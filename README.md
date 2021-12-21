@@ -1,9 +1,11 @@
-<div align="center"> <a href="https://github.com/anncwb/vue-vben-admin"> <img alt="VbenAdmin Logo" width="200" height="200" src="https://anncwb.github.io/anncwb/images/logo.png"> </a> <br> <br>
+## 基于 Vue Vben Admin   的OC中后台模板
 
-[![license](https://img.shields.io/github/license/anncwb/vue-vben-admin.svg)](LICENSE)
-
-<h1>Vue vben admin</h1>
-</div>
+### OIDC 授权
+[ ] 集成OC登录授权
+### 动态表格
+[ ] 基于Lucene Query的动态表格
+[ ] 基于GraphQL的动态表格
+[ ] 基于SQL Query 的动态表格
 
 **English** | [中文](./README.zh-CN.md)
 
