@@ -1,12 +1,13 @@
-import { defHttp } from '/@/utils/http/axios';
+import { defHttp, otherHttp } from '/@/utils/http/axios';
+import { AuthenticateResultModel } from '/@/api/abp-service-proxies'
 import { LoginParams, LoginResultModel, GetUserInfoModel } from './model/userModel';
 
 import { ErrorMessageMode } from '/#/axios';
 
 enum Api {
-  Login = '/login',
-  Logout = '/logout',
-  GetUserInfo = '/getUserInfo',
+  Login = '/api/TokenAuth/Authenticate',
+  Logout = '/users/logout',
+  GetUserInfo = '/api/services/app/Session/GetCurrentLoginInformations',
   GetPermCode = '/getPermCode',
 }
 
@@ -14,10 +15,12 @@ enum Api {
  * @description: user login api
  */
 export function loginApi(params: LoginParams, mode: ErrorMessageMode = 'modal') {
-  return defHttp.post<LoginResultModel>(
+  let { username, password } = params;
+  const model = { userNameOrEmailAddress: username, password, rememberClient: true }
+  return otherHttp.post<AuthenticateResultModel>(
     {
       url: Api.Login,
-      params,
+      params:model,
     },
     {
       errorMessageMode: mode,
@@ -29,7 +32,7 @@ export function loginApi(params: LoginParams, mode: ErrorMessageMode = 'modal') 
  * @description: getUserInfo
  */
 export function getUserInfo() {
-  return defHttp.get<GetUserInfoModel>({ url: Api.GetUserInfo }, { errorMessageMode: 'none' });
+  return otherHttp.get<GetUserInfoModel>({ url: Api.GetUserInfo }, { errorMessageMode: 'none' });
 }
 
 export function getPermCode() {
@@ -37,5 +40,5 @@ export function getPermCode() {
 }
 
 export function doLogout() {
-  return defHttp.get({ url: Api.Logout });
+  return otherHttp.get({ url: Api.Logout });
 }

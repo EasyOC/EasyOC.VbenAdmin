@@ -12,6 +12,8 @@
       <a-button @click="setProps({ actionColOptions: { span: 8 } })" class="mr-2">
         操作按钮位置
       </a-button>
+
+      <a-button @click="btnClict">2222222222</a-button>
     </div>
     <div class="mb-4">
       <a-button @click="setProps({ showActionButtonGroup: false })" class="mr-2">
@@ -70,6 +72,9 @@
   import { CollapseContainer } from '/@/components/Container/index';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { PageWrapper } from '/@/components/Page';
+  
+  import { QuotationUPCApplicationServiceProxy } from '/@/api/abp-service-proxies';
+
 
   const schemas: FormSchema[] = [
     {
@@ -182,6 +187,11 @@
           if (!formEl) return;
           formEl.setProps(props);
         },
+        async btnClict() {
+         const quotation = new QuotationUPCApplicationServiceProxy();
+         const a = await quotation.getSearch(15);
+         alert(JSON.stringify(a));
+       }
       };
     },
   });

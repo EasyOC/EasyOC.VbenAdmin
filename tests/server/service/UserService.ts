@@ -6,7 +6,7 @@ const fakeUserInfo = {
   realName: 'Vben Admin',
   desc: 'manager',
   password: '123456',
-  token: 'fakeToken1',
+  token: '',
   roles: [
     {
       roleName: 'Super Admin',

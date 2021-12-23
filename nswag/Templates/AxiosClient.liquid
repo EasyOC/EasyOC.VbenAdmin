@@ -26,9 +26,13 @@
     }
 {% endif -%} {% endcomment %}
 {% if HasExtendedConstructor == false -%}
-    constructor(instance:AxiosInstance) {
+    constructor(instance?:AxiosInstance) {
         super();
-        this.instance = instance;
+        if(instance) {
+            this.instance = instance;
+        } else {
+            this.instance = this.ajax;
+        }
         this.baseUrl = ""
     }
 {% endif -%}
