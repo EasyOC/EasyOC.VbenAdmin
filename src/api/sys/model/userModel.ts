@@ -24,7 +24,7 @@ export interface LoginResultModel {
  * @description: Get user information return value
  */
 export interface GetUserInfoModel {
-  roles: RoleInfo[];
+  roles: string[];
   // 用户id
   userId: string | number;
   // 用户名
@@ -35,4 +35,7 @@ export interface GetUserInfoModel {
   avatar: string;
   // 介绍
   desc?: string;
+
+  introduction: string;
+  email: string;
 }

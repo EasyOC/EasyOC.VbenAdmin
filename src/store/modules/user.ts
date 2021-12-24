@@ -15,12 +15,13 @@ import { usePermissionStore } from '/@/store/modules/permission';
 import { RouteRecordRaw } from 'vue-router';
 import { PAGE_NOT_FOUND_ROUTE } from '/@/router/routes/basic';
 import { isArray } from '/@/utils/is';
+import  util  from '/@/utils/util';
 import { h } from 'vue';
 
 interface UserState {
   userInfo: Nullable<UserInfo>;
   token?: string;
-  roleList: RoleEnum[];
+  roles: string[];
   sessionTimeout?: boolean;
   lastUpdateTime: number;
 }
@@ -32,8 +33,8 @@ export const useUserStore = defineStore({
     userInfo: null,
     // token
     token: undefined,
-    // roleList
-    roleList: [],
+    // roles
+    roles: [],
     // Whether the login expired
     sessionTimeout: false,
     // Last fetch time
@@ -46,8 +47,8 @@ export const useUserStore = defineStore({
     getToken(): string {
       return this.token || getAuthCache<string>(TOKEN_KEY);
     },
-    getRoleList(): RoleEnum[] {
-      return this.roleList.length > 0 ? this.roleList : getAuthCache<RoleEnum[]>(ROLES_KEY);
+    getRoles(): string[] {
+      return this.roles.length > 0 ? this.roles : getAuthCache<string[]>(ROLES_KEY);
     },
     getSessionTimeout(): boolean {
       return !!this.sessionTimeout;
@@ -61,9 +62,9 @@ export const useUserStore = defineStore({
       this.token = info ? info : ''; // for null or undefined value
       setAuthCache(TOKEN_KEY, info);
     },
-    setRoleList(roleList: RoleEnum[]) {
-      this.roleList = roleList;
-      setAuthCache(ROLES_KEY, roleList);
+    setRoles(roles: RoleEnum[]) {
+      this.roles = roles;
+      setAuthCache(ROLES_KEY, roles);
     },
     setUserInfo(info: UserInfo | null) {
       this.userInfo = info;
@@ -76,7 +77,7 @@ export const useUserStore = defineStore({
     resetState() {
       this.userInfo = null;
       this.token = '';
-      this.roleList = [];
+      this.roles = [];
       this.sessionTimeout = false;
     },
     /**
@@ -92,10 +93,10 @@ export const useUserStore = defineStore({
         const { goHome = true, mode, ...loginParams } = params;
         const data = await loginApi(loginParams, mode);
         
-        const { accessToken } = data;
-
+        const { access_token } = data;
         // save token
-        this.setToken(accessToken+"");
+        this.setToken(access_token+"");
+        // util.decodeJwt(accessToken+"");
         return this.afterLoginAction(goHome);
       } catch (error) {
         return Promise.reject(error);
@@ -105,7 +106,6 @@ export const useUserStore = defineStore({
       if (!this.getToken) return null;
       // get user info
       const userInfo = await this.getUserInfoAction();
-
       const sessionTimeout = this.sessionTimeout;
       if (sessionTimeout) {
         this.setSessionTimeout(false);
@@ -125,15 +125,39 @@ export const useUserStore = defineStore({
     },
     async getUserInfoAction(): Promise<UserInfo | null> {
       if (!this.getToken) return null;
-      const userInfo = await getUserInfo();
-      const { roles = [] } = userInfo;
-      if (isArray(roles)) {
-        const roleList = roles.map((item) => item.value) as RoleEnum[];
-        this.setRoleList(roleList);
-      } else {
-        userInfo.roles = [];
-        this.setRoleList([]);
+
+      
+
+      const userInfo =  {} as GetUserInfoModel;//await getUserInfo();
+
+      console.log('this.getToken: ', this.getToken);
+      const data = util.decodeJwt(this.getToken);
+      console.log('data: ', data);
+      console.log('data: ', data);
+      const roles = data.Permission as Array<string>;
+
+      if (!data) {
+        throw Error('Verification failed, please Login again.')
       }
+       
+      const dataRole = data["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+      if (typeof dataRole == "object") {
+        data.profile.roles.forEach(element => {
+          roles.push(element);
+          userInfo.roles.push(element);
+        });
+      } else {
+        
+        roles.push(dataRole);
+      }
+      // const { roles = [] } = userInfo;
+      // if (isArray(roles)) {
+      //   const roles = roles.map((item) => item.value) as RoleEnum[];
+      //   this.setroles(roles);
+      // } else {
+      //   userInfo.roles = [];
+      //   this.setroles([]);
+      // }
       this.setUserInfo(userInfo);
       return userInfo;
     },

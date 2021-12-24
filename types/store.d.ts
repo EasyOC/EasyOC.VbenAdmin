@@ -37,8 +37,14 @@ export interface UserInfo {
   avatar: string;
   desc?: string;
   homePath?: string;
-  roles: RoleInfo[];
+  roles: string[];
+  avatar: string;
+  introduction: string;
+  email: string;
 }
+
+
+
 
 export interface BeforeMiniState {
   menuCollapsed?: boolean;

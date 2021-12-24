@@ -8,6 +8,10 @@ import {
   TOKEN_KEY,
   USER_INFO_KEY,
   ROLES_KEY,
+  NAME_KEY,
+  EMAIL_KEY,
+  AVATAR_KEY,
+  INTRODUCTION_KEY,
   LOCK_INFO_KEY,
   PROJ_CFG_KEY,
   APP_LOCAL_CACHE_KEY,
@@ -21,6 +25,10 @@ import { pick, omit } from 'lodash-es';
 interface BasicStore {
   [TOKEN_KEY]: string | number | null | undefined;
   [USER_INFO_KEY]: UserInfo;
+  [NAME_KEY]: string;
+  [EMAIL_KEY]: string;
+  [AVATAR_KEY]: string;
+  [INTRODUCTION_KEY]: string;
   [ROLES_KEY]: string[];
   [LOCK_INFO_KEY]: LockInfo;
   [PROJ_CFG_KEY]: ProjectConfig;

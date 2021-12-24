@@ -120,7 +120,7 @@
 
   const formData = reactive({
     account: 'admin',
-    password: '123qwe',
+    password: '123123/q',
   });
 
   const { validForm } = useFormValid(formRef);
@@ -142,7 +142,7 @@
       if (userInfo) {
         notification.success({
           message: t('sys.login.loginSuccessTitle'),
-          description: `${t('sys.login.loginSuccessDesc')}: ${userInfo.realName}`,
+         // description: `${t('sys.login.loginSuccessDesc')}: ${userInfo.realName}`,
           duration: 3,
         });
       }

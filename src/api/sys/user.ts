@@ -1,13 +1,15 @@
 import { defHttp, otherHttp } from '/@/utils/http/axios';
-import { AuthenticateResultModel } from '/@/api/abp-service-proxies'
+import { AuthenticateResultModel } from '/@/api/abp-service-proxies';
 import { LoginParams, LoginResultModel, GetUserInfoModel } from './model/userModel';
 
 import { ErrorMessageMode } from '/#/axios';
 
+import { useGlobSetting } from '/@/hooks/setting';
+
 enum Api {
-  Login = '/api/TokenAuth/Authenticate',
+  Login = '/connect/token',
   Logout = '/users/logout',
-  GetUserInfo = '/api/services/app/Session/GetCurrentLoginInformations',
+  GetUserInfo = '/connect/userinfo',
   GetPermCode = '/getPermCode',
 }
 
@@ -16,23 +18,48 @@ enum Api {
  */
 export function loginApi(params: LoginParams, mode: ErrorMessageMode = 'modal') {
   let { username, password } = params;
-  const model = { userNameOrEmailAddress: username, password, rememberClient: true }
-  return otherHttp.post<AuthenticateResultModel>(
-    {
-      url: Api.Login,
-      params:model,
+  const model = { userNameOrEmailAddress: username, password, rememberClient: true };
+  console.log('useGlobSetting().clientId: ', useGlobSetting().clientId);
+  return defHttp.removeFilterPost({
+    url: Api.Login,
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
     },
-    {
-      errorMessageMode: mode,
+    data: {
+      grant_type: 'password',
+      // client_id: useGlobSetting().clientId,
+      client_id: "vue_client_app",
+      username: username,
+      password: password,
+      scopes: useGlobSetting().scopes,
     },
-  );
+  });
+
+  // .post<AuthenticateResultModel>(
+  //   {
+  //     url: Api.Login,
+  //     headers:{
+  //       'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+  //     },
+  //     data:new URLSearchParams({
+  //       grant_type: "password",
+  //       client_id: useGlobSetting().clientId,
+  //       username: username,
+  //       password: password,
+  //       scopes: useGlobSetting().scopes,
+  //     })
+  //   },
+  //   {
+  //     errorMessageMode: mode,
+  //   },
+  // );
 }
 
 /**
  * @description: getUserInfo
  */
 export function getUserInfo() {
-  return otherHttp.get<GetUserInfoModel>({ url: Api.GetUserInfo }, { errorMessageMode: 'none' });
+  return defHttp.get<GetUserInfoModel>({ url: Api.GetUserInfo }, { errorMessageMode: 'none' });
 }
 
 export function getPermCode() {
@@ -40,5 +67,5 @@ export function getPermCode() {
 }
 
 export function doLogout() {
-  return otherHttp.get({ url: Api.Logout });
+  return defHttp.get({ url: Api.Logout });
 }

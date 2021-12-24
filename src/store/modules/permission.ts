@@ -175,10 +175,10 @@ export const usePermissionStore = defineStore({
         case PermissionModeEnum.BACK:
           const { createMessage } = useMessage();
 
-          createMessage.loading({
-            content: t('sys.app.menuLoading'),
-            duration: 1,
-          });
+          createMessage.loading(
+            t('sys.app.menuLoading'),
+             1
+          );
 
           // !Simulate to obtain permission codes from the background,
           // this function may only need to be executed once, and the actual project can be put at the right time by itself
