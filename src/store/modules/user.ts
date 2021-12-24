@@ -20,7 +20,7 @@ import { h } from 'vue';
 
 interface UserState {
   userInfo: Nullable<UserInfo>;
-  token?: string;
+  token: string;
   roles: string[];
   sessionTimeout?: boolean;
   lastUpdateTime: number;
@@ -32,7 +32,7 @@ export const useUserStore = defineStore({
     // user info
     userInfo: null,
     // token
-    token: undefined,
+    token: "",
     // roles
     roles: [],
     // Whether the login expired
@@ -125,15 +125,12 @@ export const useUserStore = defineStore({
     },
     async getUserInfoAction(): Promise<UserInfo | null> {
       if (!this.getToken) return null;
-
-      
-
       const userInfo =  {} as GetUserInfoModel;//await getUserInfo();
-
-      console.log('this.getToken: ', this.getToken);
+      
       const data = util.decodeJwt(this.getToken);
-      console.log('data: ', data);
-      console.log('data: ', data);
+      const { name, email } = data;
+      userInfo.username = name;
+      userInfo.email = email;
       const roles = data.Permission as Array<string>;
 
       if (!data) {

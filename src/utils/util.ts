@@ -81,9 +81,7 @@ class Util {
   }
   
   decodeJwt(token: string):any {
-    console.log('token: ', token);
-    const text = decodeURIComponent(escape(window.atob(token.split('.')[1])))
-    console.log('text: ', text);
+    const text = decodeURIComponent(escape(window.atob(token.split('.')[1])));
     const obj = JSON.parse(text);
     return obj;
   }

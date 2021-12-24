@@ -150,6 +150,12 @@ export interface GlobConfig {
   clientId: string;
 
   scopes: string;
+  
+  responseType: string;
+
+  stsAuthority: string;
+
+  clientRoot: string;
 
 }
 export interface GlobEnvConfig {
@@ -164,5 +170,11 @@ export interface GlobEnvConfig {
   // Upload url
   VITE_GLOB_UPLOAD_URL?: string;
   // Client id
-  VITE_GLOB_OIDC_clientId: string;
+  VITE_GLOB_OIDC_CLIENTID: string;
+  // Scope
+  VITE_GLOB_OIDC_SCOPES: string;
+  // stsAuthorit
+  VITE_GLOB_OIDC_stsAuthority: string;
+  // clientRoot
+  VITE_GLOB_OIDC_clientRoot: string;
 }

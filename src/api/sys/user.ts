@@ -19,7 +19,6 @@ enum Api {
 export function loginApi(params: LoginParams, mode: ErrorMessageMode = 'modal') {
   let { username, password } = params;
   const model = { userNameOrEmailAddress: username, password, rememberClient: true };
-  console.log('useGlobSetting().clientId: ', useGlobSetting().clientId);
   return defHttp.removeFilterPost({
     url: Api.Login,
     headers: {
@@ -27,32 +26,12 @@ export function loginApi(params: LoginParams, mode: ErrorMessageMode = 'modal') 
     },
     data: {
       grant_type: 'password',
-      // client_id: useGlobSetting().clientId,
-      client_id: "vue_client_app",
+      client_id: useGlobSetting().clientId,
       username: username,
       password: password,
       scopes: useGlobSetting().scopes,
     },
   });
-
-  // .post<AuthenticateResultModel>(
-  //   {
-  //     url: Api.Login,
-  //     headers:{
-  //       'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
-  //     },
-  //     data:new URLSearchParams({
-  //       grant_type: "password",
-  //       client_id: useGlobSetting().clientId,
-  //       username: username,
-  //       password: password,
-  //       scopes: useGlobSetting().scopes,
-  //     })
-  //   },
-  //   {
-  //     errorMessageMode: mode,
-  //   },
-  // );
 }
 
 /**
