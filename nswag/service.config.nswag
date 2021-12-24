@@ -4,7 +4,7 @@
   "documentGenerator": {
     "fromDocument": {
       "json": "",
-      "url": "http://localhost:21021/swagger/v1/swagger.json",
+      "url": "http://localhost:2919/swagger/v1/swagger.json",
       "output": null
     }
   },
@@ -28,7 +28,7 @@
       "exportTypes": true,
       "wrapDtoExceptions": false,
       "exceptionClass": "ApiException",
-      "clientBaseClass": "AbpServiceBase",
+      "clientBaseClass": "AppServiceBase",
       "wrapResponses": false,
       "wrapResponseMethods": [],
       "generateResponseClasses": true,
@@ -63,7 +63,7 @@
       "enumNameGeneratorType": null,
       "serviceHost": null,
       "serviceSchemes": null,
-      "output": "../src/api/abp-service-proxies.ts"
+      "output": "../src/api/app-service-proxies.ts"
     }
   }
 }

@@ -1,8 +1,8 @@
 import { AxiosResponse } from 'axios'
-import  { otherHttp } from "/@/utils/http/axios/index";
+import  { defHttp } from "/@/utils/http/axios/index";
 
-export class AbpServiceBase {
-  public ajax = otherHttp.getAxios();
+export class AppServiceBase {
+  public ajax = defHttp.getAxios();
   protected transformResult(url: string, response: AxiosResponse, processor: (response: AxiosResponse) => Promise<any>): Promise<any> {
     return processor(response)
   }

@@ -8,9 +8,9 @@
 // ReSharper disable InconsistentNaming
 
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
-import { AbpServiceBase } from './abp-service-base';
+import { AppServiceBase } from './app-service-base';
 
-export class AccountServiceProxy extends AbpServiceBase {
+export class AccountServiceProxy extends AppServiceBase {
     private instance: AxiosInstance;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -173,7 +173,7 @@ export class AccountServiceProxy extends AbpServiceBase {
     }
 }
 
-export class ATPFFCPriceServiceProxy extends AbpServiceBase {
+export class ATPFFCPriceServiceProxy extends AppServiceBase {
     private instance: AxiosInstance;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -192,7 +192,7 @@ export class ATPFFCPriceServiceProxy extends AbpServiceBase {
     * @param id (optional) 
     * @return Success
     */
-    getAll(id: number | undefined): Promise<ATPFFCPriceDto> {
+    getAllGet(id: number | undefined): Promise<ATPFFCPriceDto> {
         let url_ = this.baseUrl + "/api/services/app/ATPFFCPrice/GetAll?";
         
         
@@ -211,11 +211,62 @@ export class ATPFFCPriceServiceProxy extends AbpServiceBase {
         };
 
         return this.instance.request(options_).then((_response: AxiosResponse) => {
-            return this.transformResult(url_, _response, (_response: AxiosResponse) => this.processGetAll(_response));
+            return this.transformResult(url_, _response, (_response: AxiosResponse) => this.processGetAllGet(_response));
         });
     }
 
-    protected processGetAll(response: AxiosResponse): Promise<ATPFFCPriceDto> {
+    protected processGetAllGet(response: AxiosResponse): Promise<ATPFFCPriceDto> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        let _mappings: { source: any, target: any }[] = [];
+        if (status === 200) {
+            const _responseText = response.data.result;
+                                                    let result200: any = null;
+                                                    let resultData200 = _responseText;
+                                result200 = ATPFFCPriceDto.fromJS(resultData200, _mappings);
+                                                                                                                                        return result200;
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data.result;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<ATPFFCPriceDto>(<any>null);
+    }
+
+    /**
+    * @param id (optional) 
+    * @return Success
+    */
+    getAllDelete(id: number | undefined): Promise<ATPFFCPriceDto> {
+        let url_ = this.baseUrl + "/api/services/app/ATPFFCPrice/GetAll?";
+        
+        
+        
+        
+         if (id !== undefined && id !== null)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+                    url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <AxiosRequestConfig>{
+            method: "DELETE",
+            url: url_,
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.instance.request(options_).then((_response: AxiosResponse) => {
+            return this.transformResult(url_, _response, (_response: AxiosResponse) => this.processGetAllDelete(_response));
+        });
+    }
+
+    protected processGetAllDelete(response: AxiosResponse): Promise<ATPFFCPriceDto> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -336,7 +387,7 @@ export class ATPFFCPriceServiceProxy extends AbpServiceBase {
     }
 }
 
-export class AuditLogServiceProxy extends AbpServiceBase {
+export class AuditLogServiceProxy extends AppServiceBase {
     private instance: AxiosInstance;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -1171,7 +1222,7 @@ export class AuditLogServiceProxy extends AbpServiceBase {
     }
 }
 
-export class AuditLogListExcelExporterServiceProxy extends AbpServiceBase {
+export class AuditLogListExcelExporterServiceProxy extends AppServiceBase {
     private instance: AxiosInstance;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -1236,7 +1287,7 @@ export class AuditLogListExcelExporterServiceProxy extends AbpServiceBase {
     }
 }
 
-export class CommonServiceProxy extends AbpServiceBase {
+export class CommonServiceProxy extends AppServiceBase {
     private instance: AxiosInstance;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -1710,7 +1761,7 @@ export class CommonServiceProxy extends AbpServiceBase {
     }
 }
 
-export class ConfigurationServiceProxy extends AbpServiceBase {
+export class ConfigurationServiceProxy extends AppServiceBase {
     private instance: AxiosInstance;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -1771,7 +1822,7 @@ export class ConfigurationServiceProxy extends AbpServiceBase {
     }
 }
 
-export class CustomerServiceProxy extends AbpServiceBase {
+export class CustomerServiceProxy extends AppServiceBase {
     private instance: AxiosInstance;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -2086,7 +2137,7 @@ export class CustomerServiceProxy extends AbpServiceBase {
     }
 }
 
-export class CustomerSalseMappingServiceProxy extends AbpServiceBase {
+export class CustomerSalseMappingServiceProxy extends AppServiceBase {
     private instance: AxiosInstance;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -2787,7 +2838,7 @@ export class CustomerSalseMappingServiceProxy extends AbpServiceBase {
     }
 }
 
-export class CustomerScreeningServiceProxy extends AbpServiceBase {
+export class CustomerScreeningServiceProxy extends AppServiceBase {
     private instance: AxiosInstance;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -3298,7 +3349,7 @@ export class CustomerScreeningServiceProxy extends AbpServiceBase {
     }
 }
 
-export class CustomerUnionMappingServiceProxy extends AbpServiceBase {
+export class CustomerUnionMappingServiceProxy extends AppServiceBase {
     private instance: AxiosInstance;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -3684,7 +3735,7 @@ export class CustomerUnionMappingServiceProxy extends AbpServiceBase {
     }
 }
 
-export class CuttingToolsPriceListServiceProxy extends AbpServiceBase {
+export class CuttingToolsPriceListServiceProxy extends AppServiceBase {
     private instance: AxiosInstance;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -3761,7 +3812,7 @@ export class CuttingToolsPriceListServiceProxy extends AbpServiceBase {
     }
 }
 
-export class DashboardTargetServiceProxy extends AbpServiceBase {
+export class DashboardTargetServiceProxy extends AppServiceBase {
     private instance: AxiosInstance;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -4027,7 +4078,7 @@ export class DashboardTargetServiceProxy extends AbpServiceBase {
     }
 }
 
-export class ExcelDataCollecteSettingsServiceProxy extends AbpServiceBase {
+export class ExcelDataCollecteSettingsServiceProxy extends AppServiceBase {
     private instance: AxiosInstance;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -4367,7 +4418,7 @@ export class ExcelDataCollecteSettingsServiceProxy extends AbpServiceBase {
     }
 }
 
-export class ExcelDataCollectRecrodsServiceProxy extends AbpServiceBase {
+export class ExcelDataCollectRecrodsServiceProxy extends AppServiceBase {
     private instance: AxiosInstance;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -4616,7 +4667,7 @@ export class ExcelDataCollectRecrodsServiceProxy extends AbpServiceBase {
     }
 }
 
-export class ExportAuditLogsExcelServiceProxy extends AbpServiceBase {
+export class ExportAuditLogsExcelServiceProxy extends AppServiceBase {
     private instance: AxiosInstance;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -4805,7 +4856,7 @@ export class ExportAuditLogsExcelServiceProxy extends AbpServiceBase {
     }
 }
 
-export class LanguageServiceProxy extends AbpServiceBase {
+export class LanguageServiceProxy extends AppServiceBase {
     private instance: AxiosInstance;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -5172,7 +5223,7 @@ export class LanguageServiceProxy extends AbpServiceBase {
     }
 }
 
-export class OpenOrderServiceProxy extends AbpServiceBase {
+export class OpenOrderServiceProxy extends AppServiceBase {
     private instance: AxiosInstance;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -5811,7 +5862,7 @@ export class OpenOrderServiceProxy extends AbpServiceBase {
     }
 }
 
-export class OrdersMonthlyServiceProxy extends AbpServiceBase {
+export class OrdersMonthlyServiceProxy extends AppServiceBase {
     private instance: AxiosInstance;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -6151,7 +6202,7 @@ export class OrdersMonthlyServiceProxy extends AbpServiceBase {
     }
 }
 
-export class OrganizationUnitServiceProxy extends AbpServiceBase {
+export class OrganizationUnitServiceProxy extends AppServiceBase {
     private instance: AxiosInstance;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -6837,7 +6888,7 @@ export class OrganizationUnitServiceProxy extends AbpServiceBase {
     }
 }
 
-export class PdfHelperServiceServiceProxy extends AbpServiceBase {
+export class PdfHelperServiceServiceProxy extends AppServiceBase {
     private instance: AxiosInstance;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -6899,7 +6950,7 @@ export class PdfHelperServiceServiceProxy extends AbpServiceBase {
     }
 }
 
-export class PermissionServiceProxy extends AbpServiceBase {
+export class PermissionServiceProxy extends AppServiceBase {
     private instance: AxiosInstance;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -7053,7 +7104,7 @@ export class PermissionServiceProxy extends AbpServiceBase {
     }
 }
 
-export class PlexusAccountServiceProxy extends AbpServiceBase {
+export class PlexusAccountServiceProxy extends AppServiceBase {
     private instance: AxiosInstance;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -7117,7 +7168,7 @@ export class PlexusAccountServiceProxy extends AbpServiceBase {
     }
 }
 
-export class PlexusMaillToolServiceProxy extends AbpServiceBase {
+export class PlexusMaillToolServiceProxy extends AppServiceBase {
     private instance: AxiosInstance;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -7256,7 +7307,7 @@ export class PlexusMaillToolServiceProxy extends AbpServiceBase {
     }
 }
 
-export class QuotationServiceProxy extends AbpServiceBase {
+export class QuotationServiceProxy extends AppServiceBase {
     private instance: AxiosInstance;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -8229,7 +8280,7 @@ export class QuotationServiceProxy extends AbpServiceBase {
     }
 }
 
-export class QuotationApprovalMatrixServiceProxy extends AbpServiceBase {
+export class QuotationApprovalMatrixServiceProxy extends AppServiceBase {
     private instance: AxiosInstance;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -8508,7 +8559,7 @@ export class QuotationApprovalMatrixServiceProxy extends AbpServiceBase {
     }
 }
 
-export class QuotationCSMaintainPriceServiceProxy extends AbpServiceBase {
+export class QuotationCSMaintainPriceServiceProxy extends AppServiceBase {
     private instance: AxiosInstance;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -8731,7 +8782,7 @@ export class QuotationCSMaintainPriceServiceProxy extends AbpServiceBase {
     }
 }
 
-export class QuotationLogsServiceProxy extends AbpServiceBase {
+export class QuotationLogsServiceProxy extends AppServiceBase {
     private instance: AxiosInstance;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -8837,7 +8888,7 @@ export class QuotationLogsServiceProxy extends AbpServiceBase {
     }
 }
 
-export class QuotationMailServiceProxy extends AbpServiceBase {
+export class QuotationMailServiceProxy extends AppServiceBase {
     private instance: AxiosInstance;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -9456,7 +9507,7 @@ export class QuotationMailServiceProxy extends AbpServiceBase {
     }
 }
 
-export class QuotationParamsServiceProxy extends AbpServiceBase {
+export class QuotationParamsServiceProxy extends AppServiceBase {
     private instance: AxiosInstance;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -9677,7 +9728,7 @@ export class QuotationParamsServiceProxy extends AbpServiceBase {
     }
 }
 
-export class QuotationPEPriceServiceProxy extends AbpServiceBase {
+export class QuotationPEPriceServiceProxy extends AppServiceBase {
     private instance: AxiosInstance;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -9789,7 +9840,7 @@ export class QuotationPEPriceServiceProxy extends AbpServiceBase {
     }
 }
 
-export class QuotationPriceServiceProxy extends AbpServiceBase {
+export class QuotationPriceServiceProxy extends AppServiceBase {
     private instance: AxiosInstance;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -10787,7 +10838,7 @@ export class QuotationPriceServiceProxy extends AbpServiceBase {
     }
 }
 
-export class QuotationPriceGroupServiceProxy extends AbpServiceBase {
+export class QuotationPriceGroupServiceProxy extends AppServiceBase {
     private instance: AxiosInstance;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -10990,7 +11041,7 @@ export class QuotationPriceGroupServiceProxy extends AbpServiceBase {
     }
 }
 
-export class QuotationToolsServiceProxy extends AbpServiceBase {
+export class QuotationToolsServiceProxy extends AppServiceBase {
     private instance: AxiosInstance;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -11820,7 +11871,7 @@ export class QuotationToolsServiceProxy extends AbpServiceBase {
     }
 }
 
-export class QuotationUPCApplicationServiceProxy extends AbpServiceBase {
+export class QuotationUPCApplicationServiceProxy extends AppServiceBase {
     private instance: AxiosInstance;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -11831,8 +11882,6 @@ export class QuotationUPCApplicationServiceProxy extends AbpServiceBase {
             this.instance = instance;
         } else {
             this.instance = this.ajax;
-            console.log('defHttp12: ', this.defHttp12);
-            console.log('instance: ', this.ajax);
         }
         this.baseUrl = ""
     }
@@ -11843,7 +11892,6 @@ export class QuotationUPCApplicationServiceProxy extends AbpServiceBase {
     */
     getSearch(id: number | undefined): Promise<NewQuotationUPCApplication> {
         let url_ = this.baseUrl + "/api/services/app/QuotationUPCApplication/GetSearch?";
-        console.log('this.baseUrl: ', this.baseUrl);
         
         
         
@@ -11859,7 +11907,6 @@ export class QuotationUPCApplicationServiceProxy extends AbpServiceBase {
                 "Accept": "text/plain"
             }
         };
-        console.log('options_: ', options_);
 
         return this.instance.request(options_).then((_response: AxiosResponse) => {
             return this.transformResult(url_, _response, (_response: AxiosResponse) => this.processGetSearch(_response));
@@ -12830,7 +12877,7 @@ export class QuotationUPCApplicationServiceProxy extends AbpServiceBase {
     }
 }
 
-export class RoleServiceProxy extends AbpServiceBase {
+export class RoleServiceProxy extends AppServiceBase {
     private instance: AxiosInstance;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -13245,7 +13292,7 @@ export class RoleServiceProxy extends AbpServiceBase {
     }
 }
 
-export class SalesDashboardTargetServiceProxy extends AbpServiceBase {
+export class SalesDashboardTargetServiceProxy extends AppServiceBase {
     private instance: AxiosInstance;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -13917,7 +13964,7 @@ export class SalesDashboardTargetServiceProxy extends AbpServiceBase {
     }
 }
 
-export class SalesIncentive_DashboardChartServiceProxy extends AbpServiceBase {
+export class SalesIncentive_DashboardChartServiceProxy extends AppServiceBase {
     private instance: AxiosInstance;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -14167,7 +14214,7 @@ export class SalesIncentive_DashboardChartServiceProxy extends AbpServiceBase {
     }
 }
 
-export class SalesMonthlyServiceProxy extends AbpServiceBase {
+export class SalesMonthlyServiceProxy extends AppServiceBase {
     private instance: AxiosInstance;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -14507,7 +14554,7 @@ export class SalesMonthlyServiceProxy extends AbpServiceBase {
     }
 }
 
-export class SendQuotationServiceProxy extends AbpServiceBase {
+export class SendQuotationServiceProxy extends AppServiceBase {
     private instance: AxiosInstance;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -14663,7 +14710,7 @@ export class SendQuotationServiceProxy extends AbpServiceBase {
     }
 }
 
-export class SessionServiceProxy extends AbpServiceBase {
+export class SessionServiceProxy extends AppServiceBase {
     private instance: AxiosInstance;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -14723,7 +14770,7 @@ export class SessionServiceProxy extends AbpServiceBase {
     }
 }
 
-export class SGAAccountServiceProxy extends AbpServiceBase {
+export class SGAAccountServiceProxy extends AppServiceBase {
     private instance: AxiosInstance;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -14779,7 +14826,7 @@ export class SGAAccountServiceProxy extends AbpServiceBase {
     }
 }
 
-export class StandardProductServiceProxy extends AbpServiceBase {
+export class StandardProductServiceProxy extends AppServiceBase {
     private instance: AxiosInstance;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -15685,7 +15732,7 @@ export class StandardProductServiceProxy extends AbpServiceBase {
     }
 }
 
-export class StrategicProductServiceProxy extends AbpServiceBase {
+export class StrategicProductServiceProxy extends AppServiceBase {
     private instance: AxiosInstance;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -16194,7 +16241,7 @@ export class StrategicProductServiceProxy extends AbpServiceBase {
     }
 }
 
-export class StrategicProductBacthQueryServiceProxy extends AbpServiceBase {
+export class StrategicProductBacthQueryServiceProxy extends AppServiceBase {
     private instance: AxiosInstance;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -17721,7 +17768,7 @@ export class StrategicProductBacthQueryServiceProxy extends AbpServiceBase {
     }
 }
 
-export class SubPlatFormServiceProxy extends AbpServiceBase {
+export class SubPlatFormServiceProxy extends AppServiceBase {
     private instance: AxiosInstance;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -17839,7 +17886,7 @@ export class SubPlatFormServiceProxy extends AbpServiceBase {
     }
 }
 
-export class SysDictsServiceProxy extends AbpServiceBase {
+export class SysDictsServiceProxy extends AppServiceBase {
     private instance: AxiosInstance;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -18391,7 +18438,7 @@ export class SysDictsServiceProxy extends AbpServiceBase {
     }
 }
 
-export class SysDictsExcelExporterServiceProxy extends AbpServiceBase {
+export class SysDictsExcelExporterServiceProxy extends AppServiceBase {
     private instance: AxiosInstance;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -18456,7 +18503,7 @@ export class SysDictsExcelExporterServiceProxy extends AbpServiceBase {
     }
 }
 
-export class TenantServiceProxy extends AbpServiceBase {
+export class TenantServiceProxy extends AppServiceBase {
     private instance: AxiosInstance;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -18732,7 +18779,7 @@ export class TenantServiceProxy extends AbpServiceBase {
     }
 }
 
-export class TokenAuthServiceProxy extends AbpServiceBase {
+export class TokenAuthServiceProxy extends AppServiceBase {
     private instance: AxiosInstance;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -18934,7 +18981,7 @@ export class TokenAuthServiceProxy extends AbpServiceBase {
     }
 }
 
-export class UserServiceProxy extends AbpServiceBase {
+export class UserServiceProxy extends AppServiceBase {
     private instance: AxiosInstance;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -19765,7 +19812,7 @@ export class UserServiceProxy extends AbpServiceBase {
     }
 }
 
-export class VisitServiceProxy extends AbpServiceBase {
+export class VisitServiceProxy extends AppServiceBase {
     private instance: AxiosInstance;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
