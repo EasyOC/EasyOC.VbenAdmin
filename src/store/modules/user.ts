@@ -15,7 +15,7 @@ import { usePermissionStore } from '/@/store/modules/permission';
 import { RouteRecordRaw } from 'vue-router';
 import { PAGE_NOT_FOUND_ROUTE } from '/@/router/routes/basic';
 import { isArray } from '/@/utils/is';
-import  util  from '/@/utils/util';
+import util from '/@/utils/util';
 import { h } from 'vue';
 
 interface UserState {
@@ -32,7 +32,7 @@ export const useUserStore = defineStore({
     // user info
     userInfo: null,
     // token
-    token: "",
+    token: '',
     // roles
     roles: [],
     // Whether the login expired
@@ -92,10 +92,10 @@ export const useUserStore = defineStore({
       try {
         const { goHome = true, mode, ...loginParams } = params;
         const data = await loginApi(loginParams, mode);
-        
+
         const { access_token } = data;
         // save token
-        this.setToken(access_token+"");
+        this.setToken(access_token + '');
         // util.decodeJwt(accessToken+"");
         return this.afterLoginAction(goHome);
       } catch (error) {
@@ -125,8 +125,8 @@ export const useUserStore = defineStore({
     },
     async getUserInfoAction(): Promise<UserInfo | null> {
       if (!this.getToken) return null;
-      const userInfo =  {} as GetUserInfoModel;//await getUserInfo();
-      
+      const userInfo = {} as GetUserInfoModel; //await getUserInfo();
+
       const data = util.decodeJwt(this.getToken);
       const { name, email } = data;
       userInfo.username = name;
@@ -134,17 +134,16 @@ export const useUserStore = defineStore({
       const roles = data.Permission as Array<string>;
 
       if (!data) {
-        throw Error('Verification failed, please Login again.')
+        throw Error('Verification failed, please Login again.');
       }
-       
-      const dataRole = data["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
-      if (typeof dataRole == "object") {
-        data.profile.roles.forEach(element => {
+
+      const dataRole = data['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+      if (typeof dataRole == 'object') {
+        data.profile.roles.forEach((element) => {
           roles.push(element);
           userInfo.roles.push(element);
         });
       } else {
-        
         roles.push(dataRole);
       }
       // const { roles = [] } = userInfo;

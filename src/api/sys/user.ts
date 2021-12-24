@@ -8,7 +8,7 @@ import { useGlobSetting } from '/@/hooks/setting';
 
 enum Api {
   Login = '/connect/token',
-  Logout = '/users/logout',
+  Logout = '/connect/logout',
   GetUserInfo = '/connect/userinfo',
   GetPermCode = '/getPermCode',
 }
@@ -17,7 +17,7 @@ enum Api {
  * @description: user login api
  */
 export function loginApi(params: LoginParams, mode: ErrorMessageMode = 'modal') {
-  let { username, password } = params;
+  const { username, password } = params;
   const model = { userNameOrEmailAddress: username, password, rememberClient: true };
   return defHttp.removeFilterPost({
     url: Api.Login,
