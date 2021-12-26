@@ -1,3 +1,4 @@
+import { UserServiceProxy } from '../app-service-proxies';
 import {
   AccountParams,
   DeptListItem,
@@ -13,7 +14,7 @@ import {
 import { defHttp } from '/@/utils/http/axios';
 
 enum Api {
-  AccountList = '/system/getAccountList',
+  AccountList = '/api/User/GetAll',
   IsAccountExist = '/system/accountExist',
   DeptList = '/system/getDeptList',
   setRoleStatus = '/system/setRoleStatus',
@@ -22,9 +23,9 @@ enum Api {
   GetAllRoleList = '/system/getAllRoleList',
 }
 
-export const getAccountList = (params: AccountParams) =>
-  defHttp.get<AccountListGetResultModel>({ url: Api.AccountList, params });
-
+export const getAccountList = (params: AccountParams) => {
+  return new UserServiceProxy().getAll(params);
+};
 export const getDeptList = (params?: DeptListItem) =>
   defHttp.get<DeptListGetResultModel>({ url: Api.DeptList, params });
 
