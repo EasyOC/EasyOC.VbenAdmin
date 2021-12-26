@@ -7,14 +7,14 @@ import {
   RolePageParams,
   MenuListGetResultModel,
   DeptListGetResultModel,
-  AccountListGetResultModel,
+  // AccountListGetResultModel,
   RolePageListGetResultModel,
   RoleListGetResultModel,
 } from './model/systemModel';
 import { defHttp } from '/@/utils/http/axios';
 
 enum Api {
-  AccountList = '/api/User/GetAll',
+  // AccountList = '/api/User/GetAll',
   IsAccountExist = '/system/accountExist',
   DeptList = '/system/getDeptList',
   setRoleStatus = '/system/setRoleStatus',
@@ -23,8 +23,10 @@ enum Api {
   GetAllRoleList = '/system/getAllRoleList',
 }
 
-export const getAccountList = (params: AccountParams) => {
-  return new UserServiceProxy().getAll(params);
+export const getAccountList = async (params: AccountParams) => {
+  const data = await new UserServiceProxy().getAll(params);
+  console.log(data, 'userList');
+  return data;
 };
 export const getDeptList = (params?: DeptListItem) =>
   defHttp.get<DeptListGetResultModel>({ url: Api.DeptList, params });

@@ -1,3 +1,5 @@
+import { SelectProps } from 'ant-design-vue';
+import { Filter } from '/@/api/app-service-proxies';
 import { getAllRoleList, isAccountExist } from '/@/api/demo/system';
 import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
@@ -43,9 +45,20 @@ export const searchFormSchema: FormSchema[] = [
     colProps: { span: 8 },
   },
   {
-    field: 'nickname',
-    label: '昵称',
-    component: 'Input',
+    field: 'filter',
+    label: '过滤',
+    component: 'Select',
+    componentProps: {
+      options: [
+        { value: Filter.All, label: 'All' },
+        { value: Filter.Approved, label: 'Approved' },
+        { value: Filter.Pending, label: 'Pending' },
+        { value: Filter.EmailPending, label: 'EmailPending' },
+        { value: Filter.Enabled, label: 'Enabled' },
+        { value: Filter.Disabled, label: 'Disabled' },
+      ],
+      defaultActiveFirstOption: true,
+    } as SelectProps,
     colProps: { span: 8 },
   },
 ];
