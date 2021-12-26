@@ -37,18 +37,18 @@
     }
 {% endif -%}
 {% if HasExtensionCode -%}
-
     {{ ExtensionCode }}
 {% endif -%}
 {% for operation in Operations -%}
-
     {% template Client.Method.Documentation %}
-    {{ operation.MethodAccessModifier }}{{ operation.ActualOperationName }}({% for parameter in operation.Parameters %}{{ parameter.VariableName }}{% if GenerateOptionalParameters and parameter.IsOptional %}?{% endif %}: {{ parameter.Type }}{{ parameter.TypePostfix }}{% if parameter.IsLast == false %}, {% endif %}{% endfor %}): Promise<{{ operation.ResultType }}> {
+    {% if operation.HttpMethodUpper == "Get" and operation.Parameters.size > 1 -%}
+{{ operation.MethodAccessModifier }}{{ operation.ActualOperationName }}(params:{ {% for parameter in operation.Parameters %}{{ parameter.VariableName }}{% if GenerateOptionalParameters and parameter.IsOptional %}?{% endif %}: {{ parameter.Type }}{{ parameter.TypePostfix }}{% if parameter.IsLast == false %}, {% endif %}{% endfor %} }): Promise<{{ operation.ResultType }}> {
+        const { {% for parameter in operation.Parameters %}{{ parameter.VariableName }}{% if parameter.IsLast == false %}, {% endif %}{% endfor %} } = {...params}; 
+{% else %}{{ operation.MethodAccessModifier }}{{ operation.ActualOperationName }}({% for parameter in operation.Parameters %}{{ parameter.VariableName }}{% if GenerateOptionalParameters and parameter.IsOptional %}?{% endif %}: {{ parameter.Type }}{{ parameter.TypePostfix }}{% if parameter.IsLast == false %}, {% endif %}{% endfor %}): Promise<{{ operation.ResultType }}> {
+    {% endif %}
         {% template Client.RequestUrl %}
-
 {%     if operation.HasBody -%}
         {% template Client.RequestBody %}
-
 {%     endif -%}
         let options_ = <AxiosRequestConfig>{
 {%     if operation.HasBody -%}
@@ -71,7 +71,6 @@
 {%     endif -%}
             }
         };
-
 {%     if UseTransformOptionsMethod -%}
         return this.transformOptions(options_).then(transformedOptions_ => {
             return this.instance.request(transformedOptions_);
@@ -82,15 +81,17 @@
 {%     if UseTransformResultMethod -%}
             return this.transformResult(url_, _response, (_response: AxiosResponse) => this.process{{ operation.ActualOperationNameUpper }}(_response));
 {%     else -%}
-            return this.process{{ operation.ActualOperationNameUpper }}(_response);
+            return this.transformResult(_response);
 {%     endif -%}
         });
     }
-
+{%     if UseTransformResultMethod -%}
     protected process{{ operation.ActualOperationNameUpper }}(response: AxiosResponse): Promise<{{ operation.ResultType }}> {
         const status = response.status;
         {% template Client.ProcessResponse %}
     }
+{%     endif -%}
+
 {% endfor -%}
 }
 {% endif -%}

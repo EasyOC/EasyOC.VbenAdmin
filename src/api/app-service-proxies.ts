@@ -24,7 +24,6 @@ export class ApiServiceProxy extends AppServiceBase {
     }
     this.baseUrl = '';
   }
-
   /**
    * @return Success
    */
@@ -34,43 +33,14 @@ export class ApiServiceProxy extends AppServiceBase {
       throw new Error("The parameter 'contentItemId' must be defined.");
     url_ = url_.replace('{contentItemId}', encodeURIComponent('' + contentItemId));
     url_ = url_.replace(/[?&]$/, '');
-
     let options_ = <AxiosRequestConfig>{
       method: 'GET',
       url: url_,
       headers: {},
     };
-
     return this.instance.request(options_).then((_response: AxiosResponse) => {
-      return this.transformResult(url_, _response, (_response: AxiosResponse) =>
-        this.processContentGet(_response),
-      );
+      return this.transformResult(_response);
     });
-  }
-
-  protected processContentGet(response: AxiosResponse): Promise<void> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
-        }
-      }
-    }
-    if (status === 200) {
-      const _responseText = response.data.result;
-      return Promise.resolve<void>(<any>null);
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data.result;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
-    }
-    return Promise.resolve<void>(<any>null);
   }
 
   /**
@@ -82,43 +52,14 @@ export class ApiServiceProxy extends AppServiceBase {
       throw new Error("The parameter 'contentItemId' must be defined.");
     url_ = url_.replace('{contentItemId}', encodeURIComponent('' + contentItemId));
     url_ = url_.replace(/[?&]$/, '');
-
     let options_ = <AxiosRequestConfig>{
       method: 'DELETE',
       url: url_,
       headers: {},
     };
-
     return this.instance.request(options_).then((_response: AxiosResponse) => {
-      return this.transformResult(url_, _response, (_response: AxiosResponse) =>
-        this.processContentDelete(_response),
-      );
+      return this.transformResult(_response);
     });
-  }
-
-  protected processContentDelete(response: AxiosResponse): Promise<void> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
-        }
-      }
-    }
-    if (status === 200) {
-      const _responseText = response.data.result;
-      return Promise.resolve<void>(<any>null);
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data.result;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
-    }
-    return Promise.resolve<void>(<any>null);
   }
 
   /**
@@ -132,9 +73,7 @@ export class ApiServiceProxy extends AppServiceBase {
     if (draft !== undefined && draft !== null)
       url_ += 'draft=' + encodeURIComponent('' + draft) + '&';
     url_ = url_.replace(/[?&]$/, '');
-
     const content_ = JSON.stringify(body);
-
     let options_ = <AxiosRequestConfig>{
       data: content_,
       method: 'POST',
@@ -143,37 +82,9 @@ export class ApiServiceProxy extends AppServiceBase {
         'Content-Type': 'application/json-patch+json',
       },
     };
-
     return this.instance.request(options_).then((_response: AxiosResponse) => {
-      return this.transformResult(url_, _response, (_response: AxiosResponse) =>
-        this.processContentPost(_response),
-      );
+      return this.transformResult(_response);
     });
-  }
-
-  protected processContentPost(response: AxiosResponse): Promise<void> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
-        }
-      }
-    }
-    if (status === 200) {
-      const _responseText = response.data.result;
-      return Promise.resolve<void>(<any>null);
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data.result;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
-    }
-    return Promise.resolve<void>(<any>null);
   }
 
   /**
@@ -189,50 +100,23 @@ export class ApiServiceProxy extends AppServiceBase {
     if (parameters !== undefined && parameters !== null)
       url_ += 'parameters=' + encodeURIComponent('' + parameters) + '&';
     url_ = url_.replace(/[?&]$/, '');
-
     let options_ = <AxiosRequestConfig>{
       method: 'POST',
       url: url_,
       headers: {},
     };
-
     return this.instance.request(options_).then((_response: AxiosResponse) => {
-      return this.transformResult(url_, _response, (_response: AxiosResponse) =>
-        this.processQueriesPost(_response),
-      );
+      return this.transformResult(_response);
     });
-  }
-
-  protected processQueriesPost(response: AxiosResponse): Promise<void> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
-        }
-      }
-    }
-    if (status === 200) {
-      const _responseText = response.data.result;
-      return Promise.resolve<void>(<any>null);
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data.result;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
-    }
-    return Promise.resolve<void>(<any>null);
   }
 
   /**
    * @param parameters (optional)
    * @return Success
    */
-  queriesGet(name: string, parameters: string | undefined): Promise<void> {
+  queriesGet(params: { name: string; parameters: string | undefined }): Promise<void> {
+    const { name, parameters } = { ...params };
+
     let url_ = this.baseUrl + '/api/queries/{name}?';
     if (name === undefined || name === null)
       throw new Error("The parameter 'name' must be defined.");
@@ -241,43 +125,14 @@ export class ApiServiceProxy extends AppServiceBase {
     if (parameters !== undefined && parameters !== null)
       url_ += 'parameters=' + encodeURIComponent('' + parameters) + '&';
     url_ = url_.replace(/[?&]$/, '');
-
     let options_ = <AxiosRequestConfig>{
       method: 'GET',
       url: url_,
       headers: {},
     };
-
     return this.instance.request(options_).then((_response: AxiosResponse) => {
-      return this.transformResult(url_, _response, (_response: AxiosResponse) =>
-        this.processQueriesGet(_response),
-      );
+      return this.transformResult(_response);
     });
-  }
-
-  protected processQueriesGet(response: AxiosResponse): Promise<void> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
-        }
-      }
-    }
-    if (status === 200) {
-      const _responseText = response.data.result;
-      return Promise.resolve<void>(<any>null);
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data.result;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
-    }
-    return Promise.resolve<void>(<any>null);
   }
 }
 
@@ -295,18 +150,19 @@ export class LuceneServiceProxy extends AppServiceBase {
     }
     this.baseUrl = '';
   }
-
   /**
    * @param indexName (optional)
    * @param query (optional)
    * @param parameters (optional)
    * @return Success
    */
-  contentGet(
-    indexName: string | undefined,
-    query: string | undefined,
-    parameters: string | undefined,
-  ): Promise<void> {
+  contentGet(params: {
+    indexName: string | undefined;
+    query: string | undefined;
+    parameters: string | undefined;
+  }): Promise<void> {
+    const { indexName, query, parameters } = { ...params };
+
     let url_ = this.baseUrl + '/api/lucene/content?';
 
     if (indexName !== undefined && indexName !== null)
@@ -318,43 +174,14 @@ export class LuceneServiceProxy extends AppServiceBase {
     if (parameters !== undefined && parameters !== null)
       url_ += 'Parameters=' + encodeURIComponent('' + parameters) + '&';
     url_ = url_.replace(/[?&]$/, '');
-
     let options_ = <AxiosRequestConfig>{
       method: 'GET',
       url: url_,
       headers: {},
     };
-
     return this.instance.request(options_).then((_response: AxiosResponse) => {
-      return this.transformResult(url_, _response, (_response: AxiosResponse) =>
-        this.processContentGet(_response),
-      );
+      return this.transformResult(_response);
     });
-  }
-
-  protected processContentGet(response: AxiosResponse): Promise<void> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
-        }
-      }
-    }
-    if (status === 200) {
-      const _responseText = response.data.result;
-      return Promise.resolve<void>(<any>null);
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data.result;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
-    }
-    return Promise.resolve<void>(<any>null);
   }
 
   /**
@@ -364,9 +191,7 @@ export class LuceneServiceProxy extends AppServiceBase {
   contentPost(body: LuceneQueryModel | undefined): Promise<void> {
     let url_ = this.baseUrl + '/api/lucene/content';
     url_ = url_.replace(/[?&]$/, '');
-
     const content_ = JSON.stringify(body);
-
     let options_ = <AxiosRequestConfig>{
       data: content_,
       method: 'POST',
@@ -375,37 +200,9 @@ export class LuceneServiceProxy extends AppServiceBase {
         'Content-Type': 'application/json-patch+json',
       },
     };
-
     return this.instance.request(options_).then((_response: AxiosResponse) => {
-      return this.transformResult(url_, _response, (_response: AxiosResponse) =>
-        this.processContentPost(_response),
-      );
+      return this.transformResult(_response);
     });
-  }
-
-  protected processContentPost(response: AxiosResponse): Promise<void> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
-        }
-      }
-    }
-    if (status === 200) {
-      const _responseText = response.data.result;
-      return Promise.resolve<void>(<any>null);
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data.result;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
-    }
-    return Promise.resolve<void>(<any>null);
   }
 
   /**
@@ -414,11 +211,13 @@ export class LuceneServiceProxy extends AppServiceBase {
    * @param parameters (optional)
    * @return Success
    */
-  documentsGet(
-    indexName: string | undefined,
-    query: string | undefined,
-    parameters: string | undefined,
-  ): Promise<void> {
+  documentsGet(params: {
+    indexName: string | undefined;
+    query: string | undefined;
+    parameters: string | undefined;
+  }): Promise<void> {
+    const { indexName, query, parameters } = { ...params };
+
     let url_ = this.baseUrl + '/api/lucene/documents?';
 
     if (indexName !== undefined && indexName !== null)
@@ -430,43 +229,14 @@ export class LuceneServiceProxy extends AppServiceBase {
     if (parameters !== undefined && parameters !== null)
       url_ += 'Parameters=' + encodeURIComponent('' + parameters) + '&';
     url_ = url_.replace(/[?&]$/, '');
-
     let options_ = <AxiosRequestConfig>{
       method: 'GET',
       url: url_,
       headers: {},
     };
-
     return this.instance.request(options_).then((_response: AxiosResponse) => {
-      return this.transformResult(url_, _response, (_response: AxiosResponse) =>
-        this.processDocumentsGet(_response),
-      );
+      return this.transformResult(_response);
     });
-  }
-
-  protected processDocumentsGet(response: AxiosResponse): Promise<void> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
-        }
-      }
-    }
-    if (status === 200) {
-      const _responseText = response.data.result;
-      return Promise.resolve<void>(<any>null);
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data.result;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
-    }
-    return Promise.resolve<void>(<any>null);
   }
 
   /**
@@ -476,9 +246,7 @@ export class LuceneServiceProxy extends AppServiceBase {
   documentsPost(body: LuceneQueryModel | undefined): Promise<void> {
     let url_ = this.baseUrl + '/api/lucene/documents';
     url_ = url_.replace(/[?&]$/, '');
-
     const content_ = JSON.stringify(body);
-
     let options_ = <AxiosRequestConfig>{
       data: content_,
       method: 'POST',
@@ -487,37 +255,9 @@ export class LuceneServiceProxy extends AppServiceBase {
         'Content-Type': 'application/json-patch+json',
       },
     };
-
     return this.instance.request(options_).then((_response: AxiosResponse) => {
-      return this.transformResult(url_, _response, (_response: AxiosResponse) =>
-        this.processDocumentsPost(_response),
-      );
+      return this.transformResult(_response);
     });
-  }
-
-  protected processDocumentsPost(response: AxiosResponse): Promise<void> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
-        }
-      }
-    }
-    if (status === 200) {
-      const _responseText = response.data.result;
-      return Promise.resolve<void>(<any>null);
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data.result;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
-    }
-    return Promise.resolve<void>(<any>null);
   }
 }
 
@@ -535,7 +275,6 @@ export class TenantsServiceProxy extends AppServiceBase {
     }
     this.baseUrl = '';
   }
-
   /**
    * @param body (optional)
    * @return Success
@@ -543,9 +282,7 @@ export class TenantsServiceProxy extends AppServiceBase {
   create(body: CreateApiViewModel | undefined): Promise<void> {
     let url_ = this.baseUrl + '/api/tenants/create';
     url_ = url_.replace(/[?&]$/, '');
-
     const content_ = JSON.stringify(body);
-
     let options_ = <AxiosRequestConfig>{
       data: content_,
       method: 'POST',
@@ -554,37 +291,9 @@ export class TenantsServiceProxy extends AppServiceBase {
         'Content-Type': 'application/json-patch+json',
       },
     };
-
     return this.instance.request(options_).then((_response: AxiosResponse) => {
-      return this.transformResult(url_, _response, (_response: AxiosResponse) =>
-        this.processCreate(_response),
-      );
+      return this.transformResult(_response);
     });
-  }
-
-  protected processCreate(response: AxiosResponse): Promise<void> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
-        }
-      }
-    }
-    if (status === 200) {
-      const _responseText = response.data.result;
-      return Promise.resolve<void>(<any>null);
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data.result;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
-    }
-    return Promise.resolve<void>(<any>null);
   }
 
   /**
@@ -594,9 +303,7 @@ export class TenantsServiceProxy extends AppServiceBase {
   setup(body: SetupApiViewModel | undefined): Promise<void> {
     let url_ = this.baseUrl + '/api/tenants/setup';
     url_ = url_.replace(/[?&]$/, '');
-
     const content_ = JSON.stringify(body);
-
     let options_ = <AxiosRequestConfig>{
       data: content_,
       method: 'POST',
@@ -605,37 +312,9 @@ export class TenantsServiceProxy extends AppServiceBase {
         'Content-Type': 'application/json-patch+json',
       },
     };
-
     return this.instance.request(options_).then((_response: AxiosResponse) => {
-      return this.transformResult(url_, _response, (_response: AxiosResponse) =>
-        this.processSetup(_response),
-      );
+      return this.transformResult(_response);
     });
-  }
-
-  protected processSetup(response: AxiosResponse): Promise<void> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
-        }
-      }
-    }
-    if (status === 200) {
-      const _responseText = response.data.result;
-      return Promise.resolve<void>(<any>null);
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data.result;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
-    }
-    return Promise.resolve<void>(<any>null);
   }
 }
 
@@ -653,7 +332,6 @@ export class ContentManagementServiceProxy extends AppServiceBase {
     }
     this.baseUrl = '';
   }
-
   /**
    * 列出所有类型定义
    * @return Success
@@ -661,7 +339,6 @@ export class ContentManagementServiceProxy extends AppServiceBase {
   getAllTypes(): Promise<{ [key: string]: string }> {
     let url_ = this.baseUrl + '/api/ContentManagement/GetAllTypes';
     url_ = url_.replace(/[?&]$/, '');
-
     let options_ = <AxiosRequestConfig>{
       method: 'GET',
       url: url_,
@@ -669,45 +346,9 @@ export class ContentManagementServiceProxy extends AppServiceBase {
         Accept: 'text/plain',
       },
     };
-
     return this.instance.request(options_).then((_response: AxiosResponse) => {
-      return this.transformResult(url_, _response, (_response: AxiosResponse) =>
-        this.processGetAllTypes(_response),
-      );
+      return this.transformResult(_response);
     });
-  }
-
-  protected processGetAllTypes(response: AxiosResponse): Promise<{ [key: string]: string }> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
-        }
-      }
-    }
-    if (status === 200) {
-      const _responseText = response.data.result;
-      let result200: any = null;
-      let resultData200 = _responseText;
-      if (resultData200) {
-        result200 = {} as any;
-        for (let key in resultData200) {
-          if (resultData200.hasOwnProperty(key)) result200![key] = resultData200[key];
-        }
-      }
-      return result200;
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data.result;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
-    }
-    return Promise.resolve<{ [key: string]: string }>(<any>null);
   }
 
   /**
@@ -716,7 +357,6 @@ export class ContentManagementServiceProxy extends AppServiceBase {
   getAllParts(): Promise<string[]> {
     let url_ = this.baseUrl + '/api/ContentManagement/GetAllParts';
     url_ = url_.replace(/[?&]$/, '');
-
     let options_ = <AxiosRequestConfig>{
       method: 'GET',
       url: url_,
@@ -724,43 +364,9 @@ export class ContentManagementServiceProxy extends AppServiceBase {
         Accept: 'text/plain',
       },
     };
-
     return this.instance.request(options_).then((_response: AxiosResponse) => {
-      return this.transformResult(url_, _response, (_response: AxiosResponse) =>
-        this.processGetAllParts(_response),
-      );
+      return this.transformResult(_response);
     });
-  }
-
-  protected processGetAllParts(response: AxiosResponse): Promise<string[]> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
-        }
-      }
-    }
-    if (status === 200) {
-      const _responseText = response.data.result;
-      let result200: any = null;
-      let resultData200 = _responseText;
-      if (Array.isArray(resultData200)) {
-        result200 = [] as any;
-        for (let item of resultData200) result200!.push(item);
-      }
-      return result200;
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data.result;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
-    }
-    return Promise.resolve<string[]>(<any>null);
   }
 
   /**
@@ -768,10 +374,12 @@ export class ContentManagementServiceProxy extends AppServiceBase {
    * @param incloudeSettings (optional)
    * @return Success
    */
-  getPartDefinition(
-    name: string | undefined,
-    incloudeSettings: boolean | undefined,
-  ): Promise<ContentPartApiModel> {
+  getPartDefinition(params: {
+    name: string | undefined;
+    incloudeSettings: boolean | undefined;
+  }): Promise<ContentPartApiModel> {
+    const { name, incloudeSettings } = { ...params };
+
     let url_ = this.baseUrl + '/api/ContentManagement/GetPartDefinition?';
 
     if (name !== undefined && name !== null) url_ += 'name=' + encodeURIComponent('' + name) + '&';
@@ -779,7 +387,6 @@ export class ContentManagementServiceProxy extends AppServiceBase {
     if (incloudeSettings !== undefined && incloudeSettings !== null)
       url_ += 'incloudeSettings=' + encodeURIComponent('' + incloudeSettings) + '&';
     url_ = url_.replace(/[?&]$/, '');
-
     let options_ = <AxiosRequestConfig>{
       method: 'GET',
       url: url_,
@@ -787,41 +394,9 @@ export class ContentManagementServiceProxy extends AppServiceBase {
         Accept: 'text/plain',
       },
     };
-
     return this.instance.request(options_).then((_response: AxiosResponse) => {
-      return this.transformResult(url_, _response, (_response: AxiosResponse) =>
-        this.processGetPartDefinition(_response),
-      );
+      return this.transformResult(_response);
     });
-  }
-
-  protected processGetPartDefinition(response: AxiosResponse): Promise<ContentPartApiModel> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
-        }
-      }
-    }
-    let _mappings: { source: any; target: any }[] = [];
-    if (status === 200) {
-      const _responseText = response.data.result;
-      let result200: any = null;
-      let resultData200 = _responseText;
-      result200 = ContentPartApiModel.fromJS(resultData200, _mappings);
-      return result200;
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data.result;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
-    }
-    return Promise.resolve<ContentPartApiModel>(<any>null);
   }
 
   /**
@@ -829,10 +404,12 @@ export class ContentManagementServiceProxy extends AppServiceBase {
    * @param incloudeSettings (optional)
    * @return Success
    */
-  getTypeDefinition(
-    name: string | undefined,
-    incloudeSettings: boolean | undefined,
-  ): Promise<ContentTypeApiModel> {
+  getTypeDefinition(params: {
+    name: string | undefined;
+    incloudeSettings: boolean | undefined;
+  }): Promise<ContentTypeApiModel> {
+    const { name, incloudeSettings } = { ...params };
+
     let url_ = this.baseUrl + '/api/ContentManagement/GetTypeDefinition?';
 
     if (name !== undefined && name !== null) url_ += 'name=' + encodeURIComponent('' + name) + '&';
@@ -840,7 +417,6 @@ export class ContentManagementServiceProxy extends AppServiceBase {
     if (incloudeSettings !== undefined && incloudeSettings !== null)
       url_ += 'incloudeSettings=' + encodeURIComponent('' + incloudeSettings) + '&';
     url_ = url_.replace(/[?&]$/, '');
-
     let options_ = <AxiosRequestConfig>{
       method: 'GET',
       url: url_,
@@ -848,41 +424,9 @@ export class ContentManagementServiceProxy extends AppServiceBase {
         Accept: 'text/plain',
       },
     };
-
     return this.instance.request(options_).then((_response: AxiosResponse) => {
-      return this.transformResult(url_, _response, (_response: AxiosResponse) =>
-        this.processGetTypeDefinition(_response),
-      );
+      return this.transformResult(_response);
     });
-  }
-
-  protected processGetTypeDefinition(response: AxiosResponse): Promise<ContentTypeApiModel> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
-        }
-      }
-    }
-    let _mappings: { source: any; target: any }[] = [];
-    if (status === 200) {
-      const _responseText = response.data.result;
-      let result200: any = null;
-      let resultData200 = _responseText;
-      result200 = ContentTypeApiModel.fromJS(resultData200, _mappings);
-      return result200;
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data.result;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
-    }
-    return Promise.resolve<ContentTypeApiModel>(<any>null);
   }
 }
 
@@ -900,7 +444,6 @@ export class ContentMappingServiceProxy extends AppServiceBase {
     }
     this.baseUrl = '';
   }
-
   /**
    * OC Content to RDBMS
    * @param contentTypeName (optional)
@@ -912,7 +455,6 @@ export class ContentMappingServiceProxy extends AppServiceBase {
     if (contentTypeName !== undefined && contentTypeName !== null)
       url_ += 'contentTypeName=' + encodeURIComponent('' + contentTypeName) + '&';
     url_ = url_.replace(/[?&]$/, '');
-
     let options_ = <AxiosRequestConfig>{
       method: 'GET',
       url: url_,
@@ -920,40 +462,9 @@ export class ContentMappingServiceProxy extends AppServiceBase {
         Accept: 'text/plain',
       },
     };
-
     return this.instance.request(options_).then((_response: AxiosResponse) => {
-      return this.transformResult(url_, _response, (_response: AxiosResponse) =>
-        this.processGetContentTypeMappingRDBMSResult(_response),
-      );
+      return this.transformResult(_response);
     });
-  }
-
-  protected processGetContentTypeMappingRDBMSResult(response: AxiosResponse): Promise<any> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
-        }
-      }
-    }
-    if (status === 200) {
-      const _responseText = response.data.result;
-      let result200: any = null;
-      let resultData200 = _responseText;
-      result200 = resultData200 !== undefined ? resultData200 : <any>null;
-      return result200;
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data.result;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
-    }
-    return Promise.resolve<any>(<any>null);
   }
 
   /**
@@ -962,10 +473,12 @@ export class ContentMappingServiceProxy extends AppServiceBase {
    * @param contentTypeName (optional)
    * @return Success
    */
-  getRDBMSMappingContentTypeResult(
-    tableName: string | undefined,
-    contentTypeName: string | undefined,
-  ): Promise<any> {
+  getRDBMSMappingContentTypeResult(params: {
+    tableName: string | undefined;
+    contentTypeName: string | undefined;
+  }): Promise<any> {
+    const { tableName, contentTypeName } = { ...params };
+
     let url_ = this.baseUrl + '/api/ContentMapping/GetRDBMSMappingContentTypeResult?';
 
     if (tableName !== undefined && tableName !== null)
@@ -974,7 +487,6 @@ export class ContentMappingServiceProxy extends AppServiceBase {
     if (contentTypeName !== undefined && contentTypeName !== null)
       url_ += 'contentTypeName=' + encodeURIComponent('' + contentTypeName) + '&';
     url_ = url_.replace(/[?&]$/, '');
-
     let options_ = <AxiosRequestConfig>{
       method: 'GET',
       url: url_,
@@ -982,40 +494,9 @@ export class ContentMappingServiceProxy extends AppServiceBase {
         Accept: 'text/plain',
       },
     };
-
     return this.instance.request(options_).then((_response: AxiosResponse) => {
-      return this.transformResult(url_, _response, (_response: AxiosResponse) =>
-        this.processGetRDBMSMappingContentTypeResult(_response),
-      );
+      return this.transformResult(_response);
     });
-  }
-
-  protected processGetRDBMSMappingContentTypeResult(response: AxiosResponse): Promise<any> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
-        }
-      }
-    }
-    if (status === 200) {
-      const _responseText = response.data.result;
-      let result200: any = null;
-      let resultData200 = _responseText;
-      result200 = resultData200 !== undefined ? resultData200 : <any>null;
-      return result200;
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data.result;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
-    }
-    return Promise.resolve<any>(<any>null);
   }
 }
 
@@ -1033,16 +514,17 @@ export class ExcelServiceProxy extends AppServiceBase {
     }
     this.baseUrl = '';
   }
-
   /**
    * @param fileFullPath (optional)
    * @param rowFilterExpression (optional)
    * @return Success
    */
-  getExcelDataFromConfig(
-    fileFullPath: string | undefined,
-    rowFilterExpression: string | undefined,
-  ): Promise<any> {
+  getExcelDataFromConfig(params: {
+    fileFullPath: string | undefined;
+    rowFilterExpression: string | undefined;
+  }): Promise<any> {
+    const { fileFullPath, rowFilterExpression } = { ...params };
+
     let url_ = this.baseUrl + '/api/Excel/GetExcelDataFromConfig?';
 
     if (fileFullPath !== undefined && fileFullPath !== null)
@@ -1051,7 +533,6 @@ export class ExcelServiceProxy extends AppServiceBase {
     if (rowFilterExpression !== undefined && rowFilterExpression !== null)
       url_ += 'rowFilterExpression=' + encodeURIComponent('' + rowFilterExpression) + '&';
     url_ = url_.replace(/[?&]$/, '');
-
     let options_ = <AxiosRequestConfig>{
       method: 'GET',
       url: url_,
@@ -1059,40 +540,9 @@ export class ExcelServiceProxy extends AppServiceBase {
         Accept: 'text/plain',
       },
     };
-
     return this.instance.request(options_).then((_response: AxiosResponse) => {
-      return this.transformResult(url_, _response, (_response: AxiosResponse) =>
-        this.processGetExcelDataFromConfig(_response),
-      );
+      return this.transformResult(_response);
     });
-  }
-
-  protected processGetExcelDataFromConfig(response: AxiosResponse): Promise<any> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
-        }
-      }
-    }
-    if (status === 200) {
-      const _responseText = response.data.result;
-      let result200: any = null;
-      let resultData200 = _responseText;
-      result200 = resultData200 !== undefined ? resultData200 : <any>null;
-      return result200;
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data.result;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
-    }
-    return Promise.resolve<any>(<any>null);
   }
 
   /**
@@ -1101,11 +551,13 @@ export class ExcelServiceProxy extends AppServiceBase {
    * @param rowFilterExpression (optional)
    * @return Success
    */
-  getProcessedData(
-    fileFullPath: string | undefined,
-    configDocumentId: string | undefined,
-    rowFilterExpression: string | undefined,
-  ): Promise<any[]> {
+  getProcessedData(params: {
+    fileFullPath: string | undefined;
+    configDocumentId: string | undefined;
+    rowFilterExpression: string | undefined;
+  }): Promise<any[]> {
+    const { fileFullPath, configDocumentId, rowFilterExpression } = { ...params };
+
     let url_ = this.baseUrl + '/api/Excel/GetProcessedData?';
 
     if (fileFullPath !== undefined && fileFullPath !== null)
@@ -1117,7 +569,6 @@ export class ExcelServiceProxy extends AppServiceBase {
     if (rowFilterExpression !== undefined && rowFilterExpression !== null)
       url_ += 'rowFilterExpression=' + encodeURIComponent('' + rowFilterExpression) + '&';
     url_ = url_.replace(/[?&]$/, '');
-
     let options_ = <AxiosRequestConfig>{
       method: 'GET',
       url: url_,
@@ -1125,43 +576,9 @@ export class ExcelServiceProxy extends AppServiceBase {
         Accept: 'text/plain',
       },
     };
-
     return this.instance.request(options_).then((_response: AxiosResponse) => {
-      return this.transformResult(url_, _response, (_response: AxiosResponse) =>
-        this.processGetProcessedData(_response),
-      );
+      return this.transformResult(_response);
     });
-  }
-
-  protected processGetProcessedData(response: AxiosResponse): Promise<any[]> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
-        }
-      }
-    }
-    if (status === 200) {
-      const _responseText = response.data.result;
-      let result200: any = null;
-      let resultData200 = _responseText;
-      if (Array.isArray(resultData200)) {
-        result200 = [] as any;
-        for (let item of resultData200) result200!.push(item);
-      }
-      return result200;
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data.result;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
-    }
-    return Promise.resolve<any[]>(<any>null);
   }
 
   /**
@@ -1170,7 +587,6 @@ export class ExcelServiceProxy extends AppServiceBase {
   getAllExcelSettings(): Promise<SelectListItem[]> {
     let url_ = this.baseUrl + '/api/Excel/GetAllExcelSettings';
     url_ = url_.replace(/[?&]$/, '');
-
     let options_ = <AxiosRequestConfig>{
       method: 'GET',
       url: url_,
@@ -1178,44 +594,9 @@ export class ExcelServiceProxy extends AppServiceBase {
         Accept: 'text/plain',
       },
     };
-
     return this.instance.request(options_).then((_response: AxiosResponse) => {
-      return this.transformResult(url_, _response, (_response: AxiosResponse) =>
-        this.processGetAllExcelSettings(_response),
-      );
+      return this.transformResult(_response);
     });
-  }
-
-  protected processGetAllExcelSettings(response: AxiosResponse): Promise<SelectListItem[]> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
-        }
-      }
-    }
-    let _mappings: { source: any; target: any }[] = [];
-    if (status === 200) {
-      const _responseText = response.data.result;
-      let result200: any = null;
-      let resultData200 = _responseText;
-      if (Array.isArray(resultData200)) {
-        result200 = [] as any;
-        for (let item of resultData200) result200!.push(SelectListItem.fromJS(item, _mappings));
-      }
-      return result200;
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data.result;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
-    }
-    return Promise.resolve<SelectListItem[]>(<any>null);
   }
 }
 
@@ -1233,7 +614,6 @@ export class RDBMSServiceProxy extends AppServiceBase {
     }
     this.baseUrl = '';
   }
-
   /**
    * Get all Connection Config
    * @return Success
@@ -1241,7 +621,6 @@ export class RDBMSServiceProxy extends AppServiceBase {
   getAllDbConnecton(): Promise<ConnectionConfigModel[]> {
     let url_ = this.baseUrl + '/api/RDBMS/GetAllDbConnecton';
     url_ = url_.replace(/[?&]$/, '');
-
     let options_ = <AxiosRequestConfig>{
       method: 'GET',
       url: url_,
@@ -1249,45 +628,9 @@ export class RDBMSServiceProxy extends AppServiceBase {
         Accept: 'text/plain',
       },
     };
-
     return this.instance.request(options_).then((_response: AxiosResponse) => {
-      return this.transformResult(url_, _response, (_response: AxiosResponse) =>
-        this.processGetAllDbConnecton(_response),
-      );
+      return this.transformResult(_response);
     });
-  }
-
-  protected processGetAllDbConnecton(response: AxiosResponse): Promise<ConnectionConfigModel[]> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
-        }
-      }
-    }
-    let _mappings: { source: any; target: any }[] = [];
-    if (status === 200) {
-      const _responseText = response.data.result;
-      let result200: any = null;
-      let resultData200 = _responseText;
-      if (Array.isArray(resultData200)) {
-        result200 = [] as any;
-        for (let item of resultData200)
-          result200!.push(ConnectionConfigModel.fromJS(item, _mappings));
-      }
-      return result200;
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data.result;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
-    }
-    return Promise.resolve<ConnectionConfigModel[]>(<any>null);
   }
 
   /**
@@ -1299,13 +642,17 @@ export class RDBMSServiceProxy extends AppServiceBase {
    * @param skipCount (optional)
    * @return Success
    */
-  getAllTables(
-    connectionConfigId: string | undefined,
-    disableCache: boolean | undefined,
-    filterText: string | undefined,
-    maxResultCount: number | undefined,
-    skipCount: number | undefined,
-  ): Promise<DbTableInfoDto[]> {
+  getAllTables(params: {
+    connectionConfigId: string | undefined;
+    disableCache: boolean | undefined;
+    filterText: string | undefined;
+    maxResultCount: number | undefined;
+    skipCount: number | undefined;
+  }): Promise<DbTableInfoDto[]> {
+    const { connectionConfigId, disableCache, filterText, maxResultCount, skipCount } = {
+      ...params,
+    };
+
     let url_ = this.baseUrl + '/api/RDBMS/GetAllTables?';
 
     if (connectionConfigId !== undefined && connectionConfigId !== null)
@@ -1323,7 +670,6 @@ export class RDBMSServiceProxy extends AppServiceBase {
     if (skipCount !== undefined && skipCount !== null)
       url_ += 'SkipCount=' + encodeURIComponent('' + skipCount) + '&';
     url_ = url_.replace(/[?&]$/, '');
-
     let options_ = <AxiosRequestConfig>{
       method: 'GET',
       url: url_,
@@ -1331,44 +677,9 @@ export class RDBMSServiceProxy extends AppServiceBase {
         Accept: 'text/plain',
       },
     };
-
     return this.instance.request(options_).then((_response: AxiosResponse) => {
-      return this.transformResult(url_, _response, (_response: AxiosResponse) =>
-        this.processGetAllTables(_response),
-      );
+      return this.transformResult(_response);
     });
-  }
-
-  protected processGetAllTables(response: AxiosResponse): Promise<DbTableInfoDto[]> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
-        }
-      }
-    }
-    let _mappings: { source: any; target: any }[] = [];
-    if (status === 200) {
-      const _responseText = response.data.result;
-      let result200: any = null;
-      let resultData200 = _responseText;
-      if (Array.isArray(resultData200)) {
-        result200 = [] as any;
-        for (let item of resultData200) result200!.push(DbTableInfoDto.fromJS(item, _mappings));
-      }
-      return result200;
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data.result;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
-    }
-    return Promise.resolve<DbTableInfoDto[]>(<any>null);
   }
 
   /**
@@ -1376,10 +687,12 @@ export class RDBMSServiceProxy extends AppServiceBase {
    * @param tableName (optional) 表名，如：dbo.table1
    * @return Success
    */
-  getTableDetails(
-    connectionConfigId: string | undefined,
-    tableName: string | undefined,
-  ): Promise<DbTableInfoDto> {
+  getTableDetails(params: {
+    connectionConfigId: string | undefined;
+    tableName: string | undefined;
+  }): Promise<DbTableInfoDto> {
+    const { connectionConfigId, tableName } = { ...params };
+
     let url_ = this.baseUrl + '/api/RDBMS/GetTableDetails?';
 
     if (connectionConfigId !== undefined && connectionConfigId !== null)
@@ -1388,7 +701,6 @@ export class RDBMSServiceProxy extends AppServiceBase {
     if (tableName !== undefined && tableName !== null)
       url_ += 'tableName=' + encodeURIComponent('' + tableName) + '&';
     url_ = url_.replace(/[?&]$/, '');
-
     let options_ = <AxiosRequestConfig>{
       method: 'GET',
       url: url_,
@@ -1396,41 +708,9 @@ export class RDBMSServiceProxy extends AppServiceBase {
         Accept: 'text/plain',
       },
     };
-
     return this.instance.request(options_).then((_response: AxiosResponse) => {
-      return this.transformResult(url_, _response, (_response: AxiosResponse) =>
-        this.processGetTableDetails(_response),
-      );
+      return this.transformResult(_response);
     });
-  }
-
-  protected processGetTableDetails(response: AxiosResponse): Promise<DbTableInfoDto> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
-        }
-      }
-    }
-    let _mappings: { source: any; target: any }[] = [];
-    if (status === 200) {
-      const _responseText = response.data.result;
-      let result200: any = null;
-      let resultData200 = _responseText;
-      result200 = DbTableInfoDto.fromJS(resultData200, _mappings);
-      return result200;
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data.result;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
-    }
-    return Promise.resolve<DbTableInfoDto>(<any>null);
   }
 
   /**
@@ -1438,10 +718,12 @@ export class RDBMSServiceProxy extends AppServiceBase {
    * @param tableName (optional)
    * @return Success
    */
-  generateRecipe(
-    connectionConfigId: string | undefined,
-    tableName: string | undefined,
-  ): Promise<string> {
+  generateRecipe(params: {
+    connectionConfigId: string | undefined;
+    tableName: string | undefined;
+  }): Promise<string> {
+    const { connectionConfigId, tableName } = { ...params };
+
     let url_ = this.baseUrl + '/api/RDBMS/GenerateRecipe?';
 
     if (connectionConfigId !== undefined && connectionConfigId !== null)
@@ -1450,7 +732,6 @@ export class RDBMSServiceProxy extends AppServiceBase {
     if (tableName !== undefined && tableName !== null)
       url_ += 'tableName=' + encodeURIComponent('' + tableName) + '&';
     url_ = url_.replace(/[?&]$/, '');
-
     let options_ = <AxiosRequestConfig>{
       method: 'GET',
       url: url_,
@@ -1458,40 +739,9 @@ export class RDBMSServiceProxy extends AppServiceBase {
         Accept: 'text/plain',
       },
     };
-
     return this.instance.request(options_).then((_response: AxiosResponse) => {
-      return this.transformResult(url_, _response, (_response: AxiosResponse) =>
-        this.processGenerateRecipe(_response),
-      );
+      return this.transformResult(_response);
     });
-  }
-
-  protected processGenerateRecipe(response: AxiosResponse): Promise<string> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
-        }
-      }
-    }
-    if (status === 200) {
-      const _responseText = response.data.result;
-      let result200: any = null;
-      let resultData200 = _responseText;
-      result200 = resultData200 !== undefined ? resultData200 : <any>null;
-      return result200;
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data.result;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
-    }
-    return Promise.resolve<string>(<any>null);
   }
 
   /**
@@ -1500,7 +750,6 @@ export class RDBMSServiceProxy extends AppServiceBase {
   getAllOrchardCoreBaseFields(): Promise<OrchardCoreBaseField[]> {
     let url_ = this.baseUrl + '/api/RDBMS/GetAllOrchardCoreBaseFields';
     url_ = url_.replace(/[?&]$/, '');
-
     let options_ = <AxiosRequestConfig>{
       method: 'GET',
       url: url_,
@@ -1508,47 +757,9 @@ export class RDBMSServiceProxy extends AppServiceBase {
         Accept: 'text/plain',
       },
     };
-
     return this.instance.request(options_).then((_response: AxiosResponse) => {
-      return this.transformResult(url_, _response, (_response: AxiosResponse) =>
-        this.processGetAllOrchardCoreBaseFields(_response),
-      );
+      return this.transformResult(_response);
     });
-  }
-
-  protected processGetAllOrchardCoreBaseFields(
-    response: AxiosResponse,
-  ): Promise<OrchardCoreBaseField[]> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
-        }
-      }
-    }
-    let _mappings: { source: any; target: any }[] = [];
-    if (status === 200) {
-      const _responseText = response.data.result;
-      let result200: any = null;
-      let resultData200 = _responseText;
-      if (Array.isArray(resultData200)) {
-        result200 = [] as any;
-        for (let item of resultData200)
-          result200!.push(OrchardCoreBaseField.fromJS(item, _mappings));
-      }
-      return result200;
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data.result;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
-    }
-    return Promise.resolve<OrchardCoreBaseField[]>(<any>null);
   }
 
   /**
@@ -1559,9 +770,7 @@ export class RDBMSServiceProxy extends AppServiceBase {
   importDeploymentPackage(body: ImportJsonInupt | undefined): Promise<void> {
     let url_ = this.baseUrl + '/api/RDBMS/ImportDeploymentPackage';
     url_ = url_.replace(/[?&]$/, '');
-
     const content_ = JSON.stringify(body);
-
     let options_ = <AxiosRequestConfig>{
       data: content_,
       method: 'POST',
@@ -1570,37 +779,9 @@ export class RDBMSServiceProxy extends AppServiceBase {
         'Content-Type': 'application/json-patch+json',
       },
     };
-
     return this.instance.request(options_).then((_response: AxiosResponse) => {
-      return this.transformResult(url_, _response, (_response: AxiosResponse) =>
-        this.processImportDeploymentPackage(_response),
-      );
+      return this.transformResult(_response);
     });
-  }
-
-  protected processImportDeploymentPackage(response: AxiosResponse): Promise<void> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
-        }
-      }
-    }
-    if (status === 200) {
-      const _responseText = response.data.result;
-      return Promise.resolve<void>(<any>null);
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data.result;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
-    }
-    return Promise.resolve<void>(<any>null);
   }
 
   /**
@@ -1614,17 +795,29 @@ export class RDBMSServiceProxy extends AppServiceBase {
    * @param enableAutoSync (optional)
    * @return Success
    */
-  getTableInfo(
-    id: string | undefined,
-    configName: string | undefined,
-    contentTypeName: string | undefined,
-    syncMappingDeriction: SyncMappingDeriction,
-    connectionConfigId: string | undefined,
-    targetTable: string | undefined,
-    mappingData: string | undefined,
-    readOnly: boolean | undefined,
-    enableAutoSync: boolean | undefined,
-  ): Promise<any> {
+  getTableInfo(params: {
+    id: string | undefined;
+    configName: string | undefined;
+    contentTypeName: string | undefined;
+    syncMappingDeriction: SyncMappingDeriction;
+    connectionConfigId: string | undefined;
+    targetTable: string | undefined;
+    mappingData: string | undefined;
+    readOnly: boolean | undefined;
+    enableAutoSync: boolean | undefined;
+  }): Promise<any> {
+    const {
+      id,
+      configName,
+      contentTypeName,
+      syncMappingDeriction,
+      connectionConfigId,
+      targetTable,
+      mappingData,
+      readOnly,
+      enableAutoSync,
+    } = { ...params };
+
     let url_ = this.baseUrl + '/api/RDBMS/GetTableInfo?';
 
     if (id !== undefined && id !== null) url_ += 'Id=' + encodeURIComponent('' + id) + '&';
@@ -1653,7 +846,6 @@ export class RDBMSServiceProxy extends AppServiceBase {
     if (enableAutoSync !== undefined && enableAutoSync !== null)
       url_ += 'EnableAutoSync=' + encodeURIComponent('' + enableAutoSync) + '&';
     url_ = url_.replace(/[?&]$/, '');
-
     let options_ = <AxiosRequestConfig>{
       method: 'GET',
       url: url_,
@@ -1661,40 +853,9 @@ export class RDBMSServiceProxy extends AppServiceBase {
         Accept: 'text/plain',
       },
     };
-
     return this.instance.request(options_).then((_response: AxiosResponse) => {
-      return this.transformResult(url_, _response, (_response: AxiosResponse) =>
-        this.processGetTableInfo(_response),
-      );
+      return this.transformResult(_response);
     });
-  }
-
-  protected processGetTableInfo(response: AxiosResponse): Promise<any> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
-        }
-      }
-    }
-    if (status === 200) {
-      const _responseText = response.data.result;
-      let result200: any = null;
-      let resultData200 = _responseText;
-      result200 = resultData200 !== undefined ? resultData200 : <any>null;
-      return result200;
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data.result;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
-    }
-    return Promise.resolve<any>(<any>null);
   }
 }
 
@@ -1712,14 +873,12 @@ export class RolesServiceProxy extends AppServiceBase {
     }
     this.baseUrl = '';
   }
-
   /**
    * @return Success
    */
   getRoles(): Promise<RoleDto[]> {
     let url_ = this.baseUrl + '/api/Roles/GetRoles';
     url_ = url_.replace(/[?&]$/, '');
-
     let options_ = <AxiosRequestConfig>{
       method: 'GET',
       url: url_,
@@ -1727,44 +886,9 @@ export class RolesServiceProxy extends AppServiceBase {
         Accept: 'text/plain',
       },
     };
-
     return this.instance.request(options_).then((_response: AxiosResponse) => {
-      return this.transformResult(url_, _response, (_response: AxiosResponse) =>
-        this.processGetRoles(_response),
-      );
+      return this.transformResult(_response);
     });
-  }
-
-  protected processGetRoles(response: AxiosResponse): Promise<RoleDto[]> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
-        }
-      }
-    }
-    let _mappings: { source: any; target: any }[] = [];
-    if (status === 200) {
-      const _responseText = response.data.result;
-      let result200: any = null;
-      let resultData200 = _responseText;
-      if (Array.isArray(resultData200)) {
-        result200 = [] as any;
-        for (let item of resultData200) result200!.push(RoleDto.fromJS(item, _mappings));
-      }
-      return result200;
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data.result;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
-    }
-    return Promise.resolve<RoleDto[]>(<any>null);
   }
 
   /**
@@ -1776,7 +900,6 @@ export class RolesServiceProxy extends AppServiceBase {
 
     if (id !== undefined && id !== null) url_ += 'id=' + encodeURIComponent('' + id) + '&';
     url_ = url_.replace(/[?&]$/, '');
-
     let options_ = <AxiosRequestConfig>{
       method: 'GET',
       url: url_,
@@ -1784,41 +907,9 @@ export class RolesServiceProxy extends AppServiceBase {
         Accept: 'text/plain',
       },
     };
-
     return this.instance.request(options_).then((_response: AxiosResponse) => {
-      return this.transformResult(url_, _response, (_response: AxiosResponse) =>
-        this.processGetRoleDetails(_response),
-      );
+      return this.transformResult(_response);
     });
-  }
-
-  protected processGetRoleDetails(response: AxiosResponse): Promise<RoleDetailsDto> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
-        }
-      }
-    }
-    let _mappings: { source: any; target: any }[] = [];
-    if (status === 200) {
-      const _responseText = response.data.result;
-      let result200: any = null;
-      let resultData200 = _responseText;
-      result200 = RoleDetailsDto.fromJS(resultData200, _mappings);
-      return result200;
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data.result;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
-    }
-    return Promise.resolve<RoleDetailsDto>(<any>null);
   }
 
   /**
@@ -1828,9 +919,7 @@ export class RolesServiceProxy extends AppServiceBase {
   createRole(body: RoleDto | undefined): Promise<void> {
     let url_ = this.baseUrl + '/api/Roles/CreateRole';
     url_ = url_.replace(/[?&]$/, '');
-
     const content_ = JSON.stringify(body);
-
     let options_ = <AxiosRequestConfig>{
       data: content_,
       method: 'POST',
@@ -1839,37 +928,9 @@ export class RolesServiceProxy extends AppServiceBase {
         'Content-Type': 'application/json-patch+json',
       },
     };
-
     return this.instance.request(options_).then((_response: AxiosResponse) => {
-      return this.transformResult(url_, _response, (_response: AxiosResponse) =>
-        this.processCreateRole(_response),
-      );
+      return this.transformResult(_response);
     });
-  }
-
-  protected processCreateRole(response: AxiosResponse): Promise<void> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
-        }
-      }
-    }
-    if (status === 200) {
-      const _responseText = response.data.result;
-      return Promise.resolve<void>(<any>null);
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data.result;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
-    }
-    return Promise.resolve<void>(<any>null);
   }
 
   /**
@@ -1881,43 +942,14 @@ export class RolesServiceProxy extends AppServiceBase {
 
     if (id !== undefined && id !== null) url_ += 'id=' + encodeURIComponent('' + id) + '&';
     url_ = url_.replace(/[?&]$/, '');
-
     let options_ = <AxiosRequestConfig>{
       method: 'DELETE',
       url: url_,
       headers: {},
     };
-
     return this.instance.request(options_).then((_response: AxiosResponse) => {
-      return this.transformResult(url_, _response, (_response: AxiosResponse) =>
-        this.processDeleteRole(_response),
-      );
+      return this.transformResult(_response);
     });
-  }
-
-  protected processDeleteRole(response: AxiosResponse): Promise<void> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
-        }
-      }
-    }
-    if (status === 200) {
-      const _responseText = response.data.result;
-      return Promise.resolve<void>(<any>null);
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data.result;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
-    }
-    return Promise.resolve<void>(<any>null);
   }
 
   /**
@@ -1927,9 +959,7 @@ export class RolesServiceProxy extends AppServiceBase {
   updateRole(body: UpdateRoleInput | undefined): Promise<void> {
     let url_ = this.baseUrl + '/api/Roles/UpdateRole';
     url_ = url_.replace(/[?&]$/, '');
-
     const content_ = JSON.stringify(body);
-
     let options_ = <AxiosRequestConfig>{
       data: content_,
       method: 'PUT',
@@ -1938,37 +968,9 @@ export class RolesServiceProxy extends AppServiceBase {
         'Content-Type': 'application/json-patch+json',
       },
     };
-
     return this.instance.request(options_).then((_response: AxiosResponse) => {
-      return this.transformResult(url_, _response, (_response: AxiosResponse) =>
-        this.processUpdateRole(_response),
-      );
+      return this.transformResult(_response);
     });
-  }
-
-  protected processUpdateRole(response: AxiosResponse): Promise<void> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
-        }
-      }
-    }
-    if (status === 200) {
-      const _responseText = response.data.result;
-      return Promise.resolve<void>(<any>null);
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data.result;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
-    }
-    return Promise.resolve<void>(<any>null);
   }
 
   /**
@@ -1977,7 +979,6 @@ export class RolesServiceProxy extends AppServiceBase {
   getAllPermissions(): Promise<{ [key: string]: PermissionDto[] }> {
     let url_ = this.baseUrl + '/api/Roles/GetAllPermissions';
     url_ = url_.replace(/[?&]$/, '');
-
     let options_ = <AxiosRequestConfig>{
       method: 'GET',
       url: url_,
@@ -1985,51 +986,9 @@ export class RolesServiceProxy extends AppServiceBase {
         Accept: 'text/plain',
       },
     };
-
     return this.instance.request(options_).then((_response: AxiosResponse) => {
-      return this.transformResult(url_, _response, (_response: AxiosResponse) =>
-        this.processGetAllPermissions(_response),
-      );
+      return this.transformResult(_response);
     });
-  }
-
-  protected processGetAllPermissions(
-    response: AxiosResponse,
-  ): Promise<{ [key: string]: PermissionDto[] }> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
-        }
-      }
-    }
-    let _mappings: { source: any; target: any }[] = [];
-    if (status === 200) {
-      const _responseText = response.data.result;
-      let result200: any = null;
-      let resultData200 = _responseText;
-      if (resultData200) {
-        result200 = {} as any;
-        for (let key in resultData200) {
-          if (resultData200.hasOwnProperty(key))
-            result200![key] = resultData200[key]
-              ? resultData200[key].map((i: any) => PermissionDto.fromJS(i, _mappings))
-              : [];
-        }
-      }
-      return result200;
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data.result;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
-    }
-    return Promise.resolve<{ [key: string]: PermissionDto[] }>(<any>null);
   }
 }
 
@@ -2047,7 +1006,6 @@ export class UserServiceProxy extends AppServiceBase {
     }
     this.baseUrl = '';
   }
-
   /**
    * @param searchText (optional)
    * @param originalSearchText (optional)
@@ -2056,16 +1014,27 @@ export class UserServiceProxy extends AppServiceBase {
    * @param pageSize (optional)
    * @return Success
    */
-  getAll(
-    searchText: string | undefined,
-    originalSearchText: string | undefined,
-    order: Order,
-    filter: Filter,
-    selectedRole: string | undefined,
-    bulkAction: BulkAction,
-    pageNum: number | undefined,
-    pageSize: number | undefined,
-  ): Promise<PagedResultDtoOfUserDto> {
+  getAll(params: {
+    searchText: string | undefined;
+    originalSearchText: string | undefined;
+    order: Order;
+    filter: Filter;
+    selectedRole: string | undefined;
+    bulkAction: BulkAction;
+    pageNum: number | undefined;
+    pageSize: number | undefined;
+  }): Promise<PagedResultDtoOfUserDto> {
+    const {
+      searchText,
+      originalSearchText,
+      order,
+      filter,
+      selectedRole,
+      bulkAction,
+      pageNum,
+      pageSize,
+    } = { ...params };
+
     let url_ = this.baseUrl + '/api/User/GetAll?';
 
     if (searchText !== undefined && searchText !== null)
@@ -2092,7 +1061,6 @@ export class UserServiceProxy extends AppServiceBase {
     if (pageSize !== undefined && pageSize !== null)
       url_ += 'PageSize=' + encodeURIComponent('' + pageSize) + '&';
     url_ = url_.replace(/[?&]$/, '');
-
     let options_ = <AxiosRequestConfig>{
       method: 'GET',
       url: url_,
@@ -2100,41 +1068,9 @@ export class UserServiceProxy extends AppServiceBase {
         Accept: 'text/plain',
       },
     };
-
     return this.instance.request(options_).then((_response: AxiosResponse) => {
-      return this.transformResult(url_, _response, (_response: AxiosResponse) =>
-        this.processGetAll(_response),
-      );
+      return this.transformResult(_response);
     });
-  }
-
-  protected processGetAll(response: AxiosResponse): Promise<PagedResultDtoOfUserDto> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
-        }
-      }
-    }
-    let _mappings: { source: any; target: any }[] = [];
-    if (status === 200) {
-      const _responseText = response.data.result;
-      let result200: any = null;
-      let resultData200 = _responseText;
-      result200 = PagedResultDtoOfUserDto.fromJS(resultData200, _mappings);
-      return result200;
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data.result;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
-    }
-    return Promise.resolve<PagedResultDtoOfUserDto>(<any>null);
   }
 
   /**
@@ -2144,9 +1080,7 @@ export class UserServiceProxy extends AppServiceBase {
   bulkAction(body: UserIndexOptionsDto | undefined): Promise<void> {
     let url_ = this.baseUrl + '/api/User/BulkAction';
     url_ = url_.replace(/[?&]$/, '');
-
     const content_ = JSON.stringify(body);
-
     let options_ = <AxiosRequestConfig>{
       data: content_,
       method: 'POST',
@@ -2155,37 +1089,9 @@ export class UserServiceProxy extends AppServiceBase {
         'Content-Type': 'application/json-patch+json',
       },
     };
-
     return this.instance.request(options_).then((_response: AxiosResponse) => {
-      return this.transformResult(url_, _response, (_response: AxiosResponse) =>
-        this.processBulkAction(_response),
-      );
+      return this.transformResult(_response);
     });
-  }
-
-  protected processBulkAction(response: AxiosResponse): Promise<void> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
-        }
-      }
-    }
-    if (status === 200) {
-      const _responseText = response.data.result;
-      return Promise.resolve<void>(<any>null);
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data.result;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
-    }
-    return Promise.resolve<void>(<any>null);
   }
 
   /**
@@ -2195,9 +1101,7 @@ export class UserServiceProxy extends AppServiceBase {
   createUser(body: UserDto | undefined): Promise<void> {
     let url_ = this.baseUrl + '/api/User/CreateUser';
     url_ = url_.replace(/[?&]$/, '');
-
     const content_ = JSON.stringify(body);
-
     let options_ = <AxiosRequestConfig>{
       data: content_,
       method: 'POST',
@@ -2206,37 +1110,9 @@ export class UserServiceProxy extends AppServiceBase {
         'Content-Type': 'application/json-patch+json',
       },
     };
-
     return this.instance.request(options_).then((_response: AxiosResponse) => {
-      return this.transformResult(url_, _response, (_response: AxiosResponse) =>
-        this.processCreateUser(_response),
-      );
+      return this.transformResult(_response);
     });
-  }
-
-  protected processCreateUser(response: AxiosResponse): Promise<void> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
-        }
-      }
-    }
-    if (status === 200) {
-      const _responseText = response.data.result;
-      return Promise.resolve<void>(<any>null);
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data.result;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
-    }
-    return Promise.resolve<void>(<any>null);
   }
 
   /**
@@ -2248,7 +1124,6 @@ export class UserServiceProxy extends AppServiceBase {
 
     if (id !== undefined && id !== null) url_ += 'id=' + encodeURIComponent('' + id) + '&';
     url_ = url_.replace(/[?&]$/, '');
-
     let options_ = <AxiosRequestConfig>{
       method: 'GET',
       url: url_,
@@ -2256,41 +1131,9 @@ export class UserServiceProxy extends AppServiceBase {
         Accept: 'text/plain',
       },
     };
-
     return this.instance.request(options_).then((_response: AxiosResponse) => {
-      return this.transformResult(url_, _response, (_response: AxiosResponse) =>
-        this.processGetUser(_response),
-      );
+      return this.transformResult(_response);
     });
-  }
-
-  protected processGetUser(response: AxiosResponse): Promise<UserDto> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
-        }
-      }
-    }
-    let _mappings: { source: any; target: any }[] = [];
-    if (status === 200) {
-      const _responseText = response.data.result;
-      let result200: any = null;
-      let resultData200 = _responseText;
-      result200 = UserDto.fromJS(resultData200, _mappings);
-      return result200;
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data.result;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
-    }
-    return Promise.resolve<UserDto>(<any>null);
   }
 
   /**
@@ -2300,9 +1143,7 @@ export class UserServiceProxy extends AppServiceBase {
   update(body: UserDto | undefined): Promise<void> {
     let url_ = this.baseUrl + '/api/User/Update';
     url_ = url_.replace(/[?&]$/, '');
-
     const content_ = JSON.stringify(body);
-
     let options_ = <AxiosRequestConfig>{
       data: content_,
       method: 'POST',
@@ -2311,37 +1152,9 @@ export class UserServiceProxy extends AppServiceBase {
         'Content-Type': 'application/json-patch+json',
       },
     };
-
     return this.instance.request(options_).then((_response: AxiosResponse) => {
-      return this.transformResult(url_, _response, (_response: AxiosResponse) =>
-        this.processUpdate(_response),
-      );
+      return this.transformResult(_response);
     });
-  }
-
-  protected processUpdate(response: AxiosResponse): Promise<void> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
-        }
-      }
-    }
-    if (status === 200) {
-      const _responseText = response.data.result;
-      return Promise.resolve<void>(<any>null);
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data.result;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
-    }
-    return Promise.resolve<void>(<any>null);
   }
 
   /**
@@ -2353,43 +1166,14 @@ export class UserServiceProxy extends AppServiceBase {
 
     if (id !== undefined && id !== null) url_ += 'id=' + encodeURIComponent('' + id) + '&';
     url_ = url_.replace(/[?&]$/, '');
-
     let options_ = <AxiosRequestConfig>{
       method: 'POST',
       url: url_,
       headers: {},
     };
-
     return this.instance.request(options_).then((_response: AxiosResponse) => {
-      return this.transformResult(url_, _response, (_response: AxiosResponse) =>
-        this.processDelete(_response),
-      );
+      return this.transformResult(_response);
     });
-  }
-
-  protected processDelete(response: AxiosResponse): Promise<void> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
-        }
-      }
-    }
-    if (status === 200) {
-      const _responseText = response.data.result;
-      return Promise.resolve<void>(<any>null);
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data.result;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
-    }
-    return Promise.resolve<void>(<any>null);
   }
 
   /**
@@ -2399,9 +1183,7 @@ export class UserServiceProxy extends AppServiceBase {
   editPassword(body: ResetUserPasswordtInput | undefined): Promise<void> {
     let url_ = this.baseUrl + '/api/User/EditPassword';
     url_ = url_.replace(/[?&]$/, '');
-
     const content_ = JSON.stringify(body);
-
     let options_ = <AxiosRequestConfig>{
       data: content_,
       method: 'POST',
@@ -2410,37 +1192,9 @@ export class UserServiceProxy extends AppServiceBase {
         'Content-Type': 'application/json-patch+json',
       },
     };
-
     return this.instance.request(options_).then((_response: AxiosResponse) => {
-      return this.transformResult(url_, _response, (_response: AxiosResponse) =>
-        this.processEditPassword(_response),
-      );
+      return this.transformResult(_response);
     });
-  }
-
-  protected processEditPassword(response: AxiosResponse): Promise<void> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
-        }
-      }
-    }
-    if (status === 200) {
-      const _responseText = response.data.result;
-      return Promise.resolve<void>(<any>null);
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data.result;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
-    }
-    return Promise.resolve<void>(<any>null);
   }
 }
 
@@ -2458,7 +1212,6 @@ export class WorkflowApiServiceProxy extends AppServiceBase {
     }
     this.baseUrl = '';
   }
-
   /**
    * 尝试使用反射获取所有 工作流的JS扩展方法（IGlobalMethodProvider）
    * @return Success
@@ -2466,7 +1219,6 @@ export class WorkflowApiServiceProxy extends AppServiceBase {
   listAllGlobalMethods(): Promise<GlobalMethodDto[]> {
     let url_ = this.baseUrl + '/api/WorkflowApi/ListAllGlobalMethods';
     url_ = url_.replace(/[?&]$/, '');
-
     let options_ = <AxiosRequestConfig>{
       method: 'POST',
       url: url_,
@@ -2474,44 +1226,9 @@ export class WorkflowApiServiceProxy extends AppServiceBase {
         Accept: 'text/plain',
       },
     };
-
     return this.instance.request(options_).then((_response: AxiosResponse) => {
-      return this.transformResult(url_, _response, (_response: AxiosResponse) =>
-        this.processListAllGlobalMethods(_response),
-      );
+      return this.transformResult(_response);
     });
-  }
-
-  protected processListAllGlobalMethods(response: AxiosResponse): Promise<GlobalMethodDto[]> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
-        }
-      }
-    }
-    let _mappings: { source: any; target: any }[] = [];
-    if (status === 200) {
-      const _responseText = response.data.result;
-      let result200: any = null;
-      let resultData200 = _responseText;
-      if (Array.isArray(resultData200)) {
-        result200 = [] as any;
-        for (let item of resultData200) result200!.push(GlobalMethodDto.fromJS(item, _mappings));
-      }
-      return result200;
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data.result;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
-    }
-    return Promise.resolve<GlobalMethodDto[]>(<any>null);
   }
 }
 
@@ -3004,20 +1721,20 @@ export class PagedResultDtoOfUserDto {
 }
 
 export class PermissionDto {
-  readonly name!: string | null;
+  name!: string | null;
   description!: string | null;
   category!: string | null;
-  readonly impliedBy!: PermissionDto[] | null;
+  impliedBy!: PermissionDto[] | null;
 
   init(_data?: any, _mappings?: any) {
     if (_data) {
-      (<any>this).name = _data['name'] !== undefined ? _data['name'] : <any>null;
+      this.name = _data['name'] !== undefined ? _data['name'] : <any>null;
       this.description = _data['description'] !== undefined ? _data['description'] : <any>null;
       this.category = _data['category'] !== undefined ? _data['category'] : <any>null;
       if (Array.isArray(_data['impliedBy'])) {
-        (<any>this).impliedBy = [] as any;
+        this.impliedBy = [] as any;
         for (let item of _data['impliedBy'])
-          (<any>this).impliedBy!.push(PermissionDto.fromJS(item, _mappings));
+          this.impliedBy!.push(PermissionDto.fromJS(item, _mappings));
       }
     }
   }
