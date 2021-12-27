@@ -1,7 +1,6 @@
 import { SelectProps } from 'ant-design-vue';
-import { Order } from '/@/api/app-service-proxies';
 // import { Filter } from '/@/api/app-service-proxies';
-import { getAllRoleList, isAccountExist } from '../../../api/demo/system';
+import { getAllRoleList, isAccountExist } from '/@/api/demo/system';
 import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
 
@@ -9,6 +8,7 @@ export const columns: BasicColumn[] = [
   {
     title: '用户名',
     dataIndex: 'userName',
+    sorter: true,
     width: 120,
   },
   // {
@@ -19,6 +19,7 @@ export const columns: BasicColumn[] = [
   {
     title: '邮箱',
     dataIndex: 'email',
+    sorter: true,
     width: 120,
   },
   // ,
@@ -44,26 +45,21 @@ export const searchFormSchema: FormSchema[] = [
     label: '关键字',
     component: 'Input',
     colProps: { span: 8 },
+    defaultValue: '',
   },
-  {
-    field: 'order',
-    label: '关键字',
-    component: 'Select',
-    componentProps: {
-      options: [
-        { value: Order.Name, label: 'Name' },
-        { value: Order.Email, label: 'Email' },
-      ],
-      defaultValue: Order.Name,
-    } as SelectProps,
-    colProps: { span: 8 },
-  },
-  {
-    field: 'selectedRole',
-    label: '关键字',
-    component: 'Select',
-    colProps: { span: 8 },
-  },
+  // {
+  //   field: 'order',
+  //   label: '排序',
+  //   component: 'Select',
+  //   componentProps: {
+  //     options: [
+  //       { value: 0, label: 'Name' },
+  //       { value: 1, label: 'Email' },
+  //     ],
+  //     defaultValue: 0,
+  //   } as SelectProps,
+  //   colProps: { span: 8 },
+  // },
 
   // {
   //   field: 'filter',

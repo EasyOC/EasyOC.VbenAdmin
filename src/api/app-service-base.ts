@@ -7,7 +7,7 @@ export class AppServiceBase {
   protected transformResult(response: AxiosResponse): Promise<any> {
     console.log('response.data.result', response);
 
-    return response.data.data;
+    return response.data.result;
   }
 
   protected isNotNull(arg: any): Boolean {

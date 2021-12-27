@@ -235,7 +235,6 @@ export class VAxios {
     });
   }
 
-
   removeFilterGet<T = any>(config: AxiosRequestConfig, options?: RequestOptions): Promise<T> {
     return this.removeFilterRequest({ ...config, method: 'GET' }, options);
   }

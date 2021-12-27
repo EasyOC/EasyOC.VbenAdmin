@@ -1,5 +1,4 @@
-import { defHttp, otherHttp } from '/@/utils/http/axios';
-import { AuthenticateResultModel } from '/@/api/abp-service-proxies';
+import { defHttp } from '/@/utils/http/axios';
 import { LoginParams, LoginResultModel, GetUserInfoModel } from './model/userModel';
 
 import { ErrorMessageMode } from '/#/axios';
@@ -46,5 +45,5 @@ export function getPermCode() {
 }
 
 export function doLogout() {
-  return defHttp.get({ url: Api.Logout });
+  return defHttp.removeFilterGet({ url: Api.Logout });
 }

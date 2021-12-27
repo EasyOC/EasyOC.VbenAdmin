@@ -2,12 +2,18 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "type": "chrome",
+      "name": "Attach to Edge",
+      "port": 3100,
+      "request": "attach",
+      "type": "pwa-msedge",
+      "webRoot": "${workspaceFolder}"
+    },
+    {
+      "name": "Launch Edge",
       "request": "launch",
-      "name": "Launch Chrome",
-      "url": "http://localhost:3100",
-      "webRoot": "${workspaceFolder}/src",
-      "sourceMaps": true
-    }
+      "type": "pwa-msedge",
+      "url": "http://localhost:8080",
+      "webRoot": "${workspaceFolder}"
+    },
   ]
 }

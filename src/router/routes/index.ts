@@ -12,6 +12,9 @@ const routeModuleList: AppRouteModule[] = [];
 
 Object.keys(modules).forEach((key) => {
   const mod = modules[key].default || {};
+  if (key.includes('/demo/')) {
+    return;
+  }
   const modList = Array.isArray(mod) ? [...mod] : [mod];
   routeModuleList.push(...modList);
 });

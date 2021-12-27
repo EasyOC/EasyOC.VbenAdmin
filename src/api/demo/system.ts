@@ -20,13 +20,13 @@ enum Api {
   setRoleStatus = '/system/setRoleStatus',
   MenuList = '/system/getMenuList',
   RolePageList = '/system/getRoleListByPage',
-  GetAllRoleList = '/system/getAllRoleList',
+  // GetAllRoleList = '/system/getAllRoleList',
 }
 
 export async function getAccountList(params: AccountParams) {
   // params.searchText = '';
-  // params.order = 0;
   console.log('param:', params);
+
   const data = await new UserServiceProxy().getAll(params);
   console.log(data, 'userList');
   return data;

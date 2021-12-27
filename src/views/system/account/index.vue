@@ -31,7 +31,7 @@
         />
       </template>
     </BasicTable>
-    <!-- <AccountModal @register="registerModal" @success="handleSuccess" /> -->
+    <AccountModal @register="registerModal" @success="handleSuccess" />
   </PageWrapper>
 </template>
 <script lang="ts">
@@ -74,18 +74,17 @@
         showTableSetting: true,
         bordered: true,
         showIndexColumn: true,
-        // handleSearchInfoFn(info) {
-        //   console.log('handleSearchInfoFn', info);
-        //   return info;
-        // },
-        // actionColumn: {
-        //   width: 120,
-        //   title: '操作',
-        //   dataIndex: 'action',
-        //   slots: { customRender: 'action' },
-        // },
+        handleSearchInfoFn(info) {
+          console.log('handleSearchInfoFn', info);
+          return info;
+        },
+        actionColumn: {
+          width: 120,
+          title: '操作',
+          dataIndex: 'action',
+          slots: { customRender: 'action' },
+        },
       });
-
       function handleCreate() {
         openModal(true, {
           isUpdate: false,

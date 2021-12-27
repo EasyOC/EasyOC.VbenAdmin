@@ -1,10 +1,15 @@
-import { Order } from '../../app-service-proxies';
+import { SortOrder } from '../../app-service-proxies';
 import { BasicPageParams, BasicFetchResult } from '/@/api/model/baseModel';
 
 export type AccountParams = BasicPageParams & {
   searchText: string | undefined;
-  order: Order;
   selectedRole: string | undefined;
+  sortField: string | undefined;
+  sortOrder: SortOrder | undefined;
+  hasOrder: boolean | undefined;
+  orderStr: string | undefined;
+  page: number | undefined;
+  pageSize: number | undefined;
 };
 
 export type RoleParams = {
