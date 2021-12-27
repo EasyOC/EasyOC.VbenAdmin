@@ -44,18 +44,17 @@ const transform: AxiosTransform = {
     // 错误的时候返回
 
     const { data } = res;
-    
+
     if (!data) {
       // return '[HTTP] Request has no return value';
       throw new Error(t('sys.api.apiRequestFailed'));
     }
     //  这里 code，result，message为 后台统一的字段，需要在 types.ts内修改为项目自己的接口返回格式
     const { code, result, success } = data;
-    let message = data.message|| data.error;
+    const message = data.message || data.error;
     // 这里逻辑可以根据项目进行修改
-    const hasSuccess = data && (success||
-      (Reflect.has(data, 'code') && code === ResultEnum.SUCCESS) 
-                               );
+    const hasSuccess =
+      data && (success || (Reflect.has(data, 'code') && code === ResultEnum.SUCCESS));
     if (hasSuccess) {
       return result;
     }
@@ -203,10 +202,10 @@ function createAxios(opt?: Partial<CreateAxiosOptions>) {
         // See https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication#authentication_schemes
         // authentication schemes，e.g: Bearer
         // authenticationScheme: 'Bearer',
-        authenticationScheme: 'Bearer ',
+        authenticationScheme: 'Bearer',
         timeout: 10 * 1000,
         // 基础接口地址
-        // baseURL: globSetting.apiUrl,
+        baseURL: globSetting.apiUrl,
 
         headers: { 'Content-Type': ContentTypeEnum.JSON },
         // 如果是form-data格式
@@ -248,7 +247,7 @@ export const defHttp = createAxios();
 // other api url
 export const otherHttp = createAxios({
   baseURL: globSetting.otherApiUrl,
-  authenticationScheme: 'Bearer ',
+  authenticationScheme: 'Bearer',
   // authenticationScheme: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjQiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiRzQ1MjczNDYiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJHdW9qdW4uQ2FpQHNhaW50LWdvYmFpbi5jb20iLCJBc3BOZXQuSWRlbnRpdHkuU2VjdXJpdHlTdGFtcCI6IkVNTklYWkxGNVlEUEtNTFZTQ1pLUTU2QktMN001UE9KIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjpbIlNhbGVzIiwiVXNlciJdLCJzdWIiOiI0IiwianRpIjoiMzEyNjEwM2QtMWJjYy00MzA4LThjYzAtMDQ0M2FlMWM3MzQyIiwiaWF0IjoxNjQwMTYzNzA4LCJuYmYiOjE2NDAxNjM3MDgsImV4cCI6MTY0MDI1MDEwOCwiaXNzIjoiUGxleHVzIiwiYXVkIjoiUGxleHVzIn0.MnZ9_tE3qC2nkGAFpO3vwfBlQULp9C_TnsqjgH4c8NQ',
   timeout: 10 * 1000,
   requestOptions: {

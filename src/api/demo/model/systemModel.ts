@@ -1,15 +1,10 @@
-import { BulkAction, Filter, Order } from '../../app-service-proxies';
+import { Order } from '../../app-service-proxies';
 import { BasicPageParams, BasicFetchResult } from '/@/api/model/baseModel';
 
 export type AccountParams = BasicPageParams & {
   searchText: string | undefined;
-  originalSearchText: string | undefined;
   order: Order;
-  filter: Filter;
   selectedRole: string | undefined;
-  bulkAction: BulkAction;
-  pageNum: number | undefined;
-  pageSize: number | undefined;
 };
 
 export type RoleParams = {

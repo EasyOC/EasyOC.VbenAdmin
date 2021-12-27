@@ -1,6 +1,7 @@
 import { SelectProps } from 'ant-design-vue';
-import { Filter } from '/@/api/app-service-proxies';
-import { getAllRoleList, isAccountExist } from '/@/api/demo/system';
+import { Order } from '/@/api/app-service-proxies';
+// import { Filter } from '/@/api/app-service-proxies';
+import { getAllRoleList, isAccountExist } from '../../../api/demo/system';
 import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
 
@@ -45,22 +46,42 @@ export const searchFormSchema: FormSchema[] = [
     colProps: { span: 8 },
   },
   {
-    field: 'filter',
-    label: '过滤',
+    field: 'order',
+    label: '关键字',
     component: 'Select',
     componentProps: {
       options: [
-        { value: Filter.All, label: 'All' },
-        { value: Filter.Approved, label: 'Approved' },
-        { value: Filter.Pending, label: 'Pending' },
-        { value: Filter.EmailPending, label: 'EmailPending' },
-        { value: Filter.Enabled, label: 'Enabled' },
-        { value: Filter.Disabled, label: 'Disabled' },
+        { value: Order.Name, label: 'Name' },
+        { value: Order.Email, label: 'Email' },
       ],
-      defaultActiveFirstOption: true,
+      defaultValue: Order.Name,
     } as SelectProps,
     colProps: { span: 8 },
   },
+  {
+    field: 'selectedRole',
+    label: '关键字',
+    component: 'Select',
+    colProps: { span: 8 },
+  },
+
+  // {
+  //   field: 'filter',
+  //   label: '过滤',
+  //   component: 'Select',
+  //   componentProps: {
+  //     options: [
+  //       { value: Filter.All, label: 'All' },
+  //       { value: Filter.Approved, label: 'Approved' },
+  //       { value: Filter.Pending, label: 'Pending' },
+  //       { value: Filter.EmailPending, label: 'EmailPending' },
+  //       { value: Filter.Enabled, label: 'Enabled' },
+  //       { value: Filter.Disabled, label: 'Disabled' },
+  //     ],
+  //     defaultActiveFirstOption: true,
+  //   } as SelectProps,
+  //   colProps: { span: 8 },
+  // },
 ];
 
 export const accountFormSchema: FormSchema[] = [

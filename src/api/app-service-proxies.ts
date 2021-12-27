@@ -1008,55 +1008,32 @@ export class UserServiceProxy extends AppServiceBase {
   }
   /**
    * @param searchText (optional)
-   * @param originalSearchText (optional)
    * @param selectedRole (optional)
-   * @param pageNum (optional)
+   * @param page (optional)
    * @param pageSize (optional)
    * @return Success
    */
   getAll(params: {
     searchText: string | undefined;
-    originalSearchText: string | undefined;
     order: Order;
-    filter: Filter;
     selectedRole: string | undefined;
-    bulkAction: BulkAction;
-    pageNum: number | undefined;
+    page: number | undefined;
     pageSize: number | undefined;
   }): Promise<PagedResultDtoOfUserDto> {
-    const {
-      searchText,
-      originalSearchText,
-      order,
-      filter,
-      selectedRole,
-      bulkAction,
-      pageNum,
-      pageSize,
-    } = { ...params };
+    const { searchText, order, selectedRole, page, pageSize } = { ...params };
 
     let url_ = this.baseUrl + '/api/User/GetAll?';
 
     if (searchText !== undefined && searchText !== null)
       url_ += 'SearchText=' + encodeURIComponent('' + searchText) + '&';
-
-    if (originalSearchText !== undefined && originalSearchText !== null)
-      url_ += 'OriginalSearchText=' + encodeURIComponent('' + originalSearchText) + '&';
     if (order === undefined || order === null)
       throw new Error("The parameter 'order' must be defined and cannot be null.");
     else url_ += 'Order=' + encodeURIComponent('' + order) + '&';
-    if (filter === undefined || filter === null)
-      throw new Error("The parameter 'filter' must be defined and cannot be null.");
-    else url_ += 'Filter=' + encodeURIComponent('' + filter) + '&';
 
     if (selectedRole !== undefined && selectedRole !== null)
       url_ += 'SelectedRole=' + encodeURIComponent('' + selectedRole) + '&';
-    if (bulkAction === undefined || bulkAction === null)
-      throw new Error("The parameter 'bulkAction' must be defined and cannot be null.");
-    else url_ += 'BulkAction=' + encodeURIComponent('' + bulkAction) + '&';
 
-    if (pageNum !== undefined && pageNum !== null)
-      url_ += 'PageNum=' + encodeURIComponent('' + pageNum) + '&';
+    if (page !== undefined && page !== null) url_ += 'Page=' + encodeURIComponent('' + page) + '&';
 
     if (pageSize !== undefined && pageSize !== null)
       url_ += 'PageSize=' + encodeURIComponent('' + pageSize) + '&';
@@ -1077,7 +1054,7 @@ export class UserServiceProxy extends AppServiceBase {
    * @param body (optional)
    * @return Success
    */
-  bulkAction(body: UserIndexOptionsDto | undefined): Promise<void> {
+  bulkAction(body: UsersBulkActionInput | undefined): Promise<void> {
     let url_ = this.baseUrl + '/api/User/BulkAction';
     url_ = url_.replace(/[?&]$/, '');
     const content_ = JSON.stringify(body);
@@ -2184,40 +2161,32 @@ export class UserDto {
   }
 }
 
-export class UserIndexOptionsDto {
-  searchText!: string | null;
-  originalSearchText!: string | null;
-  order!: UserIndexOptionsDtoOrder;
-  filter!: UserIndexOptionsDtoFilter;
-  selectedRole!: string | null;
-  bulkAction!: UserIndexOptionsDtoBulkAction;
+export class UsersBulkActionInput {
+  bulkAction!: UsersBulkActionInputBulkAction;
+  itemIds!: string[] | null;
 
   init(_data?: any, _mappings?: any) {
     if (_data) {
-      this.searchText = _data['searchText'] !== undefined ? _data['searchText'] : <any>null;
-      this.originalSearchText =
-        _data['originalSearchText'] !== undefined ? _data['originalSearchText'] : <any>null;
-      this.order = _data['order'] !== undefined ? _data['order'] : <any>null;
-      this.filter = _data['filter'] !== undefined ? _data['filter'] : <any>null;
-      this.selectedRole = _data['selectedRole'] !== undefined ? _data['selectedRole'] : <any>null;
       this.bulkAction = _data['bulkAction'] !== undefined ? _data['bulkAction'] : <any>null;
+      if (Array.isArray(_data['itemIds'])) {
+        this.itemIds = [] as any;
+        for (let item of _data['itemIds']) this.itemIds!.push(item);
+      }
     }
   }
 
-  static fromJS(data: any, _mappings?: any): UserIndexOptionsDto {
+  static fromJS(data: any, _mappings?: any): UsersBulkActionInput {
     data = typeof data === 'object' ? data : {};
-    return createInstance<UserIndexOptionsDto>(data, _mappings, UserIndexOptionsDto);
+    return createInstance<UsersBulkActionInput>(data, _mappings, UsersBulkActionInput);
   }
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
-    data['searchText'] = this.searchText !== undefined ? this.searchText : <any>null;
-    data['originalSearchText'] =
-      this.originalSearchText !== undefined ? this.originalSearchText : <any>null;
-    data['order'] = this.order !== undefined ? this.order : <any>null;
-    data['filter'] = this.filter !== undefined ? this.filter : <any>null;
-    data['selectedRole'] = this.selectedRole !== undefined ? this.selectedRole : <any>null;
     data['bulkAction'] = this.bulkAction !== undefined ? this.bulkAction : <any>null;
+    if (Array.isArray(this.itemIds)) {
+      data['itemIds'] = [];
+      for (let item of this.itemIds) data['itemIds'].push(item);
+    }
     return data;
   }
 }
@@ -2233,39 +2202,7 @@ export enum Order {
   Email = 1,
 }
 
-export enum Filter {
-  All = 0,
-  Approved = 1,
-  Pending = 2,
-  EmailPending = 3,
-  Enabled = 4,
-  Disabled = 5,
-}
-
-export enum BulkAction {
-  None = 0,
-  Delete = 1,
-  Enable = 2,
-  Disable = 3,
-  Approve = 4,
-  ChallengeEmail = 5,
-}
-
-export enum UserIndexOptionsDtoOrder {
-  Name = 0,
-  Email = 1,
-}
-
-export enum UserIndexOptionsDtoFilter {
-  All = 0,
-  Approved = 1,
-  Pending = 2,
-  EmailPending = 3,
-  Enabled = 4,
-  Disabled = 5,
-}
-
-export enum UserIndexOptionsDtoBulkAction {
+export enum UsersBulkActionInputBulkAction {
   None = 0,
   Delete = 1,
   Enable = 2,

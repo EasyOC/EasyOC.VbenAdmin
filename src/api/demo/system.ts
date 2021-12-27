@@ -1,4 +1,4 @@
-import { UserServiceProxy } from '../app-service-proxies';
+import { RolesServiceProxy, UserServiceProxy } from '../app-service-proxies';
 import {
   AccountParams,
   DeptListItem,
@@ -23,11 +23,14 @@ enum Api {
   GetAllRoleList = '/system/getAllRoleList',
 }
 
-export const getAccountList = async (params: AccountParams) => {
+export async function getAccountList(params: AccountParams) {
+  // params.searchText = '';
+  // params.order = 0;
+  console.log('param:', params);
   const data = await new UserServiceProxy().getAll(params);
   console.log(data, 'userList');
   return data;
-};
+}
 export const getDeptList = (params?: DeptListItem) =>
   defHttp.get<DeptListGetResultModel>({ url: Api.DeptList, params });
 
@@ -37,8 +40,11 @@ export const getMenuList = (params?: MenuParams) =>
 export const getRoleListByPage = (params?: RolePageParams) =>
   defHttp.get<RolePageListGetResultModel>({ url: Api.RolePageList, params });
 
-export const getAllRoleList = (params?: RoleParams) =>
-  defHttp.get<RoleListGetResultModel>({ url: Api.GetAllRoleList, params });
+export const getAllRoleList = async (params?: RoleParams) => {
+  const roles = await new RolesServiceProxy().getRoles();
+  return roles;
+  // defHttp.get<RoleListGetResultModel>({ url: Api.GetAllRoleList, params });
+};
 
 export const setRoleStatus = (id: number, status: string) =>
   defHttp.post({ url: Api.setRoleStatus, params: { id, status } });

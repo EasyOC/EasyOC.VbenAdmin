@@ -18,7 +18,7 @@
   import { CollapseContainer } from '/@/components/Container';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { PageWrapper } from '/@/components/Page';
-  import { isAccountExist } from '/@/api/demo/system';
+  import { isAccountExist } from '../../../api/demo/system';
 
   const schemas: FormSchema[] = [
     {

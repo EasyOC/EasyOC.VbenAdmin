@@ -31,14 +31,14 @@
         />
       </template>
     </BasicTable>
-    <AccountModal @register="registerModal" @success="handleSuccess" />
+    <!-- <AccountModal @register="registerModal" @success="handleSuccess" /> -->
   </PageWrapper>
 </template>
 <script lang="ts">
   import { defineComponent, reactive } from 'vue';
 
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
-  import { getAccountList } from '/@/api/demo/system';
+  import { getAccountList } from '../../../api/demo/system';
   import { PageWrapper } from '/@/components/Page';
   // import DeptTree from './DeptTree.vue';
 
@@ -64,7 +64,7 @@
         title: '账号列表',
         api: getAccountList,
         rowKey: 'id',
-        columns,
+        columns: columns,
         formConfig: {
           labelWidth: 120,
           schemas: searchFormSchema,
@@ -73,16 +73,17 @@
         useSearchForm: true,
         showTableSetting: true,
         bordered: true,
-        handleSearchInfoFn(info) {
-          console.log('handleSearchInfoFn', info);
-          return info;
-        },
-        actionColumn: {
-          width: 120,
-          title: '操作',
-          dataIndex: 'action',
-          slots: { customRender: 'action' },
-        },
+        showIndexColumn: true,
+        // handleSearchInfoFn(info) {
+        //   console.log('handleSearchInfoFn', info);
+        //   return info;
+        // },
+        // actionColumn: {
+        //   width: 120,
+        //   title: '操作',
+        //   dataIndex: 'action',
+        //   slots: { customRender: 'action' },
+        // },
       });
 
       function handleCreate() {
