@@ -23,27 +23,28 @@
         />
       </template>
     </BasicTable>
-    <RoleDrawer @register="registerDrawer" @success="handleSuccess" />
+    <!-- <RoleDrawer @register="registerDrawer" @success="handleSuccess" /> -->
   </div>
 </template>
 <script lang="ts">
   import { defineComponent } from 'vue';
 
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
-  import { getAllRoleList } from '../../../api/system';
-  import { useDrawer } from '/@/components/Drawer';
-  import RoleDrawer from './RoleDrawer.vue';
+  import { getAllTypes } from "../../../api/develop";
 
-  import { columns, searchFormSchema } from './role.data';
+  import { useDrawer } from '/@/components/Drawer';
+  import EditContentTypeDrawer from './EditContentTypeDrawer.vue';
+
+  import { columns, searchFormSchema } from './data';
 
   export default defineComponent({
     name: 'RoleManagement',
-    components: { BasicTable, RoleDrawer, TableAction },
+    components: { BasicTable, EditContentTypeDrawer, TableAction },
     setup() {
       const [registerDrawer, { openDrawer }] = useDrawer();
       const [registerTable, { reload }] = useTable({
         title: '角色列表',
-        api: getAllRoleList,
+        api: getAllTypes,
         columns,
         formConfig: {
           labelWidth: 120,

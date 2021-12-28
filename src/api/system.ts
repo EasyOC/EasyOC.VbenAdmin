@@ -1,4 +1,4 @@
-import { RolesServiceProxy, UserServiceProxy } from '../app-service-proxies';
+import { RolesServiceProxy, UserServiceProxy } from './app-service-proxies';
 import {
   AccountParams,
   DeptListItem,
@@ -10,7 +10,7 @@ import {
   // AccountListGetResultModel,
   RolePageListGetResultModel,
   RoleListGetResultModel,
-} from './model/systemModel';
+} from './demo/model/systemModel';
 import { defHttp } from '/@/utils/http/axios';
 
 enum Api {
