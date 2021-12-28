@@ -5,7 +5,7 @@ export class AppServiceBase {
   public ajax = defHttp.getAxios();
 
   protected transformResult(response: AxiosResponse): Promise<any> {
-    console.log('response.data.result', response);
+    console.log('response.data.result', response.data.result);
     const { status } = response;
     // return Promise.resolve(response.data.result);
     if (status === 200) {

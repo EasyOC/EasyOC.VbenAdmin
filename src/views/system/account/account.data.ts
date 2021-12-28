@@ -1,6 +1,8 @@
 import { SelectProps } from 'ant-design-vue';
+import { CheckboxProps } from 'ant-design-vue/lib/checkbox';
 // import { Filter } from '/@/api/app-service-proxies';
-import { getAllRoleList, isAccountExist } from '../../../api/system';
+import { getAllRoleList } from '../../../api/system';
+import { RolesServiceProxy } from '/@/api/app-service-proxies';
 import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
 
@@ -82,7 +84,7 @@ export const searchFormSchema: FormSchema[] = [
 
 export const accountFormSchema: FormSchema[] = [
   {
-    field: 'account',
+    field: 'userName',
     label: '用户名',
     component: 'Input',
     helpMessage: ['本字段演示异步验证', '不能输入带有admin的用户名'],
@@ -91,17 +93,17 @@ export const accountFormSchema: FormSchema[] = [
         required: true,
         message: '请输入用户名',
       },
-      {
-        validator(_, value) {
-          return new Promise((resolve, reject) => {
-            isAccountExist(value)
-              .then(() => resolve())
-              .catch((err) => {
-                reject(err.message || '验证失败');
-              });
-          });
-        },
-      },
+      // {
+      //   validator(_, value) {
+      //     return new Promise((resolve, reject) => {
+      //       isAccountExist(value)
+      //         .then(() => resolve())
+      //         .catch((err) => {
+      //           reject(err.message || '验证失败');
+      //         });
+      //     });
+      //   },
+      // },
     ],
   },
   {
@@ -113,35 +115,34 @@ export const accountFormSchema: FormSchema[] = [
   },
   {
     label: '角色',
-    field: 'role',
-    component: 'ApiSelect',
+    field: 'roleNames',
+    component: 'CheckboxGroup',
     componentProps: {
-      api: getAllRoleList,
-      labelField: 'roleName',
-      valueField: 'roleValue',
-    },
+      labelField: 'roleDescription',
+      valueField: 'roleName',
+    } as CheckboxProps,
     required: true,
   },
-  {
-    field: 'dept',
-    label: '所属部门',
-    component: 'TreeSelect',
-    componentProps: {
-      fieldNames: {
-        label: 'deptName',
-        key: 'id',
-        value: 'id',
-      },
-      getPopupContainer: () => document.body,
-    },
-    required: true,
-  },
-  {
-    field: 'nickname',
-    label: '昵称',
-    component: 'Input',
-    required: true,
-  },
+  // {
+  //   field: 'dept',
+  //   label: '所属部门',
+  //   component: 'TreeSelect',
+  //   componentProps: {
+  //     fieldNames: {
+  //       label: 'deptName',
+  //       key: 'id',
+  //       value: 'id',
+  //     },
+  //     getPopupContainer: () => document.body,
+  //   },
+  //   required: true,
+  // },
+  // {
+  //   field: 'nickname',
+  //   label: '昵称',
+  //   component: 'Input',
+  //   required: true,
+  // },
 
   {
     label: '邮箱',
