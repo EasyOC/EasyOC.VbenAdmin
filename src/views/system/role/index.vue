@@ -30,8 +30,7 @@
   import { defineComponent } from 'vue';
 
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
-  import { getAllRoleList } from '../../../api/demo/system';
-
+  import { getAllRoleList } from '../../../api/system';
   import { useDrawer } from '/@/components/Drawer';
   import RoleDrawer from './RoleDrawer.vue';
 

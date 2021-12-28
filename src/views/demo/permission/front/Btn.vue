@@ -8,7 +8,7 @@
     <CurrentPermissionMode />
 
     <p>
-      当前角色: <a> {{ userStore.getRoleList }} </a>
+      当前角色: <a> {{ userStore.getRoles }} </a>
     </p>
     <Alert class="mt-4" type="info" message="点击后请查看按钮变化" show-icon />
 
@@ -78,8 +78,8 @@
       return {
         userStore,
         RoleEnum,
-        isSuper: computed(() => userStore.getRoleList.includes(RoleEnum.SUPER)),
-        isTest: computed(() => userStore.getRoleList.includes(RoleEnum.TEST)),
+        isSuper: computed(() => userStore.getRoles.includes(RoleEnum.SUPER.toString())),
+        isTest: computed(() => userStore.getRoles.includes(RoleEnum.TEST.toString())),
         changeRole,
         hasPermission,
       };

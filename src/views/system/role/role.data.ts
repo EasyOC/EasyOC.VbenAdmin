@@ -1,10 +1,10 @@
 import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
-import { h } from 'vue';
-import { Switch } from 'ant-design-vue';
-import { setRoleStatus } from '../../../api/demo/system';
-import { useMessage } from '/@/hooks/web/useMessage';
-import { InputProps } from 'ant-design-vue/lib/input/inputProps';
+// import { h } from 'vue';
+// import { Switch } from 'ant-design-vue';
+// import { setRoleStatus } from '../../../api/system';
+// import { useMessage } from '/@/hooks/web/useMessage';
+// import { InputProps } from 'ant-design-vue/lib/input/inputProps';
 
 export const columns: BasicColumn[] = [
   {

@@ -102,10 +102,11 @@ export const usePermissionStore = defineStore({
       const appStore = useAppStoreWithOut();
 
       let routes: AppRouteRecordRaw[] = [];
-      const roleList = toRaw(userStore.getRoleList) || [];
+      const roleList = toRaw(userStore.getRoles) || [];
       const { permissionMode = projectSetting.permissionMode } = appStore.getProjectConfig;
 
       const routeFilter = (route: AppRouteRecordRaw) => {
+        console.log('route: ', route);
         const { meta } = route;
         const { roles } = meta || {};
         if (!roles) return true;

@@ -64,11 +64,11 @@ export function usePermission() {
 
     const permMode = projectSetting.permissionMode;
 
-    if ([PermissionModeEnum.ROUTE_MAPPING, PermissionModeEnum.ROLE].includes(permMode)) {
+    if ([PermissionModeEnum.ROUTE_MAPPING.toString(), PermissionModeEnum.ROLE.toString()].includes(permMode)) {
       if (!isArray(value)) {
-        return userStore.getRoleList?.includes(value as RoleEnum);
+        return userStore.getRoles?.includes(value as string);
       }
-      return (intersection(value, userStore.getRoleList) as RoleEnum[]).length > 0;
+      return (intersection(value, userStore.getRoles) as string[]).length > 0;
     }
 
     if (PermissionModeEnum.BACK === permMode) {
@@ -95,7 +95,7 @@ export function usePermission() {
     if (!isArray(roles)) {
       roles = [roles];
     }
-    userStore.setRoleList(roles);
+    userStore.setRoles(roles);
     await resume();
   }
 

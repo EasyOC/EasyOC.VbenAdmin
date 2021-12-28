@@ -1,6 +1,6 @@
 import { SelectProps } from 'ant-design-vue';
 // import { Filter } from '/@/api/app-service-proxies';
-import { getAllRoleList, isAccountExist } from '/@/api/demo/system';
+import { getAllRoleList, isAccountExist } from '../../../api/system';
 import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
 

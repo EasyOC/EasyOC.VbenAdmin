@@ -407,7 +407,11 @@ export type CellFormat =
   | ((text: string, record: Recordable, index: number) => string | number)
   | Map<string | number, any>;
 
-// @ts-ignore
+
+/**
+* 更多属性参考: https://next.antdv.com/components/table-cn#Column
+*/
+//@ts-ignore
 export interface BasicColumn extends ColumnProps {
   children?: BasicColumn[];
   filters?: {
