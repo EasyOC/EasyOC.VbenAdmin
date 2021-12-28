@@ -171,7 +171,10 @@ export const useUserStore = defineStore({
       this.setToken(undefined);
       this.setSessionTimeout(false);
       this.setUserInfo(null);
-      goLogin && router.push(PageEnum.BASE_LOGIN);
+      if(goLogin){
+        router.push({path: "/login"});
+        window.location.reload()
+      }
     },
 
     /**
