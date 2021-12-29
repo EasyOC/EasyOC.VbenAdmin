@@ -27,7 +27,7 @@
   import { formSchema } from './data';
   import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
   import { BasicTree, TreeItem } from '/@/components/Tree';
-
+  import { getMenuList } from '/@/api/sys/menu';
 
   export default defineComponent({
     name: 'EditContentTypeDrawer',

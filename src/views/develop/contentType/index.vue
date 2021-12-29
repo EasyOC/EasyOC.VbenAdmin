@@ -30,7 +30,7 @@
   import { defineComponent } from 'vue';
 
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
-  import { getAllTypes } from "../../../api/develop";
+  import { getAllTypes } from '../../../api/develop';
 
   import { useDrawer } from '/@/components/Drawer';
   import EditContentTypeDrawer from './EditContentTypeDrawer.vue';
@@ -39,6 +39,7 @@
 
   export default defineComponent({
     name: 'RoleManagement',
+    // eslint-disable-next-line vue/no-unused-components
     components: { BasicTable, EditContentTypeDrawer, TableAction },
     setup() {
       const [registerDrawer, { openDrawer }] = useDrawer();

@@ -23,7 +23,6 @@ const develop: AppRouteModule = {
         title: t('routes.develop.type'),
       },
     },
-    
   ],
 };
 
