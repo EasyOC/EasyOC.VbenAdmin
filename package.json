@@ -67,6 +67,7 @@
     "tinymce": "^5.10.2",
     "vditor": "^3.8.8",
     "vue": "^3.2.26",
+    "vue-class-component": "^8.0.0-rc.1",
     "vue-i18n": "^9.1.9",
     "vue-json-pretty": "^2.0.6",
     "vue-router": "^4.0.12",
