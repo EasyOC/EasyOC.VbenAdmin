@@ -38,13 +38,13 @@
   import { columns, searchFormSchema } from './data';
 
   export default defineComponent({
-    name: 'RoleManagement',
+    name: 'ContentType',
     // eslint-disable-next-line vue/no-unused-components
     components: { BasicTable, EditContentTypeDrawer, TableAction },
     setup() {
       const [registerDrawer, { openDrawer }] = useDrawer();
       const [registerTable, { reload }] = useTable({
-        title: '角色列表',
+        title: '类型列表',
         api: getAllTypes,
         columns,
         formConfig: {
