@@ -7,7 +7,7 @@
     width="500px"
     @ok="handleSubmit"
   >
-    <BasicForm @register="registerForm">
+    <!-- <BasicForm @register="registerForm">
       <template #menu="{ model, field }">
         <BasicTree
           v-model:value="model[field]"
@@ -18,7 +18,7 @@
           title="菜单分配"
         />
       </template>
-    </BasicForm>
+    </BasicForm> -->
   </BasicDrawer>
 </template>
 <script lang="ts">
