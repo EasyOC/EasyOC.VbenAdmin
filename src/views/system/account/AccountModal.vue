@@ -8,7 +8,7 @@
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { accountFormSchema } from './account.data';
-  import { getDeptList } from '../../../api/demo/system';
+  import { getAllRoleList } from '../../../api/system';
 
   export default defineComponent({
     name: 'AccountModal',
@@ -31,23 +31,23 @@
         resetFields();
         setModalProps({ confirmLoading: false });
         isUpdate.value = !!data?.isUpdate;
-
+        console.log('record', data.record);
         if (unref(isUpdate)) {
-          rowId.value = data.record.id;
+          rowId.value = data.record.userId;
           setFieldsValue({
             ...data.record,
           });
         }
+        const allRoles = await getAllRoleList();
 
-        const treeData = await getDeptList();
         updateSchema([
           {
             field: 'pwd',
             show: !unref(isUpdate),
           },
           {
-            field: 'dept',
-            componentProps: { treeData },
+            field: 'roleNames',
+            componentProps: { options: async () => allRoles },
           },
         ]);
       });

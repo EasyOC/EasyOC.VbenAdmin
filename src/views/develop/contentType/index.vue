@@ -1,8 +1,8 @@
 <template>
   <div>
-    <BasicTable @register="registerTable" @fetch-success="onFetchSuccess">
+    <BasicTable @register="registerTable">
       <template #toolbar>
-        <a-button type="primary" @click="handleCreate"> 新增菜单 </a-button>
+        <a-button type="primary" @click="handleCreate"> 新增角色 </a-button>
       </template>
       <template #action="{ record }">
         <TableAction
@@ -23,41 +23,38 @@
         />
       </template>
     </BasicTable>
-    <MenuDrawer @register="registerDrawer" @success="handleSuccess" />
+    <!-- <RoleDrawer @register="registerDrawer" @success="handleSuccess" /> -->
   </div>
 </template>
 <script lang="ts">
-  import { defineComponent, nextTick } from 'vue';
+  import { defineComponent } from 'vue';
 
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
-  import { getMenuList } from '../../../api/system';
+  import { getAllTypes } from '../../../api/develop';
 
   import { useDrawer } from '/@/components/Drawer';
-  import MenuDrawer from './MenuDrawer.vue';
+  import EditContentTypeDrawer from './EditContentTypeDrawer.vue';
 
-  import { columns, searchFormSchema } from './menu.data';
+  import { columns, searchFormSchema } from './data';
 
   export default defineComponent({
-    name: 'MenuManagement',
-    components: { BasicTable, MenuDrawer, TableAction },
+    name: 'RoleManagement',
+    // eslint-disable-next-line vue/no-unused-components
+    components: { BasicTable, EditContentTypeDrawer, TableAction },
     setup() {
       const [registerDrawer, { openDrawer }] = useDrawer();
-      const [registerTable, { reload, expandAll }] = useTable({
-        title: '菜单列表',
-        api: getMenuList,
+      const [registerTable, { reload }] = useTable({
+        title: '角色列表',
+        api: getAllTypes,
         columns,
         formConfig: {
           labelWidth: 120,
           schemas: searchFormSchema,
         },
-        isTreeTable: true,
-        pagination: false,
-        striped: false,
         useSearchForm: true,
         showTableSetting: true,
         bordered: true,
         showIndexColumn: false,
-        canResize: false,
         actionColumn: {
           width: 80,
           title: '操作',
@@ -88,11 +85,6 @@
         reload();
       }
 
-      function onFetchSuccess() {
-        // 演示默认展开所有表项
-        nextTick(expandAll);
-      }
-
       return {
         registerTable,
         registerDrawer,
@@ -100,7 +92,6 @@
         handleEdit,
         handleDelete,
         handleSuccess,
-        onFetchSuccess,
       };
     },
   });

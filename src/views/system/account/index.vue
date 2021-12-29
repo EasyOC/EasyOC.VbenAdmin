@@ -38,7 +38,7 @@
   import { defineComponent, reactive } from 'vue';
 
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
-  import { getAccountList } from '../../../api/demo/system';
+  import { getAccountList, getUserDetails } from '../../../api/system';
   import { PageWrapper } from '/@/components/Page';
   // import DeptTree from './DeptTree.vue';
 
@@ -91,10 +91,11 @@
         });
       }
 
-      function handleEdit(record: Recordable) {
+      async function handleEdit(record: Recordable) {
         console.log(record);
+        var user = await getUserDetails(record.userId);
         openModal(true, {
-          record,
+          record: user,
           isUpdate: true,
         });
       }

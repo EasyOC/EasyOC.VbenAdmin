@@ -1,16 +1,16 @@
-import { RolesServiceProxy, UserServiceProxy } from '../app-service-proxies';
+import { RolesServiceProxy, UsersServiceProxy } from './app-service-proxies';
 import {
   AccountParams,
   DeptListItem,
   MenuParams,
-  RoleParams,
+  // RoleParams,
   RolePageParams,
   MenuListGetResultModel,
   DeptListGetResultModel,
   // AccountListGetResultModel,
   RolePageListGetResultModel,
-  RoleListGetResultModel,
-} from './model/systemModel';
+  // RoleListGetResultModel,
+} from './demo/model/systemModel';
 import { defHttp } from '/@/utils/http/axios';
 
 enum Api {
@@ -22,15 +22,17 @@ enum Api {
   RolePageList = '/system/getRoleListByPage',
   // GetAllRoleList = '/system/getAllRoleList',
 }
-
+const userService = new UsersServiceProxy();
 export async function getAccountList(params: AccountParams) {
   // params.searchText = '';
   console.log('param:', params);
 
-  const data = await new UserServiceProxy().getAll(params);
+  const data = await userService.getAll(params);
   console.log(data, 'userList');
   return data;
 }
+export const getUserDetails = (id: string) => userService.getUser(id);
+
 export const getDeptList = (params?: DeptListItem) =>
   defHttp.get<DeptListGetResultModel>({ url: Api.DeptList, params });
 
@@ -40,7 +42,8 @@ export const getMenuList = (params?: MenuParams) =>
 export const getRoleListByPage = (params?: RolePageParams) =>
   defHttp.get<RolePageListGetResultModel>({ url: Api.RolePageList, params });
 
-export const getAllRoleList = async (params?: RoleParams) => {
+// export const getAllRoleList = async (params?: RoleParams) => {
+export const getAllRoleList = async () => {
   const roles = await new RolesServiceProxy().getRoles();
   return roles;
   // defHttp.get<RoleListGetResultModel>({ url: Api.GetAllRoleList, params });
