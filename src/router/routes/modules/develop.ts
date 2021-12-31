@@ -7,7 +7,7 @@ const develop: AppRouteModule = {
   path: '/develop',
   name: 'Develop',
   component: LAYOUT,
-  redirect: '/develop/type',
+  redirect: '/develop/contentType',
   meta: {
     orderNo: 10,
     icon: 'ion:grid-outline',
@@ -15,9 +15,9 @@ const develop: AppRouteModule = {
   },
   children: [
     {
-      path: 'type',
-      name: 'Type',
-      component: () => import('/@/views/develop/type/index.vue'),
+      path: 'contentType',
+      name: 'contentType',
+      component: () => import('/@/views/develop/contentType/index.vue'),
       meta: {
         // affix: true,
         title: t('routes.develop.type'),
