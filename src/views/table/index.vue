@@ -1,20 +1,35 @@
 <template>
   <label>
     {{ aaa }}
+    <abd :bbd="aaa" @click="adbClick"></abd>
   </label>
 </template>
 <script lang="ts">
-  import { Vue } from 'vue-class-component';
+  import { Vue, Options } from 'vue-property-decorator';
 
-  
+  import abd from './abd.vue';
+
+  @Options({
+    name: 'tables',
+    components: {
+      abd
+    },
+  })
   export default class tables extends Vue {
     private aaa = '21';
 
-
-    setup() {
-      this.aaa = '22';
-
-      return this.aaa;
+    adbClick(value) {
+      // console.log('this.aaa: ', this.aaa);
+      // console.log('value: ', value);
+      this.aaa = value;
+      // this.$forceUpdate();
     }
+    // setup() {
+    //   this.aaa = '22';
+
+    //   return this.aaa;
+    // }
+
+
   }
 </script>
