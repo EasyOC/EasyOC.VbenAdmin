@@ -87,7 +87,7 @@ export const accountFormSchema: FormSchema[] = [
     field: 'userName',
     label: '用户名',
     component: 'Input',
-    helpMessage: ['本字段演示异步验证', '不能输入带有admin的用户名'],
+    helpMessage: ['不能输入带有admin的用户名'],
     rules: [
       {
         required: true,
@@ -114,12 +114,19 @@ export const accountFormSchema: FormSchema[] = [
     ifShow: false,
   },
   {
+    label: '邮箱',
+    field: 'email',
+    component: 'Input',
+    required: true,
+  },
+  {
     label: '角色',
     field: 'roleNames',
     component: 'CheckboxGroup',
     componentProps: {
-      labelField: 'roleDescription',
-      valueField: 'roleName',
+      // labelField: 'roleDescription',
+      // valueField: 'roleName',
+      labelWith: 150,
     } as CheckboxProps,
     required: true,
   },
@@ -144,16 +151,9 @@ export const accountFormSchema: FormSchema[] = [
   //   required: true,
   // },
 
-  {
-    label: '邮箱',
-    field: 'email',
-    component: 'Input',
-    required: true,
-  },
-
-  {
-    label: '备注',
-    field: 'remark',
-    component: 'InputTextArea',
-  },
+  // {
+  //   label: '备注',
+  //   field: 'remark',
+  //   component: 'InputTextArea',
+  // },
 ];

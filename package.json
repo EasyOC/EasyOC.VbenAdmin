@@ -10,7 +10,7 @@
     "bootstrap": "pnpm install",
     "serve": "npm run dev",
     "dev": "vite",
-    "genApi-Win": "cd .\\nswag\\ && ..\\node_modules\\.bin\\nswag run",
+    "genApi-Win": "cd nswag & refresh.bat",
     "build": "cross-env NODE_ENV=production vite build && esno ./build/script/postBuild.ts",
     "build:test": "cross-env vite build --mode test && esno ./build/script/postBuild.ts",
     "build:no-cache": "pnpm clean:cache && npm run build",

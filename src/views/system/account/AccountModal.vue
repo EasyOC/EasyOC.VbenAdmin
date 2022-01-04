@@ -39,6 +39,9 @@
           });
         }
         const allRoles = await getAllRoleList();
+        let rolesOptions = allRoles.map((x) => {
+          return { value: x.roleName, label: x.roleDescription };
+        });
 
         updateSchema([
           {
@@ -47,7 +50,7 @@
           },
           {
             field: 'roleNames',
-            componentProps: { options: async () => allRoles },
+            componentProps: { options: rolesOptions },
           },
         ]);
       });

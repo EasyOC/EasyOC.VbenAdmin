@@ -29,9 +29,9 @@ export default {
       if (field && order) {
         return {
           // The sort field passed to the backend you
-          sortField: field,
+          'OrderInfo.SortField': field,
           // Sorting method passed to the background asc/desc
-          sortOrder: order,
+          'OrderInfo.SortOrder': order,
         };
       } else {
         return {};
