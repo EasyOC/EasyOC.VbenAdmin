@@ -8,24 +8,30 @@ import { FormSchema } from '/@/components/Table';
 
 export const columns: BasicColumn[] = [
   {
-    title: '角色名称',
-    dataIndex: 'roleName',
+    title: '显示名称',
+    dataIndex: 'displayName',
     width: 200,
     align: 'left',
   },
   {
-    title: '角色描述',
-    dataIndex: 'roleDescription',
+    title: '技术名称',
+    dataIndex: 'name',
+    width: 180,
+    align: 'left',
+  },
+  {
+    title: '构造类型',
+    dataIndex: 'stereotype',
     width: 180,
   },
 ];
 
 export const searchFormSchema: FormSchema[] = [
   {
-    field: 'roleNme',
-    label: '角色名称',
+    field: 'displayName',
+    label: '关键字',
     component: 'Input',
-    colProps: { span: 8 },
+    colProps: { span: 12 },
   },
 ];
 
@@ -53,16 +59,16 @@ export const formSchema: FormSchema[] = [
   //       { label: '停用', value: '1' },
   //     ],
   //   },
+  // // },
+  // {
+  //   label: '备注',
+  //   field: 'remark',
+  //   component: 'InputTextArea',
   // },
-  {
-    label: '备注',
-    field: 'remark',
-    component: 'InputTextArea',
-  },
-  {
-    label: ' ',
-    field: 'menu',
-    slot: 'menu',
-    component: 'Input',
-  },
+  // {
+  //   label: ' ',
+  //   field: 'menu',
+  //   slot: 'menu',
+  //   component: 'Input',
+  //},
 ];

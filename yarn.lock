@@ -11105,8 +11105,8 @@ vue-json-pretty@^2.0.6:
 
 vue-property-decorator@^10.0.0-rc.3:
   version "10.0.0-rc.3"
-  resolved "https://registry.npm.taobao.org/vue-property-decorator/download/vue-property-decorator-10.0.0-rc.3.tgz#bb0cb2c7c31dc41149eb432f2104fb82dc3d95be"
-  integrity sha1-uwyyx8MdxBFJ60MvIQT7gtw9lb4=
+  resolved "https://registry.yarnpkg.com/vue-property-decorator/-/vue-property-decorator-10.0.0-rc.3.tgz#bb0cb2c7c31dc41149eb432f2104fb82dc3d95be"
+  integrity sha512-EGqjf8Lq+kTausZzfLB1ynWOcyay8ZLAc5p2VlKGEX2q+BjYw84oZxr6IcdwuxGIdNmriZqPUX6AlAluBdnbEg==
 
 vue-router@^4.0.12:
   version "4.0.12"
