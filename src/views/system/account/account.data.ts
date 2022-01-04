@@ -1,10 +1,5 @@
-import { SelectProps } from 'ant-design-vue';
-import { CheckboxProps } from 'ant-design-vue/lib/checkbox';
-// import { Filter } from '/@/api/app-service-proxies';
-import { getAllRoleList } from '../../../api/system';
-import { RolesServiceProxy } from '/@/api/app-service-proxies';
-import { BasicColumn } from '/@/components/Table';
-import { FormSchema } from '/@/components/Table';
+// import { CheckboxProps } from 'ant-design-vue/lib/checkbox';
+import { BasicColumn, FormSchema } from '/@/components/Table';
 
 export const columns: BasicColumn[] = [
   {
@@ -123,11 +118,6 @@ export const accountFormSchema: FormSchema[] = [
     label: '角色',
     field: 'roleNames',
     component: 'CheckboxGroup',
-    componentProps: {
-      // labelField: 'roleDescription',
-      // valueField: 'roleName',
-      labelWith: 150,
-    } as CheckboxProps,
     required: true,
   },
   // {

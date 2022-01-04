@@ -979,8 +979,6 @@ export class UsersServiceProxy extends AppServiceBase {
    * @param selectedRole (optional)
    * @param orderInfo_SortField (optional)
    * @param orderInfo_SortOrder (optional)
-   * @param orderInfo_HasOrder (optional)
-   * @param orderInfo_OrderStr (optional)
    * @param filter (optional)
    * @param page (optional)
    * @param pageSize (optional)
@@ -990,22 +988,13 @@ export class UsersServiceProxy extends AppServiceBase {
     selectedRole: string | undefined;
     orderInfo_SortField: string | undefined;
     orderInfo_SortOrder: string | undefined;
-    orderInfo_HasOrder: boolean | undefined;
-    orderInfo_OrderStr: string | undefined;
     filter: string | undefined;
     page: number | undefined;
     pageSize: number | undefined;
   }): Promise<PagedResultOfUserListItemDto> {
-    const {
-      selectedRole,
-      orderInfo_SortField,
-      orderInfo_SortOrder,
-      orderInfo_HasOrder,
-      orderInfo_OrderStr,
-      filter,
-      page,
-      pageSize,
-    } = { ...params };
+    const { selectedRole, orderInfo_SortField, orderInfo_SortOrder, filter, page, pageSize } = {
+      ...params,
+    };
 
     let url_ = this.baseUrl + '/api/Users/GetAll?';
 
@@ -1017,12 +1006,6 @@ export class UsersServiceProxy extends AppServiceBase {
 
     if (orderInfo_SortOrder !== undefined && orderInfo_SortOrder !== null)
       url_ += 'OrderInfo.SortOrder=' + encodeURIComponent('' + orderInfo_SortOrder) + '&';
-
-    if (orderInfo_HasOrder !== undefined && orderInfo_HasOrder !== null)
-      url_ += 'OrderInfo.HasOrder=' + encodeURIComponent('' + orderInfo_HasOrder) + '&';
-
-    if (orderInfo_OrderStr !== undefined && orderInfo_OrderStr !== null)
-      url_ += 'OrderInfo.OrderStr=' + encodeURIComponent('' + orderInfo_OrderStr) + '&';
 
     if (filter !== undefined && filter !== null)
       url_ += 'Filter=' + encodeURIComponent('' + filter) + '&';
@@ -1069,8 +1052,8 @@ export class UsersServiceProxy extends AppServiceBase {
    * @param body (optional)
    * @return Success
    */
-  createUser(body: UserDto | undefined): Promise<void> {
-    let url_ = this.baseUrl + '/api/Users/CreateUser';
+  newUser(body: UserDetailsDto | undefined): Promise<void> {
+    let url_ = this.baseUrl + '/api/Users/NewUser';
     url_ = url_.replace(/[?&]$/, '');
     const content_ = JSON.stringify(body);
     let options_ = <AxiosRequestConfig>{
@@ -1090,7 +1073,7 @@ export class UsersServiceProxy extends AppServiceBase {
    * @param id (optional)
    * @return Success
    */
-  getUser(id: string | undefined): Promise<UserDto> {
+  getUser(id: string | undefined): Promise<UserDetailsDto> {
     let url_ = this.baseUrl + '/api/Users/GetUser?';
 
     if (id !== undefined && id !== null) url_ += 'id=' + encodeURIComponent('' + id) + '&';
@@ -1111,7 +1094,7 @@ export class UsersServiceProxy extends AppServiceBase {
    * @param body (optional)
    * @return Success
    */
-  update(body: UserDto | undefined): Promise<void> {
+  update(body: UserDetailsDto | undefined): Promise<void> {
     let url_ = this.baseUrl + '/api/Users/Update';
     url_ = url_.replace(/[?&]$/, '');
     const content_ = JSON.stringify(body);
@@ -1222,13 +1205,13 @@ export class WorkflowApiServiceProxy extends AppServiceBase {
 }
 
 export class ConnectionConfigModel {
-  configId!: string | null;
-  configName!: string | null;
+  configId!: string | undefined;
+  configName!: string | undefined;
 
   init(_data?: any, _mappings?: any) {
     if (_data) {
-      this.configId = _data['configId'] !== undefined ? _data['configId'] : <any>null;
-      this.configName = _data['configName'] !== undefined ? _data['configName'] : <any>null;
+      this.configId = _data['configId'];
+      this.configName = _data['configName'];
     }
   }
 
@@ -1239,18 +1222,18 @@ export class ConnectionConfigModel {
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
-    data['configId'] = this.configId !== undefined ? this.configId : <any>null;
-    data['configName'] = this.configName !== undefined ? this.configName : <any>null;
+    data['configId'] = this.configId;
+    data['configName'] = this.configName;
     return data;
   }
 }
 
 export class ContentFieldDefinitionDto {
-  name!: string | null;
+  name!: string | undefined;
 
   init(_data?: any, _mappings?: any) {
     if (_data) {
-      this.name = _data['name'] !== undefined ? _data['name'] : <any>null;
+      this.name = _data['name'];
     }
   }
 
@@ -1261,45 +1244,45 @@ export class ContentFieldDefinitionDto {
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
-    data['name'] = this.name !== undefined ? this.name : <any>null;
+    data['name'] = this.name;
     return data;
   }
 }
 
 export class ContentItem {
   id!: number;
-  contentItemId!: string | null;
-  contentItemVersionId!: string | null;
-  contentType!: string | null;
+  contentItemId!: string | undefined;
+  contentItemVersionId!: string | undefined;
+  contentType!: string | undefined;
   published!: boolean;
   latest!: boolean;
-  modifiedUtc!: Date | null;
-  publishedUtc!: Date | null;
-  createdUtc!: Date | null;
-  owner!: string | null;
-  author!: string | null;
-  displayText!: string | null;
+  modifiedUtc!: Date | undefined;
+  publishedUtc!: Date | undefined;
+  createdUtc!: Date | undefined;
+  owner!: string | undefined;
+  author!: string | undefined;
+  displayText!: string | undefined;
 
   init(_data?: any, _mappings?: any) {
     if (_data) {
-      this.id = _data['id'] !== undefined ? _data['id'] : <any>null;
-      this.contentItemId =
-        _data['contentItemId'] !== undefined ? _data['contentItemId'] : <any>null;
-      this.contentItemVersionId =
-        _data['contentItemVersionId'] !== undefined ? _data['contentItemVersionId'] : <any>null;
-      this.contentType = _data['contentType'] !== undefined ? _data['contentType'] : <any>null;
-      this.published = _data['published'] !== undefined ? _data['published'] : <any>null;
-      this.latest = _data['latest'] !== undefined ? _data['latest'] : <any>null;
+      this.id = _data['id'];
+      this.contentItemId = _data['contentItemId'];
+      this.contentItemVersionId = _data['contentItemVersionId'];
+      this.contentType = _data['contentType'];
+      this.published = _data['published'];
+      this.latest = _data['latest'];
       this.modifiedUtc = _data['modifiedUtc']
         ? new Date(_data['modifiedUtc'].toString())
-        : <any>null;
+        : <any>undefined;
       this.publishedUtc = _data['publishedUtc']
         ? new Date(_data['publishedUtc'].toString())
-        : <any>null;
-      this.createdUtc = _data['createdUtc'] ? new Date(_data['createdUtc'].toString()) : <any>null;
-      this.owner = _data['owner'] !== undefined ? _data['owner'] : <any>null;
-      this.author = _data['author'] !== undefined ? _data['author'] : <any>null;
-      this.displayText = _data['displayText'] !== undefined ? _data['displayText'] : <any>null;
+        : <any>undefined;
+      this.createdUtc = _data['createdUtc']
+        ? new Date(_data['createdUtc'].toString())
+        : <any>undefined;
+      this.owner = _data['owner'];
+      this.author = _data['author'];
+      this.displayText = _data['displayText'];
     }
   }
 
@@ -1310,30 +1293,29 @@ export class ContentItem {
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
-    data['id'] = this.id !== undefined ? this.id : <any>null;
-    data['contentItemId'] = this.contentItemId !== undefined ? this.contentItemId : <any>null;
-    data['contentItemVersionId'] =
-      this.contentItemVersionId !== undefined ? this.contentItemVersionId : <any>null;
-    data['contentType'] = this.contentType !== undefined ? this.contentType : <any>null;
-    data['published'] = this.published !== undefined ? this.published : <any>null;
-    data['latest'] = this.latest !== undefined ? this.latest : <any>null;
-    data['modifiedUtc'] = this.modifiedUtc ? this.modifiedUtc.toISOString() : <any>null;
-    data['publishedUtc'] = this.publishedUtc ? this.publishedUtc.toISOString() : <any>null;
-    data['createdUtc'] = this.createdUtc ? this.createdUtc.toISOString() : <any>null;
-    data['owner'] = this.owner !== undefined ? this.owner : <any>null;
-    data['author'] = this.author !== undefined ? this.author : <any>null;
-    data['displayText'] = this.displayText !== undefined ? this.displayText : <any>null;
+    data['id'] = this.id;
+    data['contentItemId'] = this.contentItemId;
+    data['contentItemVersionId'] = this.contentItemVersionId;
+    data['contentType'] = this.contentType;
+    data['published'] = this.published;
+    data['latest'] = this.latest;
+    data['modifiedUtc'] = this.modifiedUtc ? this.modifiedUtc.toISOString() : <any>undefined;
+    data['publishedUtc'] = this.publishedUtc ? this.publishedUtc.toISOString() : <any>undefined;
+    data['createdUtc'] = this.createdUtc ? this.createdUtc.toISOString() : <any>undefined;
+    data['owner'] = this.owner;
+    data['author'] = this.author;
+    data['displayText'] = this.displayText;
     return data;
   }
 }
 
 /** Dto of OrchardCore.ContentManagement.Metadata.Models.ContentPartDefinition */
 export class ContentPartDefinitionDto {
-  fields!: ContentPartFieldDefinitionDto[] | null;
-  displayName!: string | null;
-  readonly description!: string | null;
-  name!: string | null;
-  settings!: any | null;
+  fields!: ContentPartFieldDefinitionDto[] | undefined;
+  displayName!: string | undefined;
+  readonly description!: string | undefined;
+  name!: string | undefined;
+  settings!: any | undefined;
 
   init(_data?: any, _mappings?: any) {
     if (_data) {
@@ -1342,11 +1324,10 @@ export class ContentPartDefinitionDto {
         for (let item of _data['fields'])
           this.fields!.push(ContentPartFieldDefinitionDto.fromJS(item, _mappings));
       }
-      this.displayName = _data['displayName'] !== undefined ? _data['displayName'] : <any>null;
-      (<any>this).description =
-        _data['description'] !== undefined ? _data['description'] : <any>null;
-      this.name = _data['name'] !== undefined ? _data['name'] : <any>null;
-      this.settings = _data['settings'] !== undefined ? _data['settings'] : <any>null;
+      this.displayName = _data['displayName'];
+      (<any>this).description = _data['description'];
+      this.name = _data['name'];
+      this.settings = _data['settings'];
     }
   }
 
@@ -1361,31 +1342,30 @@ export class ContentPartDefinitionDto {
       data['fields'] = [];
       for (let item of this.fields) data['fields'].push(item.toJSON());
     }
-    data['displayName'] = this.displayName !== undefined ? this.displayName : <any>null;
-    data['description'] = this.description !== undefined ? this.description : <any>null;
-    data['name'] = this.name !== undefined ? this.name : <any>null;
-    data['settings'] = this.settings !== undefined ? this.settings : <any>null;
+    data['displayName'] = this.displayName;
+    data['description'] = this.description;
+    data['name'] = this.name;
+    data['settings'] = this.settings;
     return data;
   }
 }
 
 export class ContentPartFieldDefinitionDto {
   fieldDefinition!: ContentFieldDefinitionDto;
-  displayName!: string | null;
-  readonly description!: string | null;
-  name!: string | null;
-  settings!: any | null;
+  displayName!: string | undefined;
+  readonly description!: string | undefined;
+  name!: string | undefined;
+  settings!: any | undefined;
 
   init(_data?: any, _mappings?: any) {
     if (_data) {
       this.fieldDefinition = _data['fieldDefinition']
         ? ContentFieldDefinitionDto.fromJS(_data['fieldDefinition'], _mappings)
-        : <any>null;
-      this.displayName = _data['displayName'] !== undefined ? _data['displayName'] : <any>null;
-      (<any>this).description =
-        _data['description'] !== undefined ? _data['description'] : <any>null;
-      this.name = _data['name'] !== undefined ? _data['name'] : <any>null;
-      this.settings = _data['settings'] !== undefined ? _data['settings'] : <any>null;
+        : <any>undefined;
+      this.displayName = _data['displayName'];
+      (<any>this).description = _data['description'];
+      this.name = _data['name'];
+      this.settings = _data['settings'];
     }
   }
 
@@ -1400,32 +1380,32 @@ export class ContentPartFieldDefinitionDto {
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
-    data['fieldDefinition'] = this.fieldDefinition ? this.fieldDefinition.toJSON() : <any>null;
-    data['displayName'] = this.displayName !== undefined ? this.displayName : <any>null;
-    data['description'] = this.description !== undefined ? this.description : <any>null;
-    data['name'] = this.name !== undefined ? this.name : <any>null;
-    data['settings'] = this.settings !== undefined ? this.settings : <any>null;
+    data['fieldDefinition'] = this.fieldDefinition ? this.fieldDefinition.toJSON() : <any>undefined;
+    data['displayName'] = this.displayName;
+    data['description'] = this.description;
+    data['name'] = this.name;
+    data['settings'] = this.settings;
     return data;
   }
 }
 
 /** Dto of OrchardCore.ContentManagement.Metadata.Models.ContentTypeDefinition Converting Method EasyOC.ContentTypeDtoExtentions */
 export class ContentTypeDefinitionDto {
-  displayName!: string | null;
-  parts!: ContentTypePartDefinitionDto[] | null;
-  name!: string | null;
-  settings!: any | null;
+  displayName!: string | undefined;
+  parts!: ContentTypePartDefinitionDto[] | undefined;
+  name!: string | undefined;
+  settings!: any | undefined;
 
   init(_data?: any, _mappings?: any) {
     if (_data) {
-      this.displayName = _data['displayName'] !== undefined ? _data['displayName'] : <any>null;
+      this.displayName = _data['displayName'];
       if (Array.isArray(_data['parts'])) {
         this.parts = [] as any;
         for (let item of _data['parts'])
           this.parts!.push(ContentTypePartDefinitionDto.fromJS(item, _mappings));
       }
-      this.name = _data['name'] !== undefined ? _data['name'] : <any>null;
-      this.settings = _data['settings'] !== undefined ? _data['settings'] : <any>null;
+      this.name = _data['name'];
+      this.settings = _data['settings'];
     }
   }
 
@@ -1436,27 +1416,27 @@ export class ContentTypeDefinitionDto {
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
-    data['displayName'] = this.displayName !== undefined ? this.displayName : <any>null;
+    data['displayName'] = this.displayName;
     if (Array.isArray(this.parts)) {
       data['parts'] = [];
       for (let item of this.parts) data['parts'].push(item.toJSON());
     }
-    data['name'] = this.name !== undefined ? this.name : <any>null;
-    data['settings'] = this.settings !== undefined ? this.settings : <any>null;
+    data['name'] = this.name;
+    data['settings'] = this.settings;
     return data;
   }
 }
 
 export class ContentTypeListItemDto {
-  displayName!: string | null;
-  readonly stereotype!: string | null;
-  name!: string | null;
+  displayName!: string | undefined;
+  readonly stereotype!: string | undefined;
+  name!: string | undefined;
 
   init(_data?: any, _mappings?: any) {
     if (_data) {
-      this.displayName = _data['displayName'] !== undefined ? _data['displayName'] : <any>null;
-      (<any>this).stereotype = _data['stereotype'] !== undefined ? _data['stereotype'] : <any>null;
-      this.name = _data['name'] !== undefined ? _data['name'] : <any>null;
+      this.displayName = _data['displayName'];
+      (<any>this).stereotype = _data['stereotype'];
+      this.name = _data['name'];
     }
   }
 
@@ -1467,30 +1447,29 @@ export class ContentTypeListItemDto {
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
-    data['displayName'] = this.displayName !== undefined ? this.displayName : <any>null;
-    data['stereotype'] = this.stereotype !== undefined ? this.stereotype : <any>null;
-    data['name'] = this.name !== undefined ? this.name : <any>null;
+    data['displayName'] = this.displayName;
+    data['stereotype'] = this.stereotype;
+    data['name'] = this.name;
     return data;
   }
 }
 
 export class ContentTypePartDefinitionDto {
   partDefinition!: ContentPartDefinitionDto;
-  displayName!: string | null;
-  readonly description!: string | null;
-  name!: string | null;
-  settings!: any | null;
+  displayName!: string | undefined;
+  readonly description!: string | undefined;
+  name!: string | undefined;
+  settings!: any | undefined;
 
   init(_data?: any, _mappings?: any) {
     if (_data) {
       this.partDefinition = _data['partDefinition']
         ? ContentPartDefinitionDto.fromJS(_data['partDefinition'], _mappings)
-        : <any>null;
-      this.displayName = _data['displayName'] !== undefined ? _data['displayName'] : <any>null;
-      (<any>this).description =
-        _data['description'] !== undefined ? _data['description'] : <any>null;
-      this.name = _data['name'] !== undefined ? _data['name'] : <any>null;
-      this.settings = _data['settings'] !== undefined ? _data['settings'] : <any>null;
+        : <any>undefined;
+      this.displayName = _data['displayName'];
+      (<any>this).description = _data['description'];
+      this.name = _data['name'];
+      this.settings = _data['settings'];
     }
   }
 
@@ -1505,42 +1484,37 @@ export class ContentTypePartDefinitionDto {
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
-    data['partDefinition'] = this.partDefinition ? this.partDefinition.toJSON() : <any>null;
-    data['displayName'] = this.displayName !== undefined ? this.displayName : <any>null;
-    data['description'] = this.description !== undefined ? this.description : <any>null;
-    data['name'] = this.name !== undefined ? this.name : <any>null;
-    data['settings'] = this.settings !== undefined ? this.settings : <any>null;
+    data['partDefinition'] = this.partDefinition ? this.partDefinition.toJSON() : <any>undefined;
+    data['displayName'] = this.displayName;
+    data['description'] = this.description;
+    data['name'] = this.name;
+    data['settings'] = this.settings;
     return data;
   }
 }
 
 export class CreateApiViewModel {
-  description!: string | null;
+  description!: string | undefined;
   name!: string;
-  databaseProvider!: string | null;
-  requestUrlPrefix!: string | null;
-  requestUrlHost!: string | null;
-  connectionString!: string | null;
-  tablePrefix!: string | null;
-  recipeName!: string | null;
-  featureProfile!: string | null;
+  databaseProvider!: string | undefined;
+  requestUrlPrefix!: string | undefined;
+  requestUrlHost!: string | undefined;
+  connectionString!: string | undefined;
+  tablePrefix!: string | undefined;
+  recipeName!: string | undefined;
+  featureProfile!: string | undefined;
 
   init(_data?: any, _mappings?: any) {
     if (_data) {
-      this.description = _data['description'] !== undefined ? _data['description'] : <any>null;
-      this.name = _data['name'] !== undefined ? _data['name'] : <any>null;
-      this.databaseProvider =
-        _data['databaseProvider'] !== undefined ? _data['databaseProvider'] : <any>null;
-      this.requestUrlPrefix =
-        _data['requestUrlPrefix'] !== undefined ? _data['requestUrlPrefix'] : <any>null;
-      this.requestUrlHost =
-        _data['requestUrlHost'] !== undefined ? _data['requestUrlHost'] : <any>null;
-      this.connectionString =
-        _data['connectionString'] !== undefined ? _data['connectionString'] : <any>null;
-      this.tablePrefix = _data['tablePrefix'] !== undefined ? _data['tablePrefix'] : <any>null;
-      this.recipeName = _data['recipeName'] !== undefined ? _data['recipeName'] : <any>null;
-      this.featureProfile =
-        _data['featureProfile'] !== undefined ? _data['featureProfile'] : <any>null;
+      this.description = _data['description'];
+      this.name = _data['name'];
+      this.databaseProvider = _data['databaseProvider'];
+      this.requestUrlPrefix = _data['requestUrlPrefix'];
+      this.requestUrlHost = _data['requestUrlHost'];
+      this.connectionString = _data['connectionString'];
+      this.tablePrefix = _data['tablePrefix'];
+      this.recipeName = _data['recipeName'];
+      this.featureProfile = _data['featureProfile'];
     }
   }
 
@@ -1551,51 +1525,47 @@ export class CreateApiViewModel {
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
-    data['description'] = this.description !== undefined ? this.description : <any>null;
-    data['name'] = this.name !== undefined ? this.name : <any>null;
-    data['databaseProvider'] =
-      this.databaseProvider !== undefined ? this.databaseProvider : <any>null;
-    data['requestUrlPrefix'] =
-      this.requestUrlPrefix !== undefined ? this.requestUrlPrefix : <any>null;
-    data['requestUrlHost'] = this.requestUrlHost !== undefined ? this.requestUrlHost : <any>null;
-    data['connectionString'] =
-      this.connectionString !== undefined ? this.connectionString : <any>null;
-    data['tablePrefix'] = this.tablePrefix !== undefined ? this.tablePrefix : <any>null;
-    data['recipeName'] = this.recipeName !== undefined ? this.recipeName : <any>null;
-    data['featureProfile'] = this.featureProfile !== undefined ? this.featureProfile : <any>null;
+    data['description'] = this.description;
+    data['name'] = this.name;
+    data['databaseProvider'] = this.databaseProvider;
+    data['requestUrlPrefix'] = this.requestUrlPrefix;
+    data['requestUrlHost'] = this.requestUrlHost;
+    data['connectionString'] = this.connectionString;
+    data['tablePrefix'] = this.tablePrefix;
+    data['recipeName'] = this.recipeName;
+    data['featureProfile'] = this.featureProfile;
     return data;
   }
 }
 
 export class DbColumnInfoDto {
-  name!: string | null;
+  name!: string | undefined;
   csType!: TypeDto;
   dbType!: number;
-  dbTypeText!: string | null;
-  dbTypeTextFull!: string | null;
+  dbTypeText!: string | undefined;
+  dbTypeTextFull!: string | undefined;
   maxLength!: number;
   isPrimary!: boolean;
   isIdentity!: boolean;
   isNullable!: boolean;
-  coment!: string | null;
-  defaultValue!: string | null;
+  coment!: string | undefined;
+  defaultValue!: string | undefined;
   position!: number;
 
   init(_data?: any, _mappings?: any) {
     if (_data) {
-      this.name = _data['name'] !== undefined ? _data['name'] : <any>null;
-      this.csType = _data['csType'] ? TypeDto.fromJS(_data['csType'], _mappings) : <any>null;
-      this.dbType = _data['dbType'] !== undefined ? _data['dbType'] : <any>null;
-      this.dbTypeText = _data['dbTypeText'] !== undefined ? _data['dbTypeText'] : <any>null;
-      this.dbTypeTextFull =
-        _data['dbTypeTextFull'] !== undefined ? _data['dbTypeTextFull'] : <any>null;
-      this.maxLength = _data['maxLength'] !== undefined ? _data['maxLength'] : <any>null;
-      this.isPrimary = _data['isPrimary'] !== undefined ? _data['isPrimary'] : <any>null;
-      this.isIdentity = _data['isIdentity'] !== undefined ? _data['isIdentity'] : <any>null;
-      this.isNullable = _data['isNullable'] !== undefined ? _data['isNullable'] : <any>null;
-      this.coment = _data['coment'] !== undefined ? _data['coment'] : <any>null;
-      this.defaultValue = _data['defaultValue'] !== undefined ? _data['defaultValue'] : <any>null;
-      this.position = _data['position'] !== undefined ? _data['position'] : <any>null;
+      this.name = _data['name'];
+      this.csType = _data['csType'] ? TypeDto.fromJS(_data['csType'], _mappings) : <any>undefined;
+      this.dbType = _data['dbType'];
+      this.dbTypeText = _data['dbTypeText'];
+      this.dbTypeTextFull = _data['dbTypeTextFull'];
+      this.maxLength = _data['maxLength'];
+      this.isPrimary = _data['isPrimary'];
+      this.isIdentity = _data['isIdentity'];
+      this.isNullable = _data['isNullable'];
+      this.coment = _data['coment'];
+      this.defaultValue = _data['defaultValue'];
+      this.position = _data['position'];
     }
   }
 
@@ -1606,39 +1576,39 @@ export class DbColumnInfoDto {
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
-    data['name'] = this.name !== undefined ? this.name : <any>null;
-    data['csType'] = this.csType ? this.csType.toJSON() : <any>null;
-    data['dbType'] = this.dbType !== undefined ? this.dbType : <any>null;
-    data['dbTypeText'] = this.dbTypeText !== undefined ? this.dbTypeText : <any>null;
-    data['dbTypeTextFull'] = this.dbTypeTextFull !== undefined ? this.dbTypeTextFull : <any>null;
-    data['maxLength'] = this.maxLength !== undefined ? this.maxLength : <any>null;
-    data['isPrimary'] = this.isPrimary !== undefined ? this.isPrimary : <any>null;
-    data['isIdentity'] = this.isIdentity !== undefined ? this.isIdentity : <any>null;
-    data['isNullable'] = this.isNullable !== undefined ? this.isNullable : <any>null;
-    data['coment'] = this.coment !== undefined ? this.coment : <any>null;
-    data['defaultValue'] = this.defaultValue !== undefined ? this.defaultValue : <any>null;
-    data['position'] = this.position !== undefined ? this.position : <any>null;
+    data['name'] = this.name;
+    data['csType'] = this.csType ? this.csType.toJSON() : <any>undefined;
+    data['dbType'] = this.dbType;
+    data['dbTypeText'] = this.dbTypeText;
+    data['dbTypeTextFull'] = this.dbTypeTextFull;
+    data['maxLength'] = this.maxLength;
+    data['isPrimary'] = this.isPrimary;
+    data['isIdentity'] = this.isIdentity;
+    data['isNullable'] = this.isNullable;
+    data['coment'] = this.coment;
+    data['defaultValue'] = this.defaultValue;
+    data['position'] = this.position;
     return data;
   }
 }
 
 export class DbTableInfoDto {
-  id!: string | null;
+  id!: string | undefined;
   columnsCount!: number;
-  schema!: string | null;
-  name!: string | null;
-  comment!: string | null;
-  type!: string | null;
-  columns!: DbColumnInfoDto[] | null;
+  schema!: string | undefined;
+  name!: string | undefined;
+  comment!: string | undefined;
+  type!: string | undefined;
+  columns!: DbColumnInfoDto[] | undefined;
 
   init(_data?: any, _mappings?: any) {
     if (_data) {
-      this.id = _data['id'] !== undefined ? _data['id'] : <any>null;
-      this.columnsCount = _data['columnsCount'] !== undefined ? _data['columnsCount'] : <any>null;
-      this.schema = _data['schema'] !== undefined ? _data['schema'] : <any>null;
-      this.name = _data['name'] !== undefined ? _data['name'] : <any>null;
-      this.comment = _data['comment'] !== undefined ? _data['comment'] : <any>null;
-      this.type = _data['type'] !== undefined ? _data['type'] : <any>null;
+      this.id = _data['id'];
+      this.columnsCount = _data['columnsCount'];
+      this.schema = _data['schema'];
+      this.name = _data['name'];
+      this.comment = _data['comment'];
+      this.type = _data['type'];
       if (Array.isArray(_data['columns'])) {
         this.columns = [] as any;
         for (let item of _data['columns'])
@@ -1654,12 +1624,12 @@ export class DbTableInfoDto {
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
-    data['id'] = this.id !== undefined ? this.id : <any>null;
-    data['columnsCount'] = this.columnsCount !== undefined ? this.columnsCount : <any>null;
-    data['schema'] = this.schema !== undefined ? this.schema : <any>null;
-    data['name'] = this.name !== undefined ? this.name : <any>null;
-    data['comment'] = this.comment !== undefined ? this.comment : <any>null;
-    data['type'] = this.type !== undefined ? this.type : <any>null;
+    data['id'] = this.id;
+    data['columnsCount'] = this.columnsCount;
+    data['schema'] = this.schema;
+    data['name'] = this.name;
+    data['comment'] = this.comment;
+    data['type'] = this.type;
     if (Array.isArray(this.columns)) {
       data['columns'] = [];
       for (let item of this.columns) data['columns'].push(item.toJSON());
@@ -1669,14 +1639,14 @@ export class DbTableInfoDto {
 }
 
 export class GlobalMethodDto {
-  name!: string | null;
-  description!: string | null;
-  parameters!: any[] | null;
+  name!: string | undefined;
+  description!: string | undefined;
+  parameters!: any[] | undefined;
 
   init(_data?: any, _mappings?: any) {
     if (_data) {
-      this.name = _data['name'] !== undefined ? _data['name'] : <any>null;
-      this.description = _data['description'] !== undefined ? _data['description'] : <any>null;
+      this.name = _data['name'];
+      this.description = _data['description'];
       if (Array.isArray(_data['parameters'])) {
         this.parameters = [] as any;
         for (let item of _data['parameters']) this.parameters!.push(item);
@@ -1691,8 +1661,8 @@ export class GlobalMethodDto {
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
-    data['name'] = this.name !== undefined ? this.name : <any>null;
-    data['description'] = this.description !== undefined ? this.description : <any>null;
+    data['name'] = this.name;
+    data['description'] = this.description;
     if (Array.isArray(this.parameters)) {
       data['parameters'] = [];
       for (let item of this.parameters) data['parameters'].push(item);
@@ -1702,11 +1672,11 @@ export class GlobalMethodDto {
 }
 
 export class ImportJsonInupt {
-  json!: string | null;
+  json!: string | undefined;
 
   init(_data?: any, _mappings?: any) {
     if (_data) {
-      this.json = _data['json'] !== undefined ? _data['json'] : <any>null;
+      this.json = _data['json'];
     }
   }
 
@@ -1717,21 +1687,21 @@ export class ImportJsonInupt {
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
-    data['json'] = this.json !== undefined ? this.json : <any>null;
+    data['json'] = this.json;
     return data;
   }
 }
 
 export class LuceneQueryModel {
-  indexName!: string | null;
-  query!: string | null;
-  parameters!: string | null;
+  indexName!: string | undefined;
+  query!: string | undefined;
+  parameters!: string | undefined;
 
   init(_data?: any, _mappings?: any) {
     if (_data) {
-      this.indexName = _data['indexName'] !== undefined ? _data['indexName'] : <any>null;
-      this.query = _data['query'] !== undefined ? _data['query'] : <any>null;
-      this.parameters = _data['parameters'] !== undefined ? _data['parameters'] : <any>null;
+      this.indexName = _data['indexName'];
+      this.query = _data['query'];
+      this.parameters = _data['parameters'];
     }
   }
 
@@ -1742,24 +1712,24 @@ export class LuceneQueryModel {
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
-    data['indexName'] = this.indexName !== undefined ? this.indexName : <any>null;
-    data['query'] = this.query !== undefined ? this.query : <any>null;
-    data['parameters'] = this.parameters !== undefined ? this.parameters : <any>null;
+    data['indexName'] = this.indexName;
+    data['query'] = this.query;
+    data['parameters'] = this.parameters;
     return data;
   }
 }
 
 export class OrchardCoreBaseField {
-  name!: string | null;
-  description!: string | null;
-  valuePath!: string | null;
-  defaultMappToCsType!: string[] | null;
+  name!: string | undefined;
+  description!: string | undefined;
+  valuePath!: string | undefined;
+  defaultMappToCsType!: string[] | undefined;
 
   init(_data?: any, _mappings?: any) {
     if (_data) {
-      this.name = _data['name'] !== undefined ? _data['name'] : <any>null;
-      this.description = _data['description'] !== undefined ? _data['description'] : <any>null;
-      this.valuePath = _data['valuePath'] !== undefined ? _data['valuePath'] : <any>null;
+      this.name = _data['name'];
+      this.description = _data['description'];
+      this.valuePath = _data['valuePath'];
       if (Array.isArray(_data['defaultMappToCsType'])) {
         this.defaultMappToCsType = [] as any;
         for (let item of _data['defaultMappToCsType']) this.defaultMappToCsType!.push(item);
@@ -1774,9 +1744,9 @@ export class OrchardCoreBaseField {
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
-    data['name'] = this.name !== undefined ? this.name : <any>null;
-    data['description'] = this.description !== undefined ? this.description : <any>null;
-    data['valuePath'] = this.valuePath !== undefined ? this.valuePath : <any>null;
+    data['name'] = this.name;
+    data['description'] = this.description;
+    data['valuePath'] = this.valuePath;
     if (Array.isArray(this.defaultMappToCsType)) {
       data['defaultMappToCsType'] = [];
       for (let item of this.defaultMappToCsType) data['defaultMappToCsType'].push(item);
@@ -1787,11 +1757,11 @@ export class OrchardCoreBaseField {
 
 export class PagedResultOfContentPartDefinitionDto {
   total!: number;
-  items!: ContentPartDefinitionDto[] | null;
+  items!: ContentPartDefinitionDto[] | undefined;
 
   init(_data?: any, _mappings?: any) {
     if (_data) {
-      this.total = _data['total'] !== undefined ? _data['total'] : <any>null;
+      this.total = _data['total'];
       if (Array.isArray(_data['items'])) {
         this.items = [] as any;
         for (let item of _data['items'])
@@ -1811,7 +1781,7 @@ export class PagedResultOfContentPartDefinitionDto {
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
-    data['total'] = this.total !== undefined ? this.total : <any>null;
+    data['total'] = this.total;
     if (Array.isArray(this.items)) {
       data['items'] = [];
       for (let item of this.items) data['items'].push(item.toJSON());
@@ -1822,11 +1792,11 @@ export class PagedResultOfContentPartDefinitionDto {
 
 export class PagedResultOfContentTypeListItemDto {
   total!: number;
-  items!: ContentTypeListItemDto[] | null;
+  items!: ContentTypeListItemDto[] | undefined;
 
   init(_data?: any, _mappings?: any) {
     if (_data) {
-      this.total = _data['total'] !== undefined ? _data['total'] : <any>null;
+      this.total = _data['total'];
       if (Array.isArray(_data['items'])) {
         this.items = [] as any;
         for (let item of _data['items'])
@@ -1846,7 +1816,7 @@ export class PagedResultOfContentTypeListItemDto {
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
-    data['total'] = this.total !== undefined ? this.total : <any>null;
+    data['total'] = this.total;
     if (Array.isArray(this.items)) {
       data['items'] = [];
       for (let item of this.items) data['items'].push(item.toJSON());
@@ -1857,11 +1827,11 @@ export class PagedResultOfContentTypeListItemDto {
 
 export class PagedResultOfUserListItemDto {
   total!: number;
-  items!: UserListItemDto[] | null;
+  items!: UserListItemDto[] | undefined;
 
   init(_data?: any, _mappings?: any) {
     if (_data) {
-      this.total = _data['total'] !== undefined ? _data['total'] : <any>null;
+      this.total = _data['total'];
       if (Array.isArray(_data['items'])) {
         this.items = [] as any;
         for (let item of _data['items']) this.items!.push(UserListItemDto.fromJS(item, _mappings));
@@ -1880,7 +1850,7 @@ export class PagedResultOfUserListItemDto {
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
-    data['total'] = this.total !== undefined ? this.total : <any>null;
+    data['total'] = this.total;
     if (Array.isArray(this.items)) {
       data['items'] = [];
       for (let item of this.items) data['items'].push(item.toJSON());
@@ -1890,16 +1860,16 @@ export class PagedResultOfUserListItemDto {
 }
 
 export class PermissionDto {
-  name!: string | null;
-  description!: string | null;
-  category!: string | null;
-  impliedBy!: PermissionDto[] | null;
+  name!: string | undefined;
+  description!: string | undefined;
+  category!: string | undefined;
+  impliedBy!: PermissionDto[] | undefined;
 
   init(_data?: any, _mappings?: any) {
     if (_data) {
-      this.name = _data['name'] !== undefined ? _data['name'] : <any>null;
-      this.description = _data['description'] !== undefined ? _data['description'] : <any>null;
-      this.category = _data['category'] !== undefined ? _data['category'] : <any>null;
+      this.name = _data['name'];
+      this.description = _data['description'];
+      this.category = _data['category'];
       if (Array.isArray(_data['impliedBy'])) {
         this.impliedBy = [] as any;
         for (let item of _data['impliedBy'])
@@ -1915,9 +1885,9 @@ export class PermissionDto {
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
-    data['name'] = this.name !== undefined ? this.name : <any>null;
-    data['description'] = this.description !== undefined ? this.description : <any>null;
-    data['category'] = this.category !== undefined ? this.category : <any>null;
+    data['name'] = this.name;
+    data['description'] = this.description;
+    data['category'] = this.category;
     if (Array.isArray(this.impliedBy)) {
       data['impliedBy'] = [];
       for (let item of this.impliedBy) data['impliedBy'].push(item.toJSON());
@@ -1927,18 +1897,17 @@ export class PermissionDto {
 }
 
 export class ResetUserPasswordtInput {
-  email!: string | null;
-  newPassword!: string | null;
-  passwordConfirmation!: string | null;
-  resetToken!: string | null;
+  email!: string | undefined;
+  newPassword!: string | undefined;
+  passwordConfirmation!: string | undefined;
+  resetToken!: string | undefined;
 
   init(_data?: any, _mappings?: any) {
     if (_data) {
-      this.email = _data['email'] !== undefined ? _data['email'] : <any>null;
-      this.newPassword = _data['newPassword'] !== undefined ? _data['newPassword'] : <any>null;
-      this.passwordConfirmation =
-        _data['passwordConfirmation'] !== undefined ? _data['passwordConfirmation'] : <any>null;
-      this.resetToken = _data['resetToken'] !== undefined ? _data['resetToken'] : <any>null;
+      this.email = _data['email'];
+      this.newPassword = _data['newPassword'];
+      this.passwordConfirmation = _data['passwordConfirmation'];
+      this.resetToken = _data['resetToken'];
     }
   }
 
@@ -1949,23 +1918,22 @@ export class ResetUserPasswordtInput {
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
-    data['email'] = this.email !== undefined ? this.email : <any>null;
-    data['newPassword'] = this.newPassword !== undefined ? this.newPassword : <any>null;
-    data['passwordConfirmation'] =
-      this.passwordConfirmation !== undefined ? this.passwordConfirmation : <any>null;
-    data['resetToken'] = this.resetToken !== undefined ? this.resetToken : <any>null;
+    data['email'] = this.email;
+    data['newPassword'] = this.newPassword;
+    data['passwordConfirmation'] = this.passwordConfirmation;
+    data['resetToken'] = this.resetToken;
     return data;
   }
 }
 
 export class RoleClaimDto {
-  claimType!: string | null;
-  claimValue!: string | null;
+  claimType!: string | undefined;
+  claimValue!: string | undefined;
 
   init(_data?: any, _mappings?: any) {
     if (_data) {
-      this.claimType = _data['claimType'] !== undefined ? _data['claimType'] : <any>null;
-      this.claimValue = _data['claimValue'] !== undefined ? _data['claimValue'] : <any>null;
+      this.claimType = _data['claimType'];
+      this.claimValue = _data['claimValue'];
     }
   }
 
@@ -1976,24 +1944,23 @@ export class RoleClaimDto {
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
-    data['claimType'] = this.claimType !== undefined ? this.claimType : <any>null;
-    data['claimValue'] = this.claimValue !== undefined ? this.claimValue : <any>null;
+    data['claimType'] = this.claimType;
+    data['claimValue'] = this.claimValue;
     return data;
   }
 }
 
 export class RoleDetailsDto {
-  name!: string | null;
-  roleDescription!: string | null;
-  roleCategoryPermissions!: { [key: string]: PermissionDto[] } | null;
-  effectivePermissions!: string[] | null;
+  name!: string | undefined;
+  roleDescription!: string | undefined;
+  roleCategoryPermissions!: { [key: string]: PermissionDto[] } | undefined;
+  effectivePermissions!: string[] | undefined;
   role!: RoleDto;
 
   init(_data?: any, _mappings?: any) {
     if (_data) {
-      this.name = _data['name'] !== undefined ? _data['name'] : <any>null;
-      this.roleDescription =
-        _data['roleDescription'] !== undefined ? _data['roleDescription'] : <any>null;
+      this.name = _data['name'];
+      this.roleDescription = _data['roleDescription'];
       if (_data['roleCategoryPermissions']) {
         this.roleCategoryPermissions = {} as any;
         for (let key in _data['roleCategoryPermissions']) {
@@ -2009,7 +1976,7 @@ export class RoleDetailsDto {
         this.effectivePermissions = [] as any;
         for (let item of _data['effectivePermissions']) this.effectivePermissions!.push(item);
       }
-      this.role = _data['role'] ? RoleDto.fromJS(_data['role'], _mappings) : <any>null;
+      this.role = _data['role'] ? RoleDto.fromJS(_data['role'], _mappings) : <any>undefined;
     }
   }
 
@@ -2020,36 +1987,32 @@ export class RoleDetailsDto {
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
-    data['name'] = this.name !== undefined ? this.name : <any>null;
-    data['roleDescription'] = this.roleDescription !== undefined ? this.roleDescription : <any>null;
+    data['name'] = this.name;
+    data['roleDescription'] = this.roleDescription;
     if (this.roleCategoryPermissions) {
       data['roleCategoryPermissions'] = {};
       for (let key in this.roleCategoryPermissions) {
         if (this.roleCategoryPermissions.hasOwnProperty(key))
-          data['roleCategoryPermissions'][key] =
-            this.roleCategoryPermissions[key] !== undefined
-              ? this.roleCategoryPermissions[key]
-              : <any>null;
+          data['roleCategoryPermissions'][key] = this.roleCategoryPermissions[key];
       }
     }
     if (Array.isArray(this.effectivePermissions)) {
       data['effectivePermissions'] = [];
       for (let item of this.effectivePermissions) data['effectivePermissions'].push(item);
     }
-    data['role'] = this.role ? this.role.toJSON() : <any>null;
+    data['role'] = this.role ? this.role.toJSON() : <any>undefined;
     return data;
   }
 }
 
 export class RoleDto {
-  roleName!: string | null;
-  roleDescription!: string | null;
+  roleName!: string | undefined;
+  roleDescription!: string | undefined;
 
   init(_data?: any, _mappings?: any) {
     if (_data) {
-      this.roleName = _data['roleName'] !== undefined ? _data['roleName'] : <any>null;
-      this.roleDescription =
-        _data['roleDescription'] !== undefined ? _data['roleDescription'] : <any>null;
+      this.roleName = _data['roleName'];
+      this.roleDescription = _data['roleDescription'];
     }
   }
 
@@ -2060,20 +2023,20 @@ export class RoleDto {
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
-    data['roleName'] = this.roleName !== undefined ? this.roleName : <any>null;
-    data['roleDescription'] = this.roleDescription !== undefined ? this.roleDescription : <any>null;
+    data['roleName'] = this.roleName;
+    data['roleDescription'] = this.roleDescription;
     return data;
   }
 }
 
 export class SelectListGroup {
   disabled!: boolean;
-  name!: string | null;
+  name!: string | undefined;
 
   init(_data?: any, _mappings?: any) {
     if (_data) {
-      this.disabled = _data['disabled'] !== undefined ? _data['disabled'] : <any>null;
-      this.name = _data['name'] !== undefined ? _data['name'] : <any>null;
+      this.disabled = _data['disabled'];
+      this.name = _data['name'];
     }
   }
 
@@ -2084,8 +2047,8 @@ export class SelectListGroup {
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
-    data['disabled'] = this.disabled !== undefined ? this.disabled : <any>null;
-    data['name'] = this.name !== undefined ? this.name : <any>null;
+    data['disabled'] = this.disabled;
+    data['name'] = this.name;
     return data;
   }
 }
@@ -2094,16 +2057,18 @@ export class SelectListItem {
   disabled!: boolean;
   group!: SelectListGroup;
   selected!: boolean;
-  text!: string | null;
-  value!: string | null;
+  text!: string | undefined;
+  value!: string | undefined;
 
   init(_data?: any, _mappings?: any) {
     if (_data) {
-      this.disabled = _data['disabled'] !== undefined ? _data['disabled'] : <any>null;
-      this.group = _data['group'] ? SelectListGroup.fromJS(_data['group'], _mappings) : <any>null;
-      this.selected = _data['selected'] !== undefined ? _data['selected'] : <any>null;
-      this.text = _data['text'] !== undefined ? _data['text'] : <any>null;
-      this.value = _data['value'] !== undefined ? _data['value'] : <any>null;
+      this.disabled = _data['disabled'];
+      this.group = _data['group']
+        ? SelectListGroup.fromJS(_data['group'], _mappings)
+        : <any>undefined;
+      this.selected = _data['selected'];
+      this.text = _data['text'];
+      this.value = _data['value'];
     }
   }
 
@@ -2114,11 +2079,11 @@ export class SelectListItem {
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
-    data['disabled'] = this.disabled !== undefined ? this.disabled : <any>null;
-    data['group'] = this.group ? this.group.toJSON() : <any>null;
-    data['selected'] = this.selected !== undefined ? this.selected : <any>null;
-    data['text'] = this.text !== undefined ? this.text : <any>null;
-    data['value'] = this.value !== undefined ? this.value : <any>null;
+    data['disabled'] = this.disabled;
+    data['group'] = this.group ? this.group.toJSON() : <any>undefined;
+    data['selected'] = this.selected;
+    data['text'] = this.text;
+    data['value'] = this.value;
     return data;
   }
 }
@@ -2126,31 +2091,29 @@ export class SelectListItem {
 export class SetupApiViewModel {
   name!: string;
   siteName!: string;
-  databaseProvider!: string | null;
-  connectionString!: string | null;
-  tablePrefix!: string | null;
+  databaseProvider!: string | undefined;
+  connectionString!: string | undefined;
+  tablePrefix!: string | undefined;
   userName!: string;
   email!: string;
-  password!: string | null;
-  recipeName!: string | null;
-  recipe!: string | null;
-  siteTimeZone!: string | null;
+  password!: string | undefined;
+  recipeName!: string | undefined;
+  recipe!: string | undefined;
+  siteTimeZone!: string | undefined;
 
   init(_data?: any, _mappings?: any) {
     if (_data) {
-      this.name = _data['name'] !== undefined ? _data['name'] : <any>null;
-      this.siteName = _data['siteName'] !== undefined ? _data['siteName'] : <any>null;
-      this.databaseProvider =
-        _data['databaseProvider'] !== undefined ? _data['databaseProvider'] : <any>null;
-      this.connectionString =
-        _data['connectionString'] !== undefined ? _data['connectionString'] : <any>null;
-      this.tablePrefix = _data['tablePrefix'] !== undefined ? _data['tablePrefix'] : <any>null;
-      this.userName = _data['userName'] !== undefined ? _data['userName'] : <any>null;
-      this.email = _data['email'] !== undefined ? _data['email'] : <any>null;
-      this.password = _data['password'] !== undefined ? _data['password'] : <any>null;
-      this.recipeName = _data['recipeName'] !== undefined ? _data['recipeName'] : <any>null;
-      this.recipe = _data['recipe'] !== undefined ? _data['recipe'] : <any>null;
-      this.siteTimeZone = _data['siteTimeZone'] !== undefined ? _data['siteTimeZone'] : <any>null;
+      this.name = _data['name'];
+      this.siteName = _data['siteName'];
+      this.databaseProvider = _data['databaseProvider'];
+      this.connectionString = _data['connectionString'];
+      this.tablePrefix = _data['tablePrefix'];
+      this.userName = _data['userName'];
+      this.email = _data['email'];
+      this.password = _data['password'];
+      this.recipeName = _data['recipeName'];
+      this.recipe = _data['recipe'];
+      this.siteTimeZone = _data['siteTimeZone'];
     }
   }
 
@@ -2161,31 +2124,29 @@ export class SetupApiViewModel {
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
-    data['name'] = this.name !== undefined ? this.name : <any>null;
-    data['siteName'] = this.siteName !== undefined ? this.siteName : <any>null;
-    data['databaseProvider'] =
-      this.databaseProvider !== undefined ? this.databaseProvider : <any>null;
-    data['connectionString'] =
-      this.connectionString !== undefined ? this.connectionString : <any>null;
-    data['tablePrefix'] = this.tablePrefix !== undefined ? this.tablePrefix : <any>null;
-    data['userName'] = this.userName !== undefined ? this.userName : <any>null;
-    data['email'] = this.email !== undefined ? this.email : <any>null;
-    data['password'] = this.password !== undefined ? this.password : <any>null;
-    data['recipeName'] = this.recipeName !== undefined ? this.recipeName : <any>null;
-    data['recipe'] = this.recipe !== undefined ? this.recipe : <any>null;
-    data['siteTimeZone'] = this.siteTimeZone !== undefined ? this.siteTimeZone : <any>null;
+    data['name'] = this.name;
+    data['siteName'] = this.siteName;
+    data['databaseProvider'] = this.databaseProvider;
+    data['connectionString'] = this.connectionString;
+    data['tablePrefix'] = this.tablePrefix;
+    data['userName'] = this.userName;
+    data['email'] = this.email;
+    data['password'] = this.password;
+    data['recipeName'] = this.recipeName;
+    data['recipe'] = this.recipe;
+    data['siteTimeZone'] = this.siteTimeZone;
     return data;
   }
 }
 
 export class TypeDto {
-  name!: string | null;
-  fullName!: string | null;
+  name!: string | undefined;
+  fullName!: string | undefined;
 
   init(_data?: any, _mappings?: any) {
     if (_data) {
-      this.name = _data['name'] !== undefined ? _data['name'] : <any>null;
-      this.fullName = _data['fullName'] !== undefined ? _data['fullName'] : <any>null;
+      this.name = _data['name'];
+      this.fullName = _data['fullName'];
     }
   }
 
@@ -2196,25 +2157,23 @@ export class TypeDto {
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
-    data['name'] = this.name !== undefined ? this.name : <any>null;
-    data['fullName'] = this.fullName !== undefined ? this.fullName : <any>null;
+    data['name'] = this.name;
+    data['fullName'] = this.fullName;
     return data;
   }
 }
 
 export class UpdateRoleInput {
-  roleName!: string | null;
-  roleDescription!: string | null;
-  normalizedRoleName!: string | null;
-  roleClaims!: RoleClaimDto[] | null;
+  roleName!: string | undefined;
+  roleDescription!: string | undefined;
+  normalizedRoleName!: string | undefined;
+  roleClaims!: RoleClaimDto[] | undefined;
 
   init(_data?: any, _mappings?: any) {
     if (_data) {
-      this.roleName = _data['roleName'] !== undefined ? _data['roleName'] : <any>null;
-      this.roleDescription =
-        _data['roleDescription'] !== undefined ? _data['roleDescription'] : <any>null;
-      this.normalizedRoleName =
-        _data['normalizedRoleName'] !== undefined ? _data['normalizedRoleName'] : <any>null;
+      this.roleName = _data['roleName'];
+      this.roleDescription = _data['roleDescription'];
+      this.normalizedRoleName = _data['normalizedRoleName'];
       if (Array.isArray(_data['roleClaims'])) {
         this.roleClaims = [] as any;
         for (let item of _data['roleClaims'])
@@ -2230,10 +2189,9 @@ export class UpdateRoleInput {
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
-    data['roleName'] = this.roleName !== undefined ? this.roleName : <any>null;
-    data['roleDescription'] = this.roleDescription !== undefined ? this.roleDescription : <any>null;
-    data['normalizedRoleName'] =
-      this.normalizedRoleName !== undefined ? this.normalizedRoleName : <any>null;
+    data['roleName'] = this.roleName;
+    data['roleDescription'] = this.roleDescription;
+    data['normalizedRoleName'] = this.normalizedRoleName;
     if (Array.isArray(this.roleClaims)) {
       data['roleClaims'] = [];
       for (let item of this.roleClaims) data['roleClaims'].push(item.toJSON());
@@ -2242,150 +2200,101 @@ export class UpdateRoleInput {
   }
 }
 
-export class UserClaim {
-  claimType!: string | null;
-  claimValue!: string | null;
-
-  init(_data?: any, _mappings?: any) {
-    if (_data) {
-      this.claimType = _data['claimType'] !== undefined ? _data['claimType'] : <any>null;
-      this.claimValue = _data['claimValue'] !== undefined ? _data['claimValue'] : <any>null;
-    }
-  }
-
-  static fromJS(data: any, _mappings?: any): UserClaim {
-    data = typeof data === 'object' ? data : {};
-    return createInstance<UserClaim>(data, _mappings, UserClaim);
-  }
-
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data['claimType'] = this.claimType !== undefined ? this.claimType : <any>null;
-    data['claimValue'] = this.claimValue !== undefined ? this.claimValue : <any>null;
-    return data;
-  }
-}
-
-export class UserDto {
-  id!: number | null;
-  userId!: string | null;
-  userName!: string | null;
-  normalizedUserName!: string | null;
-  email!: string | null;
-  normalizedEmail!: string | null;
-  passwordHash!: string | null;
-  securityStamp!: string | null;
+export class UserDetailsDto {
+  id!: number | undefined;
+  userId!: string | undefined;
+  userName!: string | undefined;
+  normalizedUserName!: string | undefined;
+  email!: string | undefined;
+  normalizedEmail!: string | undefined;
   emailConfirmed!: boolean;
   isEnabled!: boolean;
   isLockoutEnabled!: boolean;
-  lockoutEndUtc!: Date | null;
+  lockoutEndUtc!: Date | undefined;
   accessFailedCount!: number;
-  roleNames!: string[] | null;
-  properties!: any | null;
+  roleNames!: string[] | undefined;
+  properties!: any | undefined;
 
   init(_data?: any, _mappings?: any) {
     if (_data) {
-      this.id = _data['id'] !== undefined ? _data['id'] : <any>null;
-      this.userId = _data['userId'] !== undefined ? _data['userId'] : <any>null;
-      this.userName = _data['userName'] !== undefined ? _data['userName'] : <any>null;
-      this.normalizedUserName =
-        _data['normalizedUserName'] !== undefined ? _data['normalizedUserName'] : <any>null;
-      this.email = _data['email'] !== undefined ? _data['email'] : <any>null;
-      this.normalizedEmail =
-        _data['normalizedEmail'] !== undefined ? _data['normalizedEmail'] : <any>null;
-      this.passwordHash = _data['passwordHash'] !== undefined ? _data['passwordHash'] : <any>null;
-      this.securityStamp =
-        _data['securityStamp'] !== undefined ? _data['securityStamp'] : <any>null;
-      this.emailConfirmed =
-        _data['emailConfirmed'] !== undefined ? _data['emailConfirmed'] : <any>null;
-      this.isEnabled = _data['isEnabled'] !== undefined ? _data['isEnabled'] : <any>null;
-      this.isLockoutEnabled =
-        _data['isLockoutEnabled'] !== undefined ? _data['isLockoutEnabled'] : <any>null;
+      this.id = _data['id'];
+      this.userId = _data['userId'];
+      this.userName = _data['userName'];
+      this.normalizedUserName = _data['normalizedUserName'];
+      this.email = _data['email'];
+      this.normalizedEmail = _data['normalizedEmail'];
+      this.emailConfirmed = _data['emailConfirmed'];
+      this.isEnabled = _data['isEnabled'];
+      this.isLockoutEnabled = _data['isLockoutEnabled'];
       this.lockoutEndUtc = _data['lockoutEndUtc']
         ? new Date(_data['lockoutEndUtc'].toString())
-        : <any>null;
-      this.accessFailedCount =
-        _data['accessFailedCount'] !== undefined ? _data['accessFailedCount'] : <any>null;
+        : <any>undefined;
+      this.accessFailedCount = _data['accessFailedCount'];
       if (Array.isArray(_data['roleNames'])) {
         this.roleNames = [] as any;
         for (let item of _data['roleNames']) this.roleNames!.push(item);
       }
-      this.properties = _data['properties'] !== undefined ? _data['properties'] : <any>null;
+      this.properties = _data['properties'];
     }
   }
 
-  static fromJS(data: any, _mappings?: any): UserDto {
+  static fromJS(data: any, _mappings?: any): UserDetailsDto {
     data = typeof data === 'object' ? data : {};
-    return createInstance<UserDto>(data, _mappings, UserDto);
+    return createInstance<UserDetailsDto>(data, _mappings, UserDetailsDto);
   }
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
-    data['id'] = this.id !== undefined ? this.id : <any>null;
-    data['userId'] = this.userId !== undefined ? this.userId : <any>null;
-    data['userName'] = this.userName !== undefined ? this.userName : <any>null;
-    data['normalizedUserName'] =
-      this.normalizedUserName !== undefined ? this.normalizedUserName : <any>null;
-    data['email'] = this.email !== undefined ? this.email : <any>null;
-    data['normalizedEmail'] = this.normalizedEmail !== undefined ? this.normalizedEmail : <any>null;
-    data['passwordHash'] = this.passwordHash !== undefined ? this.passwordHash : <any>null;
-    data['securityStamp'] = this.securityStamp !== undefined ? this.securityStamp : <any>null;
-    data['emailConfirmed'] = this.emailConfirmed !== undefined ? this.emailConfirmed : <any>null;
-    data['isEnabled'] = this.isEnabled !== undefined ? this.isEnabled : <any>null;
-    data['isLockoutEnabled'] =
-      this.isLockoutEnabled !== undefined ? this.isLockoutEnabled : <any>null;
-    data['lockoutEndUtc'] = this.lockoutEndUtc ? this.lockoutEndUtc.toISOString() : <any>null;
-    data['accessFailedCount'] =
-      this.accessFailedCount !== undefined ? this.accessFailedCount : <any>null;
+    data['id'] = this.id;
+    data['userId'] = this.userId;
+    data['userName'] = this.userName;
+    data['normalizedUserName'] = this.normalizedUserName;
+    data['email'] = this.email;
+    data['normalizedEmail'] = this.normalizedEmail;
+    data['emailConfirmed'] = this.emailConfirmed;
+    data['isEnabled'] = this.isEnabled;
+    data['isLockoutEnabled'] = this.isLockoutEnabled;
+    data['lockoutEndUtc'] = this.lockoutEndUtc ? this.lockoutEndUtc.toISOString() : <any>undefined;
+    data['accessFailedCount'] = this.accessFailedCount;
     if (Array.isArray(this.roleNames)) {
       data['roleNames'] = [];
       for (let item of this.roleNames) data['roleNames'].push(item);
     }
-    data['properties'] = this.properties !== undefined ? this.properties : <any>null;
+    data['properties'] = this.properties;
     return data;
   }
 }
 
 export class UserListItemDto {
-  id!: number | null;
-  userId!: string | null;
-  userName!: string | null;
-  normalizedUserName!: string | null;
-  email!: string | null;
+  id!: number | undefined;
+  userId!: string | undefined;
+  userName!: string | undefined;
+  normalizedUserName!: string | undefined;
+  email!: string | undefined;
   emailConfirmed!: boolean;
   isEnabled!: boolean;
   isLockoutEnabled!: boolean;
-  lockoutEndUtc!: Date | null;
+  lockoutEndUtc!: Date | undefined;
   accessFailedCount!: number;
-  roleNames!: string[] | null;
-  userClaims!: UserClaim[] | null;
+  roleNames!: string[] | undefined;
 
   init(_data?: any, _mappings?: any) {
     if (_data) {
-      this.id = _data['id'] !== undefined ? _data['id'] : <any>null;
-      this.userId = _data['userId'] !== undefined ? _data['userId'] : <any>null;
-      this.userName = _data['userName'] !== undefined ? _data['userName'] : <any>null;
-      this.normalizedUserName =
-        _data['normalizedUserName'] !== undefined ? _data['normalizedUserName'] : <any>null;
-      this.email = _data['email'] !== undefined ? _data['email'] : <any>null;
-      this.emailConfirmed =
-        _data['emailConfirmed'] !== undefined ? _data['emailConfirmed'] : <any>null;
-      this.isEnabled = _data['isEnabled'] !== undefined ? _data['isEnabled'] : <any>null;
-      this.isLockoutEnabled =
-        _data['isLockoutEnabled'] !== undefined ? _data['isLockoutEnabled'] : <any>null;
+      this.id = _data['id'];
+      this.userId = _data['userId'];
+      this.userName = _data['userName'];
+      this.normalizedUserName = _data['normalizedUserName'];
+      this.email = _data['email'];
+      this.emailConfirmed = _data['emailConfirmed'];
+      this.isEnabled = _data['isEnabled'];
+      this.isLockoutEnabled = _data['isLockoutEnabled'];
       this.lockoutEndUtc = _data['lockoutEndUtc']
         ? new Date(_data['lockoutEndUtc'].toString())
-        : <any>null;
-      this.accessFailedCount =
-        _data['accessFailedCount'] !== undefined ? _data['accessFailedCount'] : <any>null;
+        : <any>undefined;
+      this.accessFailedCount = _data['accessFailedCount'];
       if (Array.isArray(_data['roleNames'])) {
         this.roleNames = [] as any;
         for (let item of _data['roleNames']) this.roleNames!.push(item);
-      }
-      if (Array.isArray(_data['userClaims'])) {
-        this.userClaims = [] as any;
-        for (let item of _data['userClaims'])
-          this.userClaims!.push(UserClaim.fromJS(item, _mappings));
       }
     }
   }
@@ -2397,26 +2306,19 @@ export class UserListItemDto {
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
-    data['id'] = this.id !== undefined ? this.id : <any>null;
-    data['userId'] = this.userId !== undefined ? this.userId : <any>null;
-    data['userName'] = this.userName !== undefined ? this.userName : <any>null;
-    data['normalizedUserName'] =
-      this.normalizedUserName !== undefined ? this.normalizedUserName : <any>null;
-    data['email'] = this.email !== undefined ? this.email : <any>null;
-    data['emailConfirmed'] = this.emailConfirmed !== undefined ? this.emailConfirmed : <any>null;
-    data['isEnabled'] = this.isEnabled !== undefined ? this.isEnabled : <any>null;
-    data['isLockoutEnabled'] =
-      this.isLockoutEnabled !== undefined ? this.isLockoutEnabled : <any>null;
-    data['lockoutEndUtc'] = this.lockoutEndUtc ? this.lockoutEndUtc.toISOString() : <any>null;
-    data['accessFailedCount'] =
-      this.accessFailedCount !== undefined ? this.accessFailedCount : <any>null;
+    data['id'] = this.id;
+    data['userId'] = this.userId;
+    data['userName'] = this.userName;
+    data['normalizedUserName'] = this.normalizedUserName;
+    data['email'] = this.email;
+    data['emailConfirmed'] = this.emailConfirmed;
+    data['isEnabled'] = this.isEnabled;
+    data['isLockoutEnabled'] = this.isLockoutEnabled;
+    data['lockoutEndUtc'] = this.lockoutEndUtc ? this.lockoutEndUtc.toISOString() : <any>undefined;
+    data['accessFailedCount'] = this.accessFailedCount;
     if (Array.isArray(this.roleNames)) {
       data['roleNames'] = [];
       for (let item of this.roleNames) data['roleNames'].push(item);
-    }
-    if (Array.isArray(this.userClaims)) {
-      data['userClaims'] = [];
-      for (let item of this.userClaims) data['userClaims'].push(item.toJSON());
     }
     return data;
   }
@@ -2424,11 +2326,11 @@ export class UserListItemDto {
 
 export class UsersBulkActionInput {
   bulkAction!: UsersBulkActionInputBulkAction;
-  itemIds!: string[] | null;
+  itemIds!: string[] | undefined;
 
   init(_data?: any, _mappings?: any) {
     if (_data) {
-      this.bulkAction = _data['bulkAction'] !== undefined ? _data['bulkAction'] : <any>null;
+      this.bulkAction = _data['bulkAction'];
       if (Array.isArray(_data['itemIds'])) {
         this.itemIds = [] as any;
         for (let item of _data['itemIds']) this.itemIds!.push(item);
@@ -2443,7 +2345,7 @@ export class UsersBulkActionInput {
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
-    data['bulkAction'] = this.bulkAction !== undefined ? this.bulkAction : <any>null;
+    data['bulkAction'] = this.bulkAction;
     if (Array.isArray(this.itemIds)) {
       data['itemIds'] = [];
       for (let item of this.itemIds) data['itemIds'].push(item);
