@@ -1,9 +1,7 @@
 import { RolesServiceProxy, UsersServiceProxy } from './app-service-proxies';
 import {
-  AccountParams,
   DeptListItem,
   MenuParams,
-  // RoleParams,
   RolePageParams,
   MenuListGetResultModel,
   DeptListGetResultModel,

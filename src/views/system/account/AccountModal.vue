@@ -4,7 +4,7 @@
   </BasicModal>
 </template>
 <script lang="ts">
-  import { defineComponent, ref, computed, unref, reactive } from 'vue';
+  import { defineComponent, computed, unref, reactive } from 'vue';
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { accountFormSchema } from './account.data';
@@ -19,11 +19,14 @@
       // const isUpdate = ref(true);
       // const rowId = ref('');
       // const userInfo = ref({});
-      const model = reactive({ isUpdate: true, rowId: '', userInfo: {} });
-      const [
-        registerForm,
-        { setFieldsValue, updateSchema, resetFields, getFieldsValue, validate },
-      ] = useForm({
+      const model = reactive<{ isUpdate: boolean; rowId: string; userInfo: UserDetailsDto | null }>(
+        {
+          isUpdate: true,
+          rowId: '',
+          userInfo: null,
+        },
+      );
+      const [registerForm, { setFieldsValue, updateSchema, resetFields, validate }] = useForm({
         labelWidth: 100,
         schemas: accountFormSchema,
         showActionButtonGroup: false,
@@ -58,23 +61,19 @@
         ]);
       });
 
-      const getTitle = computed(() => (!unref(model.isUpdate) ? '新增账号' : '编辑账号'));
+      const getTitle = computed(() => (!model.isUpdate ? '新增账号' : '编辑账号'));
 
       async function handleSubmit() {
         try {
           const values = await validate();
           setModalProps({ confirmLoading: true });
           // TODO custom api
-          if (unref(model.isUpdate)) {
-            const userInfo = Object.assign(unref(model.userInfo), values);
-            console.log(userInfo, 'getFieldsValue');
+          if (model.isUpdate) {
+            const userInfo = Object.assign(model.userInfo, values);
             await userService.update(userInfo);
           } else {
             const userInfo = new UserDetailsDto();
-            userInfo.init(getFieldsValue());
-            console.log(getFieldsValue(), ' getFieldsValue()');
-            console.log(userInfo, 'userInfo getFieldsValue()');
-            console.log(userInfo, 'values getFieldsValue()');
+            userInfo.init(values);
             userInfo.properties = {};
             await userService.newUser(userInfo);
           }
