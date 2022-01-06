@@ -1,22 +1,22 @@
 <template>
   <div>
   <label>
-    {{ aaa }}
-    <abd :bbd="aaa" @click="adbClick"></abd>
+   aaa: {{ aaa }}
   </label>
   <br>
-  3333
+  <label>obbb:{{ obbb.bbb }} {{ obbb.ccc}} </label>
   <br>
   <a-button type="primary" @click="btnClick">22222222222222222</a-button>
-
+  <br>
   <Suspense>
 			<template v-slot:default>
-				<child v-model:aaa="aaa"></child> 
+				<child v-model:aaa="aaa" v-model="obbb"></child> 
 			</template>
 			<template v-slot:fallback>
 				<h3>加载中.....</h3>
 			</template>
 	</Suspense>
+  <br>
   <!-- <child v-model:aaa="aaa"></child> -->
   </div>
 </template>
@@ -35,10 +35,17 @@
   })
   export default class tables extends Vue {
     private aaa = '21';
+    private obbb = {
+      bbb: '22',
+      ccc: 33
+    }
     
 
     btnClick() {
       this.aaa = '22222222222222222';
+      this.obbb.bbb = '3333333333333333333';
+
+      
     }
 
     
