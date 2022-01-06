@@ -19,6 +19,7 @@
       v-bind="getBindValues"
       :rowClassName="getRowClassName"
       v-show="getEmptyDataIsShowTable"
+      @resize-column="onResizeColumn"
       @change="handleTableChange"
     >
       <template #[item]="data" v-for="item in Object.keys($slots)" :key="item">
@@ -307,7 +308,21 @@
       expose(tableAction);
 
       emit('register', tableAction, formActions);
-
+      function onResizeColumn(w, col) {
+        // console.log(Number(w), Number(w.toFixed(0)));
+        const cw = Number(w.toFixed(0));
+        if (cw % 10 != 0) return;
+        const cols = getColumns();
+        const c = cols.find((x) => x.dataIndex == col.dataIndex);
+        if (c) {
+          console.log(col, 'asdgasd');
+          console.log(w, 'wwwwwwwwwwwwwwwwwwwwwwwwww');
+          if (Number(Number(c.width).toFixed()) != cw) {
+            c.width = cw;
+            setColumns(cols);
+          }
+        }
+      }
       return {
         tableElRef,
         getBindValues,
@@ -316,6 +331,7 @@
         handleSearchInfoChange,
         getEmptyDataIsShowTable,
         handleTableChange,
+        onResizeColumn,
         getRowClassName,
         wrapRef,
         tableAction,

@@ -11,10 +11,12 @@ export const columns: BasicColumn[] = [
     title: '角色名称',
     dataIndex: 'roleName',
     width: 200,
+    resizable: true,
     align: 'left',
   },
   {
     title: '角色描述',
+    resizable: true,
     dataIndex: 'roleDescription',
     width: 180,
   },
