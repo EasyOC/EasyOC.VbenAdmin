@@ -1,9 +1,7 @@
 import { RolesServiceProxy, UsersServiceProxy } from './app-service-proxies';
 import {
-  AccountParams,
   DeptListItem,
   MenuParams,
-  // RoleParams,
   RolePageParams,
   MenuListGetResultModel,
   DeptListGetResultModel,
@@ -22,8 +20,8 @@ enum Api {
   RolePageList = '/system/getRoleListByPage',
   // GetAllRoleList = '/system/getAllRoleList',
 }
-const userService = new UsersServiceProxy();
-export async function getAccountList(params: AccountParams) {
+export const userService = new UsersServiceProxy();
+export async function getAccountList(params: any) {
   // params.searchText = '';
   console.log('param:', params);
 
@@ -31,6 +29,7 @@ export async function getAccountList(params: AccountParams) {
   console.log(data, 'userList');
   return data;
 }
+
 export const getUserDetails = (id: string) => userService.getUser(id);
 
 export const getDeptList = (params?: DeptListItem) =>

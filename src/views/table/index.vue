@@ -21,17 +21,17 @@
   </div>
 </template>
 <script lang="ts">
-  import { Vue,Options } from 'vue-property-decorator';
-  import { defineAsyncComponent } from 'vue'
+  import { Vue, Options } from 'vue-property-decorator';
+  import { defineAsyncComponent } from 'vue';
   // import child from '/@/views/table/child.vue';
 
-  const child = defineAsyncComponent(()=>import('/@/views/table/child1.vue'));
+  const child = defineAsyncComponent(() => import('/@/views/table/child1.vue'));
 
   @Options({
     name: 'tables',
     components: {
-       child
-    }
+      child,
+    },
   })
   export default class tables extends Vue {
     private aaa = '21';
@@ -47,7 +47,5 @@
 
       
     }
-
-    
   }
 </script>

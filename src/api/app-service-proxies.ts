@@ -334,10 +334,32 @@ export class ContentManagementServiceProxy extends AppServiceBase {
   }
   /**
    * 列出所有类型定义
+   * @param stereotype (optional)
+   * @param filter (optional)
+   * @param page (optional)
+   * @param pageSize (optional)
    * @return Success
    */
-  getAllTypes(): Promise<ContentTypeDefinitionDto[]> {
-    let url_ = this.baseUrl + '/api/ContentManagement/GetAllTypes';
+  getAllTypes(params: {
+    stereotype: string | undefined;
+    filter: string | undefined;
+    page: number | undefined;
+    pageSize: number | undefined;
+  }): Promise<PagedResultOfContentTypeListItemDto> {
+    const { stereotype, filter, page, pageSize } = { ...params };
+
+    let url_ = this.baseUrl + '/api/ContentManagement/GetAllTypes?';
+
+    if (stereotype !== undefined && stereotype !== null)
+      url_ += 'Stereotype=' + encodeURIComponent('' + stereotype) + '&';
+
+    if (filter !== undefined && filter !== null)
+      url_ += 'Filter=' + encodeURIComponent('' + filter) + '&';
+
+    if (page !== undefined && page !== null) url_ += 'Page=' + encodeURIComponent('' + page) + '&';
+
+    if (pageSize !== undefined && pageSize !== null)
+      url_ += 'PageSize=' + encodeURIComponent('' + pageSize) + '&';
     url_ = url_.replace(/[?&]$/, '');
     let options_ = <AxiosRequestConfig>{
       method: 'GET',
@@ -352,10 +374,27 @@ export class ContentManagementServiceProxy extends AppServiceBase {
   }
 
   /**
+   * @param page (optional)
+   * @param pageSize (optional)
+   * @param filter (optional)
    * @return Success
    */
-  getAllParts(): Promise<string[]> {
-    let url_ = this.baseUrl + '/api/ContentManagement/GetAllParts';
+  getAllParts(params: {
+    page: number | undefined;
+    pageSize: number | undefined;
+    filter: string | undefined;
+  }): Promise<PagedResultOfContentPartDefinitionDto> {
+    const { page, pageSize, filter } = { ...params };
+
+    let url_ = this.baseUrl + '/api/ContentManagement/GetAllParts?';
+
+    if (page !== undefined && page !== null) url_ += 'Page=' + encodeURIComponent('' + page) + '&';
+
+    if (pageSize !== undefined && pageSize !== null)
+      url_ += 'PageSize=' + encodeURIComponent('' + pageSize) + '&';
+
+    if (filter !== undefined && filter !== null)
+      url_ += 'Filter=' + encodeURIComponent('' + filter) + '&';
     url_ = url_.replace(/[?&]$/, '');
     let options_ = <AxiosRequestConfig>{
       method: 'GET',
@@ -371,21 +410,21 @@ export class ContentManagementServiceProxy extends AppServiceBase {
 
   /**
    * @param name (optional)
-   * @param incloudeSettings (optional)
+   * @param withSettings (optional)
    * @return Success
    */
   getPartDefinition(params: {
     name: string | undefined;
-    incloudeSettings: boolean | undefined;
-  }): Promise<ContentPartApiModel> {
-    const { name, incloudeSettings } = { ...params };
+    withSettings: boolean | undefined;
+  }): Promise<ContentPartDefinitionDto> {
+    const { name, withSettings } = { ...params };
 
     let url_ = this.baseUrl + '/api/ContentManagement/GetPartDefinition?';
 
     if (name !== undefined && name !== null) url_ += 'name=' + encodeURIComponent('' + name) + '&';
 
-    if (incloudeSettings !== undefined && incloudeSettings !== null)
-      url_ += 'incloudeSettings=' + encodeURIComponent('' + incloudeSettings) + '&';
+    if (withSettings !== undefined && withSettings !== null)
+      url_ += 'withSettings=' + encodeURIComponent('' + withSettings) + '&';
     url_ = url_.replace(/[?&]$/, '');
     let options_ = <AxiosRequestConfig>{
       method: 'GET',
@@ -401,91 +440,21 @@ export class ContentManagementServiceProxy extends AppServiceBase {
 
   /**
    * @param name (optional)
-   * @param incloudeSettings (optional)
+   * @param withSettings (optional)
    * @return Success
    */
   getTypeDefinition(params: {
     name: string | undefined;
-    incloudeSettings: boolean | undefined;
-  }): Promise<ContentTypeApiModel> {
-    const { name, incloudeSettings } = { ...params };
+    withSettings: boolean | undefined;
+  }): Promise<ContentTypeDefinitionDto> {
+    const { name, withSettings } = { ...params };
 
     let url_ = this.baseUrl + '/api/ContentManagement/GetTypeDefinition?';
 
     if (name !== undefined && name !== null) url_ += 'name=' + encodeURIComponent('' + name) + '&';
 
-    if (incloudeSettings !== undefined && incloudeSettings !== null)
-      url_ += 'incloudeSettings=' + encodeURIComponent('' + incloudeSettings) + '&';
-    url_ = url_.replace(/[?&]$/, '');
-    let options_ = <AxiosRequestConfig>{
-      method: 'GET',
-      url: url_,
-      headers: {
-        Accept: 'text/plain',
-      },
-    };
-    return this.instance.request(options_).then((_response: AxiosResponse) => {
-      return this.transformResult(_response);
-    });
-  }
-}
-
-export class ContentMappingServiceProxy extends AppServiceBase {
-  private instance: AxiosInstance;
-  private baseUrl: string;
-  protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
-
-  constructor(instance?: AxiosInstance) {
-    super();
-    if (instance) {
-      this.instance = instance;
-    } else {
-      this.instance = this.ajax;
-    }
-    this.baseUrl = '';
-  }
-  /**
-   * OC Content to RDBMS
-   * @param contentTypeName (optional)
-   * @return Success
-   */
-  getContentTypeMappingRDBMSResult(contentTypeName: string | undefined): Promise<any> {
-    let url_ = this.baseUrl + '/api/ContentMapping/GetContentTypeMappingRDBMSResult?';
-
-    if (contentTypeName !== undefined && contentTypeName !== null)
-      url_ += 'contentTypeName=' + encodeURIComponent('' + contentTypeName) + '&';
-    url_ = url_.replace(/[?&]$/, '');
-    let options_ = <AxiosRequestConfig>{
-      method: 'GET',
-      url: url_,
-      headers: {
-        Accept: 'text/plain',
-      },
-    };
-    return this.instance.request(options_).then((_response: AxiosResponse) => {
-      return this.transformResult(_response);
-    });
-  }
-
-  /**
-   * RDBMS TO OC Content
-   * @param tableName (optional)
-   * @param contentTypeName (optional)
-   * @return Success
-   */
-  getRDBMSMappingContentTypeResult(params: {
-    tableName: string | undefined;
-    contentTypeName: string | undefined;
-  }): Promise<any> {
-    const { tableName, contentTypeName } = { ...params };
-
-    let url_ = this.baseUrl + '/api/ContentMapping/GetRDBMSMappingContentTypeResult?';
-
-    if (tableName !== undefined && tableName !== null)
-      url_ += 'tableName=' + encodeURIComponent('' + tableName) + '&';
-
-    if (contentTypeName !== undefined && contentTypeName !== null)
-      url_ += 'contentTypeName=' + encodeURIComponent('' + contentTypeName) + '&';
+    if (withSettings !== undefined && withSettings !== null)
+      url_ += 'withSettings=' + encodeURIComponent('' + withSettings) + '&';
     url_ = url_.replace(/[?&]$/, '');
     let options_ = <AxiosRequestConfig>{
       method: 'GET',
@@ -1007,28 +976,25 @@ export class UsersServiceProxy extends AppServiceBase {
     this.baseUrl = '';
   }
   /**
-   * @param searchText (optional)
    * @param selectedRole (optional)
    * @param sortField (optional)
    * @param sortOrder (optional)
+   * @param filter (optional)
    * @param page (optional)
    * @param pageSize (optional)
    * @return Success
    */
   getAll(params: {
-    searchText: string | undefined;
     selectedRole: string | undefined;
     sortField: string | undefined;
     sortOrder: string | undefined;
+    filter: string | undefined;
     page: number | undefined;
     pageSize: number | undefined;
-  }): Promise<PagedResultDtoOfUserDto> {
-    const { searchText, selectedRole, sortField, sortOrder, page, pageSize } = { ...params };
+  }): Promise<PagedResultOfUserListItemDto> {
+    const { selectedRole, sortField, sortOrder, filter, page, pageSize } = { ...params };
 
     let url_ = this.baseUrl + '/api/Users/GetAll?';
-
-    if (searchText !== undefined && searchText !== null)
-      url_ += 'SearchText=' + encodeURIComponent('' + searchText) + '&';
 
     if (selectedRole !== undefined && selectedRole !== null)
       url_ += 'SelectedRole=' + encodeURIComponent('' + selectedRole) + '&';
@@ -1038,6 +1004,9 @@ export class UsersServiceProxy extends AppServiceBase {
 
     if (sortOrder !== undefined && sortOrder !== null)
       url_ += 'SortOrder=' + encodeURIComponent('' + sortOrder) + '&';
+
+    if (filter !== undefined && filter !== null)
+      url_ += 'Filter=' + encodeURIComponent('' + filter) + '&';
 
     if (page !== undefined && page !== null) url_ += 'Page=' + encodeURIComponent('' + page) + '&';
 
@@ -1081,8 +1050,8 @@ export class UsersServiceProxy extends AppServiceBase {
    * @param body (optional)
    * @return Success
    */
-  createUser(body: UserDto | undefined): Promise<void> {
-    let url_ = this.baseUrl + '/api/Users/CreateUser';
+  newUser(body: UserDetailsDto | undefined): Promise<void> {
+    let url_ = this.baseUrl + '/api/Users/NewUser';
     url_ = url_.replace(/[?&]$/, '');
     const content_ = JSON.stringify(body);
     let options_ = <AxiosRequestConfig>{
@@ -1102,7 +1071,7 @@ export class UsersServiceProxy extends AppServiceBase {
    * @param id (optional)
    * @return Success
    */
-  getUser(id: string | undefined): Promise<UserDto> {
+  getUser(id: string | undefined): Promise<UserDetailsDto> {
     let url_ = this.baseUrl + '/api/Users/GetUser?';
 
     if (id !== undefined && id !== null) url_ += 'id=' + encodeURIComponent('' + id) + '&';
@@ -1123,7 +1092,7 @@ export class UsersServiceProxy extends AppServiceBase {
    * @param body (optional)
    * @return Success
    */
-  update(body: UserDto | undefined): Promise<void> {
+  update(body: UserDetailsDto | undefined): Promise<void> {
     let url_ = this.baseUrl + '/api/Users/Update';
     url_ = url_.replace(/[?&]$/, '');
     const content_ = JSON.stringify(body);
@@ -1173,6 +1142,24 @@ export class UsersServiceProxy extends AppServiceBase {
       url: url_,
       headers: {
         'Content-Type': 'application/json-patch+json',
+      },
+    };
+    return this.instance.request(options_).then((_response: AxiosResponse) => {
+      return this.transformResult(_response);
+    });
+  }
+
+  /**
+   * @return Success
+   */
+  getUserSettingsTypes(): Promise<ContentTypeDefinitionDto[]> {
+    let url_ = this.baseUrl + '/api/Users/GetUserSettingsTypes';
+    url_ = url_.replace(/[?&]$/, '');
+    let options_ = <AxiosRequestConfig>{
+      method: 'GET',
+      url: url_,
+      headers: {
+        Accept: 'text/plain',
       },
     };
     return this.instance.request(options_).then((_response: AxiosResponse) => {
@@ -1239,33 +1226,23 @@ export class ConnectionConfigModel {
   }
 }
 
-export class ContentFiledsApiModel {
-  displayName!: string | null;
-  fieldTypeName!: string | null;
+export class ContentFieldDefinitionDto {
   name!: string | null;
-  settings!: any | null;
 
   init(_data?: any, _mappings?: any) {
     if (_data) {
-      this.displayName = _data['displayName'] !== undefined ? _data['displayName'] : <any>null;
-      this.fieldTypeName =
-        _data['fieldTypeName'] !== undefined ? _data['fieldTypeName'] : <any>null;
       this.name = _data['name'] !== undefined ? _data['name'] : <any>null;
-      this.settings = _data['settings'] !== undefined ? _data['settings'] : <any>null;
     }
   }
 
-  static fromJS(data: any, _mappings?: any): ContentFiledsApiModel {
+  static fromJS(data: any, _mappings?: any): ContentFieldDefinitionDto {
     data = typeof data === 'object' ? data : {};
-    return createInstance<ContentFiledsApiModel>(data, _mappings, ContentFiledsApiModel);
+    return createInstance<ContentFieldDefinitionDto>(data, _mappings, ContentFieldDefinitionDto);
   }
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
-    data['displayName'] = this.displayName !== undefined ? this.displayName : <any>null;
-    data['fieldTypeName'] = this.fieldTypeName !== undefined ? this.fieldTypeName : <any>null;
     data['name'] = this.name !== undefined ? this.name : <any>null;
-    data['settings'] = this.settings !== undefined ? this.settings : <any>null;
     return data;
   }
 }
@@ -1331,8 +1308,11 @@ export class ContentItem {
   }
 }
 
-export class ContentPartApiModel {
-  fields!: ContentFiledsApiModel[] | null;
+/** Dto of OrchardCore.ContentManagement.Metadata.Models.ContentPartDefinition */
+export class ContentPartDefinitionDto {
+  fields!: ContentPartFieldDefinitionDto[] | null;
+  displayName!: string | null;
+  readonly description!: string | null;
   name!: string | null;
   settings!: any | null;
 
@@ -1341,16 +1321,19 @@ export class ContentPartApiModel {
       if (Array.isArray(_data['fields'])) {
         this.fields = [] as any;
         for (let item of _data['fields'])
-          this.fields!.push(ContentFiledsApiModel.fromJS(item, _mappings));
+          this.fields!.push(ContentPartFieldDefinitionDto.fromJS(item, _mappings));
       }
+      this.displayName = _data['displayName'] !== undefined ? _data['displayName'] : <any>null;
+      (<any>this).description =
+        _data['description'] !== undefined ? _data['description'] : <any>null;
       this.name = _data['name'] !== undefined ? _data['name'] : <any>null;
       this.settings = _data['settings'] !== undefined ? _data['settings'] : <any>null;
     }
   }
 
-  static fromJS(data: any, _mappings?: any): ContentPartApiModel {
+  static fromJS(data: any, _mappings?: any): ContentPartDefinitionDto {
     data = typeof data === 'object' ? data : {};
-    return createInstance<ContentPartApiModel>(data, _mappings, ContentPartApiModel);
+    return createInstance<ContentPartDefinitionDto>(data, _mappings, ContentPartDefinitionDto);
   }
 
   toJSON(data?: any) {
@@ -1359,15 +1342,58 @@ export class ContentPartApiModel {
       data['fields'] = [];
       for (let item of this.fields) data['fields'].push(item.toJSON());
     }
+    data['displayName'] = this.displayName !== undefined ? this.displayName : <any>null;
+    data['description'] = this.description !== undefined ? this.description : <any>null;
     data['name'] = this.name !== undefined ? this.name : <any>null;
     data['settings'] = this.settings !== undefined ? this.settings : <any>null;
     return data;
   }
 }
 
-export class ContentTypeApiModel {
+export class ContentPartFieldDefinitionDto {
+  fieldDefinition!: ContentFieldDefinitionDto;
   displayName!: string | null;
-  parts!: ContentPartApiModel[] | null;
+  readonly description!: string | null;
+  name!: string | null;
+  settings!: any | null;
+
+  init(_data?: any, _mappings?: any) {
+    if (_data) {
+      this.fieldDefinition = _data['fieldDefinition']
+        ? ContentFieldDefinitionDto.fromJS(_data['fieldDefinition'], _mappings)
+        : <any>null;
+      this.displayName = _data['displayName'] !== undefined ? _data['displayName'] : <any>null;
+      (<any>this).description =
+        _data['description'] !== undefined ? _data['description'] : <any>null;
+      this.name = _data['name'] !== undefined ? _data['name'] : <any>null;
+      this.settings = _data['settings'] !== undefined ? _data['settings'] : <any>null;
+    }
+  }
+
+  static fromJS(data: any, _mappings?: any): ContentPartFieldDefinitionDto {
+    data = typeof data === 'object' ? data : {};
+    return createInstance<ContentPartFieldDefinitionDto>(
+      data,
+      _mappings,
+      ContentPartFieldDefinitionDto,
+    );
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['fieldDefinition'] = this.fieldDefinition ? this.fieldDefinition.toJSON() : <any>null;
+    data['displayName'] = this.displayName !== undefined ? this.displayName : <any>null;
+    data['description'] = this.description !== undefined ? this.description : <any>null;
+    data['name'] = this.name !== undefined ? this.name : <any>null;
+    data['settings'] = this.settings !== undefined ? this.settings : <any>null;
+    return data;
+  }
+}
+
+/** Dto of OrchardCore.ContentManagement.Metadata.Models.ContentTypeDefinition Converting Method EasyOC.ContentTypeDtoExtentions */
+export class ContentTypeDefinitionDto {
+  displayName!: string | null;
+  parts!: ContentTypePartDefinitionDto[] | null;
   name!: string | null;
   settings!: any | null;
 
@@ -1377,16 +1403,16 @@ export class ContentTypeApiModel {
       if (Array.isArray(_data['parts'])) {
         this.parts = [] as any;
         for (let item of _data['parts'])
-          this.parts!.push(ContentPartApiModel.fromJS(item, _mappings));
+          this.parts!.push(ContentTypePartDefinitionDto.fromJS(item, _mappings));
       }
       this.name = _data['name'] !== undefined ? _data['name'] : <any>null;
       this.settings = _data['settings'] !== undefined ? _data['settings'] : <any>null;
     }
   }
 
-  static fromJS(data: any, _mappings?: any): ContentTypeApiModel {
+  static fromJS(data: any, _mappings?: any): ContentTypeDefinitionDto {
     data = typeof data === 'object' ? data : {};
-    return createInstance<ContentTypeApiModel>(data, _mappings, ContentTypeApiModel);
+    return createInstance<ContentTypeDefinitionDto>(data, _mappings, ContentTypeDefinitionDto);
   }
 
   toJSON(data?: any) {
@@ -1402,26 +1428,69 @@ export class ContentTypeApiModel {
   }
 }
 
-export class ContentTypeDefinitionDto {
+export class ContentTypeListItemDto {
   displayName!: string | null;
+  readonly stereotype!: string | null;
   name!: string | null;
 
   init(_data?: any, _mappings?: any) {
     if (_data) {
       this.displayName = _data['displayName'] !== undefined ? _data['displayName'] : <any>null;
+      (<any>this).stereotype = _data['stereotype'] !== undefined ? _data['stereotype'] : <any>null;
       this.name = _data['name'] !== undefined ? _data['name'] : <any>null;
     }
   }
 
-  static fromJS(data: any, _mappings?: any): ContentTypeDefinitionDto {
+  static fromJS(data: any, _mappings?: any): ContentTypeListItemDto {
     data = typeof data === 'object' ? data : {};
-    return createInstance<ContentTypeDefinitionDto>(data, _mappings, ContentTypeDefinitionDto);
+    return createInstance<ContentTypeListItemDto>(data, _mappings, ContentTypeListItemDto);
   }
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
     data['displayName'] = this.displayName !== undefined ? this.displayName : <any>null;
+    data['stereotype'] = this.stereotype !== undefined ? this.stereotype : <any>null;
     data['name'] = this.name !== undefined ? this.name : <any>null;
+    return data;
+  }
+}
+
+export class ContentTypePartDefinitionDto {
+  partDefinition!: ContentPartDefinitionDto;
+  displayName!: string | null;
+  readonly description!: string | null;
+  name!: string | null;
+  settings!: any | null;
+
+  init(_data?: any, _mappings?: any) {
+    if (_data) {
+      this.partDefinition = _data['partDefinition']
+        ? ContentPartDefinitionDto.fromJS(_data['partDefinition'], _mappings)
+        : <any>null;
+      this.displayName = _data['displayName'] !== undefined ? _data['displayName'] : <any>null;
+      (<any>this).description =
+        _data['description'] !== undefined ? _data['description'] : <any>null;
+      this.name = _data['name'] !== undefined ? _data['name'] : <any>null;
+      this.settings = _data['settings'] !== undefined ? _data['settings'] : <any>null;
+    }
+  }
+
+  static fromJS(data: any, _mappings?: any): ContentTypePartDefinitionDto {
+    data = typeof data === 'object' ? data : {};
+    return createInstance<ContentTypePartDefinitionDto>(
+      data,
+      _mappings,
+      ContentTypePartDefinitionDto,
+    );
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['partDefinition'] = this.partDefinition ? this.partDefinition.toJSON() : <any>null;
+    data['displayName'] = this.displayName !== undefined ? this.displayName : <any>null;
+    data['description'] = this.description !== undefined ? this.description : <any>null;
+    data['name'] = this.name !== undefined ? this.name : <any>null;
+    data['settings'] = this.settings !== undefined ? this.settings : <any>null;
     return data;
   }
 }
@@ -1697,23 +1766,97 @@ export class OrchardCoreBaseField {
   }
 }
 
-export class PagedResultDtoOfUserDto {
+export class PagedResultOfContentPartDefinitionDto {
   total!: number;
-  items!: UserDto[] | null;
+  items!: ContentPartDefinitionDto[] | null;
 
   init(_data?: any, _mappings?: any) {
     if (_data) {
       this.total = _data['total'] !== undefined ? _data['total'] : <any>null;
       if (Array.isArray(_data['items'])) {
         this.items = [] as any;
-        for (let item of _data['items']) this.items!.push(UserDto.fromJS(item, _mappings));
+        for (let item of _data['items'])
+          this.items!.push(ContentPartDefinitionDto.fromJS(item, _mappings));
       }
     }
   }
 
-  static fromJS(data: any, _mappings?: any): PagedResultDtoOfUserDto {
+  static fromJS(data: any, _mappings?: any): PagedResultOfContentPartDefinitionDto {
     data = typeof data === 'object' ? data : {};
-    return createInstance<PagedResultDtoOfUserDto>(data, _mappings, PagedResultDtoOfUserDto);
+    return createInstance<PagedResultOfContentPartDefinitionDto>(
+      data,
+      _mappings,
+      PagedResultOfContentPartDefinitionDto,
+    );
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['total'] = this.total !== undefined ? this.total : <any>null;
+    if (Array.isArray(this.items)) {
+      data['items'] = [];
+      for (let item of this.items) data['items'].push(item.toJSON());
+    }
+    return data;
+  }
+}
+
+export class PagedResultOfContentTypeListItemDto {
+  total!: number;
+  items!: ContentTypeListItemDto[] | null;
+
+  init(_data?: any, _mappings?: any) {
+    if (_data) {
+      this.total = _data['total'] !== undefined ? _data['total'] : <any>null;
+      if (Array.isArray(_data['items'])) {
+        this.items = [] as any;
+        for (let item of _data['items'])
+          this.items!.push(ContentTypeListItemDto.fromJS(item, _mappings));
+      }
+    }
+  }
+
+  static fromJS(data: any, _mappings?: any): PagedResultOfContentTypeListItemDto {
+    data = typeof data === 'object' ? data : {};
+    return createInstance<PagedResultOfContentTypeListItemDto>(
+      data,
+      _mappings,
+      PagedResultOfContentTypeListItemDto,
+    );
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['total'] = this.total !== undefined ? this.total : <any>null;
+    if (Array.isArray(this.items)) {
+      data['items'] = [];
+      for (let item of this.items) data['items'].push(item.toJSON());
+    }
+    return data;
+  }
+}
+
+export class PagedResultOfUserListItemDto {
+  total!: number;
+  items!: UserListItemDto[] | null;
+
+  init(_data?: any, _mappings?: any) {
+    if (_data) {
+      this.total = _data['total'] !== undefined ? _data['total'] : <any>null;
+      if (Array.isArray(_data['items'])) {
+        this.items = [] as any;
+        for (let item of _data['items']) this.items!.push(UserListItemDto.fromJS(item, _mappings));
+      }
+    }
+  }
+
+  static fromJS(data: any, _mappings?: any): PagedResultOfUserListItemDto {
+    data = typeof data === 'object' ? data : {};
+    return createInstance<PagedResultOfUserListItemDto>(
+      data,
+      _mappings,
+      PagedResultOfUserListItemDto,
+    );
   }
 
   toJSON(data?: any) {
@@ -2080,46 +2223,20 @@ export class UpdateRoleInput {
   }
 }
 
-export class UserClaim {
-  claimType!: string | null;
-  claimValue!: string | null;
-
-  init(_data?: any, _mappings?: any) {
-    if (_data) {
-      this.claimType = _data['claimType'] !== undefined ? _data['claimType'] : <any>null;
-      this.claimValue = _data['claimValue'] !== undefined ? _data['claimValue'] : <any>null;
-    }
-  }
-
-  static fromJS(data: any, _mappings?: any): UserClaim {
-    data = typeof data === 'object' ? data : {};
-    return createInstance<UserClaim>(data, _mappings, UserClaim);
-  }
-
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data['claimType'] = this.claimType !== undefined ? this.claimType : <any>null;
-    data['claimValue'] = this.claimValue !== undefined ? this.claimValue : <any>null;
-    return data;
-  }
-}
-
-export class UserDto {
+export class UserDetailsDto {
   id!: number | null;
   userId!: string | null;
   userName!: string | null;
   normalizedUserName!: string | null;
   email!: string | null;
   normalizedEmail!: string | null;
-  passwordHash!: string | null;
-  securityStamp!: string | null;
   emailConfirmed!: boolean;
   isEnabled!: boolean;
   isLockoutEnabled!: boolean;
   lockoutEndUtc!: Date | null;
   accessFailedCount!: number;
   roleNames!: string[] | null;
-  userClaims!: UserClaim[] | null;
+  properties!: any | null;
 
   init(_data?: any, _mappings?: any) {
     if (_data) {
@@ -2131,9 +2248,6 @@ export class UserDto {
       this.email = _data['email'] !== undefined ? _data['email'] : <any>null;
       this.normalizedEmail =
         _data['normalizedEmail'] !== undefined ? _data['normalizedEmail'] : <any>null;
-      this.passwordHash = _data['passwordHash'] !== undefined ? _data['passwordHash'] : <any>null;
-      this.securityStamp =
-        _data['securityStamp'] !== undefined ? _data['securityStamp'] : <any>null;
       this.emailConfirmed =
         _data['emailConfirmed'] !== undefined ? _data['emailConfirmed'] : <any>null;
       this.isEnabled = _data['isEnabled'] !== undefined ? _data['isEnabled'] : <any>null;
@@ -2148,17 +2262,13 @@ export class UserDto {
         this.roleNames = [] as any;
         for (let item of _data['roleNames']) this.roleNames!.push(item);
       }
-      if (Array.isArray(_data['userClaims'])) {
-        this.userClaims = [] as any;
-        for (let item of _data['userClaims'])
-          this.userClaims!.push(UserClaim.fromJS(item, _mappings));
-      }
+      this.properties = _data['properties'] !== undefined ? _data['properties'] : <any>null;
     }
   }
 
-  static fromJS(data: any, _mappings?: any): UserDto {
+  static fromJS(data: any, _mappings?: any): UserDetailsDto {
     data = typeof data === 'object' ? data : {};
-    return createInstance<UserDto>(data, _mappings, UserDto);
+    return createInstance<UserDetailsDto>(data, _mappings, UserDetailsDto);
   }
 
   toJSON(data?: any) {
@@ -2170,8 +2280,6 @@ export class UserDto {
       this.normalizedUserName !== undefined ? this.normalizedUserName : <any>null;
     data['email'] = this.email !== undefined ? this.email : <any>null;
     data['normalizedEmail'] = this.normalizedEmail !== undefined ? this.normalizedEmail : <any>null;
-    data['passwordHash'] = this.passwordHash !== undefined ? this.passwordHash : <any>null;
-    data['securityStamp'] = this.securityStamp !== undefined ? this.securityStamp : <any>null;
     data['emailConfirmed'] = this.emailConfirmed !== undefined ? this.emailConfirmed : <any>null;
     data['isEnabled'] = this.isEnabled !== undefined ? this.isEnabled : <any>null;
     data['isLockoutEnabled'] =
@@ -2183,9 +2291,72 @@ export class UserDto {
       data['roleNames'] = [];
       for (let item of this.roleNames) data['roleNames'].push(item);
     }
-    if (Array.isArray(this.userClaims)) {
-      data['userClaims'] = [];
-      for (let item of this.userClaims) data['userClaims'].push(item.toJSON());
+    data['properties'] = this.properties !== undefined ? this.properties : <any>null;
+    return data;
+  }
+}
+
+export class UserListItemDto {
+  id!: number | null;
+  userId!: string | null;
+  userName!: string | null;
+  normalizedUserName!: string | null;
+  email!: string | null;
+  emailConfirmed!: boolean;
+  isEnabled!: boolean;
+  isLockoutEnabled!: boolean;
+  lockoutEndUtc!: Date | null;
+  accessFailedCount!: number;
+  roleNames!: string[] | null;
+
+  init(_data?: any, _mappings?: any) {
+    if (_data) {
+      this.id = _data['id'] !== undefined ? _data['id'] : <any>null;
+      this.userId = _data['userId'] !== undefined ? _data['userId'] : <any>null;
+      this.userName = _data['userName'] !== undefined ? _data['userName'] : <any>null;
+      this.normalizedUserName =
+        _data['normalizedUserName'] !== undefined ? _data['normalizedUserName'] : <any>null;
+      this.email = _data['email'] !== undefined ? _data['email'] : <any>null;
+      this.emailConfirmed =
+        _data['emailConfirmed'] !== undefined ? _data['emailConfirmed'] : <any>null;
+      this.isEnabled = _data['isEnabled'] !== undefined ? _data['isEnabled'] : <any>null;
+      this.isLockoutEnabled =
+        _data['isLockoutEnabled'] !== undefined ? _data['isLockoutEnabled'] : <any>null;
+      this.lockoutEndUtc = _data['lockoutEndUtc']
+        ? new Date(_data['lockoutEndUtc'].toString())
+        : <any>null;
+      this.accessFailedCount =
+        _data['accessFailedCount'] !== undefined ? _data['accessFailedCount'] : <any>null;
+      if (Array.isArray(_data['roleNames'])) {
+        this.roleNames = [] as any;
+        for (let item of _data['roleNames']) this.roleNames!.push(item);
+      }
+    }
+  }
+
+  static fromJS(data: any, _mappings?: any): UserListItemDto {
+    data = typeof data === 'object' ? data : {};
+    return createInstance<UserListItemDto>(data, _mappings, UserListItemDto);
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['id'] = this.id !== undefined ? this.id : <any>null;
+    data['userId'] = this.userId !== undefined ? this.userId : <any>null;
+    data['userName'] = this.userName !== undefined ? this.userName : <any>null;
+    data['normalizedUserName'] =
+      this.normalizedUserName !== undefined ? this.normalizedUserName : <any>null;
+    data['email'] = this.email !== undefined ? this.email : <any>null;
+    data['emailConfirmed'] = this.emailConfirmed !== undefined ? this.emailConfirmed : <any>null;
+    data['isEnabled'] = this.isEnabled !== undefined ? this.isEnabled : <any>null;
+    data['isLockoutEnabled'] =
+      this.isLockoutEnabled !== undefined ? this.isLockoutEnabled : <any>null;
+    data['lockoutEndUtc'] = this.lockoutEndUtc ? this.lockoutEndUtc.toISOString() : <any>null;
+    data['accessFailedCount'] =
+      this.accessFailedCount !== undefined ? this.accessFailedCount : <any>null;
+    if (Array.isArray(this.roleNames)) {
+      data['roleNames'] = [];
+      for (let item of this.roleNames) data['roleNames'].push(item);
     }
     return data;
   }
