@@ -2392,6 +2392,7 @@ export class UserListItemDto {
     isLockoutEnabled!: boolean;
     lockoutEndUtc!: Date | null;
     accessFailedCount!: number;
+    properties!: any | null;
     roleNames!: string[] | null;
 
     init(_data?: any, _mappings?: any) {
@@ -2406,6 +2407,7 @@ export class UserListItemDto {
             this.isLockoutEnabled = _data["isLockoutEnabled"] !== undefined ? _data["isLockoutEnabled"] : <any>null;
             this.lockoutEndUtc = _data["lockoutEndUtc"] ? new Date(_data["lockoutEndUtc"].toString()) : <any>null;
             this.accessFailedCount = _data["accessFailedCount"] !== undefined ? _data["accessFailedCount"] : <any>null;
+            this.properties = _data["properties"] !== undefined ? _data["properties"] : <any>null;
             if (Array.isArray(_data["roleNames"])) {
                 this.roleNames = [] as any;
                 for (let item of _data["roleNames"])
@@ -2431,6 +2433,7 @@ export class UserListItemDto {
         data["isLockoutEnabled"] = this.isLockoutEnabled !== undefined ? this.isLockoutEnabled : <any>null;
         data["lockoutEndUtc"] = this.lockoutEndUtc ? this.lockoutEndUtc.toISOString() : <any>null;
         data["accessFailedCount"] = this.accessFailedCount !== undefined ? this.accessFailedCount : <any>null;
+        data["properties"] = this.properties !== undefined ? this.properties : <any>null;
         if (Array.isArray(this.roleNames)) {
             data["roleNames"] = [];
             for (let item of this.roleNames)
