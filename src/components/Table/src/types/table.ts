@@ -407,10 +407,9 @@ export type CellFormat =
   | ((text: string, record: Recordable, index: number) => string | number)
   | Map<string | number, any>;
 
-
 /**
-* 更多属性参考: https://next.antdv.com/components/table-cn#Column
-*/
+ * 更多属性参考: https://next.antdv.com/components/table-cn#Column
+ */
 //@ts-ignore
 export interface BasicColumn extends ColumnProps {
   children?: BasicColumn[];
@@ -421,7 +420,6 @@ export interface BasicColumn extends ColumnProps {
       | unknown[]
       | (((props: Record<string, unknown>) => unknown[]) & (() => unknown[]) & (() => unknown[]));
   }[];
-
   //
   flag?: 'INDEX' | 'DEFAULT' | 'CHECKBOX' | 'RADIO' | 'ACTION';
   customTitle?: VueNode;

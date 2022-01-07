@@ -41,7 +41,7 @@ specifiers:
   '@vueuse/core': ^7.4.0
   '@vueuse/shared': ^7.4.0
   '@zxcvbn-ts/core': ^1.2.0
-  ant-design-vue: 3.0.0-alpha.16
+  ant-design-vue: 3.0.0-beta.5
   autoprefixer: ^10.4.0
   axios: ^0.24.0
   codemirror: ^5.64.0
@@ -131,7 +131,7 @@ dependencies:
   '@vueuse/core': 7.4.1_vue@3.2.26
   '@vueuse/shared': 7.4.1_vue@3.2.26
   '@zxcvbn-ts/core': 1.2.0
-  ant-design-vue: 3.0.0-alpha.16_ae87cbba5ec93a01f3fe1197df446ca3
+  ant-design-vue: 3.0.0-beta.5_ae87cbba5ec93a01f3fe1197df446ca3
   axios: 0.24.0
   codemirror: 5.65.0
   cropperjs: 1.5.12
@@ -2992,8 +2992,8 @@ packages:
     engines: {node: '>=12'}
     dev: true
 
-  /ant-design-vue/3.0.0-alpha.16_ae87cbba5ec93a01f3fe1197df446ca3:
-    resolution: {integrity: sha512-EPWt3F6SOfPXe+HyhOJXdTywdabbuzyARpnXER/zHfq0pYXeFPhki1v5re0afnrS7k6MR/BHJ6cJ1BRBeFqXhQ==}
+  /ant-design-vue/3.0.0-beta.5_ae87cbba5ec93a01f3fe1197df446ca3:
+    resolution: {integrity: sha512-yX+JGkPlzXav56hHCg0aa1LAB9GQEEQ8Xfy0o7tc49zFH2v0Q8ekiWVXsvsiracLZgl7GcLm5HnEPp9tAy0BZQ==}
     peerDependencies:
       '@vue/compiler-sfc': '>=3.1.0'
       vue: '>=3.1.0'
@@ -4439,7 +4439,7 @@ packages:
     dependencies:
       file-type: registry.npmmirror.com/file-type/3.9.0
       get-stream: registry.nlark.com/get-stream/2.3.1
-      pify: registry.nlark.com/pify/2.3.0
+      pify: 2.3.0
       yauzl: registry.npmmirror.com/yauzl/2.10.0
     dev: true
 
@@ -8122,7 +8122,7 @@ packages:
     resolution: {integrity: sha512-2w31R7SJtieJJnQtGc7RVL2StM2vGYVfqUOvUDxH6bC6aJTxPxTF0GnIgCyu7tjockiUWAYQRbxa7vKn34s5sQ==}
     engines: {node: '>=4'}
     dependencies:
-      pify: registry.nlark.com/pify/3.0.0
+      pify: 3.0.0
     dev: true
 
   /make-dir/2.1.0:
@@ -12177,7 +12177,7 @@ packages:
       decompress-unzip: registry.npmmirror.com/decompress-unzip/4.0.1
       graceful-fs: 4.2.8
       make-dir: 1.3.0
-      pify: registry.nlark.com/pify/2.3.0
+      pify: 2.3.0
       strip-dirs: registry.nlark.com/strip-dirs/2.1.0
     dev: true
 

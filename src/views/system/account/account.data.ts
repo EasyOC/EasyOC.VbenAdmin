@@ -6,6 +6,7 @@ export const columns: BasicColumn[] = [
     title: '用户名',
     dataIndex: 'userName',
     sorter: true,
+    resizable: true,
     width: 120,
   },
   // {
@@ -16,6 +17,7 @@ export const columns: BasicColumn[] = [
   {
     title: '邮箱',
     dataIndex: 'email',
+    resizable: true,
     sorter: true,
     width: 120,
   },
