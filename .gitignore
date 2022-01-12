@@ -1,11 +1,8 @@
 node_modules
 .DS_Store
 dist
-.npmrc
 .cache
 
-tests/server/static
-tests/server/static/upload
 
 .local
 # local env files

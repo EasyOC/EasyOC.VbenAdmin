@@ -1,0 +1,21 @@
+{
+  "name": "@admin/utils",
+  "version": "3.0.0-alpha.3",
+  "main": "index.ts",
+  "module": "index.ts",
+  "types": "index.d.js",
+  "unpkg": "index.js",
+  "jsdelivr": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@vue/runtime-core": "^3.2.26",
+    "@vue/shared": "^3.2.26",
+    "@vueuse/core": "^7.5.3",
+    "@vueuse/shared": "^7.5.3",
+    "dayjs": "^1.10.7",
+    "lodash-es": "^4.17.21"
+  },
+  "devDependencies": {
+    "@types/lodash-es": "^4.17.5"
+  }
+}

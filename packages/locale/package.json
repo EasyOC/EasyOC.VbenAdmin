@@ -1,0 +1,15 @@
+{
+  "name": "@admin/locale",
+  "version": "3.0.0-alpha.3",
+  "main": "index.ts",
+  "module": "index.ts",
+  "license": "MIT",
+  "dependencies": {
+    "@admin/setting": "workspace:*",
+    "@admin/tokens": "workspace:*",
+    "@admin/types": "workspace:*",
+    "@admin/utils": "workspace:*",
+    "@vueuse/core": "^7.5.3",
+    "vue-i18n": "^9.1.9"
+  }
+}

@@ -1,7 +1,5 @@
 {
   "typescript.tsdk": "./node_modules/typescript/lib",
-  "volar.tsPlugin": true,
-  "volar.tsPluginStatus": false,
   "npm.packageManager": "pnpm",
   "editor.tabSize": 2,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
@@ -20,6 +18,7 @@
     "**/.idea": true,
     "**/.vscode": false,
     "**/yarn.lock": true,
+    "**/pnpm-lock.yaml": true,
     "**/tmp": true,
     "out": true,
     "dist": true,
@@ -52,53 +51,26 @@
     "**/tmp/**": true,
     "**/bower_components/**": true,
     "**/dist/**": true,
-    "**/yarn.lock": true
+    "**/yarn.lock": true,
+    "**/pnpm-lock.yaml": true
   },
   "stylelint.enable": true,
-  "stylelint.packageManager": "yarn",
-  "path-intellisense.mappings": {
-    "/@/": "${workspaceRoot}/src"
-  },
-  "[javascriptreact]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[typescript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[typescriptreact]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[html]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[css]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[less]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[scss]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[markdown]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
+  "stylelint.packageManager": "pnpm",
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
   },
   "[vue]": {
     "editor.codeActionsOnSave": {
       "source.fixAll.eslint": false
-    },
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    }
   },
-  "i18n-ally.localesPaths": ["src/locales/lang"],
+  "i18n-ally.localesPaths": ["packages/locale/src/lang"],
   "i18n-ally.keystyle": "nested",
   "i18n-ally.sortKeys": true,
   "i18n-ally.namespace": true,
   "i18n-ally.pathMatcher": "{locale}/{namespaces}.{ext}",
   "i18n-ally.enabledParsers": ["ts"],
-  "i18n-ally.sourceLanguage": "zh-CN",
+  "i18n-ally.sourceLanguage": "en",
   "i18n-ally.displayLanguage": "zh-CN",
   "i18n-ally.enabledFrameworks": ["vue", "react"],
   "cSpell.words": [
@@ -129,11 +101,19 @@
     "logicflow",
     "vueuse",
     "zxcvbn",
-    "lintstagedrc",
+    "postbuild",
     "brotli",
     "tailwindcss",
     "sider",
     "pnpm",
-    "antd"
-  ]
+    "antd",
+    "antdv",
+    "demi",
+    "styl",
+    "unplugin",
+    "unref",
+    "vitest"
+  ],
+  "commentTranslate.multiLineMerge": true,
+  "typescript.suggest.autoImports": false
 }
