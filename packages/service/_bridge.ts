@@ -11,6 +11,10 @@ export interface ContextOptions {
   urlPrefix?: string
   apiUrl?: string
   uploadUrl?: string
+  clientId?: string
+  scopes?: string
+  clientRoot?: string
+  stsAuthority?: string
 }
 
 export let context: ContextOptions = {
@@ -23,6 +27,10 @@ export let context: ContextOptions = {
   timeoutFunction: () => {},
   urlPrefix: '',
   apiUrl: '',
+  clientId: '',
+  scopes: '',
+  clientRoot: '',
+  stsAuthority: '',
 }
 
 export const initServiceModule = async (_context: ContextOptions) => {

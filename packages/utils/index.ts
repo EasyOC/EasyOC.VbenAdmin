@@ -1,6 +1,5 @@
 export * from './src'
 export * from './bem'
-
 export {
   cloneDeep,
   omit,

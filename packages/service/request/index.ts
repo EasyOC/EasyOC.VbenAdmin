@@ -1,10 +1,11 @@
 // axios配置  可自行根据项目进行更改，只需更改该文件即可，其他文件可以不动
-// The axios configuration can be changed according to the project, just change the file, other files can be left unchanged
+// The axios configuration can be changed according to the project,
+//just change the file, other files can be left unchanged
 
 import type { AxiosResponse } from 'axios'
 import type { RequestOptions, RequestResult } from '@admin/types'
 import type { AxiosTransform, CreateAxiosOptions } from './axiosTransform'
-
+import { useGlobSetting } from ''
 import { VAxios } from './Axios'
 import { checkStatus } from './checkStatus'
 import { context } from '../_bridge'
@@ -227,10 +228,10 @@ const createAxios = (opt?: Partial<CreateAxiosOptions>) => {
         // See https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication#authentication_schemes
         // authentication schemes，e.g: Bearer
         // authenticationScheme: 'Bearer',
-        authenticationScheme: '',
+        authenticationScheme: 'Bearer',
         timeout: 10 * 1000,
         // 基础接口地址
-        // baseURL: globSetting.apiUrl,
+        // baseURL: process.env.VITE_GLOB_API_URL .apiUrl,
 
         headers: { 'Content-Type': ContentTypeEnum.JSON },
         // 如果是form-data格式

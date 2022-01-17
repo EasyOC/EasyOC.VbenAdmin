@@ -1,31 +1,42 @@
 import type { ErrorMessageMode } from '@admin/types'
 import type { LoginParams, LoginResultModel, GetUserInfoModel } from '../model'
-
+import { ContentTypeEnum } from '@admin/tokens'
 import { defaultRequest } from '../../request'
+import { context } from '../../_bridge'
 
 enum Api {
-  Login = '/login',
-  Logout = '/logout',
-  GetUserInfo = '/getUserInfo',
+  Login = '/connect/token',
+  Logout = '/connect/logout',
+  GetUserInfo = '/connect/userinfo',
   GetPermCode = '/getPermCode',
 }
 
 /**
  * @description: user login api
  */
-export function loginApi(
+export async function loginApi(
   params: LoginParams,
   mode: ErrorMessageMode = 'modal',
 ) {
-  return defaultRequest.post<LoginResultModel>(
+  const { username, password } = params
+  const result = await defaultRequest.post(
     {
       url: Api.Login,
-      params,
+      headers: { 'Content-Type': ContentTypeEnum.FORM_URLENCODED },
+      data: {
+        grant_type: 'password',
+        client_id: context.clientId,
+        username: username,
+        password: password,
+        scopes: context.scopes,
+      },
     },
     {
       errorMessageMode: mode,
+      isReturnNativeResponse: true,
     },
   )
+  return result.data
 }
 
 /**

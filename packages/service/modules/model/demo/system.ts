@@ -1,10 +1,13 @@
 import { BasicPageParams, BasicFetchResult } from '../basic'
 
 export type AccountParams = BasicPageParams & {
-  account?: string
-  nickname?: string
+  searchText: string | undefined
+  selectedRole: string | undefined
+  sortField: string | undefined
+  sortOrder: string | undefined
+  page: number | undefined
+  pageSize: number | undefined
 }
-
 export type RoleParams = {
   roleName?: string
   status?: string

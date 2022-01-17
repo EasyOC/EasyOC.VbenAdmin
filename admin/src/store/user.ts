@@ -2,10 +2,17 @@ import type { UserInfo, ErrorMessageMode } from '@admin/types'
 
 import { defineStore } from 'pinia'
 import { RoleEnum, PageEnum } from '@admin/tokens'
-import { isArray } from '@admin/utils'
+import {
+  decodeJwt,
+  // , isArray
+} from '@admin/utils'
 import { useI18n } from '@admin/locale'
 import { pinia } from '@/internal'
-import { doLogout, getUserInfo, loginApi } from '@service/sys/user'
+import {
+  doLogout,
+  // getUserInfo,
+  loginApi,
+} from '@service/sys/user'
 import { GetUserInfoModel, LoginParams } from '@service/model'
 import { useMessage } from '@/hooks/web/useMessage'
 import { router } from '@/router'
@@ -87,21 +94,21 @@ export const useUserStore = defineStore({
         goHome?: boolean
         mode?: ErrorMessageMode
       },
-    ): Promise<GetUserInfoModel | null> {
+    ): Promise<UserInfo | null> {
       try {
         const { goHome = true, mode, ...loginParams } = params
 
         const data = await loginApi(loginParams, mode)
-        const { token } = data
+        const { access_token } = data
 
         // save token
-        this.setToken(token)
+        this.setToken(access_token)
         return this.afterLoginAction(goHome)
       } catch (error) {
         return Promise.reject(error)
       }
     },
-    async afterLoginAction(goHome?: boolean): Promise<GetUserInfoModel | null> {
+    async afterLoginAction(goHome?: boolean): Promise<UserInfo | null> {
       if (!this.getToken) {
         return null
       }
@@ -132,15 +139,36 @@ export const useUserStore = defineStore({
         return null
       }
 
-      const userInfo = await getUserInfo()
-      const { roles = [] } = userInfo
-      if (isArray(roles)) {
-        const roleList = roles.map((item) => item.value) as RoleEnum[]
-        this.setRoleList(roleList)
-      } else {
-        userInfo.roles = []
-        this.setRoleList([])
+      // const userInfo = await getUserInfo()
+      const userInfo = {} as GetUserInfoModel //await getUserInfo();
+
+      const data = decodeJwt(this.getToken)
+
+      if (!data) {
+        throw Error('Verification failed, please Login again.')
       }
+      const { name, email } = data
+      userInfo.username = name
+      userInfo.email = email
+      // const { roles = [] } = userInfo
+      const roles = data.Permission as Array<string>
+      const dataRole =
+        data['http://schemas.microsoft.com/ws/2008/06/identity/claims/role']
+      if (typeof dataRole == 'object') {
+        data.profile.roles.forEach((element) => {
+          roles.push(element)
+          userInfo.roles.push(element)
+        })
+      } else {
+        roles.push(dataRole)
+      }
+      // if (isArray(roles)) {
+      //   const roleList = roles.map((item) => item.value) as RoleEnum[]
+      //   this.setRoleList(roleList)
+      // } else {
+      //   userInfo.roles = []
+      //   this.setRoleList([])
+      // }
       this.setUserInfo(userInfo)
       return userInfo
     },

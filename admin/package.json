@@ -9,7 +9,6 @@
   "scripts": {
     "dev": "vite",
     "build": "cross-env NODE_ENV=production vite build && esno ./scripts/post-build.ts",
-    "genApi-Win": "cd nswag & refresh.bat",
     "build:test": "cross-env vite build --mode test && esno ./scripts/post-build.ts",
     "build:no-cache": "pnpm clean:cache && npm run build",
     "report": "cross-env REPORT=true npm run build",

@@ -5,9 +5,9 @@ import { resolve } from 'path'
 import { OUTPUT_DIR, wrapperEnv } from './config'
 import { configProxy, configVitePlugins } from './config/vite'
 import { generateModifyVars } from './config/modifyVars'
-import { cyan } from 'chalk'
+// import { cyan } from 'chalk'
 
-console.log(cyan('当前处于开发测试阶段，请勿用于实际项目！\n'))
+// console.log(cyan('当前处于开发测试阶段，请勿用于实际项目！\n'))
 
 export default defineConfig(async ({ command, mode }) => {
   const { dependencies, devDependencies, name, version } = pkg

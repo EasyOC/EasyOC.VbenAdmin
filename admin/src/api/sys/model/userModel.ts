@@ -15,9 +15,9 @@ export interface RoleInfo {
  * @description: Login interface return value
  */
 export interface LoginResultModel {
-  access_token: string
-  expires_in: number
-  token_type: string
+  userId: string | number
+  token: string
+  role: RoleInfo
 }
 
 /**
@@ -35,5 +35,7 @@ export interface GetUserInfoModel {
   avatar: string
   // 介绍
   desc?: string
+
+  introduction: string
   email: string
 }

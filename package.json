@@ -10,6 +10,7 @@
   "scripts": {
     "bootstrap": "pnpm install",
     "dev": "pnpm run -C admin dev",
+    "genApi-Win": "cd nswag & refresh.bat",
     "build": "pnpm run -C admin build",
     "log": "conventional-changelog -p angular -i CHANGELOG.md -s",
     "clean": "npm run clean:dist && npm run clean -r --stream",
@@ -19,8 +20,7 @@
     "lint:eslint": "eslint --cache --max-warnings 0  \"{packages,admin}/**/*.{vue,ts,tsx}\" --fix",
     "lint:prettier": "prettier --write  \"{packages,admin}/**/*.{js,json,ts,tsx,css,less,scss,vue,html,md}\"",
     "lint:stylelint": "stylelint --fix \"**/*.{vue,less,postcss,css,scss}\"",
-    "reinstall": "rimraf pnpm-lock.yaml && rimraf package.lock.json && rimraf yarn.lock && npm run clean:all && npm run bootstrap",
-    "prepare": "husky install"
+    "reinstall": "rimraf pnpm-lock.yaml && rimraf package.lock.json && rimraf yarn.lock && npm run clean:all && npm run bootstrap"
   },
   "devDependencies": {
     "@commitlint/cli": "^16.0.1",
@@ -43,6 +43,7 @@
     "husky": "^7.0.4",
     "inquirer": "^8.2.0",
     "lint-staged": "12.1.5",
+    "nswag": "^13.15.5",
     "postcss": "^8.4.5",
     "postcss-html": "^1.3.0",
     "postcss-less": "^6.0.0",
@@ -60,22 +61,6 @@
     "typescript": "^4.5.4",
     "vue-eslint-parser": "^8.0.1"
   },
-  "resolutions": {
-    "bin-wrapper": "npm:bin-wrapper-china",
-    "gifsicle": "5.2.0"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/anncwb/vue-vben-admin.git"
-  },
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/anncwb/vue-vben-admin/issues"
-  },
-  "homepage": "https://github.com/anncwb/vue-vben-admin",
-  "engines": {
-    "node": ">=16.0.0"
-  },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
       "eslint --fix"
@@ -87,5 +72,8 @@
     "*.{scss,less,styl,html}": [
       "stylelint --fix"
     ]
+  },
+  "dependencies": {
+    "nswag": "^13.15.5"
   }
 }

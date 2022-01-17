@@ -148,6 +148,10 @@ export interface GlobConfig {
   urlPrefix?: string
   // Project abbreviation
   shortName: string
+  clientRoot: string
+  stsAuthority: string
+  clientId?: string
+  scopes: string
 }
 
 export interface GlobEnvConfig {
@@ -161,4 +165,9 @@ export interface GlobEnvConfig {
   VITE_GLOB_APP_SHORT_NAME: string
   // Upload url
   VITE_GLOB_UPLOAD_URL?: string
+
+  VITE_GLOB_OIDC_clientRoot: string
+  VITE_GLOB_OIDC_stsAuthority: string
+  VITE_GLOB_OIDC_CLIENTID?: string
+  VITE_GLOB_OIDC_SCOPES: string
 }
