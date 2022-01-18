@@ -95,10 +95,5 @@
     "vite-plugin-windicss": "^1.6.1",
     "vitest": "^0.0.136",
     "vue-tsc": "^0.30.2"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/anncwb/vue-vben-admin.git",
-    "directory": "admin"
   }
 }

@@ -1,5 +1,5 @@
 import { AxiosResponse } from 'axios'
-import { defaultRequest } from '../request'
+import { defaultRequest } from '../../request'
 
 export class AppServiceBase {
   public ajax = defaultRequest.getAxios()

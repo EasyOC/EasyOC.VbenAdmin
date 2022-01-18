@@ -1,6 +1,6 @@
-import type { GetAccountInfoModel } from '../model'
+import type { GetAccountInfoModel } from './model'
 
-import { defaultRequest } from '../../request'
+import { defaultRequest } from '../request'
 
 enum Api {
   ACCOUNT_INFO = '/account/getAccountInfo',

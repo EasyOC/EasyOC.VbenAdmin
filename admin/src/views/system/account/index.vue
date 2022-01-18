@@ -35,33 +35,40 @@
   </PageWrapper>
 </template>
 <script setup lang="ts">
-  import { reactive, onMounted } from 'vue';
-  import { BasicTable, useTable, TableAction } from '/@/components/Table';
-  import { getAccountList, getUserDetails, userService } from '../../../api/system';
-  import { PageWrapper } from '/@/components/Page';
-  // import DeptTree from './DeptTree.vue';
-  import { useModal } from '/@/components/Modal';
-  import AccountModal from './AccountModal.vue';
-  import { columns, searchFormSchema } from './account.data';
-  import { useGo } from '/@/hooks/web/usePage';
-  import { ContentHelper } from '/@/api/EOC/ContentHelper';
-  import { ContentTypeDefinitionDto } from '/@/api/app-service-proxies';
-  let userCustomSettings: ContentTypeDefinitionDto[];
-  onMounted(async () => {
-    userCustomSettings = await userService.getUserSettingsTypes();
-    console.log(userCustomSettings, 'aauserCustomSettings');
-    const helper = new ContentHelper();
-    const customPropCols = helper.getColumnsFromUserProperties(userCustomSettings);
-    const userListColumns = [...columns, ...customPropCols];
-    console.log(userListColumns, 'userListColumnsuserListColumnsuserListColumns');
-    setColumns(userListColumns);
-  });
+import { reactive, onMounted } from 'vue'
+import { BasicTable, useTable, TableAction } from '/@/components/Table'
+import {
+  getAccountList,
+  getUserDetails,
+  userService,
+} from '@service/'
 
-  const go = useGo();
-  const [registerModal, { openModal }] = useModal();
-  const searchInfo = reactive<Recordable>({});
+// } from '../../../api/system'
+import { PageWrapper } from '/@/components/Page'
+// import DeptTree from './DeptTree.vue';
+import { useModal } from '/@/components/Modal'
+import AccountModal from './AccountModal.vue'
+import { columns, searchFormSchema } from './account.data'
+import { useGo } from '/@/hooks/web/usePage'
+import { ContentHelper } from '/@/api/EOC/ContentHelper'
+import { ContentTypeDefinitionDto } from '/@/api/app-service-proxies'
+let userCustomSettings: ContentTypeDefinitionDto[]
+onMounted(async () => {
+  userCustomSettings = await userService.getUserSettingsTypes()
+  console.log(userCustomSettings, 'aauserCustomSettings')
+  const helper = new ContentHelper()
+  const customPropCols = helper.getColumnsFromUserProperties(userCustomSettings)
+  const userListColumns = [...columns, ...customPropCols]
+  console.log(userListColumns, 'userListColumnsuserListColumnsuserListColumns')
+  setColumns(userListColumns)
+})
 
-  const [registerTable, { reload, updateTableDataRecord, setColumns }] = useTable({
+const go = useGo()
+const [registerModal, { openModal }] = useModal()
+const searchInfo = reactive<Recordable>({})
+
+const [registerTable, { reload, updateTableDataRecord, setColumns }] = useTable(
+  {
     title: '账号列表',
     api: getAccountList,
     rowKey: 'id',
@@ -77,8 +84,8 @@
     bordered: true,
     showIndexColumn: true,
     handleSearchInfoFn(info) {
-      console.log('handleSearchInfoFn', info);
-      return info;
+      console.log('handleSearchInfoFn', info)
+      return info
     },
     actionColumn: {
       width: 120,
@@ -86,40 +93,41 @@
       dataIndex: 'action',
       slots: { customRender: 'action' },
     },
-  });
+  },
+)
 
-  function handleCreate() {
-    openModal(true, {
-      isUpdate: false,
-    });
-  }
+function handleCreate() {
+  openModal(true, {
+    isUpdate: false,
+  })
+}
 
-  async function handleEdit(record: Recordable) {
-    console.log(record);
-    var user = await getUserDetails(record.userId);
-    openModal(true, {
-      record: user,
-      isUpdate: true,
-      userCustomSettings,
-    });
-  }
+async function handleEdit(record: Recordable) {
+  console.log(record)
+  var user = await getUserDetails(record.userId)
+  openModal(true, {
+    record: user,
+    isUpdate: true,
+    userCustomSettings,
+  })
+}
 
-  function handleDelete(record: Recordable) {
-    console.log(record);
-  }
+function handleDelete(record: Recordable) {
+  console.log(record)
+}
 
-  function handleSuccess({ isUpdate, values }) {
-    if (isUpdate) {
-      // 演示不刷新表格直接更新内部数据。
-      // 注意：updateTableDataRecord要求表格的rowKey属性为string并且存在于每一行的record的keys中
-      const result = updateTableDataRecord(values.id, values);
-      console.log(result, 'updateTableDataRecord');
-    } else {
-      reload();
-    }
+function handleSuccess({ isUpdate, values }) {
+  if (isUpdate) {
+    // 演示不刷新表格直接更新内部数据。
+    // 注意：updateTableDataRecord要求表格的rowKey属性为string并且存在于每一行的record的keys中
+    const result = updateTableDataRecord(values.id, values)
+    console.log(result, 'updateTableDataRecord')
+  } else {
+    reload()
   }
+}
 
-  function handleView(record: Recordable) {
-    go('/system/account_detail/' + record.id);
-  }
+function handleView(record: Recordable) {
+  go('/system/account_detail/' + record.id)
+}
 </script>

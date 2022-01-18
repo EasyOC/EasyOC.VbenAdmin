@@ -6,15 +6,18 @@ import type {
   RolePageParams,
   MenuListGetResultModel,
   DeptListGetResultModel,
-  AccountListGetResultModel,
+  // AccountListGetResultModel,
   RolePageListGetResultModel,
-  RoleListGetResultModel,
-} from '../model'
-import { defaultRequest } from '../../request'
-import { RolesServiceProxy, UsersServiceProxy } from '../app-service-proxies'
+  // RoleListGetResultModel,
+} from './model'
+import { defaultRequest } from '../request'
+import {
+  RolesServiceProxy,
+  UsersServiceProxy,
+} from './api/app-service-proxies'
 
 enum Api {
-  AccountList = '/system/getAccountList',
+  // AccountList = '/system/getAccountList',
   IsAccountExist = '/system/accountExist',
   DeptList = '/system/getDeptList',
   setRoleStatus = '/system/setRoleStatus',
@@ -22,7 +25,7 @@ enum Api {
   RolePageList = '/system/getRoleListByPage',
   GetAllRoleList = '/system/getAllRoleList',
 }
-const userService = new UsersServiceProxy()
+export const userService = new UsersServiceProxy()
 
 export async function getAccountList(params: AccountParams) {
   const data = await userService.getAll(params)
