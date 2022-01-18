@@ -10,7 +10,6 @@
   "scripts": {
     "bootstrap": "pnpm install",
     "dev": "pnpm run -C admin dev",
-    "genApi-Win": "cd nswag & refresh.bat",
     "build": "pnpm run -C admin build",
     "log": "conventional-changelog -p angular -i CHANGELOG.md -s",
     "clean": "npm run clean:dist && npm run clean -r --stream",
@@ -40,7 +39,6 @@
     "eslint-plugin-vue": "^8.2.0",
     "esno": "^0.13.0",
     "fs-extra": "^10.0.0",
-    "husky": "^7.0.4",
     "inquirer": "^8.2.0",
     "lint-staged": "12.1.5",
     "postcss": "^8.4.5",
@@ -59,5 +57,24 @@
     "ts-node": "^10.4.0",
     "typescript": "^4.5.4",
     "vue-eslint-parser": "^8.0.1"
+  },
+  "resolutions": {
+    "bin-wrapper": "npm:bin-wrapper-china",
+    "gifsicle": "5.2.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix"
+    ],
+    "*.vue": [
+      "eslint --fix",
+      "stylelint --fix"
+    ],
+    "*.{scss,less,styl,html}": [
+      "stylelint --fix"
+    ]
   }
 }
