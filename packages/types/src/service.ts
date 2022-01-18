@@ -26,9 +26,10 @@ export interface RequestOptions {
 }
 
 export interface RequestResult<T = any> {
-  code: number
+  statusCode: number
   type: 'success' | 'error' | 'warning'
-  message: string
+  succeeded: boolean
+  message: string[]
   result: T
 }
 

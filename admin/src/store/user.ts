@@ -143,7 +143,7 @@ export const useUserStore = defineStore({
       const userInfo = {} as GetUserInfoModel //await getUserInfo();
 
       const data = decodeJwt(this.getToken)
-
+      console.log(data, 'jwtdata')
       if (!data) {
         throw Error('Verification failed, please Login again.')
       }

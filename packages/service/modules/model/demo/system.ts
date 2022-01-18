@@ -42,6 +42,7 @@ export interface DeptListItem {
   createTime: string
   remark: string
   status: number
+  parentId: string
 }
 
 export interface MenuListItem {

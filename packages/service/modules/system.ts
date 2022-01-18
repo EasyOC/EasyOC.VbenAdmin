@@ -2,7 +2,7 @@ import type {
   AccountParams,
   DeptListItem,
   MenuParams,
-  RoleParams,
+  // RoleParams,
   RolePageParams,
   MenuListGetResultModel,
   DeptListGetResultModel,
@@ -11,10 +11,8 @@ import type {
   // RoleListGetResultModel,
 } from './model'
 import { defaultRequest } from '../request'
-import {
-  RolesServiceProxy,
-  UsersServiceProxy,
-} from './api/app-service-proxies'
+import { RolesServiceProxy, UsersServiceProxy } from './api/app-service-proxies'
+import { excuteGraphqlGetQuery } from './eoc/GraphqlService'
 
 enum Api {
   // AccountList = '/system/getAccountList',
@@ -41,8 +39,51 @@ export const getAllRoleList = async () => {
   return roles
   // defHttp.get<RoleListGetResultModel>({ url: Api.GetAllRoleList, params });
 }
-export const getDeptList = (params?: DeptListItem) =>
-  defaultRequest.get<DeptListGetResultModel>({ url: Api.DeptList, params })
+export const getDeptList = async (): Promise<DeptListGetResultModel> => {
+  const result = await excuteGraphqlGetQuery({
+    query: `query queryDepartment {
+    queryDepartment {
+      createdUtc
+      description
+      displayText
+      modifiedUtc
+      orderIndex
+      publishedUtc
+      status
+      parentDepartmentId {
+        contentItemIds
+      }
+      contentItemId
+    }
+  }`,
+  })
+  console.log('queryDepartment', result)
+  // const sample = {
+  //   createdUtc: '2022-01-10T11:16:08.5105019Z',
+  //   description: null,
+  //   displayText: '财务部',
+  //   modifiedUtc: '2022-01-10T11:16:08.5105019Z',
+  //   orderIndex: null,
+  //   publishedUtc: '2022-01-10T11:16:08.5142674Z',
+  //   status: true,
+  // }
+  const depList = result.data.queryDepartment.map((x) => {
+    const dept = {
+      id: x.contentItemId,
+      orderNo: x.orderIndex,
+      createTime: x.createdUtc,
+      remark: x.description,
+      status: x.status ? 1 : 0,
+    } as DeptListItem
+    if (x.parentDepartmentId?.contentItemIds) {
+      dept.parentId = x.parentDepartmentId.contentItemIds[0]
+    }
+    return dept
+  })
+  console.log(depList, 'depList')
+  return { items: depList, total: depList.length } as DeptListGetResultModel
+  // defaultRequest.get<DeptListGetResultModel>({ url: Api.DeptList, params })
+}
 
 export const getMenuList = (params?: MenuParams) =>
   defaultRequest.get<MenuListGetResultModel>({ url: Api.MenuList, params })

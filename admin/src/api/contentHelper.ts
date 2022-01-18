@@ -1,8 +1,8 @@
-import { BasicColumn } from '@/components/Table'
+import { BasicColumn, FormSchema } from '@/components/Table'
 import {
   ContentTypeDefinitionDto,
   ContentPartDefinitionDto,
-} from '@service/app-service-proxies'
+} from '@service/api/app-service-proxies'
 
 export class ContentHelper {
   public getColumns(

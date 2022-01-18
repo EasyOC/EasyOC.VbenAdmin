@@ -9,20 +9,43 @@
   </BasicModal>
 </template>
 <script lang="ts">
-import { defineComponent, ref, computed, unref } from 'vue'
+import { defineComponent, computed, unref, reactive, onMounted } from 'vue'
 import { BasicModal, useModalInner } from '@/components/Modal'
-import { BasicForm, useForm } from '@/components/Form/index'
+import { BasicForm, FormSchema, useForm } from '@/components/Form/index'
 import { accountFormSchema } from './account.data'
-import { getDeptList } from '@service/demo/system'
+import { getDeptList } from '@service/system'
+import {
+  ContentTypeDefinitionDto,
+  UserDetailsDto,
+} from '@service/api/app-service-proxies'
+import { ContentHelper } from '@/api/contentHelper'
 
 export default defineComponent({
   name: 'AccountModal',
   components: { BasicModal, BasicForm },
   emits: ['success', 'register'],
   setup(_, { emit }) {
-    const isUpdate = ref(true)
-    const rowId = ref('')
+    const model = reactive<{
+      isUpdate: boolean
+      rowId: string
+      userInfo: UserDetailsDto | null
+      userCustomSettings: ContentTypeDefinitionDto[]
+    }>({
+      isUpdate: true,
+      rowId: '',
+      userInfo: null,
+      userCustomSettings: [],
+    })
 
+    let finalFormSchema: FormSchema[] = []
+    onMounted(async () => {
+      const helper = new ContentHelper()
+      const customPropCols = helper.getFormSchemaFromUserProperties(
+        model.userCustomSettings,
+      )
+      finalFormSchema = [...accountFormSchema, ...customPropCols]
+      console.log(finalFormSchema, 'getFormSchemaFromUserProperties')
+    })
     const [
       registerForm,
       { setFieldsValue, updateSchema, resetFields, validate },
@@ -39,10 +62,11 @@ export default defineComponent({
       async (data) => {
         resetFields()
         setModalProps({ confirmLoading: false })
-        isUpdate.value = !!data?.isUpdate
+        model.isUpdate = !!data?.isUpdate
+        model.userInfo = data.record
 
-        if (unref(isUpdate)) {
-          rowId.value = data.record.id
+        if (unref(model.isUpdate)) {
+          model.rowId = data.record.userId
           setFieldsValue({
             ...data.record,
           })
@@ -52,7 +76,7 @@ export default defineComponent({
         updateSchema([
           {
             field: 'pwd',
-            show: !unref(isUpdate),
+            show: !unref(model.isUpdate),
           },
           {
             field: 'dept',
@@ -62,9 +86,7 @@ export default defineComponent({
       },
     )
 
-    const getTitle = computed(() =>
-      !unref(isUpdate) ? '新增账号' : '编辑账号',
-    )
+    const getTitle = computed(() => (!model.isUpdate ? '新增账号' : '编辑账号'))
 
     async function handleSubmit() {
       try {
@@ -74,8 +96,8 @@ export default defineComponent({
         console.log(values)
         closeModal()
         emit('success', {
-          isUpdate: unref(isUpdate),
-          values: { ...values, id: rowId.value },
+          isUpdate: unref(model.isUpdate),
+          values: { ...values, id: model.rowId },
         })
       } finally {
         setModalProps({ confirmLoading: false })

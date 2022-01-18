@@ -1,5 +1,5 @@
 // import { CheckboxProps } from 'ant-design-vue/lib/checkbox';
-import { BasicColumn, FormSchema } from '/@/components/Table';
+import { BasicColumn, FormSchema } from '@/components/Table'
 
 export const columns: BasicColumn[] = [
   {
@@ -36,7 +36,7 @@ export const columns: BasicColumn[] = [
   //   title: '备注',
   //   dataIndex: 'remark',
   // },
-];
+]
 
 export const searchFormSchema: FormSchema[] = [
   {
@@ -77,7 +77,7 @@ export const searchFormSchema: FormSchema[] = [
   //   } as SelectProps,
   //   colProps: { span: 8 },
   // },
-];
+]
 
 export const accountFormSchema: FormSchema[] = [
   {
@@ -148,4 +148,4 @@ export const accountFormSchema: FormSchema[] = [
   //   field: 'remark',
   //   component: 'InputTextArea',
   // },
-];
+]

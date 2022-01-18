@@ -1,7 +1,7 @@
 import type { ErrorMessageMode } from '@admin/types'
 import type { LoginParams, LoginResultModel, GetUserInfoModel } from '../model'
 import { ContentTypeEnum } from '@admin/tokens'
-import { defaultRequest } from '../../request'
+import { ocApi } from '../../request'
 import { context } from '../../_bridge'
 
 enum Api {
@@ -19,7 +19,7 @@ export async function loginApi(
   mode: ErrorMessageMode = 'modal',
 ) {
   const { username, password } = params
-  const result = await defaultRequest.post(
+  const result = await ocApi.post(
     {
       url: Api.Login,
       headers: { 'Content-Type': ContentTypeEnum.FORM_URLENCODED },
@@ -33,7 +33,6 @@ export async function loginApi(
     },
     {
       errorMessageMode: mode,
-      isReturnNativeResponse: true,
     },
   )
   return result.data

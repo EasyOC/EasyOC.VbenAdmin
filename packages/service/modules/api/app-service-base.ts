@@ -2,23 +2,25 @@ import { AxiosResponse } from 'axios'
 import { defaultRequest } from '../../request'
 
 export class AppServiceBase {
-  public ajax = defaultRequest.getAxios()
+  public ajax = defaultRequest
 
   protected transformResult(response: AxiosResponse): Promise<any> {
-    console.log('response.data.result', response.data.result)
-    const { status } = response
+    console.log('response', response)
+    return Promise.resolve(response)
+
+    // const { status } = response
     // return Promise.resolve(response.data.result);
-    if (status === 200) {
-      return response.data.result
-    } else {
-      const _responseText = response.data.result
-      return this.throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        response.headers,
-      )
-    }
+    // if (status === 200) {
+    //   return response.data.result
+    // } else {
+    //   const _responseText = response.data.result
+    //   return this.throwException(
+    //     'An unexpected server error occurred.',
+    //     status,
+    //     _responseText,
+    //     response.headers,
+    //   )
+    // }
   }
 
   protected isNotNull(arg: any): Boolean {

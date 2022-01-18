@@ -15,7 +15,7 @@
 import { defineComponent, onMounted, ref } from 'vue'
 
 import { BasicTree, TreeItem } from '@/components/Tree'
-import { getDeptList } from '@service/demo/system'
+import { getDeptList } from '@service/system'
 
 export default defineComponent({
   name: 'DeptTree',

@@ -1,7 +1,7 @@
 /* eslint-disable */
 import Oidc from 'oidc-client';
 // import 'babel-polyfill';
-import { useGlobSetting } from '/@/hooks/setting';
+import { useGlobSetting } from '@/hooks/setting';
 
 const oidcClient = new Oidc.UserManager({
 
