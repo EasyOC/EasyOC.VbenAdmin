@@ -16,6 +16,8 @@ import { defineComponent, onMounted, ref } from 'vue'
 
 import { BasicTree, TreeItem } from '@/components/Tree'
 import { getDeptList } from '@service/system'
+// import { TreeNodeBuilder } from '@/utils'
+import { listToTree } from '@admin/utils/src/helper/tree'
 
 export default defineComponent({
   name: 'DeptTree',
@@ -26,7 +28,21 @@ export default defineComponent({
     const treeData = ref<TreeItem[]>([])
 
     async function fetch() {
-      treeData.value = (await getDeptList()) as unknown as TreeItem[]
+      const deptList = await getDeptList()
+      // const nodeBuilder = new TreeNodeBuilder(
+      //   deptList,
+      //   (item) => {
+      //     return !item.parentId
+      //   },
+      //   (parent, node) => {
+      //     return node.parentId == parent.id
+      //   },
+      // )
+      // const result = nodeBuilder.buildDataNode()
+
+      const result = listToTree(deptList, { pid: 'parentId' })
+      console.log(result, 'TreeBuilderResult')
+      treeData.value = result as unknown as TreeItem[]
     }
 
     function handleSelect(keys) {

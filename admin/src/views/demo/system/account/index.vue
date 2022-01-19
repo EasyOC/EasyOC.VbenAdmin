@@ -67,15 +67,15 @@ export default defineComponent({
     let userCustomSettings: ContentTypeDefinitionDto[]
     onMounted(async () => {
       userCustomSettings = await userService.getUserSettingTypes()
-      console.log(userCustomSettings, 'aauserCustomSettings')
+      // console.log(userCustomSettings, 'aauserCustomSettings')
       const helper = new ContentHelper()
       const customPropCols =
         helper.getColumnsFromUserProperties(userCustomSettings)
       const userListColumns = [...columns, ...customPropCols]
-      console.log(
-        userListColumns,
-        'userListColumnsuserListColumnsuserListColumns',
-      )
+      // console.log(
+      //   userListColumns,
+      //   'userListColumnsuserListColumnsuserListColumns',
+      // )
       setColumns(userListColumns)
     })
     const go = useGo()
@@ -138,7 +138,7 @@ export default defineComponent({
     }
 
     function handleSelect(deptId = '') {
-      searchInfo.deptId = deptId
+      searchInfo.departmentId = deptId
       reload()
     }
 

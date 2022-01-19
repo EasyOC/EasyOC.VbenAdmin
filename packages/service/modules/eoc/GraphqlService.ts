@@ -17,5 +17,7 @@ export const excuteGraphqlGetQuery = async (params: { query: string }) => {
     params: params,
     headers: { 'Content-Type': ContentTypeEnum.FORM_URLENCODED },
   })
+  console.log(result, 'excuteGraphqlGetQuery Result')
+  console.log(result.data, 'excuteGraphqlGetQuery result.data')
   return result.data
 }

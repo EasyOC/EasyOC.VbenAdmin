@@ -5,7 +5,7 @@ import type {
   // RoleParams,
   RolePageParams,
   MenuListGetResultModel,
-  DeptListGetResultModel,
+  // DeptListGetResultModel,
   // AccountListGetResultModel,
   RolePageListGetResultModel,
   // RoleListGetResultModel,
@@ -39,7 +39,7 @@ export const getAllRoleList = async () => {
   return roles
   // defHttp.get<RoleListGetResultModel>({ url: Api.GetAllRoleList, params });
 }
-export const getDeptList = async (): Promise<DeptListGetResultModel> => {
+export const getDeptList = async (): Promise<DeptListItem[]> => {
   const result = await excuteGraphqlGetQuery({
     query: `query queryDepartment {
     queryDepartment {
@@ -70,6 +70,7 @@ export const getDeptList = async (): Promise<DeptListGetResultModel> => {
   const depList = result.data.queryDepartment.map((x) => {
     const dept = {
       id: x.contentItemId,
+      deptName: x.displayText,
       orderNo: x.orderIndex,
       createTime: x.createdUtc,
       remark: x.description,
@@ -81,7 +82,7 @@ export const getDeptList = async (): Promise<DeptListGetResultModel> => {
     return dept
   })
   console.log(depList, 'depList')
-  return { items: depList, total: depList.length } as DeptListGetResultModel
+  return depList
   // defaultRequest.get<DeptListGetResultModel>({ url: Api.DeptList, params })
 }
 

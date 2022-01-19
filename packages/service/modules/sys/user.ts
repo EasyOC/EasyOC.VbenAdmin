@@ -1,7 +1,7 @@
 import type { ErrorMessageMode } from '@admin/types'
 import type { LoginParams, LoginResultModel, GetUserInfoModel } from '../model'
 import { ContentTypeEnum } from '@admin/tokens'
-import { ocApi } from '../../request'
+import { defaultRequest, ocApi } from '../../request'
 import { context } from '../../_bridge'
 
 enum Api {
@@ -42,7 +42,7 @@ export async function loginApi(
  * @description: getUserInfo
  */
 export function getUserInfo() {
-  return defaultRequest.get<GetUserInfoModel>(
+  return ocApi.get<GetUserInfoModel>(
     { url: Api.GetUserInfo },
     { errorMessageMode: 'none' },
   )
@@ -53,5 +53,5 @@ export function getPermCode() {
 }
 
 export function doLogout() {
-  return defaultRequest.get({ url: Api.Logout })
+  return ocApi.get({ url: Api.Logout })
 }

@@ -149,6 +149,7 @@ export const useUserStore = defineStore({
       }
       const { name, email } = data
       userInfo.username = name
+      userInfo.realName = name
       userInfo.email = email
       // const { roles = [] } = userInfo
       const roles = data.Permission as Array<string>

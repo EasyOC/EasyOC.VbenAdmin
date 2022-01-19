@@ -4,9 +4,8 @@ export type AccountParams = BasicPageParams & {
   selectedRole: string | undefined
   sortField: string | undefined
   sortOrder: string | undefined
+  departmentId: string | undefined
   filter: string | undefined
-  page: number | undefined
-  pageSize: number | undefined
 }
 export type RoleParams = {
   roleName?: string
@@ -39,6 +38,7 @@ export interface AccountListItem {
 export interface DeptListItem {
   id: string
   orderNo: string
+  deptName: string
   createTime: string
   remark: string
   status: number
