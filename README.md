@@ -2,7 +2,11 @@
 
 ### 基础信息管理
 - [X] 用户列表 （动态属性）
+![YX8TP2L7W%V )T7IWUKEW)3](https://user-images.githubusercontent.com/15613121/150072609-b25abb26-f3c9-4efe-b526-77e234c1309f.png)
+
 - [X] 用户列表部门筛选 （graphql+lucene）
+![SC)RH3LX%FV}6FN99N 5Y U](https://user-images.githubusercontent.com/15613121/150072622-4c0f33fd-804c-48d1-bf72-976a764c0173.png)
+
 - [ ] 修改用户信息 （暂时用OC后台编辑，通过配置 UserProfile 类型实现动态属性）
 - [ ] 角色管理
 - [ ] 部门管理
