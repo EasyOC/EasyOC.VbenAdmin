@@ -7,7 +7,7 @@
     width="500px"
     @ok="handleSubmit"
   >
-    <BasicForm @register="registerForm">
+    <!-- <BasicForm @register="registerForm">
       <template #menu="{ model, field }">
         <BasicTree
           v-model:value="model[field]"
@@ -18,20 +18,19 @@
           title="菜单分配"
         />
       </template>
-    </BasicForm>
+    </BasicForm> -->
   </BasicDrawer>
 </template>
 <script lang="ts">
 import { defineComponent, ref, computed, unref } from 'vue'
 import { BasicForm, useForm } from '@/components/Form/index'
-import { formSchema } from './role.data'
+import { formSchema } from './data'
 import { BasicDrawer, useDrawerInner } from '@/components/Drawer'
 import { BasicTree, TreeItem } from '@/components/Tree'
-
-import { getMenuList } from '@service/system'
+import { getMenuList } from '@service/sys/menu'
 
 export default defineComponent({
-  name: 'RoleDrawer',
+  name: 'EditContentTypeDrawer',
   components: { BasicDrawer, BasicForm, BasicTree },
   emits: ['success', 'register'],
   setup(_, { emit }) {

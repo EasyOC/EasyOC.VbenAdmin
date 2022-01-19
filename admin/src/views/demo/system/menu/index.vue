@@ -30,7 +30,7 @@
 import { defineComponent, nextTick } from 'vue'
 
 import { BasicTable, useTable, TableAction } from '@/components/Table'
-import { getMenuList } from '@service/demo/system'
+import { getMenuList } from '@service/system'
 
 import { useDrawer } from '@/components/Drawer'
 import MenuDrawer from './MenuDrawer.vue'

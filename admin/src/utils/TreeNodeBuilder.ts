@@ -2,6 +2,20 @@ export interface IHasChildren<T> {
   children?: IHasChildren<T>[] | undefined
 }
 
+/**
+ * 自定义树形解构转换
+ * @description
+  const nodeBuilder = new TreeNodeBuilder(
+      deptList,
+      (item) => {
+        return !item.parentId
+      },
+      (parent, node) => {
+        return node.parentId == parent.id
+      },
+    )
+    const result = nodeBuilder.buildDataNode()
+ */
 export class TreeNodeBuilder<T> {
   public ls: Array<IHasChildren<T>> = []
   constructor(

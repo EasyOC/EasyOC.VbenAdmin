@@ -1,5 +1,6 @@
 import { ContentTypeEnum } from '@admin/tokens'
 import { ocApi } from '../../request'
+import { BasicFetchResult } from '../model'
 
 export const GraphqlServiceAPI = '/api/graphql'
 
@@ -17,7 +18,23 @@ export const excuteGraphqlGetQuery = async (params: { query: string }) => {
     params: params,
     headers: { 'Content-Type': ContentTypeEnum.FORM_URLENCODED },
   })
-  console.log(result, 'excuteGraphqlGetQuery Result')
-  console.log(result.data, 'excuteGraphqlGetQuery result.data')
   return result.data
+}
+
+export const excuteGraphqlGetPagedQuery = async (params: {
+  query: string
+}): Promise<BasicFetchResult<any>> => {
+  const result = await ocApi.get({
+    url: GraphqlServiceAPI,
+    params: params,
+    headers: { 'Content-Type': ContentTypeEnum.FORM_URLENCODED },
+  })
+  if (result.headers['query_total'] && result.data.data) {
+    const resultDescription = JSON.parse(result.headers['query_total'])
+    return {
+      items: result.data.data[resultDescription.queryName],
+      total: resultDescription.total,
+    } as BasicFetchResult<any>
+  }
+  throw '返回结果错误'
 }

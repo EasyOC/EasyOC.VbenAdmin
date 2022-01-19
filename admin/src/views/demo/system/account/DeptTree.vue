@@ -5,6 +5,7 @@
       toolbar
       search
       :clickRowToExpand="false"
+      :expandedKeys="expandedKeys"
       :treeData="treeData"
       :fieldNames="{ key: 'id', title: 'deptName' }"
       @select="handleSelect"
@@ -26,33 +27,23 @@ export default defineComponent({
   emits: ['select'],
   setup(_, { emit }) {
     const treeData = ref<TreeItem[]>([])
-
-    async function fetch() {
-      const deptList = await getDeptList()
-      // const nodeBuilder = new TreeNodeBuilder(
-      //   deptList,
-      //   (item) => {
-      //     return !item.parentId
-      //   },
-      //   (parent, node) => {
-      //     return node.parentId == parent.id
-      //   },
-      // )
-      // const result = nodeBuilder.buildDataNode()
-
-      const result = listToTree(deptList, { pid: 'parentId' })
-      console.log(result, 'TreeBuilderResult')
-      treeData.value = result as unknown as TreeItem[]
-    }
+    const expandedKeys = ref<string[]>([])
 
     function handleSelect(keys) {
       emit('select', keys[0])
     }
 
-    onMounted(() => {
-      fetch()
+    onMounted(async () => {
+      const deptList = await getDeptList()
+      const result = listToTree(deptList, { pid: 'parentId' })
+      console.log(result, 'TreeBuilderResult')
+      treeData.value = result as unknown as TreeItem[]
+      const rootNode = result.find((x) => !x.parentId)
+      if (rootNode) {
+        expandedKeys.value = [rootNode.id]
+      }
     })
-    return { treeData, handleSelect }
+    return { treeData, expandedKeys, handleSelect }
   },
 })
 </script>

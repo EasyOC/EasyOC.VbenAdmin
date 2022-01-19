@@ -7,16 +7,17 @@
 //----------------------
 // ReSharper disable InconsistentNaming
 
-import { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
+import { AxiosRequestConfig, AxiosResponse } from 'axios'
+import { VAxios } from 'service/request/Axios'
 import { AppServiceBase } from './app-service-base'
 
 export class ApiServiceProxy extends AppServiceBase {
-  private instance: AxiosInstance
+  private instance: VAxios
   private baseUrl: string
   protected jsonParseReviver: ((key: string, value: any) => any) | undefined =
     undefined
 
-  constructor(instance?: AxiosInstance) {
+  constructor(instance?: VAxios) {
     super()
     if (instance) {
       this.instance = instance
@@ -150,12 +151,12 @@ export class ApiServiceProxy extends AppServiceBase {
 }
 
 export class LuceneServiceProxy extends AppServiceBase {
-  private instance: AxiosInstance
+  private instance: VAxios
   private baseUrl: string
   protected jsonParseReviver: ((key: string, value: any) => any) | undefined =
     undefined
 
-  constructor(instance?: AxiosInstance) {
+  constructor(instance?: VAxios) {
     super()
     if (instance) {
       this.instance = instance
@@ -276,12 +277,12 @@ export class LuceneServiceProxy extends AppServiceBase {
 }
 
 export class TenantsServiceProxy extends AppServiceBase {
-  private instance: AxiosInstance
+  private instance: VAxios
   private baseUrl: string
   protected jsonParseReviver: ((key: string, value: any) => any) | undefined =
     undefined
 
-  constructor(instance?: AxiosInstance) {
+  constructor(instance?: VAxios) {
     super()
     if (instance) {
       this.instance = instance
@@ -334,12 +335,12 @@ export class TenantsServiceProxy extends AppServiceBase {
 }
 
 export class ContentManagementServiceProxy extends AppServiceBase {
-  private instance: AxiosInstance
+  private instance: VAxios
   private baseUrl: string
   protected jsonParseReviver: ((key: string, value: any) => any) | undefined =
     undefined
 
-  constructor(instance?: AxiosInstance) {
+  constructor(instance?: VAxios) {
     super()
     if (instance) {
       this.instance = instance
@@ -490,12 +491,12 @@ export class ContentManagementServiceProxy extends AppServiceBase {
 }
 
 export class ExcelServiceProxy extends AppServiceBase {
-  private instance: AxiosInstance
+  private instance: VAxios
   private baseUrl: string
   protected jsonParseReviver: ((key: string, value: any) => any) | undefined =
     undefined
 
-  constructor(instance?: AxiosInstance) {
+  constructor(instance?: VAxios) {
     super()
     if (instance) {
       this.instance = instance
@@ -600,12 +601,12 @@ export class ExcelServiceProxy extends AppServiceBase {
 }
 
 export class RDBMSServiceProxy extends AppServiceBase {
-  private instance: AxiosInstance
+  private instance: VAxios
   private baseUrl: string
   protected jsonParseReviver: ((key: string, value: any) => any) | undefined =
     undefined
 
-  constructor(instance?: AxiosInstance) {
+  constructor(instance?: VAxios) {
     super()
     if (instance) {
       this.instance = instance
@@ -884,12 +885,12 @@ export class RDBMSServiceProxy extends AppServiceBase {
 }
 
 export class RolesServiceProxy extends AppServiceBase {
-  private instance: AxiosInstance
+  private instance: VAxios
   private baseUrl: string
   protected jsonParseReviver: ((key: string, value: any) => any) | undefined =
     undefined
 
-  constructor(instance?: AxiosInstance) {
+  constructor(instance?: VAxios) {
     super()
     if (instance) {
       this.instance = instance
@@ -1020,12 +1021,12 @@ export class RolesServiceProxy extends AppServiceBase {
 }
 
 export class UsersServiceProxy extends AppServiceBase {
-  private instance: AxiosInstance
+  private instance: VAxios
   private baseUrl: string
   protected jsonParseReviver: ((key: string, value: any) => any) | undefined =
     undefined
 
-  constructor(instance?: AxiosInstance) {
+  constructor(instance?: VAxios) {
     super()
     if (instance) {
       this.instance = instance
@@ -1275,12 +1276,12 @@ export class UsersServiceProxy extends AppServiceBase {
 }
 
 export class WorkflowApiServiceProxy extends AppServiceBase {
-  private instance: AxiosInstance
+  private instance: VAxios
   private baseUrl: string
   protected jsonParseReviver: ((key: string, value: any) => any) | undefined =
     undefined
 
-  constructor(instance?: AxiosInstance) {
+  constructor(instance?: VAxios) {
     super()
     if (instance) {
       this.instance = instance

@@ -42,16 +42,6 @@ const system: RouteRecordItem = {
       },
       component: () => import('@/views/demo/system/role/index.vue'),
     },
-
-    {
-      path: 'menu',
-      name: 'MenuManagement',
-      meta: {
-        title: t('routes.demo.system.menu'),
-        ignoreKeepAlive: true,
-      },
-      component: () => import('@/views/demo/system/menu/index.vue'),
-    },
     {
       path: 'dept',
       name: 'DeptManagement',
@@ -60,6 +50,15 @@ const system: RouteRecordItem = {
         ignoreKeepAlive: true,
       },
       component: () => import('@/views/demo/system/dept/index.vue'),
+    },
+    {
+      path: 'menu',
+      name: 'MenuManagement',
+      meta: {
+        title: t('routes.demo.system.menu'),
+        ignoreKeepAlive: true,
+      },
+      component: () => import('@/views/demo/system/menu/index.vue'),
     },
     {
       path: 'changePassword',

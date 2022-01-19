@@ -14,8 +14,8 @@ const getConfig = (config: Partial<TreeHelperConfig>) =>
   Object.assign({}, DEFAULT_CONFIG, config)
 
 // tree from list
-export const listToTree = <T = any>(
-  list: any[],
+export const listToTree = <T>(
+  list: T[],
   config: Partial<TreeHelperConfig> = {},
 ): T[] => {
   const conf = getConfig(config) as TreeHelperConfig

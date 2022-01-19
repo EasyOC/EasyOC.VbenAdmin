@@ -1,5 +1,4 @@
-import { BasicColumn } from '/@/components/Table';
-import { FormSchema } from '/@/components/Table';
+import { BasicColumn, FormSchema } from '@/components/Table'
 // import { h } from 'vue';
 // import { Switch } from 'ant-design-vue';
 // import { setRoleStatus } from '../../../api/system';
@@ -66,7 +65,7 @@ export const columns: BasicColumn[] = [
   //   title: '备注',
   //   dataIndex: 'remark',
   // },
-];
+]
 
 export const searchFormSchema: FormSchema[] = [
   {
@@ -87,7 +86,7 @@ export const searchFormSchema: FormSchema[] = [
   //   },
   //   colProps: { span: 8 },
   // },
-];
+]
 
 export const formSchema: FormSchema[] = [
   {
@@ -125,4 +124,4 @@ export const formSchema: FormSchema[] = [
     slot: 'menu',
     component: 'Input',
   },
-];
+]

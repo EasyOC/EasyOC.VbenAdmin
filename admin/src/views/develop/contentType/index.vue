@@ -23,28 +23,42 @@
         />
       </template>
     </BasicTable>
-    <RoleDrawer @register="registerDrawer" @success="handleSuccess" />
+    <!-- <RoleDrawer @register="registerDrawer" @success="handleSuccess" /> -->
   </div>
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, onBeforeMount } from 'vue'
 
 import { BasicTable, useTable, TableAction } from '@/components/Table'
-import { getAllRoleList } from '@service/system'
+import { getAllTypes } from '@service/develop'
 
 import { useDrawer } from '@/components/Drawer'
-import RoleDrawer from './RoleDrawer.vue'
+// import EditContentTypeDrawer from './EditContentTypeDrawer.vue'
 
-import { columns, searchFormSchema } from './role.data'
+import { columns, searchFormSchema } from './data'
+// import {
+//   ContentTypeListItemDto,
+//   PagedResultOfContentTypeListItemDto,
+// } from '@service/api/app-service-proxies'
 
 export default defineComponent({
-  name: 'RoleManagement',
-  components: { BasicTable, RoleDrawer, TableAction },
+  name: 'ContentType',
+  // eslint-disable-next-line vue/no-unused-components
+  components: {
+    BasicTable, //EditContentTypeDrawer,
+    TableAction,
+  },
   setup() {
+    // let allTypes = reactive<PagedResultOfContentTypeListItemDto>(
+    //   new PagedResultOfContentTypeListItemDto(),
+    // )
+    onBeforeMount(async () => {
+      // console.log(allTypes)
+    })
     const [registerDrawer, { openDrawer }] = useDrawer()
     const [registerTable, { reload }] = useTable({
-      title: '角色列表',
-      api: getAllRoleList,
+      title: '类型列表',
+      api: getAllTypes,
       columns,
       formConfig: {
         labelWidth: 120,
@@ -62,6 +76,34 @@ export default defineComponent({
         fixed: undefined,
       },
     })
+
+    // async function filterTypes(params: {
+    //   stereotype: string | undefined
+    //   filter: string | undefined
+    //   page: number | undefined
+    //   pageSize: number | undefined
+    // }) {
+    //   if (!allTypes.items) {
+    //     allTypes = await getAllTypes()
+    //   }
+    //   if (params.filter || params.stereotype) {
+    //     let items = (allTypes.items as ContentTypeListItemDto[]).filter(
+    //       (x) =>
+    //         x.displayName?.includes(params.filter || '') ||
+    //         x.name?.includes(params.filter || ''),
+    //     )
+
+    //     if (params.stereotype) {
+    //       items = items.filter((x) => x.stereotype == params.stereotype)
+    //     }
+    //     return {
+    //       items: items,
+    //       total: allTypes.total,
+    //     } as PagedResultOfContentTypeListItemDto
+    //   } else {
+    //     return allTypes
+    //   }
+    // }
 
     function handleCreate() {
       openDrawer(true, {
@@ -91,6 +133,7 @@ export default defineComponent({
       handleEdit,
       handleDelete,
       handleSuccess,
+      // filterTypes,
     }
   },
 })

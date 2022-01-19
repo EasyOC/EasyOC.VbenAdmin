@@ -19,9 +19,9 @@ export const columns: BasicColumn[] = [
     title: '状态',
     dataIndex: 'status',
     width: 80,
-    customRender: ({ record }) => {
-      const status = record.status
-      const enable = ~~status === 0
+    customRender: ({ record }: any) => {
+      console.log(record, 'Row:Role')
+      const enable = record.status
       const color = enable ? 'green' : 'red'
       const text = enable ? '启用' : '停用'
       return h(Tag, { color: color }, () => text)
