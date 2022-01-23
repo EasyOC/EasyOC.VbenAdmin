@@ -1,13 +1,9 @@
 <template>
   <PageWrapper dense contentFullHeight fixedHeight contentClass="flex">
-    <DeptTree class="w-1/4 xl:w-1/5" @select="handleSelect" />
-    <BasicTable
-      @register="registerTable"
-      class="w-3/4 xl:w-4/5"
-      :searchInfo="searchInfo"
-    >
+    <!-- <DeptTree class="w-1/4 xl:w-1/5" @select="handleSelect" /> -->
+    <BasicTable @register="registerTable" :searchInfo="searchInfo">
       <template #toolbar>
-        <a-button type="primary" @click="handleCreate">新增账号</a-button>
+        <a-button type="primary" @click="handleCreate">添加客户</a-button>
       </template>
       <template #action="{ record }">
         <TableAction
@@ -35,37 +31,60 @@
         />
       </template>
     </BasicTable>
-    <AccountModal @register="registerModal" @success="handleSuccess" />
+    <!-- <AccountModal @register="registerModal" @success="handleSuccess" /> -->
   </PageWrapper>
 </template>
 <script setup lang="ts">
-import { reactive, onMounted } from 'vue'
+import { reactive } from 'vue'
 
 import { BasicTable, useTable, TableAction } from '@/components/Table'
 import { ContentHelper } from '@/api/contentHelper'
-import { getAccountList, userService } from '@service/system'
-import { ContentTypeDefinitionDto } from '@service/api/app-service-proxies'
+import {
+  ContentManagementServiceProxy,
+  ContentTypeDefinitionDto,
+} from '@service/api/app-service-proxies'
 
 import { PageWrapper } from '@/components/Page'
-import DeptTree from './DeptTree.vue'
 import { useModal } from '@/components/Modal'
-import AccountModal from './AccountModal.vue'
 import { BasicColumn } from '@/components/Table'
 
-import { columns, searchFormSchema } from './account.data'
+import { columns, searchFormSchema } from './data'
 import { useGo } from '@/hooks/web/usePage'
+import { ContentTypeService } from '@/api/ContentTypeService'
+import {
+  excuteGraphqlQuery,
+  GraphQLQueryParams,
+} from '@service/eoc/GraphqlService'
+const contentTypeName = 'VbenList'
+const helper = new ContentHelper()
+let dynamicSettings: ContentTypeDefinitionDto
+let dynamicColumns = reactive<BasicColumn[]>([])
 
-let userCustomSettings: ContentTypeDefinitionDto[]
-let userListColumns: BasicColumn[] = await getCols()
+const contentManagementService = new ContentManagementServiceProxy()
+dynamicSettings = await contentManagementService.getTypeDefinition({
+  name: contentTypeName,
+  withSettings: true,
+})
+// let temp = helper.getColumnsFromType(dynamicSettings)
+// temp = temp.filter(
+//   (t) =>
+//     !!columns.find(
+//       (x) => x.dataIndex?.toString().toLowerCase() == t.dataIndex?.toString().toLowerCase(),
+//     ),
+// )
+dynamicColumns = [...columns]
 
 const go = useGo()
-const [registerModal, { openModal }] = useModal()
 const searchInfo = reactive<Recordable>({})
+// const typeService = new ContentTypeService(contentTypeName)
+// await typeService.getTableSchema({ hasTotal: true, query: `` })
+
 const [registerTable, { reload, updateTableDataRecord }] = useTable({
-  title: '账号列表',
-  api: getAccountList,
-  columns: userListColumns,
-  rowKey: 'id',
+  title: '列表管理',
+  api: getList,
+  columns: dynamicColumns,
+  pagination: false,
+  rowKey: 'contentItemId',
   formConfig: {
     labelWidth: 120,
     schemas: searchFormSchema,
@@ -86,19 +105,38 @@ const [registerTable, { reload, updateTableDataRecord }] = useTable({
   },
 })
 
-async function getCols() {
-  userCustomSettings = await userService.getUserSettingTypes()
-  const helper = new ContentHelper()
-  const customPropCols = helper.getColumnsFromUserProperties(userCustomSettings)
-  return [...columns, ...customPropCols]
+async function getList(params) {
+  const result = await excuteGraphqlQuery({
+    // variables: { where: { displayText_contains: params.filter } },
+    //   skip: ${(params.page - 1) * params.pageSize}
+    // first: ${params.pageSize}
+    query: `query MyQuery {
+  vbenList(
+    where: {displayText_contains: "${params.filter || ''}"}
+    orderBy: {publishedUtc: DESC}
+
+  ) {
+    contentItemId
+    createdUtc
+    displayText
+    listMapping
+    modifiedUtc
+    publishedUtc
+    queryMethod
+    targetContentType
+    published
+  }
+}`,
+  })
+  // var result1 = {
+  //   items: result.data.data.vbenList,
+  //   total: result.data.data.vbenList.length,
+  // }
+  // console.log(result1, 'excuteGraphqlQueryexcuteGraphqlQueryexcuteGraphqlQuery')
+  return result.data.data.vbenList
 }
 
-function handleCreate() {
-  openModal(true, {
-    isUpdate: false,
-    userCustomSettings,
-  })
-}
+function handleCreate() {}
 
 function handleEdit(record: Recordable) {
   console.log(record)
@@ -129,6 +167,6 @@ function handleSelect(deptId = '') {
 }
 
 function handleView(record: Recordable) {
-  go('/system/account_detail/' + record.id)
+  go('listDetails/' + record.contentItemId)
 }
 </script>

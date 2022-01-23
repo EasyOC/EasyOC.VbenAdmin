@@ -80,6 +80,8 @@
     ]
   },
   "dependencies": {
+    "@urql/vue": "^0.6.1",
+    "graphql": "^16.2.0",
     "oidc-client": "^1.11.5"
   }
 }

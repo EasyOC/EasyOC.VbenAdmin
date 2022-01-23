@@ -3,24 +3,14 @@ import { defaultRequest } from '../../request'
 
 export class AppServiceBase {
   public ajax = defaultRequest
-
+  /**
+   * API 响应结果根据 调用的 axios 实例自动配置,
+   * 比如如果使用defaultRequest将会 在 defaultRequest 的拦截器中处理结果
+   * 如果使用 ocApi 则并不会对结果进行任何处理
+   */
   protected transformResult(response: AxiosResponse): Promise<any> {
-    console.log('response', response)
+    // console.log('response', response)
     return Promise.resolve(response)
-
-    // const { status } = response
-    // return Promise.resolve(response.data.result);
-    // if (status === 200) {
-    //   return response.data.result
-    // } else {
-    //   const _responseText = response.data.result
-    //   return this.throwException(
-    //     'An unexpected server error occurred.',
-    //     status,
-    //     _responseText,
-    //     response.headers,
-    //   )
-    // }
   }
 
   protected isNotNull(arg: any): Boolean {

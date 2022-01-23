@@ -3,7 +3,7 @@ import { t } from '@admin/locale'
 
 const develop: RouteRecordItem = {
   path: '/develop',
-  name: 'Develop',
+  name: 'develop',
   component: LAYOUT,
   redirect: '/develop/contentType',
   meta: {
@@ -20,6 +20,26 @@ const develop: RouteRecordItem = {
         // affix: true,
         title: t('routes.develop.type'),
       },
+    },
+    {
+      path: 'listManagement',
+      name: 'listManagement',
+      component: () => import('@/views/develop/listManagement/index.vue'),
+      meta: {
+        title: t('routes.develop.listManagement'),
+      },
+    },
+    {
+      path: 'listDetails/:id',
+      name: 'listDetails',
+      meta: {
+        hideMenu: true,
+        title: t('routes.develop.listDetails'),
+        ignoreKeepAlive: true,
+        showMenu: false,
+        currentActiveMenu: '/develop/listManagement',
+      },
+      component: () => import('@/views/develop/listManagement/ListDetails.vue'),
     },
   ],
 }

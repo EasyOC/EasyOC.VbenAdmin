@@ -1,82 +1,44 @@
 import { BasicColumn, FormSchema } from '@/components/Table'
-import { ContentFieldsMapping, ContentFiledType } from '@service/eoc/contentApi'
+import { useAppStore } from '@/store/app'
+// import {  } from "@service/eoc/";
 import {
   ContentTypeDefinitionDto,
   ContentPartDefinitionDto,
+  ContentManagementServiceProxy,
 } from '@service/api/app-service-proxies'
-import { t } from '@admin/locale'
+export class GraphqlQuery {
+  public query!: string
+  public hasTotal = true
+}
 
-export class ContentHelper {
-  public getAllFields(
-    def: ContentTypeDefinitionDto | ContentPartDefinitionDto,
-    rootPath = '',
-  ): ContentFieldsMapping[] {
-    return this.getFieldsFromType(def as ContentTypeDefinitionDto, rootPath)
+export class ContentTypeService {
+  constructor(contentType: string) {
+    this.ContentType = contentType
+    this.ContentManagementService = new ContentManagementServiceProxy()
   }
 
-  public getFieldsFromType(
-    typeDef: ContentTypeDefinitionDto,
-    parentPath = '',
-  ): ContentFieldsMapping[] {
-    const cols: ContentFieldsMapping[] = []
-    if (!!parentPath && !parentPath.endsWith('.')) {
-      parentPath = parentPath + '.'
-    }
-    const dataPath = parentPath
-    typeDef.parts?.forEach((x) => {
-      if (x.partDefinition.name == 'TitlePart') {
-        cols.push({
-          displayName: t('显示名称'),
-          partName: 'TitlePart',
-          fieldType: ContentFiledType.TitlePart,
-          editable: false,
-          visable: false,
-          filedName: 'DisplayText',
-          keyPath: dataPath + 'TitlePart.Title',
-          fieldSettings: x.partDefinition.settings,
-          buildFrom: 'ContentTypeDefinition',
-        })
-      } else {
-        cols.push(
-          ...this.getFieldsFromPart(x.partDefinition, `${dataPath}${x.name}`),
-        )
-      }
-    })
-    return cols
+  public async loadType() {
+    this.ContentTypeDefinitionDto =
+      await this.ContentManagementService.getTypeDefinition({
+        name: this.ContentType,
+        withSettings: true,
+      })
   }
 
-  public getFieldsFromPart(
-    partDef: ContentPartDefinitionDto,
-
-    parentPath = '',
-  ): ContentFieldsMapping[] {
-    const cols: ContentFieldsMapping[] = []
-    if (!!parentPath && !parentPath.endsWith('.')) {
-      parentPath = parentPath + '.'
-    }
-    const dataPath = parentPath
-    partDef.fields?.forEach((x) => {
-      const fieldType = x.fieldDefinition.name as ContentFiledType
-      const valuePath = this.buildPath(fieldType)
-
-      const col: ContentFieldsMapping = {
-        displayName: x.displayName || '',
-        buildFrom: 'ContentTypeDefinition',
-        partName: partDef.name || '',
-        filedName: x.name || '',
-        editable: true,
-        visable: true,
-        keyPath: `${dataPath}${x.name}.${valuePath}`,
-        fieldSettings: x.settings,
-        fieldType: fieldType,
-      }
-      cols.push(col)
-    })
-    return cols
+  public async getTableSchema(graphQLQuery: GraphqlQuery) {
+    const appStore = useAppStore()
+    await appStore.loadGraphQLSchema()
+    console.log(appStore.graphqlSchema, 'appStore.graphqlSchema')
+    return graphQLQuery
   }
+
+  public ContentManagementService: ContentManagementServiceProxy
+
+  public ContentType: string
+  public ContentTypeDefinitionDto!: ContentTypeDefinitionDto
 
   public getColumns(
-    def: ContentTypeDefinitionDto | ContentPartDefinitionDto,
+    def: ContentTypeDefinitionDto | ContentPartDefinitionDto | any,
     rootPath = '',
   ): BasicColumn[] {
     if (def instanceof ContentTypeDefinitionDto) {
@@ -86,21 +48,7 @@ export class ContentHelper {
     }
   }
 
-  getColumnsFromType(
-    typeDef: ContentTypeDefinitionDto,
-    parentPath = '',
-  ): BasicColumn[] {
-    const fields = this.getFieldsFromType(typeDef, parentPath)
-    const cols: BasicColumn[] = fields.map((x) => {
-      return {
-        title: t(x.displayName),
-        dataIndex: x.keyPath.split('.'),
-      } as BasicColumn
-    })
-    return cols
-  }
-
-  getColumsFromPart(
+  public getColumsFromPart(
     partDef: ContentPartDefinitionDto,
     parentPath = '',
   ): BasicColumn[] {
@@ -114,12 +62,34 @@ export class ContentHelper {
         title: x.displayName,
       }
 
-      const valuePath = this.buildPath(
-        x.fieldDefinition.name as ContentFiledType,
-      )
+      const valuePath = this.buildPath(x.fieldDefinition.name)
 
       col.dataIndex = `${dataPath}${x.name}.${valuePath}`.split('.')
       cols.push(col)
+    })
+    return cols
+  }
+
+  public getColumnsFromType(
+    typeDef: ContentTypeDefinitionDto,
+    parentPath = '',
+  ): BasicColumn[] {
+    const cols: BasicColumn[] = []
+    if (!!parentPath && !parentPath.endsWith('.')) {
+      parentPath = parentPath + '.'
+    }
+    const dataPath = parentPath
+    typeDef.parts?.forEach((x) => {
+      if (x.partDefinition.name == 'TitlePart') {
+        cols.push({
+          title: 'DisplayName',
+          dataIndex: dataPath + 'TitlePart.Title',
+        })
+      } else {
+        cols.push(
+          ...this.getColumsFromPart(x.partDefinition, `${dataPath}${x.name}`),
+        )
+      }
     })
     return cols
   }
@@ -196,7 +166,7 @@ export class ContentHelper {
     }
     const dataPath = parentPath
     partDef.fields?.forEach((x) => {
-      let valuePath = this.buildPath(x.fieldDefinition.name as ContentFiledType)
+      let valuePath = this.buildPath(x.fieldDefinition.name)
       valuePath = `${dataPath}${x.name}.${valuePath}`
       const formItem: FormSchema = {
         label: x.displayName || '',
@@ -209,29 +179,29 @@ export class ContentHelper {
     return cols
   }
 
-  public buildPath(fieldName: ContentFiledType | string) {
+  public buildPath(fieldName: string | null) {
     let valuePath = 'Value'
     switch (fieldName) {
-      case ContentFiledType.TextField:
+      case 'TextField':
         valuePath = 'Text'
         break
-      case ContentFiledType.BooleanField:
+      case 'BooleanField':
         valuePath = 'Value'
         break
-      case ContentFiledType.DateField:
+      case 'DateField':
         valuePath = 'Value'
         break
-      case ContentFiledType.TimeField:
+      case 'TimeField':
         valuePath = 'Value'
         break
-      case ContentFiledType.DateTimefield:
+      case 'Date&Timefield':
         valuePath = 'Value'
         break
-      case ContentFiledType.NumericField:
+      case 'NumericField':
         valuePath = 'Value'
         break
-      case ContentFiledType.ContentPickerField:
-      case ContentFiledType.UserPickerField:
+      case 'ContentPickerField':
+      case 'UserPickerField':
         valuePath = 'DisplayText'
         break
     }
