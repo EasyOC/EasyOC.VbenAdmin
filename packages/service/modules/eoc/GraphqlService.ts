@@ -6,16 +6,10 @@ export const GraphqlServiceAPI = '/api/graphql'
 export type GraphQLQueryParams = {
   operationName?: string
   query: string
-  variables?: LuceneCommonQueryParams | any
+  variables?: LuceneCommonQueryParams
 }
 export const excuteGraphqlQuery = async (query: GraphQLQueryParams) => {
-  const data = {
-    variables: query.variables
-      ? JSON.stringify(query.variables).replace('"', "'")
-      : null,
-    query: query.query,
-  }
-  return await ocApi.post({ url: GraphqlServiceAPI, data: data })
+  return await ocApi.post({ url: GraphqlServiceAPI, data: query })
 }
 
 export const excuteGraphqlGetQuery = async (params: { query: string }) => {
@@ -32,7 +26,7 @@ export const loadGraphQLSchema = async () => {
 }
 
 export type LuceneCommonQueryParams = {
-  filters: { method: string; key?: string; value: string }[]
+  filters?: { method: string; key?: string; value: string }[]
   from: number
   skip: number
 }

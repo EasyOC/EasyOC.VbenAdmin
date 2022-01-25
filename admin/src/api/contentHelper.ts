@@ -10,7 +10,7 @@ import {
   ContentPartDefinitionDto,
 } from '@service/api/app-service-proxies'
 import { t } from '@admin/locale'
-import { deepMerge } from '@admin/utils'
+import { camelCase, deepMerge } from '@admin/utils'
 
 export function expandContentType(
   contentItem: ContentItemUpperCase,
@@ -121,6 +121,18 @@ export class ContentHelper {
     } else {
       return this.getColumsFromPart(def as ContentPartDefinitionDto, rootPath)
     }
+  }
+
+  getGraphqlTableCols(typeDef: ContentTypeDefinitionDto, parentPath = '') {
+    let cols: BasicColumn[] = []
+    const fields = this.getFieldsFromType(typeDef, parentPath)
+    cols = fields.map((x) => {
+      return {
+        title: t(x.displayName),
+        dataIndex: camelCase(x.filedName),
+      } as BasicColumn
+    })
+    return cols
   }
 
   getColumnsFromType(

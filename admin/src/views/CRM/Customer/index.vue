@@ -47,8 +47,8 @@ import {
 
 import { PageWrapper } from '@/components/Page'
 // import DeptTree from './DeptTree.vue'
-// import { useModal } from '@/components/Modal'
-// import AccountModal from './AccountModal.vue'
+import { useModal } from '@/components/Modal'
+import EditModal from './EditModal.vue'
 import { BasicColumn } from '@/components/Table'
 
 import { columns, searchFormSchema } from './data'
@@ -62,23 +62,21 @@ import {
 
 const helper = new ContentHelper()
 let dynamicSettings: ContentTypeDefinitionDto
-let dynamicColumns: BasicColumn[]
+const dynamicColumns = reactive<BasicColumn[]>([])
 
 let contentManagementService: ContentManagementServiceProxy
-onMounted(async () => {
+onBeforeMount(async () => {
   contentManagementService = new ContentManagementServiceProxy()
   dynamicSettings = await contentManagementService.getTypeDefinition({
     name: 'Customer',
     withSettings: true,
   })
-  dynamicColumns = helper.getColumnsFromType(dynamicSettings)
-  setProps({ columns: [...columns, ...dynamicColumns], showTableSetting: true })
+  dynamicColumns.push(...helper.getGraphqlTableCols(dynamicSettings))
+  setProps({ columns: dynamicColumns, showTableSetting: true })
 })
 const go = useGo()
-// const [registerModal, { openModal }] = useModal()
+const [registerModal, { openModal }] = useModal()
 const searchInfo = reactive<Recordable>({})
-// const typeService = new ContentTypeService('Customer')
-// await typeService.getTableSchema({ hasTotal: true, query: `` })
 
 const [registerTable, { setProps }] = useTable({
   title: '客户列表',
@@ -106,34 +104,26 @@ const [registerTable, { setProps }] = useTable({
 
 async function getList(params) {
   const result = await excuteGraphqlQuery({
-    // variables: {
-    //   from: (params.page - 1) * params.pageSize,
-    //   skip: params.pageSize,
-    // } as LuceneCommonQueryParams,
-    // query: `query MyQuery($params:String) {
-    query: `query MyQuery {
-  crmCustomers(parameters:"{from:${(params.page - 1) * params.pageSize},size:${
-      params.pageSize
-    }}") {
-     items {
-      published
-      publishedUtc
-      owner
-      name
-      modifiedUtc
-      custNum
-      displayText
-      latest
-    }
-    total
-  }
-}`,
+    variables: {
+      from: (params.page - 1) * params.pageSize,
+      skip: params.pageSize,
+    },
+    query: `query MyQuery($params:String) {
+              crmCustomers(parameters:$params) {
+                items {
+                  published
+                  publishedUtc
+                  owner
+                  name
+                  modifiedUtc
+                  custNum
+                  displayText
+                  latest
+                }
+                total
+              }
+            }`,
   })
-  // var result1 = {
-  //   items: result.data.data.vbenList,
-  //   total: result.data.data.vbenList.length,
-  // }
-  // console.log(result1, 'excuteGraphqlQueryexcuteGraphqlQueryexcuteGraphqlQuery')
   return result.data.data.crmCustomers
 }
 function handleCreate() {
@@ -145,10 +135,10 @@ function handleCreate() {
 
 function handleEdit(record: Recordable) {
   console.log(record)
-  // openModal(true, {
-  //   record,
-  //   isUpdate: true,
-  // })
+  openModal(true, {
+    record,
+    isUpdate: true,
+  })
 }
 
 function handleDelete(record: Recordable) {
