@@ -17,9 +17,7 @@ useTitle(title, (route) => route.name !== REDIRECT_NAME)
 <template>
   <a-config-provider :locale="antdLocale">
     <app-provider>
-      <suspense>
-        <router-view />
-      </suspense>
+      <router-view />
     </app-provider>
   </a-config-provider>
 </template>

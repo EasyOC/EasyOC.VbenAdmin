@@ -1,10 +1,45 @@
 import { BasicColumn, FormSchema } from '@/components/Table'
-import { ContentFieldsMapping, ContentFiledType } from '@service/eoc/contentApi'
+import {
+  ContentFieldsMapping,
+  FiledType,
+  ContentItemUpperCase,
+  getValuePath,
+} from '@service/eoc/contentApi'
 import {
   ContentTypeDefinitionDto,
   ContentPartDefinitionDto,
 } from '@service/api/app-service-proxies'
 import { t } from '@admin/locale'
+import { deepMerge } from '@admin/utils'
+
+export function expandContentType(
+  contentItem: ContentItemUpperCase,
+  fields: ContentFieldsMapping[],
+) {
+  const expandedContentItem = {}
+  fields.forEach((f) => {
+    let tempValue = { ...contentItem }
+    if (f.isNormal() || false) {
+      f.keyPath.split('.').forEach((x) => (tempValue = tempValue[x]))
+    }
+    expandedContentItem[f.filedName] = tempValue
+  })
+  return expandedContentItem
+}
+
+export function updateContentItem(
+  formModel: any,
+  targetContentItem: ContentItemUpperCase,
+  fields: ContentFieldsMapping[],
+) {
+  console.log('input values', formModel)
+  console.log('before Update ContentItem ', targetContentItem)
+  fields.forEach((f) => {
+    eval(`targetContentItem[${f.keyPath}]=contentModel[${f.filedName}]`)
+  })
+  console.log('Updated ContentItem ', targetContentItem)
+  return targetContentItem
+}
 
 export class ContentHelper {
   public getAllFields(
@@ -25,17 +60,20 @@ export class ContentHelper {
     const dataPath = parentPath
     typeDef.parts?.forEach((x) => {
       if (x.partDefinition.name == 'TitlePart') {
-        cols.push({
-          displayName: t('显示名称'),
-          partName: 'TitlePart',
-          fieldType: ContentFiledType.TitlePart,
-          editable: false,
-          visable: false,
-          filedName: 'DisplayText',
-          keyPath: dataPath + 'TitlePart.Title',
-          fieldSettings: x.partDefinition.settings,
-          buildFrom: 'ContentTypeDefinition',
-        })
+        cols.push(
+          deepMerge(new ContentFieldsMapping(), {
+            displayName: t('显示名称'),
+            partName: 'TitlePart',
+            fieldType: FiledType.TitlePart,
+            editable: false,
+            lastValueKey: 'Title',
+            visable: false,
+            filedName: 'DisplayText',
+            keyPath: dataPath + 'TitlePart.Title',
+            fieldSettings: x.partDefinition.settings,
+            buildFrom: 'ContentTypeDefinition',
+          }),
+        )
       } else {
         cols.push(
           ...this.getFieldsFromPart(x.partDefinition, `${dataPath}${x.name}`),
@@ -56,10 +94,9 @@ export class ContentHelper {
     }
     const dataPath = parentPath
     partDef.fields?.forEach((x) => {
-      const fieldType = x.fieldDefinition.name as ContentFiledType
-      const valuePath = this.buildPath(fieldType)
-
-      const col: ContentFieldsMapping = {
+      const fieldType = x.fieldDefinition.name as FiledType
+      const valuePath = getValuePath(fieldType)
+      const col = deepMerge(new ContentFieldsMapping(), {
         displayName: x.displayName || '',
         buildFrom: 'ContentTypeDefinition',
         partName: partDef.name || '',
@@ -69,7 +106,7 @@ export class ContentHelper {
         keyPath: `${dataPath}${x.name}.${valuePath}`,
         fieldSettings: x.settings,
         fieldType: fieldType,
-      }
+      })
       cols.push(col)
     })
     return cols
@@ -113,11 +150,7 @@ export class ContentHelper {
       const col: BasicColumn = {
         title: x.displayName,
       }
-
-      const valuePath = this.buildPath(
-        x.fieldDefinition.name as ContentFiledType,
-      )
-
+      const valuePath = getValuePath(x.fieldDefinition.name as FiledType)
       col.dataIndex = `${dataPath}${x.name}.${valuePath}`.split('.')
       cols.push(col)
     })
@@ -196,7 +229,7 @@ export class ContentHelper {
     }
     const dataPath = parentPath
     partDef.fields?.forEach((x) => {
-      let valuePath = this.buildPath(x.fieldDefinition.name as ContentFiledType)
+      let valuePath = getValuePath(x.fieldDefinition.name as FiledType)
       valuePath = `${dataPath}${x.name}.${valuePath}`
       const formItem: FormSchema = {
         label: x.displayName || '',
@@ -207,34 +240,5 @@ export class ContentHelper {
       cols.push(formItem)
     })
     return cols
-  }
-
-  public buildPath(fieldName: ContentFiledType | string) {
-    let valuePath = 'Value'
-    switch (fieldName) {
-      case ContentFiledType.TextField:
-        valuePath = 'Text'
-        break
-      case ContentFiledType.BooleanField:
-        valuePath = 'Value'
-        break
-      case ContentFiledType.DateField:
-        valuePath = 'Value'
-        break
-      case ContentFiledType.TimeField:
-        valuePath = 'Value'
-        break
-      case ContentFiledType.DateTimefield:
-        valuePath = 'Value'
-        break
-      case ContentFiledType.NumericField:
-        valuePath = 'Value'
-        break
-      case ContentFiledType.ContentPickerField:
-      case ContentFiledType.UserPickerField:
-        valuePath = 'DisplayText'
-        break
-    }
-    return valuePath
   }
 }

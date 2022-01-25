@@ -35,7 +35,7 @@
   </PageWrapper>
 </template>
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { reactive, onBeforeMount, ref } from 'vue'
 
 import { BasicTable, useTable, TableAction } from '@/components/Table'
 import { ContentHelper } from '@/api/contentHelper'
@@ -45,7 +45,7 @@ import {
 } from '@service/api/app-service-proxies'
 
 import { PageWrapper } from '@/components/Page'
-import { useModal } from '@/components/Modal'
+// import { useModal } from '@/components/Modal'
 import { BasicColumn } from '@/components/Table'
 
 import { columns, searchFormSchema } from './data'
@@ -58,31 +58,33 @@ import {
 const contentTypeName = 'VbenList'
 const helper = new ContentHelper()
 let dynamicSettings: ContentTypeDefinitionDto
-let dynamicColumns = reactive<BasicColumn[]>([])
+let dynamicColumns = ref<BasicColumn[]>(columns)
 
 const contentManagementService = new ContentManagementServiceProxy()
-dynamicSettings = await contentManagementService.getTypeDefinition({
-  name: contentTypeName,
-  withSettings: true,
+onBeforeMount(async () => {
+  dynamicSettings = await contentManagementService.getTypeDefinition({
+    name: contentTypeName,
+    withSettings: true,
+  })
+  // let temp = helper.getColumnsFromType(dynamicSettings)
+  dynamicColumns = [...columns]
+  setProps({ columns: dynamicColumns, showTableSetting: true })
+  // temp = temp.filter(
+  //   (t) =>
+  //     !!columns.find(
+  //       (x) =>
+  //         x.dataIndex?.toString().toLowerCase() ==
+  //         t.dataIndex?.toString().toLowerCase(),
+  //     ),
+  // )
 })
-// let temp = helper.getColumnsFromType(dynamicSettings)
-// temp = temp.filter(
-//   (t) =>
-//     !!columns.find(
-//       (x) => x.dataIndex?.toString().toLowerCase() == t.dataIndex?.toString().toLowerCase(),
-//     ),
-// )
-dynamicColumns = [...columns]
 
 const go = useGo()
 const searchInfo = reactive<Recordable>({})
-// const typeService = new ContentTypeService(contentTypeName)
-// await typeService.getTableSchema({ hasTotal: true, query: `` })
 
-const [registerTable, { reload, updateTableDataRecord }] = useTable({
+const [registerTable, { reload, updateTableDataRecord, setProps }] = useTable({
   title: '列表管理',
   api: getList,
-  columns: dynamicColumns,
   pagination: false,
   rowKey: 'contentItemId',
   formConfig: {
@@ -91,7 +93,6 @@ const [registerTable, { reload, updateTableDataRecord }] = useTable({
     autoSubmitOnEnter: true,
   },
   useSearchForm: true,
-  showTableSetting: true,
   bordered: true,
   handleSearchInfoFn(info) {
     console.log('handleSearchInfoFn', info)
@@ -140,10 +141,10 @@ function handleCreate() {}
 
 function handleEdit(record: Recordable) {
   console.log(record)
-  openModal(true, {
-    record,
-    isUpdate: true,
-  })
+  // openModal(true, {
+  //   record,
+  //   isUpdate: true,
+  // })
 }
 
 function handleDelete(record: Recordable) {

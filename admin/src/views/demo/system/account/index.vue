@@ -39,7 +39,7 @@
   </PageWrapper>
 </template>
 <script setup lang="ts">
-import { reactive, onMounted } from 'vue'
+import { reactive, onBeforeMount, ref, computed } from 'vue'
 
 import { BasicTable, useTable, TableAction } from '@/components/Table'
 import { ContentHelper } from '@/api/contentHelper'
@@ -56,15 +56,24 @@ import { columns, searchFormSchema } from './account.data'
 import { useGo } from '@/hooks/web/usePage'
 
 let userCustomSettings: ContentTypeDefinitionDto[]
-let userListColumns: BasicColumn[] = await getCols()
+
+// (options:{
+//   getter:(async () => (await getCols()),
+//   setter:
+// })
+onBeforeMount(async () => {
+  userCustomSettings = await userService.getUserSettingTypes()
+  const helper = new ContentHelper()
+  const customPropCols = helper.getColumnsFromUserProperties(userCustomSettings)
+  setProps({ columns: [...columns, ...customPropCols], showTableSetting: true })
+})
 
 const go = useGo()
 const [registerModal, { openModal }] = useModal()
 const searchInfo = reactive<Recordable>({})
-const [registerTable, { reload, updateTableDataRecord }] = useTable({
+const [registerTable, { reload, updateTableDataRecord, setProps }] = useTable({
   title: '账号列表',
   api: getAccountList,
-  columns: userListColumns,
   rowKey: 'id',
   formConfig: {
     labelWidth: 120,
@@ -72,7 +81,6 @@ const [registerTable, { reload, updateTableDataRecord }] = useTable({
     autoSubmitOnEnter: true,
   },
   useSearchForm: true,
-  showTableSetting: true,
   bordered: true,
   handleSearchInfoFn(info) {
     console.log('handleSearchInfoFn', info)
@@ -85,13 +93,6 @@ const [registerTable, { reload, updateTableDataRecord }] = useTable({
     slots: { customRender: 'action' },
   },
 })
-
-async function getCols() {
-  userCustomSettings = await userService.getUserSettingTypes()
-  const helper = new ContentHelper()
-  const customPropCols = helper.getColumnsFromUserProperties(userCustomSettings)
-  return [...columns, ...customPropCols]
-}
 
 function handleCreate() {
   openModal(true, {

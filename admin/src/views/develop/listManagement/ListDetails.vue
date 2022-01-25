@@ -50,7 +50,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref, unref } from 'vue'
+import { computed, onMounted, onBeforeMount, reactive, ref, unref } from 'vue'
 import {
   BasicForm,
   FormSchema,
@@ -64,15 +64,8 @@ import { PageWrapper } from '@/components/Page'
 import { useGo } from '@/hooks/web/usePage'
 import { useTabs } from '@/hooks/web/useTabs'
 import { VueDraggableNext } from 'vue-draggable-next'
-import {
-  ContentManagementServiceProxy,
-  ContentTypeListItemDto,
-} from '@service/api/app-service-proxies'
-import {
-  getContent,
-  createOrUpdateContent,
-  ContentItemUpperCase,
-} from '@service/eoc/contentApi'
+import { ContentManagementServiceProxy } from '@service/api/app-service-proxies'
+import { getContent, ContentItemUpperCase } from '@service/eoc/contentApi'
 import { ContentFieldsMapping } from '@service/eoc/contentApi'
 import { ContentHelper } from '@/api/contentHelper'
 const route = useRoute()
@@ -85,23 +78,15 @@ let listManageFields: ContentFieldsMapping[] = reactive<ContentFieldsMapping[]>(
 )
 // 此处可以得到文档ID
 const documentId = ref(route.params?.id)
-let contentItem: ContentItemUpperCase = reactive<ContentItemUpperCase>({})
+let contentItem: ContentItemUpperCase = reactive({})
 
 const typeManagement = new ContentManagementServiceProxy()
 const contentHelper = new ContentHelper()
 
-async function getAllFileds(typeName: string) {
-  const typDef = await typeManagement.getTypeDefinition({
-    name: typeName,
-    withSettings: true,
-  })
-  console.log(typDef, 'TypeDef')
-  return contentHelper.getAllFields(typDef)
-}
-
 const schemas = [
   {
-    field: 'VbenList.TargetContentType.Text',
+    field: 'TargetContentType',
+    prop: 'VbenList.TargetContentType.Text',
     component: 'Input',
     label: '类型',
     helpMessage: ['选择一个类型', '用于加载类型中的字段'],
@@ -121,13 +106,15 @@ const schemas = [
     },
   },
   {
-    field: 'VbenList.QueryMethod.Text',
+    field: 'QueryMethod',
+    componentProps: {
+      prop: 'VbenList.QueryMethod.Text',
+    },
     component: 'Select',
     label: '查询方式',
     colProps: {
       span: 8,
     },
-    defaultValue: 'Graphql',
   },
 ] as FormSchema[]
 
@@ -149,7 +136,7 @@ async function getTypeList() {
 const currentKey = ref('detail')
 const { setTitle } = useTabs()
 // 设置Tab的标题（不会影响页面标题）
-onMounted(async () => {
+onBeforeMount(async () => {
   if (documentId.value) {
     contentItem = await getContent(documentId.value.toString())
     console.log(contentItem, 'contentItem')
@@ -179,7 +166,6 @@ onMounted(async () => {
       },
     ])
   }
-  await setFieldsValue(unref(contentItem))
   setTitle('编辑列表：' + contentItem.DisplayText)
 })
 
@@ -188,6 +174,14 @@ async function typeSelectionChanged(value) {
   console.log('typeSelectionChanged', fields)
 }
 
+async function getAllFileds(typeName: string) {
+  const typDef = await typeManagement.getTypeDefinition({
+    name: typeName,
+    withSettings: true,
+  })
+  console.log(typDef, 'TypeDef')
+  return contentHelper.getAllFields(typDef)
+}
 function handleReset() {
   // keyword.value = ''
 }
@@ -195,8 +189,9 @@ function handleSubmit(values: any) {
   // createMessage.success('click search,values:' + JSON.stringify(values))
 }
 const getTitle = computed(() => {
-  if (unref(contentItem).DisplayTexttItem) {
-    return `编辑：${unref(contentItem).DisplayText}`
+  console.log(contentItem, 'getTitle = computed(()')
+  if (unref(contentItem).DisplayText) {
+    return `编辑：${contentItem.DisplayText}`
   } else {
     return '新建列表'
   }

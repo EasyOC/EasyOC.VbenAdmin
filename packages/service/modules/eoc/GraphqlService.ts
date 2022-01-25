@@ -1,14 +1,20 @@
 import { ContentTypeEnum } from '@admin/tokens'
-import { ocApi, defaultRequest } from '../../request'
+import { ocApi } from '../../request'
 // import { BasicFetchResult } from '../model'
 
 export const GraphqlServiceAPI = '/api/graphql'
 export type GraphQLQueryParams = {
   operationName?: string
   query: string
-  variables?: any
+  variables?: LuceneCommonQueryParams | any
 }
-export const excuteGraphqlQuery = async (data: GraphQLQueryParams) => {
+export const excuteGraphqlQuery = async (query: GraphQLQueryParams) => {
+  const data = {
+    variables: query.variables
+      ? JSON.stringify(query.variables).replace('"', "'")
+      : null,
+    query: query.query,
+  }
   return await ocApi.post({ url: GraphqlServiceAPI, data: data })
 }
 
@@ -23,6 +29,12 @@ export const excuteGraphqlGetQuery = async (params: { query: string }) => {
 
 export const loadGraphQLSchema = async () => {
   return excuteGraphqlGetQuery({ query: querySchema })
+}
+
+export type LuceneCommonQueryParams = {
+  filters: { method: string; key?: string; value: string }[]
+  from: number
+  skip: number
 }
 
 const querySchema = ` 
