@@ -31,7 +31,7 @@
         />
       </template>
     </BasicTable>
-    <!-- <AccountModal @register="registerModal" @success="handleSuccess" /> -->
+    <EditModal @register="registerModal" />
   </PageWrapper>
 </template>
 <script setup lang="ts">
@@ -64,6 +64,14 @@ const helper = new ContentHelper()
 let dynamicSettings: ContentTypeDefinitionDto
 const dynamicColumns = reactive<BasicColumn[]>([])
 
+const fieldNames = [
+  'published',
+  'publishedUtc',
+  'name',
+  'modifiedUtc',
+  'custNum',
+  'displayText',
+]
 let contentManagementService: ContentManagementServiceProxy
 onBeforeMount(async () => {
   contentManagementService = new ContentManagementServiceProxy()
@@ -71,9 +79,11 @@ onBeforeMount(async () => {
     name: 'Customer',
     withSettings: true,
   })
-  dynamicColumns.push(...helper.getGraphqlTableCols(dynamicSettings))
+  const gpCols = helper.getGraphqlTableCols(dynamicSettings, fieldNames)
+  dynamicColumns.push(...gpCols)
   setProps({ columns: dynamicColumns, showTableSetting: true })
 })
+
 const go = useGo()
 const [registerModal, { openModal }] = useModal()
 const searchInfo = reactive<Recordable>({})
@@ -111,14 +121,7 @@ async function getList(params) {
     query: `query MyQuery($params:String) {
               crmCustomers(parameters:$params) {
                 items {
-                  published
-                  publishedUtc
-                  owner
-                  name
-                  modifiedUtc
-                  custNum
-                  displayText
-                  latest
+                 ${fieldNames.join(' ')}
                 }
                 total
               }

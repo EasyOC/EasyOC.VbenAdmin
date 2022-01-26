@@ -123,15 +123,22 @@ export class ContentHelper {
     }
   }
 
-  getGraphqlTableCols(typeDef: ContentTypeDefinitionDto, parentPath = '') {
+  getGraphqlTableCols(
+    typeDef: ContentTypeDefinitionDto,
+    colFilter: string[],
+    parentPath = '',
+  ) {
     let cols: BasicColumn[] = []
     const fields = this.getFieldsFromType(typeDef, parentPath)
-    cols = fields.map((x) => {
-      return {
-        title: t(x.displayName),
-        dataIndex: camelCase(x.filedName),
-      } as BasicColumn
-    })
+
+    cols = fields
+      .filter((x) => colFilter.includes(x.filedName.toLocaleLowerCase()))
+      .map((x) => {
+        return {
+          title: t(x.displayName),
+          dataIndex: camelCase(x.filedName),
+        } as BasicColumn
+      })
     return cols
   }
 
