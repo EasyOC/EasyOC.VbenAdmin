@@ -1,10 +1,10 @@
 <template>
-  <BasicForm @register="register"/>
+  <BasicForm @register="register" />
 </template>
 
 <script lang="ts">
 import { BasicForm, FormSchema, useForm } from '@/components/Form/index'
-import { defineComponent, reactive, onMounted, onBeforeMount } from 'vue'
+import { defineComponent, reactive, onMounted, onBeforeMount, ref } from 'vue'
 import { basicProps } from './props'
 import { ContentTypeDefinitionDto } from '@service/api/app-service-proxies'
 import { ContentManagementServiceProxy } from '@service/api/app-service-proxies'
@@ -15,11 +15,7 @@ import {
   FiledType,
   ContentItemUpperCase,
 } from '@service/eoc/contentApi'
-import {
-  ContentHelper,
-  expandContentType,
-  updateContentItem,
-} from '@/api/contentHelper'
+import { ContentHelper } from '@/api/contentHelper'
 import { SelectProps } from 'ant-design-vue'
 export default defineComponent({
   name: 'ContentForm',
@@ -28,9 +24,10 @@ export default defineComponent({
   emits: ['advanced-change', 'reset', 'submit', 'register'],
   setup(props) {
     const typeManager = new ContentManagementServiceProxy()
+    const contentHelper = new ContentHelper()
 
     let contentItem = reactive(new ContentItemUpperCase())
-    let formModel = reactive({})
+    let formModel = ref({})
     let typeDef = reactive(new ContentTypeDefinitionDto())
     let fields = reactive<ContentFieldsMapping[]>([])
 
@@ -46,7 +43,9 @@ export default defineComponent({
 
       if (props.contentItemId) {
         contentItem = await getContent(props.contentItemId?.toString())
-        formModel = { ...expandContentType(contentItem, fields) }
+        formModel.value = {
+          ...contentHelper.expandContentType(contentItem, fields),
+        }
         setFieldsValue(formModel)
       }
     })
@@ -64,8 +63,6 @@ export default defineComponent({
         },
         fieldMapToTime: [['fieldTime', ['startTime', 'endTime'], 'YYYY-MM-DD']],
       })
-
-    const contentHelper = new ContentHelper()
 
     async function handleSubmit() {
       try {

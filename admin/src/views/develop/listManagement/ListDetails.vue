@@ -1,16 +1,10 @@
 <template>
-  <PageWrapper :title="getTitle" contentBackground @back="goBack">
+  <PageWrapper :title="getTitle" @back="goBack">
     <template #extra>
       <a-button type="primary"> 保存 </a-button>
       <a-button type="primary" danger> 删除列表</a-button>
     </template>
-    <template #footer>
-      <a-tabs default-active-key="detail" v-model:activeKey="currentKey">
-        <a-tab-pane key="detail" tab="用户资料" />
-        <a-tab-pane key="logs" tab="操作日志" />
-      </a-tabs>
-    </template>
-    <div class="pt-4 m-4 desc-wrap">
+    <div class="pt-4 m-4 bg-white desc-wrap">
       <template v-if="currentKey == 'detail'">
         <div>
           <BasicForm
@@ -30,27 +24,42 @@
               />
             </template>
           </BasicForm>
-          <a-col :span="3"
-            >122232
-            <a-row v-for="item in unref(fields)" :key="item.keyPath || ''">
-              1111
+        </div>
+      </template>
+
+      <a-row>
+        <div class="w-1/3 bg-white p-4">
+          <div ref="elTypeFields">
+            <a-row v-for="item in fields" :key="item.keyPath">
               <a-col>{{ t(item.displayName || '') }} </a-col>
             </a-row>
-            <!-- <VueDraggableNext :list="fields"> </VueDraggableNext> -->
-          </a-col>
+          </div>
         </div>
-      </template>
-      <template v-if="currentKey == 'logs'">
-        <div v-for="i in 10" :key="i">
-          这是用户{{ contentItem.DisplayText }}操作日志Tab
+        <div class="w-1/3 bg-white p-4">
+          <div ref="elListFields">
+            <a-row v-for="item in listFields" :key="item.keyPath">
+              <a-col>{{ t(item.displayName || '') }} </a-col>
+            </a-row>
+          </div>
         </div>
-      </template>
+        <a-row class="w-1/3 bg-white p-4">
+          <CodeMirror :value="model.ListMapping" />
+        </a-row>
+      </a-row>
     </div>
   </PageWrapper>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, onBeforeMount, reactive, ref, unref } from 'vue'
+import {
+  computed,
+  onMounted,
+  onBeforeMount,
+  reactive,
+  ref,
+  unref,
+  nextTick,
+} from 'vue'
 import {
   BasicForm,
   FormSchema,
@@ -62,16 +71,20 @@ import { t } from '@admin/locale'
 import { useRoute } from 'vue-router'
 import { PageWrapper } from '@/components/Page'
 import { useGo } from '@/hooks/web/usePage'
-import { useTabs } from '@/hooks/web/useTabs'
-import { VueDraggableNext } from 'vue-draggable-next'
+
 import { ContentManagementServiceProxy } from '@service/api/app-service-proxies'
 import { getContent, ContentItemUpperCase } from '@service/eoc/contentApi'
 import { ContentFieldsMapping } from '@service/eoc/contentApi'
-import { ContentHelper } from '@/api/contentHelper'
+import { ContentHelper, expandContentType } from '@/api/contentHelper'
+import Sortable from 'sortablejs'
+import CodeMirror from '@/components/CodeEditor/src/codemirror/CodeMirror.vue'
 const route = useRoute()
 const go = useGo()
+const elListFields = ref<ComponentRef>(null)
+const elTypeFields = ref<ComponentRef>(null)
 
-let fields: ContentFieldsMapping[] = []
+const fields = ref<ContentFieldsMapping[]>([])
+const listFields = ref<ContentFieldsMapping[]>([])
 
 let listManageFields: ContentFieldsMapping[] = reactive<ContentFieldsMapping[]>(
   [],
@@ -79,14 +92,13 @@ let listManageFields: ContentFieldsMapping[] = reactive<ContentFieldsMapping[]>(
 // 此处可以得到文档ID
 const documentId = ref(route.params?.id)
 let contentItem: ContentItemUpperCase = reactive({})
-
+const model = ref<any>({})
 const typeManagement = new ContentManagementServiceProxy()
 const contentHelper = new ContentHelper()
 
 const schemas = [
   {
     field: 'TargetContentType',
-    prop: 'VbenList.TargetContentType.Text',
     component: 'Input',
     label: '类型',
     helpMessage: ['选择一个类型', '用于加载类型中的字段'],
@@ -107,9 +119,6 @@ const schemas = [
   },
   {
     field: 'QueryMethod',
-    componentProps: {
-      prop: 'VbenList.QueryMethod.Text',
-    },
     component: 'Select',
     label: '查询方式',
     colProps: {
@@ -134,15 +143,14 @@ async function getTypeList() {
   return (await result).items || []
 }
 const currentKey = ref('detail')
-const { setTitle } = useTabs()
-// 设置Tab的标题（不会影响页面标题）
 onBeforeMount(async () => {
   if (documentId.value) {
     contentItem = await getContent(documentId.value.toString())
-    console.log(contentItem, 'contentItem')
+    listManageFields = await getAllFileds('VbenList')
+    model.value = contentHelper.expandContentType(contentItem, listManageFields)
+    console.log('model.value ', model.value)
+    typeSelectionChanged(unref(model).TargetContentType)
   }
-  listManageFields = await getAllFileds('VbenList')
-  console.log(listManageFields, 'listManageFields')
   const queryMethodField = listManageFields.find(
     (x) => x.filedName == 'QueryMethod',
   )
@@ -166,12 +174,38 @@ onBeforeMount(async () => {
       },
     ])
   }
-  setTitle('编辑列表：' + contentItem.DisplayText)
+  setFieldsValue(model.value)
 })
 
 async function typeSelectionChanged(value) {
-  fields = await getAllFileds(value)
+  fields.value = await getAllFileds(value)
   console.log('typeSelectionChanged', fields)
+  updateDraggableEl()
+}
+
+// let sortable: Sortable
+
+function updateDraggableEl() {
+  nextTick(() => {
+    const TypeFieldsEl = unref(elTypeFields)
+    if (!TypeFieldsEl) return
+    const el = TypeFieldsEl as any
+    if (!el) return
+
+    new Sortable(unref(el), {
+      group: 'shared', // set both lists to same group
+      animation: 150,
+    })
+
+    const TypeFieldsEl2 = unref(elListFields)
+    if (!TypeFieldsEl2) return
+    const el2 = TypeFieldsEl2 as any
+    if (!el2) return
+    new Sortable(unref(el2), {
+      group: 'shared', // set both lists to same group
+      animation: 150,
+    })
+  })
 }
 
 async function getAllFileds(typeName: string) {

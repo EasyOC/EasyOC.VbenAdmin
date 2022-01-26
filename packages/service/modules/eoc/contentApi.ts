@@ -120,7 +120,7 @@ export class ContentFieldsMapping {
   displayName!: string
   fieldType!: FiledType
   editable!: boolean
-  visable!: boolean
+  visible!: boolean
   partName!: string
   fieldSettings: any
   buildFrom!: 'ContentTypeDefinition' | 'GraphQL'

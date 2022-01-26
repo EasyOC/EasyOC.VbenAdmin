@@ -12,41 +12,47 @@ import {
 import { t } from '@admin/locale'
 import { camelCase, deepMerge } from '@admin/utils'
 
-export function expandContentType(
-  contentItem: ContentItemUpperCase,
-  fields: ContentFieldsMapping[],
-) {
-  const expandedContentItem = {}
-  fields.forEach((f) => {
-    let tempValue = { ...contentItem }
-    if (f.isNormal() || false) {
-      f.keyPath.split('.').forEach((x) => (tempValue = tempValue[x]))
-    }
-    expandedContentItem[f.filedName] = tempValue
-  })
-  return expandedContentItem
-}
-
-export function updateContentItem(
-  formModel: any,
-  targetContentItem: ContentItemUpperCase,
-  fields: ContentFieldsMapping[],
-) {
-  console.log('input values', formModel)
-  console.log('before Update ContentItem ', targetContentItem)
-  fields.forEach((f) => {
-    eval(`targetContentItem[${f.keyPath}]=contentModel[${f.filedName}]`)
-  })
-  console.log('Updated ContentItem ', targetContentItem)
-  return targetContentItem
-}
-
 export class ContentHelper {
   public getAllFields(
     def: ContentTypeDefinitionDto | ContentPartDefinitionDto,
     rootPath = '',
   ): ContentFieldsMapping[] {
     return this.getFieldsFromType(def as ContentTypeDefinitionDto, rootPath)
+  }
+  public expandContentType(
+    _contentItem: ContentItemUpperCase,
+    fields: ContentFieldsMapping[],
+    toCamelCase = false,
+  ) {
+    const expandedContentItem: any = {}
+    fields.forEach((f) => {
+      if (toCamelCase) {
+        expandedContentItem[camelCase(f.filedName)] = eval(
+          `_contentItem.${f.keyPath}`,
+        )
+      } else {
+        expandedContentItem[f.filedName] = eval(`_contentItem.${f.keyPath}`)
+      }
+    })
+    expandedContentItem.isCamelCase = toCamelCase
+    return expandedContentItem
+  }
+
+  public updateContentItem(
+    _formModel: any,
+    targetContentItem: ContentItemUpperCase,
+    fields: ContentFieldsMapping[],
+  ) {
+    fields.forEach((f) => {
+      if (_formModel.isCamelCase) {
+        eval(
+          `targetContentItem.${f.keyPath}=_formModel.${camelCase(f.filedName)}`,
+        )
+      } else {
+        eval(`targetContentItem.${f.keyPath}=_formModel.${f.filedName}`)
+      }
+    })
+    return targetContentItem
   }
 
   public getFieldsFromType(
@@ -67,7 +73,7 @@ export class ContentHelper {
             fieldType: FiledType.TitlePart,
             editable: false,
             lastValueKey: 'Title',
-            visable: false,
+            visible: false,
             filedName: 'DisplayText',
             keyPath: dataPath + 'TitlePart.Title',
             fieldSettings: x.partDefinition.settings,
@@ -102,7 +108,8 @@ export class ContentHelper {
         partName: partDef.name || '',
         filedName: x.name || '',
         editable: true,
-        visable: true,
+        lastValueKey: valuePath,
+        visible: true,
         keyPath: `${dataPath}${x.name}.${valuePath}`,
         fieldSettings: x.settings,
         fieldType: fieldType,

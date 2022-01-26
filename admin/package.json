@@ -54,7 +54,6 @@
     "tinymce": "^5.10.2",
     "vditor": "^3.8.10",
     "vue": "^3.2.26",
-    "vue-draggable-next": "^2.1.1",
     "vue-json-pretty": "^1.8.2",
     "vue-router": "^4.0.12",
     "xlsx": "^0.17.4"

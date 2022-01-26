@@ -25,6 +25,11 @@ export const loadGraphQLSchema = async () => {
   return excuteGraphqlGetQuery({ query: querySchema })
 }
 
+export type SqlCommonQueryParams = {
+  fist: string
+  skip: string
+}
+
 export type LuceneCommonQueryParams = {
   filters?: { method: string; key?: string; value: string }[]
   from: number
