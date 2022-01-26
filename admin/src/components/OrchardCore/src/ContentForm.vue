@@ -12,7 +12,7 @@ import {
   getContent,
   createOrUpdateContent,
   ContentFieldsMapping,
-  FiledType,
+  FieldType,
   ContentItemUpperCase,
 } from '@service/eoc/contentApi'
 import { ContentHelper } from '@/api/contentHelper'
@@ -80,16 +80,16 @@ export default defineComponent({
       fields.forEach((f) => {
         const s = {
           label: f.displayName,
-          field: f.filedName,
+          field: f.fieldName,
           colProps: {
             span: 8,
           },
         } as FormSchema
         switch (f.fieldType) {
-          case FiledType.BooleanField:
+          case FieldType.BooleanField:
             s.component = 'Switch'
             break
-          case FiledType.TextField:
+          case FieldType.TextField:
             updateTextFieldSchema(s, f)
             break
         }

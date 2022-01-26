@@ -7,7 +7,7 @@ import type {
 import type { DynamicProps } from '@admin/types'
 import { schemas } from '@/views/demo/page/form/basic/data'
 import { ContentTypeDefinitionDto } from '@service/api/app-service-proxies'
-import { FiledType, ContentFieldsMapping } from '@service/eoc/contentApi'
+import { FieldType, ContentFieldsMapping } from '@service/eoc/contentApi'
 import { SelectProps } from 'ant-design-vue'
 import { onUnmounted } from 'vue'
 
@@ -21,16 +21,16 @@ export function useContentForm(props?: Props) {
       fields.forEach((f) => {
         const s = {
           label: f.displayName,
-          field: f.filedName,
+          field: f.fieldName,
           colProps: {
             span: 8,
           },
         } as FormSchema
         switch (f.fieldType) {
-          case FiledType.BooleanField:
+          case FieldType.BooleanField:
             s.component = 'Switch'
             break
-          case FiledType.TextField:
+          case FieldType.TextField:
             this.updateTextFieldSchema(s, f)
             break
         }

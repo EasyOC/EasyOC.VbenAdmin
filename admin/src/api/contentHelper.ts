@@ -1,7 +1,7 @@
 import { BasicColumn, FormSchema } from '@/components/Table'
 import {
   ContentFieldsMapping,
-  FiledType,
+  FieldType,
   ContentItemUpperCase,
   getValuePath,
 } from '@service/eoc/contentApi'
@@ -27,11 +27,11 @@ export class ContentHelper {
     const expandedContentItem: any = {}
     fields.forEach((f) => {
       if (toCamelCase) {
-        expandedContentItem[camelCase(f.filedName)] = eval(
+        expandedContentItem[camelCase(f.fieldName)] = eval(
           `_contentItem.${f.keyPath}`,
         )
       } else {
-        expandedContentItem[f.filedName] = eval(`_contentItem.${f.keyPath}`)
+        expandedContentItem[f.fieldName] = eval(`_contentItem.${f.keyPath}`)
       }
     })
     expandedContentItem.isCamelCase = toCamelCase
@@ -46,10 +46,10 @@ export class ContentHelper {
     fields.forEach((f) => {
       if (_formModel.isCamelCase) {
         eval(
-          `targetContentItem.${f.keyPath}=_formModel.${camelCase(f.filedName)}`,
+          `targetContentItem.${f.keyPath}=_formModel.${camelCase(f.fieldName)}`,
         )
       } else {
-        eval(`targetContentItem.${f.keyPath}=_formModel.${f.filedName}`)
+        eval(`targetContentItem.${f.keyPath}=_formModel.${f.fieldName}`)
       }
     })
     return targetContentItem
@@ -70,11 +70,11 @@ export class ContentHelper {
           deepMerge(new ContentFieldsMapping(), {
             displayName: t('显示名称'),
             partName: 'TitlePart',
-            fieldType: FiledType.TitlePart,
+            fieldType: FieldType.TitlePart,
             editable: false,
             lastValueKey: 'Title',
             visible: false,
-            filedName: 'DisplayText',
+            fieldName: 'DisplayText',
             keyPath: dataPath + 'TitlePart.Title',
             fieldSettings: x.partDefinition.settings,
             buildFrom: 'ContentTypeDefinition',
@@ -100,13 +100,13 @@ export class ContentHelper {
     }
     const dataPath = parentPath
     partDef.fields?.forEach((x) => {
-      const fieldType = x.fieldDefinition.name as FiledType
+      const fieldType = x.fieldDefinition.name as FieldType
       const valuePath = getValuePath(fieldType)
       const col = deepMerge(new ContentFieldsMapping(), {
         displayName: x.displayName || '',
         buildFrom: 'ContentTypeDefinition',
         partName: partDef.name || '',
-        filedName: x.name || '',
+        fieldName: x.name || '',
         editable: true,
         lastValueKey: valuePath,
         visible: true,
@@ -139,11 +139,11 @@ export class ContentHelper {
     const fields = this.getFieldsFromType(typeDef, parentPath)
 
     cols = fields
-      .filter((x) => colFilter.includes(x.filedName.toLocaleLowerCase()))
+      .filter((x) => colFilter.includes(x.fieldName.toLocaleLowerCase()))
       .map((x) => {
         return {
           title: t(x.displayName),
-          dataIndex: camelCase(x.filedName),
+          dataIndex: camelCase(x.fieldName),
         } as BasicColumn
       })
     return cols
@@ -176,7 +176,7 @@ export class ContentHelper {
       const col: BasicColumn = {
         title: x.displayName,
       }
-      const valuePath = getValuePath(x.fieldDefinition.name as FiledType)
+      const valuePath = getValuePath(x.fieldDefinition.name as FieldType)
       col.dataIndex = `${dataPath}${x.name}.${valuePath}`.split('.')
       cols.push(col)
     })
@@ -255,7 +255,7 @@ export class ContentHelper {
     }
     const dataPath = parentPath
     partDef.fields?.forEach((x) => {
-      let valuePath = getValuePath(x.fieldDefinition.name as FiledType)
+      let valuePath = getValuePath(x.fieldDefinition.name as FieldType)
       valuePath = `${dataPath}${x.name}.${valuePath}`
       const formItem: FormSchema = {
         label: x.displayName || '',

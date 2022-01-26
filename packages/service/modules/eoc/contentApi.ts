@@ -71,7 +71,7 @@ export class ContentItemUpperCase {
   [key: string]: any
 }
 
-export enum FiledType {
+export enum FieldType {
   TextField = 'TextField',
   BooleanField = 'BooleanField',
   DateField = 'DateField',
@@ -81,24 +81,25 @@ export enum FiledType {
   ContentPickerField = 'ContentPickerField',
   UserPickerField = 'UserPickerField',
   TitlePart = 'TitlePart',
+  CustomField = 'CustomField',
 }
 
-export function getValuePath(fieldName: FiledType | string) {
+export function getValuePath(fieldName: FieldType | string) {
   let valuePath = 'Value'
   switch (fieldName) {
-    case FiledType.TextField:
+    case FieldType.TextField:
       valuePath = 'Text'
       break
-    case FiledType.BooleanField:
-    case FiledType.DateField:
-    case FiledType.TimeField:
-    case FiledType.DateTimefield:
-    case FiledType.NumericField:
+    case FieldType.BooleanField:
+    case FieldType.DateField:
+    case FieldType.TimeField:
+    case FieldType.DateTimefield:
+    case FieldType.NumericField:
       valuePath = 'Value'
       break
-    case FiledType.ContentPickerField:
+    case FieldType.ContentPickerField:
       valuePath = 'ContentItemIds'
-    case FiledType.UserPickerField:
+    case FieldType.UserPickerField:
       valuePath = 'DisplayText'
       break
     default:
@@ -108,17 +109,17 @@ export function getValuePath(fieldName: FiledType | string) {
 }
 
 export const NormalFields = [
-  FiledType.TitlePart,
-  FiledType.UserPickerField,
-  FiledType.UserPickerField,
+  FieldType.TitlePart,
+  FieldType.UserPickerField,
+  FieldType.UserPickerField,
 ]
 
 export class ContentFieldsMapping {
   keyPath!: string
   lastValueKey!: string
-  filedName!: string
+  fieldName!: string
   displayName!: string
-  fieldType!: FiledType
+  fieldType!: FieldType
   editable!: boolean
   visible!: boolean
   partName!: string

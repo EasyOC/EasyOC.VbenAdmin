@@ -29,18 +29,43 @@
 
       <a-row>
         <div class="w-1/3 bg-white p-4">
-          <div ref="elTypeFields">
-            <a-row v-for="item in fields" :key="item.keyPath">
-              <a-col>{{ t(item.displayName || '') }} </a-col>
-            </a-row>
-          </div>
+          <div>类型列表</div>
+          <!-- <a-input v-model:value="colFilterText" @input.stop="searchFields" /> -->
+          <draggable
+            class="dragArea list-group w-full"
+            group="fieldsList"
+            :list="filteredCols"
+            :move="checkMove"
+          >
+            <div
+              class="list-group-item bg-gray-300 m-1 p-3 rounded-md text-center"
+              v-for="element in filteredCols"
+              :key="element.keyPath"
+            >
+              {{ element.displayName }}
+            </div>
+          </draggable>
         </div>
         <div class="w-1/3 bg-white p-4">
-          <div ref="elListFields">
-            <a-row v-for="item in listFields" :key="item.keyPath">
-              <a-col>{{ t(item.displayName || '') }} </a-col>
-            </a-row>
+          <div>
+            表字段列表 <a-button @click="addCol">添加自定义字段</a-button>
           </div>
+
+          <draggable
+            class="dragArea list-group w-full"
+            group="fieldsList"
+            :list="listFields"
+            @change="draggableChange"
+            :move="checkMove"
+          >
+            <div
+              class="list-group-item bg-gray-300 m-1 p-3 rounded-md text-center"
+              v-for="element in listFields"
+              :key="element.keyPath"
+            >
+              {{ element.displayName }}
+            </div>
+          </draggable>
         </div>
         <a-row class="w-1/3 bg-white p-4">
           <CodeMirror :value="model.ListMapping" />
@@ -58,7 +83,7 @@ import {
   reactive,
   ref,
   unref,
-  nextTick,
+  watchEffect,
 } from 'vue'
 import {
   BasicForm,
@@ -67,24 +92,46 @@ import {
   useForm,
 } from '@/components/Form/index'
 
-import { t } from '@admin/locale'
+// import { t } from '@admin/locale'
 import { useRoute } from 'vue-router'
 import { PageWrapper } from '@/components/Page'
 import { useGo } from '@/hooks/web/usePage'
-
+import { VueDraggableNext as draggable } from 'vue-draggable-next'
 import { ContentManagementServiceProxy } from '@service/api/app-service-proxies'
-import { getContent, ContentItemUpperCase } from '@service/eoc/contentApi'
+import {
+  getContent,
+  ContentItemUpperCase,
+  FieldType,
+} from '@service/eoc/contentApi'
 import { ContentFieldsMapping } from '@service/eoc/contentApi'
 import { ContentHelper, expandContentType } from '@/api/contentHelper'
-import Sortable from 'sortablejs'
 import CodeMirror from '@/components/CodeEditor/src/codemirror/CodeMirror.vue'
+import { BasicColumn } from '@/components/Table'
+import { camelCase } from '@admin/utils'
 const route = useRoute()
 const go = useGo()
-const elListFields = ref<ComponentRef>(null)
-const elTypeFields = ref<ComponentRef>(null)
 
 const fields = ref<ContentFieldsMapping[]>([])
 const listFields = ref<ContentFieldsMapping[]>([])
+const model = ref<any>({})
+
+// watchEffect(() => {})
+
+function addField(field: ContentFieldsMapping) {
+  const config = unref(model)
+  const jobj = JSON.parse(config.ListMapping)
+  const newobj: BasicColumn = {
+    title: field.displayName,
+    dataIndex: field.keyPath.split('.'),
+  }
+  if (config.QueryMethod == 'Graphql') {
+    newobj.dataIndex = camelCase(field.fieldName)
+  }
+  jobj.push(newobj)
+  model.value.ListMapping = JSON.stringify(jobj)
+}
+
+const filteredCols = ref<ContentFieldsMapping[]>()
 
 let listManageFields: ContentFieldsMapping[] = reactive<ContentFieldsMapping[]>(
   [],
@@ -92,7 +139,6 @@ let listManageFields: ContentFieldsMapping[] = reactive<ContentFieldsMapping[]>(
 // 此处可以得到文档ID
 const documentId = ref(route.params?.id)
 let contentItem: ContentItemUpperCase = reactive({})
-const model = ref<any>({})
 const typeManagement = new ContentManagementServiceProxy()
 const contentHelper = new ContentHelper()
 
@@ -133,6 +179,26 @@ const [register, { setFieldsValue, validate, updateSchema }] = useForm({
   schemas: schemas,
   showActionButtonGroup: false,
 })
+
+function draggableChange(event) {
+  const { moved, added } = event
+  console.log(event)
+  if (moved) {
+    console.log('moved', moved)
+  }
+  if (added) {
+    console.log('added', added, added.element)
+    addField(added.element)
+  }
+}
+function checkMove(event) {
+  console.log('checkMove', event.draggedContext)
+  var elment = event.draggedContext.element as ContentFieldsMapping
+  if (elment && elment.fieldType == FieldType.CustomField) {
+    return false
+  }
+  console.log('Future index: ' + event.draggedContext.futureIndex)
+}
 async function getTypeList() {
   const result = typeManagement.getAllTypes({
     stereotype: '',
@@ -152,7 +218,7 @@ onBeforeMount(async () => {
     typeSelectionChanged(unref(model).TargetContentType)
   }
   const queryMethodField = listManageFields.find(
-    (x) => x.filedName == 'QueryMethod',
+    (x) => x.fieldName == 'QueryMethod',
   )
   if (queryMethodField) {
     const options =
@@ -176,36 +242,32 @@ onBeforeMount(async () => {
   }
   setFieldsValue(model.value)
 })
+let colFilterText = '客'
+function searchFields(e) {
+  console.log(e.data)
+  console.log(colFilterText)
+  if (colFilterText) {
+    filteredCols.value = fields.value.filter((x) =>
+      x.displayName.includes(colFilterText),
+    )
+  } else {
+    filteredCols.value = unref(fields)
+  }
+}
+function addCol() {
+  const field = {
+    displayName: '自定义字段',
+    fieldType: FieldType.CustomField,
+    fieldName: 'CustomField',
+  } as ContentFieldsMapping
+  listFields.value.push(field)
+  addField(field)
+}
 
 async function typeSelectionChanged(value) {
   fields.value = await getAllFileds(value)
-  console.log('typeSelectionChanged', fields)
-  updateDraggableEl()
-}
-
-// let sortable: Sortable
-
-function updateDraggableEl() {
-  nextTick(() => {
-    const TypeFieldsEl = unref(elTypeFields)
-    if (!TypeFieldsEl) return
-    const el = TypeFieldsEl as any
-    if (!el) return
-
-    new Sortable(unref(el), {
-      group: 'shared', // set both lists to same group
-      animation: 150,
-    })
-
-    const TypeFieldsEl2 = unref(elListFields)
-    if (!TypeFieldsEl2) return
-    const el2 = TypeFieldsEl2 as any
-    if (!el2) return
-    new Sortable(unref(el2), {
-      group: 'shared', // set both lists to same group
-      animation: 150,
-    })
-  })
+  filteredCols.value = unref(fields)
+  console.log('typeSelectionChanged', filteredCols)
 }
 
 async function getAllFileds(typeName: string) {
@@ -238,4 +300,9 @@ function goBack() {
 }
 </script>
 
-<style></style>
+<style>
+.dragArea {
+  border: 1px solid darkgrey;
+  min-height: 400px;
+}
+</style>
