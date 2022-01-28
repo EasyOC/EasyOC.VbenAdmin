@@ -15,9 +15,8 @@ import { camelCase, deepMerge } from '@admin/utils'
 export class ContentHelper {
   public getAllFields(
     def: ContentTypeDefinitionDto | ContentPartDefinitionDto,
-    rootPath = '',
   ): ContentFieldsMapping[] {
-    return this.getFieldsFromType(def as ContentTypeDefinitionDto, rootPath)
+    return this.getFieldsFromType(def as ContentTypeDefinitionDto)
   }
   public expandContentType(
     _contentItem: ContentItemUpperCase,
@@ -57,7 +56,7 @@ export class ContentHelper {
 
   public getFieldsFromType(
     typeDef: ContentTypeDefinitionDto,
-    parentPath = '',
+    parentPath: string | undefined = '',
   ): ContentFieldsMapping[] {
     const cols: ContentFieldsMapping[] = []
     if (!!parentPath && !parentPath.endsWith('.')) {
@@ -91,7 +90,6 @@ export class ContentHelper {
 
   public getFieldsFromPart(
     partDef: ContentPartDefinitionDto,
-
     parentPath = '',
   ): ContentFieldsMapping[] {
     const cols: ContentFieldsMapping[] = []

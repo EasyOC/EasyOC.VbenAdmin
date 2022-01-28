@@ -28,7 +28,7 @@
       </template>
 
       <a-row>
-        <div class="w-1/3 bg-white p-4">
+        <div class="w-1/8 bg-white p-4">
           <div>类型列表</div>
           <!-- <a-input v-model:value="colFilterText" @input.stop="searchFields" /> -->
           <draggable
@@ -46,7 +46,7 @@
             </div>
           </draggable>
         </div>
-        <div class="w-1/3 bg-white p-4">
+        <div class="w-1/8 bg-white p-4">
           <div>
             表字段列表 <a-button @click="addCol">添加自定义字段</a-button>
           </div>
@@ -68,7 +68,13 @@
           </draggable>
         </div>
         <a-row class="w-1/3 bg-white p-4">
-          <CodeMirror :value="model.ListMapping" />
+          <MonacoEditor
+            :value="model.ListMapping"
+            language="json"
+            ref="codeEditor"
+            @editorDidMount="editorDidMounted"
+            @change="editorUpdated"
+          />
         </a-row>
       </a-row>
     </div>
@@ -76,15 +82,7 @@
 </template>
 
 <script setup lang="ts">
-import {
-  computed,
-  onMounted,
-  onBeforeMount,
-  reactive,
-  ref,
-  unref,
-  watchEffect,
-} from 'vue'
+import { computed, onBeforeMount, reactive, ref, unref } from 'vue'
 import {
   BasicForm,
   FormSchema,
@@ -104,8 +102,8 @@ import {
   FieldType,
 } from '@service/eoc/contentApi'
 import { ContentFieldsMapping } from '@service/eoc/contentApi'
-import { ContentHelper, expandContentType } from '@/api/contentHelper'
-import CodeMirror from '@/components/CodeEditor/src/codemirror/CodeMirror.vue'
+import MonacoEditor from '@/components/MonacoEditor/index.vue'
+import { ContentHelper } from '@/api/contentHelper'
 import { BasicColumn } from '@/components/Table'
 import { camelCase } from '@admin/utils'
 const route = useRoute()
@@ -114,7 +112,7 @@ const go = useGo()
 const fields = ref<ContentFieldsMapping[]>([])
 const listFields = ref<ContentFieldsMapping[]>([])
 const model = ref<any>({})
-
+const codeEditor = ref<ComponentRef>(null)
 // watchEffect(() => {})
 
 function addField(field: ContentFieldsMapping) {
@@ -122,13 +120,14 @@ function addField(field: ContentFieldsMapping) {
   const jobj = JSON.parse(config.ListMapping)
   const newobj: BasicColumn = {
     title: field.displayName,
-    dataIndex: field.keyPath.split('.'),
+    dataIndex: field.keyPath?.split('.'),
   }
   if (config.QueryMethod == 'Graphql') {
     newobj.dataIndex = camelCase(field.fieldName)
   }
   jobj.push(newobj)
   model.value.ListMapping = JSON.stringify(jobj)
+  monacoEditor.value.getAction(['editor.action.formatDocument'])._run()
 }
 
 const filteredCols = ref<ContentFieldsMapping[]>()
@@ -173,7 +172,7 @@ const schemas = [
   },
 ] as FormSchema[]
 
-const [register, { setFieldsValue, validate, updateSchema }] = useForm({
+const [register, { setFieldsValue, updateSchema }] = useForm({
   model: contentItem,
   labelWidth: 100,
   schemas: schemas,
@@ -191,6 +190,7 @@ function draggableChange(event) {
     addField(added.element)
   }
 }
+
 function checkMove(event) {
   console.log('checkMove', event.draggedContext)
   var elment = event.draggedContext.element as ContentFieldsMapping
@@ -212,7 +212,7 @@ const currentKey = ref('detail')
 onBeforeMount(async () => {
   if (documentId.value) {
     contentItem = await getContent(documentId.value.toString())
-    listManageFields = await getAllFileds('VbenList')
+    listManageFields = await getAllFileds(contentItem.ContentType || '')
     model.value = contentHelper.expandContentType(contentItem, listManageFields)
     console.log('model.value ', model.value)
     typeSelectionChanged(unref(model).TargetContentType)
@@ -242,18 +242,18 @@ onBeforeMount(async () => {
   }
   setFieldsValue(model.value)
 })
-let colFilterText = '客'
-function searchFields(e) {
-  console.log(e.data)
-  console.log(colFilterText)
-  if (colFilterText) {
-    filteredCols.value = fields.value.filter((x) =>
-      x.displayName.includes(colFilterText),
-    )
-  } else {
-    filteredCols.value = unref(fields)
-  }
-}
+// let colFilterText = '客'
+// function searchFields(e) {
+//   console.log(e.data)
+//   console.log(colFilterText)
+//   if (colFilterText) {
+//     filteredCols.value = fields.value.filter((x) =>
+//       x.displayName.includes(colFilterText),
+//     )
+//   } else {
+//     filteredCols.value = unref(fields)
+//   }
+// }
 function addCol() {
   const field = {
     displayName: '自定义字段',
@@ -293,6 +293,18 @@ const getTitle = computed(() => {
   }
 })
 
+let monacoEditor: any = reactive<any>({})
+function editorDidMounted(editor) {
+  monacoEditor.value = editor
+}
+function editorUpdated() {
+  try {
+    console.log(monacoEditor.value, 'monacoEditor')
+    // monacoEditor.value.getAction(['editor.action.formatDocument'])._run()
+  } catch (error) {
+    console.log(error)
+  }
+}
 // 页面左侧点击返回链接时的操作
 function goBack() {
   // 本例的效果时点击返回始终跳转到账号列表页，实际应用时可返回上一页

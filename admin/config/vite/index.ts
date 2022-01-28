@@ -15,7 +15,7 @@ import { configThemePlugin } from './theme'
 import { configImageminPlugin } from './imagemin'
 import { configSvgIconsPlugin } from './svgSprite'
 import { configProxy } from './proxy'
-
+import monacoEditorPlugin from 'vite-plugin-monaco-editor'
 export const configVitePlugins = (viteEnv: ViteEnv, isBuild: boolean) => {
   const {
     VITE_USE_IMAGEMIN,
@@ -74,7 +74,8 @@ export const configVitePlugins = (viteEnv: ViteEnv, isBuild: boolean) => {
     // vite-plugin-pwa
     vitePlugins.push(configPwaConfig(viteEnv))
   }
-
+  //Add Monaco
+  vitePlugins.push(monacoEditorPlugin())
   return vitePlugins
 }
 
