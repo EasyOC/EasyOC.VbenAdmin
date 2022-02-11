@@ -69,6 +69,7 @@
     "@types/mockjs": "^1.0.4",
     "@types/nprogress": "^0.2.0",
     "@types/qrcode": "^1.4.2",
+    "monaco-editor": "^0.32.1",
     "@types/qs": "^6.9.7",
     "@types/showdown": "^1.9.4",
     "@types/sortablejs": "^1.10.7",
