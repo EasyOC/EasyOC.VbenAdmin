@@ -46,16 +46,19 @@
                 :value="model.GraphQL"
                 language="GraphQL"
                 height="500"
+                @editorUpdated="(value) => (model.value.GraphQL = value)"
               />
             </a-card>
           </a-col>
           <a-col class="w-1/4">
             <a-card title="字段列表" :bordered="false" size="small">
               <template #extra>
-                <a-button size="small">添加</a-button>
-                <a-button size="small">刷新架构</a-button>
+                <a-button size="small" @click="typeSelectionChanged"
+                  >刷新架构</a-button
+                >
+                <a-button size="small" @click="() => 1 + 1">添加字段</a-button>
               </template>
-              <div class="dragArea list-group w-full">
+              <draggable class="dragArea list-group w-full">
                 <div
                   class="list-group-item borderGray m-1 p-2 rounded-md"
                   v-for="(element, index) in filteredCols"
@@ -73,7 +76,9 @@
                         /> </a-button
                     ></b>
 
-                    <!-- <span><swap-right-outlined /></span> -->
+                    <span
+                      ><a-switch v-model="element.show">显示</a-switch></span
+                    >
                   </div>
 
                   <p style="padding-left: 5px; color: gray">
@@ -81,7 +86,7 @@
                     {{ element.fieldType }}
                   </p>
                 </div>
-              </div>
+              </draggable>
             </a-card>
           </a-col>
 
@@ -146,7 +151,7 @@ import { useRoute } from 'vue-router'
 import { PageWrapper } from '@/components/Page'
 import { useGo } from '@/hooks/web/usePage'
 import { SwapRightOutlined } from '@ant-design/icons-vue'
-// import { VueDraggableNext as draggable } from 'vue-draggable-next'
+import { VueDraggableNext as draggable } from 'vue-draggable-next'
 import {
   ContentManagementServiceProxy,
   QueryDefDto,
@@ -246,6 +251,13 @@ function addField(field: ContentFieldsMapping) {
       default:
         newobj.dataIndex = camelCase(field.fieldName)
     }
+    if (field.partName != unref(model).TargetContentType) {
+      if (typeof newobj.dataIndex === 'string') {
+        newobj.dataIndex = [camelCase(field.partName), newobj.dataIndex]
+      } else {
+        newobj.dataIndex = [camelCase(field.partName), ...newobj.dataIndex]
+      }
+    }
   }
   jobj.push(newobj)
   model.value.ListMapping = JSON.stringify(jobj)
@@ -327,7 +339,7 @@ onBeforeMount(async () => {
     }
 
     console.log('model.value expandContentType', model.value)
-    typeSelectionChanged(unref(model).TargetContentType)
+    typeSelectionChanged()
   }
 
   queryNames.value = await typeManagement.listLuceneQueries()
@@ -372,8 +384,8 @@ function addCol() {
   addField(field)
 }
 
-async function typeSelectionChanged(value) {
-  fields.value = await getAllFileds(value)
+async function typeSelectionChanged() {
+  fields.value = await getAllFileds(unref(model).TargetContentType)
   filteredCols.value = unref(fields)
   console.log('typeSelectionChanged', filteredCols)
 }
