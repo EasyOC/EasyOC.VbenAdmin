@@ -3,7 +3,7 @@
     <!-- <DeptTree class="w-1/4 xl:w-1/5" @select="handleSelect" /> -->
     <BasicTable @register="registerTable" :searchInfo="searchInfo">
       <template #toolbar>
-        <a-button type="primary" @click="handleCreate">添加客户</a-button>
+        <a-button type="primary" @click="handleCreate">添加</a-button>
       </template>
       <template #action="{ record }">
         <TableAction

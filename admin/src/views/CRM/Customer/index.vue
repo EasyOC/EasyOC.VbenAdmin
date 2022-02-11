@@ -79,6 +79,7 @@ onBeforeMount(async () => {
     name: 'Customer',
     withSettings: true,
   })
+  //TODO 从 API 读取 列定义
   const gpCols = helper.getGraphqlTableCols(dynamicSettings, fieldNames)
   dynamicColumns.push(...gpCols)
   setProps({ columns: dynamicColumns, showTableSetting: true })

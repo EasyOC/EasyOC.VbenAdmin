@@ -45,10 +45,12 @@ export class ContentHelper {
     fields.forEach((f) => {
       if (_formModel.isCamelCase) {
         eval(
-          `targetContentItem.${f.keyPath}=_formModel.${camelCase(f.fieldName)}`,
+          `targetContentItem.${f.keyPath}=_formModel.${camelCase(
+            f.fieldName,
+          )}||null`,
         )
       } else {
-        eval(`targetContentItem.${f.keyPath}=_formModel.${f.fieldName}`)
+        eval(`targetContentItem.${f.keyPath}=_formModel.${f.fieldName}||null`)
       }
     })
     return targetContentItem
