@@ -58,6 +58,9 @@
                 >
                 <a-button size="small" @click="() => 1 + 1">添加字段</a-button>
               </template>
+              <!-- <a-button @click="delCol(index)" type="link">
+                      <DeleteOutlined style="color: #ed6f6f" />
+                    </a-button> -->
               <draggable class="dragArea list-group w-full">
                 <div
                   class="list-group-item borderGray m-1 p-2 rounded-md"
@@ -65,9 +68,6 @@
                   :key="element.keyPath"
                 >
                   <div>
-                    <!-- <a-button @click="delCol(index)" type="link">
-                      <DeleteOutlined style="color: #ed6f6f" />
-                    </a-button> -->
                     <b>
                       {{ element.displayName }}
                       <a-button @click="addField(element)" type="link">
@@ -122,11 +122,7 @@
       </template>
     </div>
   </PageWrapper>
-  <!-- <BasicModal v-bind="$attrs" @register="registerModal" :title="getTitle">
-    <list-Preview></list-Preview>
-  </BasicModal> -->
 </template>
-
 <script setup lang="ts">
 import {
   computed,
@@ -135,7 +131,6 @@ import {
   onMounted,
   reactive,
   ref,
-  toRefs,
   unref,
 } from 'vue'
 import {
@@ -144,7 +139,7 @@ import {
   ApiSelect,
   useForm,
 } from '@/components/Form/index'
-import { BasicModal, useModalInner } from '@/components/Modal'
+// import { BasicModal, useModalInner } from '@/components/Modal'
 
 // import { t } from '@admin/locale'
 import { useRoute } from 'vue-router'
@@ -167,6 +162,7 @@ import MonacoEditor from '@/components/MonacoEditor/index.vue'
 import { ContentHelper } from '@/api/contentHelper'
 import { BasicColumn } from '@/components/Table'
 import { camelCase, deepMerge } from '@admin/utils'
+
 const route = useRoute()
 const loading = ref<boolean>(false)
 const go = useGo()
