@@ -371,7 +371,14 @@ function buildField(field: ContentFieldsMapping) {
       default:
         newobj.dataIndex = camelCase(field.fieldName)
     }
-    if (field.partName && field.partName != unref(model).TargetContentType) {
+    const formValue = getFieldsValue()
+    let isPart = false
+    if (field.partName) {
+      isPart = ![formValue.TargetContentType, 'TitlePart'].includes(
+        field.partName,
+      )
+    }
+    if (isPart) {
       if (typeof newobj.dataIndex === 'string') {
         newobj.dataIndex = [camelCase(field.partName), newobj.dataIndex]
       } else {

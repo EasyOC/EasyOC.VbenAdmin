@@ -16,15 +16,24 @@ import { BasicForm, useForm } from '@/components/Form/index'
 import { formSchema } from './menu.data'
 import { BasicDrawer, useDrawerInner } from '@/components/Drawer'
 
-import { getMenuList } from '@service/demo/system'
+import { getMenuList } from '@service/system'
+import { ContentFieldsMappingDto } from '@service/api/app-service-proxies'
+import { ContentHelper } from '@/api/contentHelper'
+import {
+  ContentItemUpperCase,
+  createOrUpdateContent,
+} from '@service/eoc/contentApi'
 
 export default defineComponent({
   name: 'MenuDrawer',
   components: { BasicDrawer, BasicForm },
   emits: ['success', 'register'],
   setup(_, { emit }) {
+    const typeName = 'VbenMenu'
     const isUpdate = ref(true)
-
+    const contentHelper = new ContentHelper()
+    const contentItem = ref<ContentItemUpperCase>({ ContentType: typeName })
+    const contentFields = ref<ContentFieldsMappingDto[]>([])
     const [
       registerForm,
       { resetFields, setFieldsValue, updateSchema, validate },
@@ -40,7 +49,8 @@ export default defineComponent({
         resetFields()
         setDrawerProps({ confirmLoading: false })
         isUpdate.value = !!data?.isUpdate
-
+        contentItem.value = data.contentItem
+        contentFields.value = data.contentFields
         if (unref(isUpdate)) {
           setFieldsValue({
             ...data.record,
@@ -62,7 +72,14 @@ export default defineComponent({
       try {
         const values = await validate()
         setDrawerProps({ confirmLoading: true })
-        // TODO custom api
+        // Save to Db
+        const content = contentHelper.updateContentItem(
+          values,
+          unref(contentFields),
+          typeName,
+          unref(contentItem),
+        )
+        await createOrUpdateContent(content)
         console.log(values)
         closeDrawer()
         emit('success')
