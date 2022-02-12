@@ -55,7 +55,7 @@ export default defineComponent({
     const [registerDrawer, { openDrawer }] = useDrawer()
     const [registerTable, { reload, expandAll }] = useTable({
       title: '菜单列表',
-      api: getAllMenuList,
+      api: getMenuList,
       columns,
       formConfig: {
         labelWidth: 120,
@@ -81,12 +81,7 @@ export default defineComponent({
       contentFields.value = await contentHelper.getAllFields(typeName)
     })
     function handleCreate() {
-      // const editModel = contentHelper.expandContentType(
-      //   contentItem.value,
-      //   contentFields.value,
-      // )
       openDrawer(true, {
-        // record: editModel,
         contentItem: contentItem.value,
         isUpdate: false,
         contentFields: contentFields.value,
@@ -120,12 +115,10 @@ export default defineComponent({
       // 演示默认展开所有表项
       nextTick(expandAll)
     }
-    async function getAllMenuList() {
-      return await getMenuList()
-    }
+
     return {
       registerTable,
-      getAllMenuList,
+      getMenuList,
       registerDrawer,
       handleCreate,
       handleEdit,
