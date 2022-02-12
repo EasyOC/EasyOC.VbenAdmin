@@ -8,6 +8,7 @@ import {
 import {
   ContentTypeDefinitionDto,
   ContentPartDefinitionDto,
+  ContentFieldsMappingDto,
 } from '@service/api/app-service-proxies'
 import { t } from '@admin/locale'
 import { camelCase, deepMerge } from '@admin/utils'
@@ -20,20 +21,23 @@ export class ContentHelper {
   }
   public expandContentType(
     _contentItem: ContentItemUpperCase,
-    fields: ContentFieldsMapping[],
-    toCamelCase = false,
+    fields: ContentFieldsMapping[] | ContentFieldsMappingDto[],
+    // toCamelCase = false,
   ) {
     const expandedContentItem: any = {}
     fields.forEach((f) => {
-      if (toCamelCase) {
-        expandedContentItem[camelCase(f.fieldName)] = eval(
+      // if (toCamelCase) {
+      //   expandedContentItem[camelCase(f.fieldName || '')] = eval(
+      //     `_contentItem.${f.keyPath}`,
+      //   )
+      // } else
+      {
+        expandedContentItem[f.fieldName || ''] = eval(
           `_contentItem.${f.keyPath}`,
         )
-      } else {
-        expandedContentItem[f.fieldName] = eval(`_contentItem.${f.keyPath}`)
       }
     })
-    expandedContentItem.isCamelCase = toCamelCase
+    // expandedContentItem.isCamelCase = toCamelCase
     return expandedContentItem
   }
 
@@ -43,13 +47,23 @@ export class ContentHelper {
     fields: ContentFieldsMapping[],
   ) {
     fields.forEach((f) => {
-      if (_formModel.isCamelCase) {
-        eval(
-          `targetContentItem.${f.keyPath}=_formModel.${camelCase(
-            f.fieldName,
-          )}||null`,
-        )
-      } else {
+      // if (_formModel.isCamelCase)
+      // {
+      //   if (camelCase(f.fieldName) == 'displayText' && !f.partName) {
+      //     targetContentItem.TitlePart.Title = _formModel.DisplayText
+      //     return
+      //   }
+      //   eval(
+      //     `targetContentItem.${f.keyPath}=_formModel.${camelCase(
+      //       f.fieldName || '',
+      //     )}||null`,
+      //   )
+      // } else
+      {
+        if (f.fieldName == 'DisplayText' && !f.partName) {
+          targetContentItem.TitlePart = { Title: _formModel.DisplayText }
+          return
+        }
         eval(`targetContentItem.${f.keyPath}=_formModel.${f.fieldName}||null`)
       }
     })

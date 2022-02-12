@@ -121,11 +121,9 @@ export class ContentFieldsMapping {
   displayName!: string
   fieldType!: FieldType
   editable!: boolean
-  visible!: boolean
+  visible = true
+  description!: string
   partName!: string
   fieldSettings: any
   buildFrom!: 'ContentTypeDefinition' | 'GraphQL'
-  isNormal = () => {
-    return NormalFields.includes(this.fieldType)
-  }
 }

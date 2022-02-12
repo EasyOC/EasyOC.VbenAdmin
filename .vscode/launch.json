@@ -1,13 +1,13 @@
 {
   "version": "0.2.0",
   "configurations": [
-  {
-    "name": "Attach to Edge",
-    "port": 3100,
-    "request": "attach",
-    "type": "pwa-msedge",
-    "webRoot": "${workspaceFolder}"
-  },
+    {
+      "name": "Attach to Edge",
+      "port": 3100,
+      "request": "attach",
+      "type": "pwa-msedge",
+      "webRoot": "${workspaceFolder}"
+    },
     {
       "type": "chrome",
       "request": "launch",

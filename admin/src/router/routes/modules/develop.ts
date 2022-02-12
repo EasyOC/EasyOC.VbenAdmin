@@ -30,7 +30,7 @@ const develop: RouteRecordItem = {
       },
     },
     {
-      path: 'listDetails/:id',
+      path: 'listDetails/:id?',
       name: 'ListDetails',
       meta: {
         hideMenu: true,

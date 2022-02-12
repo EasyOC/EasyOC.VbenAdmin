@@ -33,7 +33,7 @@
 import { reactive, onBeforeMount, ref } from 'vue'
 
 import { BasicTable, useTable, TableAction } from '@/components/Table'
-import { ContentHelper } from '@/api/contentHelper'
+// import { ContentHelper } from '@/api/contentHelper'
 import {
   ContentManagementServiceProxy,
   ContentTypeDefinitionDto,
@@ -45,15 +45,11 @@ import { BasicColumn } from '@/components/Table'
 
 import { columns, searchFormSchema } from './data'
 import { useGo } from '@/hooks/web/usePage'
-import { ContentTypeService } from '@/api/ContentTypeService'
-import {
-  excuteGraphqlQuery,
-  GraphQLQueryParams,
-} from '@service/eoc/GraphqlService'
+// import { ContentTypeService } from '@/api/ContentTypeService'
+import { excuteGraphqlQuery } from '@service/eoc/GraphqlService'
 const contentTypeName = 'VbenList'
-const helper = new ContentHelper()
 let dynamicSettings: ContentTypeDefinitionDto
-let dynamicColumns = ref<BasicColumn[]>(columns)
+const dynamicColumns = ref<BasicColumn[]>(columns)
 
 const contentManagementService = new ContentManagementServiceProxy()
 onBeforeMount(async () => {
@@ -62,16 +58,8 @@ onBeforeMount(async () => {
     withSettings: true,
   })
   // let temp = helper.getColumnsFromType(dynamicSettings)
-  dynamicColumns = [...columns]
+  dynamicColumns.value = [...columns]
   setProps({ columns: dynamicColumns, showTableSetting: true })
-  // temp = temp.filter(
-  //   (t) =>
-  //     !!columns.find(
-  //       (x) =>
-  //         x.dataIndex?.toString().toLowerCase() ==
-  //         t.dataIndex?.toString().toLowerCase(),
-  //     ),
-  // )
 })
 
 const go = useGo()
@@ -132,14 +120,8 @@ async function getList(params) {
   return result.data.data.vbenList
 }
 
-function handleCreate() {}
-
-function handleEdit(record: Recordable) {
-  console.log(record)
-  // openModal(true, {
-  //   record,
-  //   isUpdate: true,
-  // })
+function handleCreate() {
+  go('listDetails')
 }
 
 function handleDelete(record: Recordable) {

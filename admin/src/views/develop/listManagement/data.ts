@@ -62,40 +62,54 @@ export const searchFormSchema: FormSchema[] = [
   },
 ]
 
-export const formSchema: FormSchema[] = [
+export const formSchema = [
   {
-    field: 'roleName',
-    label: '角色名称',
-    required: true,
+    field: 'DisplayText',
     component: 'Input',
+    label: '列表名称',
+    required: true,
+    colProps: {
+      span: 24,
+    },
   },
   {
-    field: 'roleDescription',
-    label: '角色描述',
-    required: true,
+    field: 'TargetContentType',
     component: 'Input',
+    label: '类型',
+    helpMessage: ['选择一个类型', '用于加载类型中的字段'],
+    required: true,
+    slot: 'contentTypeSearch',
+    colProps: {
+      span: 12,
+    },
   },
-  // {
-  //   field: 'status',
-  //   label: '状态',
-  //   component: 'RadioButtonGroup',
-  //   defaultValue: '0',
-  //   componentProps: {
-  //     options: [
-  //       { label: '启用', value: '0' },
-  //       { label: '停用', value: '1' },
-  //     ],
-  //   },
-  // // },
-  // {
-  //   label: '备注',
-  //   field: 'remark',
-  //   component: 'InputTextArea',
-  // },
-  // {
-  //   label: ' ',
-  //   field: 'menu',
-  //   slot: 'menu',
-  //   component: 'Input',
-  //},
-]
+  {
+    field: 'QueryName',
+    component: 'Select',
+    label: '查询名称',
+    required: true,
+    slot: 'queryName',
+    colProps: {
+      span: 12,
+    },
+  },
+  {
+    field: 'QueryMethod',
+    component: 'Select',
+    label: '查询方式',
+    colProps: {
+      span: 12,
+    },
+  },
+  {
+    field: 'EnablePage',
+    component: 'Switch',
+    label: '包含分页',
+    componentProps: {
+      disabled: true,
+    },
+    colProps: {
+      span: 12,
+    },
+  },
+] as FormSchema[]

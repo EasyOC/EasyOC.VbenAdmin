@@ -27,6 +27,7 @@
             v-model:value="model[field]"
             optionFilterProp="label"
             labelField="displayName"
+            @change="queryNameChanged"
             valueField="name"
           />
         </template>
@@ -39,33 +40,25 @@
     <div class="desc-wrap">
       <template v-if="currentKey == 'eidtList'">
         <a-row class="bg-white p-4">
-          <a-col class="w-1/4">
-            <h3></h3>
-            <a-card title="GraphQL" :bordered="false" size="small">
-              <MonacoEditor
-                :value="model.GraphQL"
-                language="GraphQL"
-                height="500"
-                @editorUpdated="(value) => (model.value.GraphQL = value)"
-              />
-            </a-card>
-          </a-col>
-          <a-col class="w-1/4">
+          <a-col style="width: 400px">
             <a-card title="字段列表" :bordered="false" size="small">
               <template #extra>
-                <a-button size="small" @click="typeSelectionChanged"
+                <a-button size="small" @click="typeSelectionChanged()"
                   >刷新架构</a-button
                 >
                 <a-button size="small" @click="() => 1 + 1">添加字段</a-button>
               </template>
-              <!-- <a-button @click="delCol(index)" type="link">
-                      <DeleteOutlined style="color: #ed6f6f" />
-                    </a-button> -->
-              <draggable class="dragArea list-group w-full">
+              <!--   <a-button @click="delCol(index)" type="link">
+                        <DeleteOutlined style="color: #ed6f6f" />
+                      </a-button> -->
+              <draggable
+                class="dragArea list-group w-full"
+                style="height: 500px; overflow-y: scroll"
+              >
                 <div
                   class="list-group-item borderGray m-1 p-2 rounded-md"
-                  v-for="(element, index) in filteredCols"
-                  :key="element.keyPath"
+                  v-for="(element, index) in listFields"
+                  :key="element.keyPath || ''"
                 >
                   <div>
                     <b>
@@ -75,12 +68,10 @@
                           style="color: rgb(50, 150, 231); font-size: large"
                         /> </a-button
                     ></b>
-
-                    <span
-                      ><a-switch v-model="element.show">显示</a-switch></span
-                    >
+                    <!-- <span
+                      ><a-switch v-model="element.visible">显示</a-switch></span
+                    > -->
                   </div>
-
                   <p style="padding-left: 5px; color: gray">
                     {{ element.partName }} | {{ element.fieldName }} |
                     {{ element.fieldType }}
@@ -89,8 +80,7 @@
               </draggable>
             </a-card>
           </a-col>
-
-          <a-col class="w-2/4">
+          <a-col class="w-3/8">
             <a-card title="字段映射" :bordered="false" size="small">
               <template #extra>
                 <a-button
@@ -112,6 +102,21 @@
                 height="500"
             /></a-card>
           </a-col>
+          <a-col class="w-2/8">
+            <a-card title="GraphQL" :bordered="false" size="small">
+              <template #extra>
+                <a :href="`${apiUrl}/Admin/GraphQL`" target="AdminGraphQL"
+                  >在设计器中打开</a
+                >
+              </template>
+              <MonacoEditor
+                :value="model.GraphQL"
+                language="GraphQL"
+                height="500"
+                @editorUpdated="(value) => (model.GraphQL = value)"
+              />
+            </a-card>
+          </a-col>
         </a-row>
       </template>
       <template v-if="currentKey == 'preview'">
@@ -124,15 +129,7 @@
   </PageWrapper>
 </template>
 <script setup lang="ts">
-import {
-  computed,
-  nextTick,
-  onBeforeMount,
-  onMounted,
-  reactive,
-  ref,
-  unref,
-} from 'vue'
+import { computed, nextTick, onBeforeMount, onMounted, ref, unref } from 'vue'
 import {
   BasicForm,
   FormSchema,
@@ -145,7 +142,7 @@ import {
 import { useRoute } from 'vue-router'
 import { PageWrapper } from '@/components/Page'
 import { useGo } from '@/hooks/web/usePage'
-import { SwapRightOutlined } from '@ant-design/icons-vue'
+import { SwapRightOutlined, DeleteOutlined } from '@ant-design/icons-vue'
 import { VueDraggableNext as draggable } from 'vue-draggable-next'
 import {
   ContentManagementServiceProxy,
@@ -162,142 +159,44 @@ import MonacoEditor from '@/components/MonacoEditor/index.vue'
 import { ContentHelper } from '@/api/contentHelper'
 import { BasicColumn } from '@/components/Table'
 import { camelCase, deepMerge } from '@admin/utils'
-
+import { formSchema } from './data'
+import { getGlobalConfig } from '@/internal'
 const route = useRoute()
 const loading = ref<boolean>(false)
 const go = useGo()
-
-const schemas = [
-  {
-    field: 'TargetContentType',
-    component: 'Input',
-    label: '类型',
-    helpMessage: ['选择一个类型', '用于加载类型中的字段'],
-    required: true,
-    slot: 'contentTypeSearch',
-    componentProps: ({ schema, formModel }) => {
-      console.log('form:', schema)
-      console.log('formModel:', formModel)
-      return {
-        onChange: (e: any) => {
-          console.log(e, '11111111111111111111111')
-        },
-      }
-    },
-    colProps: {
-      span: 12,
-    },
-  },
-  {
-    field: 'QueryName',
-    component: 'Select',
-    label: '查询名称',
-    required: true,
-    slot: 'queryName',
-    colProps: {
-      span: 12,
-    },
-  },
-  {
-    field: 'QueryMethod',
-    component: 'Select',
-    label: '查询方式',
-    colProps: {
-      span: 12,
-    },
-  },
-  {
-    field: 'EnablePage',
-    component: 'Switch',
-    label: '启用分页',
-    colProps: {
-      span: 12,
-    },
-  },
-] as FormSchema[]
-
-const fields = ref<ContentFieldsMapping[]>([])
+const { apiUrl } = getGlobalConfig()
+//所有字段
+const listAllFields = ref<ContentFieldsMapping[]>([])
+/**
+ * 已添加字段
+ */
 const listFields = ref<ContentFieldsMapping[]>([])
-const model = ref<any>({})
 
-function addField(field: ContentFieldsMapping) {
-  console.log(model, 'modelmodelmodelmodelmodel')
-  const jobj = JSON.parse(model.value.ListMapping || '[]')
-  const newobj: BasicColumn = {
-    title: field.displayName,
-  }
-  if (model.value.QueryMethod == 'Graphql') {
-    switch (field.fieldType) {
-      case FieldType.ContentPickerField:
-        newobj.dataIndex = [
-          camelCase(field.fieldName),
-          'contentItems',
-          0,
-          'displayText',
-        ]
-        break
-      case FieldType.UserPickerField:
-        newobj.dataIndex = [
-          camelCase(field.fieldName),
-          'userProfiles',
-          0,
-          'displayText',
-        ]
-        break
-      default:
-        newobj.dataIndex = camelCase(field.fieldName)
-    }
-    if (field.partName != unref(model).TargetContentType) {
-      if (typeof newobj.dataIndex === 'string') {
-        newobj.dataIndex = [camelCase(field.partName), newobj.dataIndex]
-      } else {
-        newobj.dataIndex = [camelCase(field.partName), ...newobj.dataIndex]
-      }
-    }
-  }
-  jobj.push(newobj)
-  model.value.ListMapping = JSON.stringify(jobj)
-  monacoEditor.value.getAction(['editor.action.formatDocument'])._run()
-}
+const VbenListFields = ref<ContentFieldsMapping[]>([])
+const model = ref({
+  TargetContentType: '',
+  QueryMethod: 'Graphql',
+  Title: '',
+  ListMapping: '',
+  FieldList: '',
+  GraphQL: '',
+  EnablePage: false,
+})
 
-const filteredCols = ref<ContentFieldsMapping[]>()
+const listManageName = 'VbenList'
 
-let listManageFields: ContentFieldsMapping[] = reactive<ContentFieldsMapping[]>(
-  [],
-)
 // 此处可以得到文档ID
 const documentId = ref(route.params?.id)
-let contentItem = ref<ContentItemUpperCase>({})
+let contentItem = ref<ContentItemUpperCase>({ ContentType: listManageName })
 const typeManagement = new ContentManagementServiceProxy()
 const contentHelper = new ContentHelper()
 
-const [register, { setFieldsValue, updateSchema, getFieldsValue }] = useForm({
-  model: model,
-  labelWidth: 100,
-  schemas: schemas,
-  showActionButtonGroup: false,
-})
-
-function draggableChange(event) {
-  const { moved, added } = event
-  console.log(event)
-  if (moved) {
-    console.log('moved', moved)
-  }
-  if (added) {
-    console.log('added', added, added.element)
-    addField(added.element)
-  }
-}
-
-function checkMove(event) {
-  console.log('checkMove', event.draggedContext)
-  var elment = event.draggedContext.element as ContentFieldsMapping
-  if (elment && elment.fieldType == FieldType.CustomField) {
-    return false
-  }
-  console.log('Future index: ' + event.draggedContext.futureIndex)
-}
+const [register, { setFieldsValue, submit, updateSchema, getFieldsValue }] =
+  useForm({
+    labelWidth: 100,
+    schemas: formSchema,
+    showActionButtonGroup: false,
+  })
 
 async function getTypeList() {
   const result = await typeManagement.getAllTypes({
@@ -310,7 +209,7 @@ async function getTypeList() {
 }
 
 async function listQueryNames() {
-  console.log(queryNames.value, 'queryNamesqueryNamesqueryNamesqueryNames')
+  console.log('queryNames.value: ', queryNames.value)
   return queryNames.value?.map((x) => {
     return {
       query: x,
@@ -323,25 +222,24 @@ const queryNames = ref<QueryDefDto[]>()
 const currentKey = ref('eidtList')
 onBeforeMount(async () => {
   loading.value = true
+  VbenListFields.value = await getAllFileds(listManageName)
   if (documentId.value) {
     contentItem.value = await getContent(documentId.value.toString())
-    listManageFields = await getAllFileds(contentItem.value.ContentType || '')
     model.value = contentHelper.expandContentType(
       contentItem.value,
-      listManageFields,
+      VbenListFields.value,
     )
     if (model.value.FieldList) {
       listFields.value = JSON.parse(model.value.FieldList)
     }
-
     console.log('model.value expandContentType', model.value)
-    typeSelectionChanged()
   }
 
   queryNames.value = await typeManagement.listLuceneQueries()
-  const queryMethodField = listManageFields.find(
+  const queryMethodField = VbenListFields.value.find(
     (x) => x.fieldName == 'QueryMethod',
   )
+  console.log('queryMethodField: ', queryMethodField)
   if (queryMethodField) {
     const options =
       queryMethodField.fieldSettings.TextFieldPredefinedListEditorSettings.Options.map(
@@ -370,36 +268,40 @@ onMounted(() => {
     monacoEditor?.value.getAction(['editor.action.formatDocument'])._run()
   })
 })
-function addCol() {
-  const field = {
-    displayName: '自定义字段',
-    fieldType: FieldType.CustomField,
-    fieldName: 'CustomField',
-  } as ContentFieldsMapping
-  listFields.value.push(field)
-  addField(field)
-}
+// function addCol() {
+//   const field = {
+//     displayName: '自定义字段',
+//     fieldType: FieldType.CustomField,
+//     fieldName: 'CustomField',
+//   } as ContentFieldsMapping
+//   listFields.value.push(field)
+//   addField(field)
+// }
 
-async function typeSelectionChanged() {
-  fields.value = await getAllFileds(unref(model).TargetContentType)
-  filteredCols.value = unref(fields)
-  console.log('typeSelectionChanged', filteredCols)
+async function typeSelectionChanged(value?) {
+  if (!value) {
+    value = unref(model).TargetContentType
+  }
+  if (value) {
+    listFields.value = await getAllFileds(value)
+  }
+  if (listFields.value) {
+    listAllFields.value = unref(listFields)
+    const jobj = listFields.value.map((field) => buildField(field))
+    model.value.GraphQL = buildGraphql(listFields.value)
+    model.value.ListMapping = JSON.stringify(jobj)
+    monacoEditor.value.getAction(['editor.action.formatDocument'])._run()
+  }
 }
 
 async function getAllFileds(typeName: string) {
-  const typDef = await typeManagement.getTypeDefinition({
-    name: typeName,
-    withSettings: true,
-  })
-  console.log(typDef, 'TypeDef')
-  return contentHelper.getAllFields(typDef)
+  return deepMerge(
+    [],
+    await typeManagement.getFields(typeName),
+  ) as ContentFieldsMapping[]
 }
 
-function handleSubmit(values: any) {
-  // createMessage.success('click search,values:' + JSON.stringify(values))
-}
 const getTitle = computed(() => {
-  console.log(contentItem, 'getTitle = computed(()')
   if (unref(contentItem).DisplayText) {
     return `编辑：${contentItem.value.DisplayText}`
   } else {
@@ -407,7 +309,7 @@ const getTitle = computed(() => {
   }
 })
 
-let monacoEditor: any = reactive<any>({})
+let monacoEditor = ref<any>({})
 function editorDidMounted(editor) {
   monacoEditor.value = editor
   monacoEditor.value.getAction(['editor.action.formatDocument'])._run()
@@ -415,19 +317,16 @@ function editorDidMounted(editor) {
 function editorUpdated(value) {
   try {
     model.value.ListMapping = value
-    console.log(
-      model.value.ListMapping,
-      'ListMappingListMappingListMappingListMapping',
-    )
   } catch (error) {
     console.log(error)
   }
 }
 function delCol(index) {
-  filteredCols.value?.splice(index, 1)
+  listFields.value?.splice(index, 1)
 }
-function showAdd() {}
+// function showAdd() {}
 async function save() {
+  await submit()
   const result = getFieldsValue()
   loading.value = true
   deepMerge(model.value, result)
@@ -435,7 +334,7 @@ async function save() {
   contentHelper.updateContentItem(
     model.value,
     contentItem.value,
-    listManageFields,
+    VbenListFields.value,
   )
   console.log(contentItem.value, 'Saved content')
   await createOrUpdateContent(contentItem.value)
@@ -445,6 +344,112 @@ async function save() {
 function goBack() {
   // 本例的效果时点击返回始终跳转到账号列表页，实际应用时可返回上一页
   go(route.meta.currentActiveMenu)
+}
+
+function buildField(field: ContentFieldsMapping) {
+  const newobj: BasicColumn = {
+    title: field.displayName,
+  }
+  if (model.value.QueryMethod == 'Graphql') {
+    switch (field.fieldType) {
+      case FieldType.ContentPickerField:
+        newobj.dataIndex = [
+          camelCase(field.fieldName),
+          'contentItems',
+          0,
+          'displayText',
+        ]
+        break
+      case FieldType.UserPickerField:
+        newobj.dataIndex = [
+          camelCase(field.fieldName),
+          'userProfiles',
+          0,
+          'displayText',
+        ]
+        break
+      default:
+        newobj.dataIndex = camelCase(field.fieldName)
+    }
+    if (field.partName && field.partName != unref(model).TargetContentType) {
+      if (typeof newobj.dataIndex === 'string') {
+        newobj.dataIndex = [camelCase(field.partName), newobj.dataIndex]
+      } else {
+        newobj.dataIndex = [camelCase(field.partName), ...newobj.dataIndex]
+      }
+    }
+    if (!newobj.dataIndex) {
+      newobj.dataIndex = camelCase(field.fieldName)
+    }
+  }
+  console.log('newobj: ', newobj)
+  return newobj
+}
+function buildGraphql(fields: ContentFieldsMapping[]) {
+  const gfields: { [key: string]: any } = {}
+  fields.forEach((field) => {
+    const fieldName = camelCase(field.fieldName)
+    const formValue = getFieldsValue()
+    debugger
+    let isPart = false
+    if (field.partName) {
+      isPart = ![formValue.TargetContentType, 'TitlePart'].includes(
+        field.partName,
+      )
+    }
+
+    let tempPart = gfields
+    if (isPart) {
+      if (!gfields[camelCase(field.partName)]) {
+        gfields[camelCase(field.partName)] = {}
+      }
+      tempPart = gfields[camelCase(field.partName)]
+    }
+    if (model.value.QueryMethod == 'Graphql') {
+      switch (field.fieldType) {
+        case FieldType.ContentPickerField:
+          tempPart[fieldName] = {
+            contentItems: {
+              contentItemId: false,
+              displayText: false,
+            },
+          }
+          break
+        case FieldType.UserPickerField:
+          tempPart[fieldName] = {
+            userIds: false,
+            userProfiles: { displayText: false },
+          }
+          break
+        default:
+          tempPart[fieldName] = false
+      }
+    }
+  })
+  console.log('stringify', JSON.stringify(gfields, null, 2))
+  const tempGraphqlStr = JSON.stringify(gfields, null, 2).replace(
+    /false|'|"|:|,/g,
+    '',
+  )
+  return tempGraphqlStr
+}
+
+async function queryNameChanged(name) {
+  model.value.EnablePage = false
+  const current = queryNames.value?.find((x) => camelCase(x.name || '') == name)
+  if (current && current.schema) {
+    var schema = JSON.parse(current.schema)
+    model.value.EnablePage = !!schema.hasTotal
+  }
+  setFieldsValue({ EnablePage: model.value.EnablePage })
+}
+
+function addField(field: ContentFieldsMapping) {
+  const jobj = JSON.parse(model.value.ListMapping || '[]')
+  const newObj = buildField(field)
+  jobj.push(newObj)
+  model.value.ListMapping = JSON.stringify(jobj)
+  monacoEditor.value.getAction(['editor.action.formatDocument'])._run()
 }
 </script>
 
