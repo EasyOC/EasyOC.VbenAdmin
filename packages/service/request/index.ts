@@ -281,5 +281,7 @@ export const defaultRequest = createAxios()
 export const ocApi = createAxios({
   requestOptions: {
     isReturnNativeResponse: true,
+    isTransformResponse: false,
   },
+  transform: undefined,
 })

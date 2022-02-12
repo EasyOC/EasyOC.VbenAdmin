@@ -62,9 +62,11 @@ async function handleLogin() {
   if (!data) return
   try {
     loading.value = true
+    console.log(rememberMe.value, 'rememberMe')
     const userInfo = await userStore.login({
       password: data.password,
       username: data.account,
+      rememberMe: rememberMe.value,
       mode: 'none', //不要默认的错误提示
     })
     if (userInfo) {

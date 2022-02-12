@@ -12,9 +12,11 @@ import { darkMode } from '@admin/setting'
 import { defineStore } from 'pinia'
 import { pinia } from '@/internal'
 import { resetRouter } from '@/router'
+import { loadGraphQLSchema } from '@service/eoc/GraphqlService'
 
 interface AppState {
   darkMode?: ThemeEnum
+  graphqlSchema: any
   // Page loading status
   pageLoading: boolean
   // project config
@@ -37,12 +39,15 @@ export const useAppStore = defineStore({
     pageLoading: false,
     projectConfig: {} as any,
     beforeMiniInfo: {},
+    graphqlSchema: null,
   }),
   getters: {
     getPageLoading(): boolean {
       return this.pageLoading
     },
-
+    getGraphqlSchema(): any {
+      return this.graphqlSchema
+    },
     getDarkMode(): 'light' | 'dark' | string {
       return this.darkMode || darkMode
     },
@@ -72,14 +77,17 @@ export const useAppStore = defineStore({
     },
   },
   actions: {
+    async loadGraphQLSchema() {
+      if (!this.graphqlSchema) {
+        this.graphqlSchema = await loadGraphQLSchema()
+      }
+    },
     setPageLoading(loading: boolean): void {
       this.pageLoading = loading
     },
-
     setDarkMode(mode: ThemeEnum): void {
       this.darkMode = mode
     },
-
     setBeforeMiniInfo(state: BeforeMiniState): void {
       this.beforeMiniInfo = state
     },

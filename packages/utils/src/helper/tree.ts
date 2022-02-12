@@ -1,37 +1,50 @@
 interface TreeHelperConfig {
   id: string
   children: string
-  pid: string
+  pid: string | ((parent, current) => boolean)
+  rootFinder: (item) => boolean
 }
 
 const DEFAULT_CONFIG: TreeHelperConfig = {
   id: 'id',
   children: 'children',
   pid: 'pid',
+  rootFinder: function (): boolean {
+    return false
+  },
 }
 
 const getConfig = (config: Partial<TreeHelperConfig>) =>
   Object.assign({}, DEFAULT_CONFIG, config)
 
 // tree from list
-export const listToTree = <T = any>(
-  list: any[],
+export const listToTree = <T>(
+  list: T[],
   config: Partial<TreeHelperConfig> = {},
 ): T[] => {
   const conf = getConfig(config) as TreeHelperConfig
-  const nodeMap = new Map()
-  const result: T[] = []
-  const { id, children, pid } = conf
+  const { rootFinder } = conf
+  const rootNodes = list.filter(rootFinder)
+  rootNodes.forEach((root) => {
+    getChildren(list, root, config)
+  })
+  return rootNodes
+}
 
-  for (const node of list) {
-    node[children] = node[children] || []
-    nodeMap.set(node[id], node)
-  }
-  for (const node of list) {
-    const parent = nodeMap.get(node[pid])
-    ;(parent ? parent[children] : result).push(node)
-  }
-  return result
+function getChildren(list, parent, config: Partial<TreeHelperConfig> = {}) {
+  const conf = getConfig(config) as TreeHelperConfig
+  const { id, children, pid } = conf
+  const childNodes = list.filter((x) => {
+    if (typeof pid === 'string') {
+      return x[pid] == parent[id]
+    } else {
+      return pid(parent, x)
+    }
+  })
+  childNodes.forEach((element) => {
+    getChildren(list, element, config)
+  })
+  parent[children] = childNodes
 }
 
 export const treeToList = <T = any>(

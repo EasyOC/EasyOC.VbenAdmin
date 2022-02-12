@@ -18,7 +18,7 @@ export async function loginApi(
   params: LoginParams,
   mode: ErrorMessageMode = 'modal',
 ) {
-  const { username, password } = params
+  const { username, password, rememberMe } = params
   const result = await ocApi.post(
     {
       url: Api.Login,
@@ -28,6 +28,7 @@ export async function loginApi(
         client_id: context.clientId,
         username: username,
         password: password,
+        rememberMe: rememberMe,
         scopes: context.scopes,
       },
     },

@@ -1,12 +1,149 @@
 import { BasicColumn, FormSchema } from '@/components/Table'
 import {
+  ContentFieldsMapping,
+  FieldType,
+  ContentItemUpperCase,
+  getValuePath,
+} from '@service/eoc/contentApi'
+import {
   ContentTypeDefinitionDto,
   ContentPartDefinitionDto,
+  ContentFieldsMappingDto,
+  ContentManagementServiceProxy,
 } from '@service/api/app-service-proxies'
+import { t } from '@admin/locale'
+import { camelCase, deepMerge } from '@admin/utils'
 
 export class ContentHelper {
+  // public getAllFields(
+  //   def: ContentTypeDefinitionDto | ContentPartDefinitionDto,
+  // ): ContentFieldsMapping[] {
+  //   return this.getFieldsFromType(def as ContentTypeDefinitionDto)
+  // }
+
+  public async getAllFields(typeName: string) {
+    return await new ContentManagementServiceProxy().getFields(typeName)
+  }
+  public expandContentType(
+    _contentItem: ContentItemUpperCase,
+    fields: ContentFieldsMapping[] | ContentFieldsMappingDto[],
+    // toCamelCase = false,
+  ) {
+    const expandedContentItem: any = {}
+    fields.forEach((f) => {
+      expandedContentItem[f.fieldName] = eval(`_contentItem.${f.keyPath}`)
+    })
+    return expandedContentItem
+  }
+
+  public updateContentItem(
+    _formModel: any,
+    fields: ContentFieldsMapping[] | ContentFieldsMappingDto[],
+    typeName: string,
+    targetContentItem: ContentItemUpperCase = {},
+  ) {
+    fields.forEach((f) => {
+      {
+        if (f.fieldName == 'DisplayText' && !f.partName) {
+          targetContentItem.TitlePart = { Title: _formModel.DisplayText }
+          return
+        }
+        const val = eval(`_formModel.${f.fieldName}`)
+        if (val !== undefined) {
+          const pathArray = f.keyPath.split('.')
+
+          if (pathArray.length > 1) {
+            let temp = targetContentItem
+            for (let index = 0; index < pathArray.length; index++) {
+              let path = pathArray[index]
+              const isLast = index == pathArray.length - 1
+              if (path.includes('[0]')) {
+                path = path.replace('[0]', '')
+                temp[path] = [val]
+              } else {
+                if (!temp[path]) {
+                  temp[path] = isLast ? val : {}
+                }
+              }
+              //利用引用类型层级赋值
+              temp = temp[path]
+            }
+            console.log('targetContentItem', targetContentItem)
+          } else {
+            targetContentItem[f.keyPath] = val
+          }
+        }
+      }
+    })
+    targetContentItem.ContentType = typeName
+    return targetContentItem
+  }
+
+  public getFieldsFromType(
+    typeDef: ContentTypeDefinitionDto,
+    parentPath: string | undefined = '',
+  ): ContentFieldsMapping[] {
+    const cols: ContentFieldsMapping[] = []
+    if (!!parentPath && !parentPath.endsWith('.')) {
+      parentPath = parentPath + '.'
+    }
+    const dataPath = parentPath
+    typeDef.parts?.forEach((x) => {
+      if (x.partDefinition.name == 'TitlePart') {
+        cols.push(
+          deepMerge(new ContentFieldsMapping(), {
+            displayName: t('显示名称'),
+            partName: 'TitlePart',
+            fieldType: FieldType.TitlePart,
+            editable: false,
+            lastValueKey: 'Title',
+            visible: false,
+            fieldName: 'DisplayText',
+            keyPath: dataPath + 'TitlePart.Title',
+            fieldSettings: x.partDefinition.settings,
+            buildFrom: 'ContentTypeDefinition',
+          }),
+        )
+      } else {
+        cols.push(
+          ...this.getFieldsFromPart(x.partDefinition, `${dataPath}${x.name}`),
+        )
+      }
+    })
+    return cols
+  }
+
+  public getFieldsFromPart(
+    partDef: ContentPartDefinitionDto,
+    parentPath = '',
+  ): ContentFieldsMapping[] {
+    const cols: ContentFieldsMapping[] = []
+    if (!!parentPath && !parentPath.endsWith('.')) {
+      parentPath = parentPath + '.'
+    }
+    const dataPath = parentPath
+    partDef.fields?.forEach((x) => {
+      const fieldType = x.fieldDefinition.name as FieldType
+      const valuePath = getValuePath(fieldType)
+      const col = deepMerge(new ContentFieldsMapping(), {
+        displayName: x.displayName || '',
+        buildFrom: 'ContentTypeDefinition',
+        partName: partDef.name || '',
+        fieldName: x.name || '',
+        editable: true,
+        lastValueKey: valuePath,
+        visible: true,
+        keyPath: `${dataPath}${x.name}.${valuePath}`,
+        fieldSettings: x.settings,
+        fieldType: fieldType,
+      })
+      cols.push(col)
+    })
+    return cols
+  }
+
   public getColumns(
-    def: ContentTypeDefinitionDto | ContentPartDefinitionDto | any,
+    def: ContentTypeDefinitionDto | ContentPartDefinitionDto,
     rootPath = '',
   ): BasicColumn[] {
     if (def instanceof ContentTypeDefinitionDto) {
@@ -16,7 +153,40 @@ export class ContentHelper {
     }
   }
 
-  public getColumsFromPart(
+  getGraphqlTableCols(
+    typeDef: ContentTypeDefinitionDto,
+    colFilter: string[],
+    parentPath = '',
+  ) {
+    let cols: BasicColumn[] = []
+    const fields = this.getFieldsFromType(typeDef, parentPath)
+
+    cols = fields
+      .filter((x) => colFilter.includes(x.fieldName.toLocaleLowerCase()))
+      .map((x) => {
+        return {
+          title: t(x.displayName),
+          dataIndex: camelCase(x.fieldName),
+        } as BasicColumn
+      })
+    return cols
+  }
+
+  getColumnsFromType(
+    typeDef: ContentTypeDefinitionDto,
+    parentPath = '',
+  ): BasicColumn[] {
+    const fields = this.getFieldsFromType(typeDef, parentPath)
+    const cols: BasicColumn[] = fields.map((x) => {
+      return {
+        title: t(x.displayName),
+        dataIndex: x.keyPath.split('.'),
+      } as BasicColumn
+    })
+    return cols
+  }
+
+  getColumsFromPart(
     partDef: ContentPartDefinitionDto,
     parentPath = '',
   ): BasicColumn[] {
@@ -29,35 +199,9 @@ export class ContentHelper {
       const col: BasicColumn = {
         title: x.displayName,
       }
-
-      const valuePath = this.buildPath(x.fieldDefinition.name)
-
+      const valuePath = getValuePath(x.fieldDefinition.name as FieldType)
       col.dataIndex = `${dataPath}${x.name}.${valuePath}`.split('.')
       cols.push(col)
-    })
-    return cols
-  }
-
-  public getColumnsFromType(
-    typeDef: ContentTypeDefinitionDto,
-    parentPath = '',
-  ): BasicColumn[] {
-    const cols: BasicColumn[] = []
-    if (!!parentPath && !parentPath.endsWith('.')) {
-      parentPath = parentPath + '.'
-    }
-    const dataPath = parentPath
-    typeDef.parts?.forEach((x) => {
-      if (x.partDefinition.name == 'TitlePart') {
-        cols.push({
-          title: 'DisplayName',
-          dataIndex: dataPath + 'TitlePart.Title',
-        })
-      } else {
-        cols.push(
-          ...this.getColumsFromPart(x.partDefinition, `${dataPath}${x.name}`),
-        )
-      }
     })
     return cols
   }
@@ -134,7 +278,7 @@ export class ContentHelper {
     }
     const dataPath = parentPath
     partDef.fields?.forEach((x) => {
-      let valuePath = this.buildPath(x.fieldDefinition.name)
+      let valuePath = getValuePath(x.fieldDefinition.name as FieldType)
       valuePath = `${dataPath}${x.name}.${valuePath}`
       const formItem: FormSchema = {
         label: x.displayName || '',
@@ -145,34 +289,5 @@ export class ContentHelper {
       cols.push(formItem)
     })
     return cols
-  }
-
-  public buildPath(fieldName: string | null) {
-    let valuePath = 'Value'
-    switch (fieldName) {
-      case 'TextField':
-        valuePath = 'Text'
-        break
-      case 'BooleanField':
-        valuePath = 'Value'
-        break
-      case 'DateField':
-        valuePath = 'Value'
-        break
-      case 'TimeField':
-        valuePath = 'Value'
-        break
-      case 'Date&Timefield':
-        valuePath = 'Value'
-        break
-      case 'NumericField':
-        valuePath = 'Value'
-        break
-      case 'ContentPickerField':
-      case 'UserPickerField':
-        valuePath = 'DisplayText'
-        break
-    }
-    return valuePath
   }
 }

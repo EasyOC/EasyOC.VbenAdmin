@@ -7,16 +7,17 @@
 //----------------------
 // ReSharper disable InconsistentNaming
 
-import { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
+import { AxiosRequestConfig, AxiosResponse } from 'axios'
+import { VAxios } from 'service/request/Axios'
 import { AppServiceBase } from './app-service-base'
 
 export class ApiServiceProxy extends AppServiceBase {
-  private instance: AxiosInstance
+  private instance: VAxios
   private baseUrl: string
   protected jsonParseReviver: ((key: string, value: any) => any) | undefined =
     undefined
 
-  constructor(instance?: AxiosInstance) {
+  constructor(instance?: VAxios) {
     super()
     if (instance) {
       this.instance = instance
@@ -98,6 +99,41 @@ export class ApiServiceProxy extends AppServiceBase {
   }
 
   /**
+   * @param queryName (optional)
+   * @param typeName (optional)
+   * @param body (optional)
+   * @return Success
+   */
+  excel(params: {
+    queryName: string | undefined
+    typeName: string | undefined
+    body: { [key: string]: any } | undefined
+  }): Promise<void> {
+    const { queryName, typeName, body } = { ...params }
+
+    let url_ = this.baseUrl + '/api/Excel?'
+
+    if (queryName !== undefined && queryName !== null)
+      url_ += 'queryName=' + encodeURIComponent('' + queryName) + '&'
+
+    if (typeName !== undefined && typeName !== null)
+      url_ += 'typeName=' + encodeURIComponent('' + typeName) + '&'
+    url_ = url_.replace(/[?&]$/, '')
+    const content_ = JSON.stringify(body)
+    let options_ = <AxiosRequestConfig>{
+      data: content_,
+      method: 'GET',
+      url: url_,
+      headers: {
+        'Content-Type': 'application/json-patch+json',
+      },
+    }
+    return this.instance.request(options_).then((_response: AxiosResponse) => {
+      return this.transformResult(_response)
+    })
+  }
+
+  /**
    * @param parameters (optional)
    * @return Success
    */
@@ -150,12 +186,12 @@ export class ApiServiceProxy extends AppServiceBase {
 }
 
 export class LuceneServiceProxy extends AppServiceBase {
-  private instance: AxiosInstance
+  private instance: VAxios
   private baseUrl: string
   protected jsonParseReviver: ((key: string, value: any) => any) | undefined =
     undefined
 
-  constructor(instance?: AxiosInstance) {
+  constructor(instance?: VAxios) {
     super()
     if (instance) {
       this.instance = instance
@@ -276,12 +312,12 @@ export class LuceneServiceProxy extends AppServiceBase {
 }
 
 export class TenantsServiceProxy extends AppServiceBase {
-  private instance: AxiosInstance
+  private instance: VAxios
   private baseUrl: string
   protected jsonParseReviver: ((key: string, value: any) => any) | undefined =
     undefined
 
-  constructor(instance?: AxiosInstance) {
+  constructor(instance?: VAxios) {
     super()
     if (instance) {
       this.instance = instance
@@ -334,12 +370,12 @@ export class TenantsServiceProxy extends AppServiceBase {
 }
 
 export class ContentManagementServiceProxy extends AppServiceBase {
-  private instance: AxiosInstance
+  private instance: VAxios
   private baseUrl: string
   protected jsonParseReviver: ((key: string, value: any) => any) | undefined =
     undefined
 
-  constructor(instance?: AxiosInstance) {
+  constructor(instance?: VAxios) {
     super()
     if (instance) {
       this.instance = instance
@@ -487,15 +523,56 @@ export class ContentManagementServiceProxy extends AppServiceBase {
       return this.transformResult(_response)
     })
   }
+
+  /**
+   * 获取指定类型的字段清单
+   * @param typeName (optional)
+   * @return Success
+   */
+  getFields(typeName: string | undefined): Promise<ContentFieldsMappingDto[]> {
+    let url_ = this.baseUrl + '/api/ContentManagement/GetFields?'
+
+    if (typeName !== undefined && typeName !== null)
+      url_ += 'typeName=' + encodeURIComponent('' + typeName) + '&'
+    url_ = url_.replace(/[?&]$/, '')
+    let options_ = <AxiosRequestConfig>{
+      method: 'GET',
+      url: url_,
+      headers: {
+        Accept: 'text/plain',
+      },
+    }
+    return this.instance.request(options_).then((_response: AxiosResponse) => {
+      return this.transformResult(_response)
+    })
+  }
+
+  /**
+   * @return Success
+   */
+  listLuceneQueries(): Promise<QueryDefDto[]> {
+    let url_ = this.baseUrl + '/api/ContentManagement/ListLuceneQueries'
+    url_ = url_.replace(/[?&]$/, '')
+    let options_ = <AxiosRequestConfig>{
+      method: 'POST',
+      url: url_,
+      headers: {
+        Accept: 'text/plain',
+      },
+    }
+    return this.instance.request(options_).then((_response: AxiosResponse) => {
+      return this.transformResult(_response)
+    })
+  }
 }
 
 export class ExcelServiceProxy extends AppServiceBase {
-  private instance: AxiosInstance
+  private instance: VAxios
   private baseUrl: string
   protected jsonParseReviver: ((key: string, value: any) => any) | undefined =
     undefined
 
-  constructor(instance?: AxiosInstance) {
+  constructor(instance?: VAxios) {
     super()
     if (instance) {
       this.instance = instance
@@ -600,12 +677,12 @@ export class ExcelServiceProxy extends AppServiceBase {
 }
 
 export class RDBMSServiceProxy extends AppServiceBase {
-  private instance: AxiosInstance
+  private instance: VAxios
   private baseUrl: string
   protected jsonParseReviver: ((key: string, value: any) => any) | undefined =
     undefined
 
-  constructor(instance?: AxiosInstance) {
+  constructor(instance?: VAxios) {
     super()
     if (instance) {
       this.instance = instance
@@ -884,12 +961,12 @@ export class RDBMSServiceProxy extends AppServiceBase {
 }
 
 export class RolesServiceProxy extends AppServiceBase {
-  private instance: AxiosInstance
+  private instance: VAxios
   private baseUrl: string
   protected jsonParseReviver: ((key: string, value: any) => any) | undefined =
     undefined
 
-  constructor(instance?: AxiosInstance) {
+  constructor(instance?: VAxios) {
     super()
     if (instance) {
       this.instance = instance
@@ -1020,12 +1097,12 @@ export class RolesServiceProxy extends AppServiceBase {
 }
 
 export class UsersServiceProxy extends AppServiceBase {
-  private instance: AxiosInstance
+  private instance: VAxios
   private baseUrl: string
   protected jsonParseReviver: ((key: string, value: any) => any) | undefined =
     undefined
 
-  constructor(instance?: AxiosInstance) {
+  constructor(instance?: VAxios) {
     super()
     if (instance) {
       this.instance = instance
@@ -1091,37 +1168,6 @@ export class UsersServiceProxy extends AppServiceBase {
       url: url_,
       headers: {
         Accept: 'text/plain',
-      },
-    }
-    return this.instance.request(options_).then((_response: AxiosResponse) => {
-      return this.transformResult(_response)
-    })
-  }
-
-  /**
-   * @param incloudeItemDetails (optional)
-   * @param body (optional)
-   * @return Success
-   */
-  fillAdditionalData(
-    incloudeItemDetails: boolean | undefined,
-    body: User[] | undefined,
-  ): Promise<void> {
-    let url_ = this.baseUrl + '/api/Users/FillAdditionalData?'
-
-    if (incloudeItemDetails !== undefined && incloudeItemDetails !== null)
-      url_ +=
-        'incloudeItemDetails=' +
-        encodeURIComponent('' + incloudeItemDetails) +
-        '&'
-    url_ = url_.replace(/[?&]$/, '')
-    const content_ = JSON.stringify(body)
-    let options_ = <AxiosRequestConfig>{
-      data: content_,
-      method: 'POST',
-      url: url_,
-      headers: {
-        'Content-Type': 'application/json-patch+json',
       },
     }
     return this.instance.request(options_).then((_response: AxiosResponse) => {
@@ -1275,12 +1321,12 @@ export class UsersServiceProxy extends AppServiceBase {
 }
 
 export class WorkflowApiServiceProxy extends AppServiceBase {
-  private instance: AxiosInstance
+  private instance: VAxios
   private baseUrl: string
   protected jsonParseReviver: ((key: string, value: any) => any) | undefined =
     undefined
 
-  constructor(instance?: AxiosInstance) {
+  constructor(instance?: VAxios) {
     super()
     if (instance) {
       this.instance = instance
@@ -1361,6 +1407,84 @@ export class ContentFieldDefinitionDto {
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {}
     data['name'] = this.name !== undefined ? this.name : <any>null
+    return data
+  }
+}
+
+export class ContentFieldsMappingDto {
+  keyPath!: string | null
+  /** 内容项的直接属性，默认False,比如 Published，Latest，DisplayText, */
+  isContentItemProperty!: boolean
+  fieldName!: string | null
+  readonly fieldNameCamelCase!: string | null
+  displayName!: string | null
+  partDisplayName!: string | null
+  partName!: string | null
+  fieldSettings!: any | null
+  fieldType!: string | null
+
+  init(_data?: any, _mappings?: any) {
+    if (_data) {
+      this.keyPath =
+        _data['keyPath'] !== undefined ? _data['keyPath'] : <any>null
+      this.isContentItemProperty =
+        _data['isContentItemProperty'] !== undefined
+          ? _data['isContentItemProperty']
+          : <any>null
+      this.fieldName =
+        _data['fieldName'] !== undefined ? _data['fieldName'] : <any>null
+      ;(<any>this).fieldNameCamelCase =
+        _data['fieldNameCamelCase'] !== undefined
+          ? _data['fieldNameCamelCase']
+          : <any>null
+      this.displayName =
+        _data['displayName'] !== undefined ? _data['displayName'] : <any>null
+      this.partDisplayName =
+        _data['partDisplayName'] !== undefined
+          ? _data['partDisplayName']
+          : <any>null
+      this.partName =
+        _data['partName'] !== undefined ? _data['partName'] : <any>null
+      this.fieldSettings =
+        _data['fieldSettings'] !== undefined
+          ? _data['fieldSettings']
+          : <any>null
+      this.fieldType =
+        _data['fieldType'] !== undefined ? _data['fieldType'] : <any>null
+    }
+  }
+
+  static fromJS(data: any, _mappings?: any): ContentFieldsMappingDto {
+    data = typeof data === 'object' ? data : {}
+    return createInstance<ContentFieldsMappingDto>(
+      data,
+      _mappings,
+      ContentFieldsMappingDto,
+    )
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {}
+    data['keyPath'] = this.keyPath !== undefined ? this.keyPath : <any>null
+    data['isContentItemProperty'] =
+      this.isContentItemProperty !== undefined
+        ? this.isContentItemProperty
+        : <any>null
+    data['fieldName'] =
+      this.fieldName !== undefined ? this.fieldName : <any>null
+    data['fieldNameCamelCase'] =
+      this.fieldNameCamelCase !== undefined
+        ? this.fieldNameCamelCase
+        : <any>null
+    data['displayName'] =
+      this.displayName !== undefined ? this.displayName : <any>null
+    data['partDisplayName'] =
+      this.partDisplayName !== undefined ? this.partDisplayName : <any>null
+    data['partName'] = this.partName !== undefined ? this.partName : <any>null
+    data['fieldSettings'] =
+      this.fieldSettings !== undefined ? this.fieldSettings : <any>null
+    data['fieldType'] =
+      this.fieldType !== undefined ? this.fieldType : <any>null
     return data
   }
 }
@@ -2152,6 +2276,39 @@ export class PermissionDto {
   }
 }
 
+export class QueryDefDto {
+  name!: string | null
+  schema!: string | null
+  returnContentItems!: boolean
+
+  init(_data?: any, _mappings?: any) {
+    if (_data) {
+      this.name = _data['name'] !== undefined ? _data['name'] : <any>null
+      this.schema = _data['schema'] !== undefined ? _data['schema'] : <any>null
+      this.returnContentItems =
+        _data['returnContentItems'] !== undefined
+          ? _data['returnContentItems']
+          : <any>null
+    }
+  }
+
+  static fromJS(data: any, _mappings?: any): QueryDefDto {
+    data = typeof data === 'object' ? data : {}
+    return createInstance<QueryDefDto>(data, _mappings, QueryDefDto)
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {}
+    data['name'] = this.name !== undefined ? this.name : <any>null
+    data['schema'] = this.schema !== undefined ? this.schema : <any>null
+    data['returnContentItems'] =
+      this.returnContentItems !== undefined
+        ? this.returnContentItems
+        : <any>null
+    return data
+  }
+}
+
 export class ResetUserPasswordtInput {
   email!: string | null
   newPassword!: string | null
@@ -2524,175 +2681,6 @@ export class UpdateRoleInput {
   }
 }
 
-export class User {
-  id!: number
-  userId!: string | null
-  userName!: string | null
-  normalizedUserName!: string | null
-  email!: string | null
-  normalizedEmail!: string | null
-  passwordHash!: string | null
-  securityStamp!: string | null
-  emailConfirmed!: boolean
-  isEnabled!: boolean
-  isLockoutEnabled!: boolean
-  lockoutEndUtc!: Date | null
-  accessFailedCount!: number
-  resetToken!: string | null
-  roleNames!: string[] | null
-  userClaims!: UserClaim[] | null
-  loginInfos!: UserLoginInfo[] | null
-  userTokens!: UserToken[] | null
-  properties!: any | null
-
-  init(_data?: any, _mappings?: any) {
-    if (_data) {
-      this.id = _data['id'] !== undefined ? _data['id'] : <any>null
-      this.userId = _data['userId'] !== undefined ? _data['userId'] : <any>null
-      this.userName =
-        _data['userName'] !== undefined ? _data['userName'] : <any>null
-      this.normalizedUserName =
-        _data['normalizedUserName'] !== undefined
-          ? _data['normalizedUserName']
-          : <any>null
-      this.email = _data['email'] !== undefined ? _data['email'] : <any>null
-      this.normalizedEmail =
-        _data['normalizedEmail'] !== undefined
-          ? _data['normalizedEmail']
-          : <any>null
-      this.passwordHash =
-        _data['passwordHash'] !== undefined ? _data['passwordHash'] : <any>null
-      this.securityStamp =
-        _data['securityStamp'] !== undefined
-          ? _data['securityStamp']
-          : <any>null
-      this.emailConfirmed =
-        _data['emailConfirmed'] !== undefined
-          ? _data['emailConfirmed']
-          : <any>null
-      this.isEnabled =
-        _data['isEnabled'] !== undefined ? _data['isEnabled'] : <any>null
-      this.isLockoutEnabled =
-        _data['isLockoutEnabled'] !== undefined
-          ? _data['isLockoutEnabled']
-          : <any>null
-      this.lockoutEndUtc = _data['lockoutEndUtc']
-        ? new Date(_data['lockoutEndUtc'].toString())
-        : <any>null
-      this.accessFailedCount =
-        _data['accessFailedCount'] !== undefined
-          ? _data['accessFailedCount']
-          : <any>null
-      this.resetToken =
-        _data['resetToken'] !== undefined ? _data['resetToken'] : <any>null
-      if (Array.isArray(_data['roleNames'])) {
-        this.roleNames = [] as any
-        for (let item of _data['roleNames']) this.roleNames!.push(item)
-      }
-      if (Array.isArray(_data['userClaims'])) {
-        this.userClaims = [] as any
-        for (let item of _data['userClaims'])
-          this.userClaims!.push(UserClaim.fromJS(item, _mappings))
-      }
-      if (Array.isArray(_data['loginInfos'])) {
-        this.loginInfos = [] as any
-        for (let item of _data['loginInfos'])
-          this.loginInfos!.push(UserLoginInfo.fromJS(item, _mappings))
-      }
-      if (Array.isArray(_data['userTokens'])) {
-        this.userTokens = [] as any
-        for (let item of _data['userTokens'])
-          this.userTokens!.push(UserToken.fromJS(item, _mappings))
-      }
-      this.properties =
-        _data['properties'] !== undefined ? _data['properties'] : <any>null
-    }
-  }
-
-  static fromJS(data: any, _mappings?: any): User {
-    data = typeof data === 'object' ? data : {}
-    return createInstance<User>(data, _mappings, User)
-  }
-
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {}
-    data['id'] = this.id !== undefined ? this.id : <any>null
-    data['userId'] = this.userId !== undefined ? this.userId : <any>null
-    data['userName'] = this.userName !== undefined ? this.userName : <any>null
-    data['normalizedUserName'] =
-      this.normalizedUserName !== undefined
-        ? this.normalizedUserName
-        : <any>null
-    data['email'] = this.email !== undefined ? this.email : <any>null
-    data['normalizedEmail'] =
-      this.normalizedEmail !== undefined ? this.normalizedEmail : <any>null
-    data['passwordHash'] =
-      this.passwordHash !== undefined ? this.passwordHash : <any>null
-    data['securityStamp'] =
-      this.securityStamp !== undefined ? this.securityStamp : <any>null
-    data['emailConfirmed'] =
-      this.emailConfirmed !== undefined ? this.emailConfirmed : <any>null
-    data['isEnabled'] =
-      this.isEnabled !== undefined ? this.isEnabled : <any>null
-    data['isLockoutEnabled'] =
-      this.isLockoutEnabled !== undefined ? this.isLockoutEnabled : <any>null
-    data['lockoutEndUtc'] = this.lockoutEndUtc
-      ? this.lockoutEndUtc.toISOString()
-      : <any>null
-    data['accessFailedCount'] =
-      this.accessFailedCount !== undefined ? this.accessFailedCount : <any>null
-    data['resetToken'] =
-      this.resetToken !== undefined ? this.resetToken : <any>null
-    if (Array.isArray(this.roleNames)) {
-      data['roleNames'] = []
-      for (let item of this.roleNames) data['roleNames'].push(item)
-    }
-    if (Array.isArray(this.userClaims)) {
-      data['userClaims'] = []
-      for (let item of this.userClaims) data['userClaims'].push(item.toJSON())
-    }
-    if (Array.isArray(this.loginInfos)) {
-      data['loginInfos'] = []
-      for (let item of this.loginInfos) data['loginInfos'].push(item.toJSON())
-    }
-    if (Array.isArray(this.userTokens)) {
-      data['userTokens'] = []
-      for (let item of this.userTokens) data['userTokens'].push(item.toJSON())
-    }
-    data['properties'] =
-      this.properties !== undefined ? this.properties : <any>null
-    return data
-  }
-}
-
-export class UserClaim {
-  claimType!: string | null
-  claimValue!: string | null
-
-  init(_data?: any, _mappings?: any) {
-    if (_data) {
-      this.claimType =
-        _data['claimType'] !== undefined ? _data['claimType'] : <any>null
-      this.claimValue =
-        _data['claimValue'] !== undefined ? _data['claimValue'] : <any>null
-    }
-  }
-
-  static fromJS(data: any, _mappings?: any): UserClaim {
-    data = typeof data === 'object' ? data : {}
-    return createInstance<UserClaim>(data, _mappings, UserClaim)
-  }
-
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {}
-    data['claimType'] =
-      this.claimType !== undefined ? this.claimType : <any>null
-    data['claimValue'] =
-      this.claimValue !== undefined ? this.claimValue : <any>null
-    return data
-  }
-}
-
 export class UserDetailsDto {
   id!: number | null
   userId!: string | null
@@ -2874,45 +2862,6 @@ export class UserListItemDto {
   }
 }
 
-export class UserLoginInfo {
-  loginProvider!: string | null
-  providerKey!: string | null
-  providerDisplayName!: string | null
-
-  init(_data?: any, _mappings?: any) {
-    if (_data) {
-      this.loginProvider =
-        _data['loginProvider'] !== undefined
-          ? _data['loginProvider']
-          : <any>null
-      this.providerKey =
-        _data['providerKey'] !== undefined ? _data['providerKey'] : <any>null
-      this.providerDisplayName =
-        _data['providerDisplayName'] !== undefined
-          ? _data['providerDisplayName']
-          : <any>null
-    }
-  }
-
-  static fromJS(data: any, _mappings?: any): UserLoginInfo {
-    data = typeof data === 'object' ? data : {}
-    return createInstance<UserLoginInfo>(data, _mappings, UserLoginInfo)
-  }
-
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {}
-    data['loginProvider'] =
-      this.loginProvider !== undefined ? this.loginProvider : <any>null
-    data['providerKey'] =
-      this.providerKey !== undefined ? this.providerKey : <any>null
-    data['providerDisplayName'] =
-      this.providerDisplayName !== undefined
-        ? this.providerDisplayName
-        : <any>null
-    return data
-  }
-}
-
 export class UsersBulkActionInput {
   bulkAction!: UsersBulkActionInputBulkAction
   itemIds!: string[] | null
@@ -2945,37 +2894,6 @@ export class UsersBulkActionInput {
       data['itemIds'] = []
       for (let item of this.itemIds) data['itemIds'].push(item)
     }
-    return data
-  }
-}
-
-export class UserToken {
-  loginProvider!: string | null
-  name!: string | null
-  value!: string | null
-
-  init(_data?: any, _mappings?: any) {
-    if (_data) {
-      this.loginProvider =
-        _data['loginProvider'] !== undefined
-          ? _data['loginProvider']
-          : <any>null
-      this.name = _data['name'] !== undefined ? _data['name'] : <any>null
-      this.value = _data['value'] !== undefined ? _data['value'] : <any>null
-    }
-  }
-
-  static fromJS(data: any, _mappings?: any): UserToken {
-    data = typeof data === 'object' ? data : {}
-    return createInstance<UserToken>(data, _mappings, UserToken)
-  }
-
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {}
-    data['loginProvider'] =
-      this.loginProvider !== undefined ? this.loginProvider : <any>null
-    data['name'] = this.name !== undefined ? this.name : <any>null
-    data['value'] = this.value !== undefined ? this.value : <any>null
     return data
   }
 }

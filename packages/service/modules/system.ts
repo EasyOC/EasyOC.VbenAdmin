@@ -6,13 +6,14 @@ import type {
   RolePageParams,
   MenuListGetResultModel,
   // DeptListGetResultModel,
-  // AccountListGetResultModel,
+  // AccrountListGetResultModel,
   RolePageListGetResultModel,
   // RoleListGetResultModel,
 } from './model'
 import { defaultRequest } from '../request'
 import { RolesServiceProxy, UsersServiceProxy } from './api/app-service-proxies'
-import { excuteGraphqlGetQuery } from './eoc/GraphqlService'
+import { excuteGraphqlGetQuery, excuteGraphqlQuery } from './eoc/GraphqlService'
+import { listToTree } from '@admin/utils/src/helper/tree'
 
 enum Api {
   // AccountList = '/system/getAccountList',
@@ -21,7 +22,7 @@ enum Api {
   setRoleStatus = '/system/setRoleStatus',
   MenuList = '/system/getMenuList',
   RolePageList = '/system/getRoleListByPage',
-  GetAllRoleList = '/system/getAllRoleList',
+  GetAllrRoleList = '/system/getrAllRoleList',
 }
 export const userService = new UsersServiceProxy()
 
@@ -86,8 +87,43 @@ export const getDeptList = async (): Promise<DeptListItem[]> => {
   // defaultRequest.get<DeptListGetResultModel>({ url: Api.DeptList, params })
 }
 
-export const getMenuList = (params?: MenuParams) =>
-  defaultRequest.get<MenuListGetResultModel>({ url: Api.MenuList, params })
+export const getMenuList = async () => {
+  const result = await excuteGraphqlQuery({
+    query: `query MyQurery {
+          vbenMenu {
+            contentItemId
+            menuName
+            icon
+            permission
+            component
+            orderNo
+            status
+            modifiedUtc
+            createdUtc
+            routePath
+            parentMenu {
+              contentItems {
+                contentItemId
+              }
+            }
+          }
+        }`,
+  })
+  const menuList = result.data.vbenMenu as []
+
+  const treeMenu = listToTree(menuList, {
+    id: 'contentItemId',
+    rootFinder: (node) => !node.parentMenu?.contentItems[0]?.contentItemId,
+    pid: (parent, current) => {
+      return (
+        parent.contentItemId ==
+        current.parentMenu?.contentItems[0]?.contentItemId
+      )
+    },
+  })
+  console.log('treeMenu: ', treeMenu)
+  return treeMenu
+}
 
 export const getRoleListByPage = (params?: RolePageParams) =>
   defaultRequest.get<RolePageListGetResultModel>({

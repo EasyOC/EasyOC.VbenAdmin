@@ -44,7 +44,8 @@ import * as ng from 'angular';
 {%         endif -%}
 {%         if Framework.IsAxios -%}
 
-import { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import { AxiosRequestConfig, AxiosResponse } from 'axios';
+import { VAxios } from 'service/request/Axios'
 import { AppServiceBase } from './app-service-base';
 {%         endif -%}
 {%         if Framework.IsKnockout -%}

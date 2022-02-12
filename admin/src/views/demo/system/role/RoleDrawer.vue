@@ -12,7 +12,7 @@
         <BasicTree
           v-model:value="model[field]"
           :treeData="treeData"
-          :fieldNames="{ title: 'menuName', key: 'id' }"
+          :fieldNames="{ title: 'menuName', key: 'contentItemId' }"
           checkable
           toolbar
           title="菜单分配"
@@ -28,7 +28,7 @@ import { formSchema } from './role.data'
 import { BasicDrawer, useDrawerInner } from '@/components/Drawer'
 import { BasicTree, TreeItem } from '@/components/Tree'
 
-import { getMenuList } from '@service/demo/system'
+import { getMenuList } from '@service/system'
 
 export default defineComponent({
   name: 'RoleDrawer',

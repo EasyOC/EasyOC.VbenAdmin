@@ -30,21 +30,23 @@
 import { defineComponent } from 'vue'
 
 import { BasicTable, useTable, TableAction } from '@/components/Table'
-import { getDeptList } from '@service/demo/system'
+import { getDeptList } from '@service/system'
 
 import { useModal } from '@/components/Modal'
 import DeptModal from './DeptModal.vue'
 
 import { columns, searchFormSchema } from './dept.data'
+import { listToTree } from '@admin/utils/'
 
 export default defineComponent({
   name: 'DeptManagement',
   components: { BasicTable, DeptModal, TableAction },
+
   setup() {
     const [registerModal, { openModal }] = useModal()
     const [registerTable, { reload }] = useTable({
       title: '部门列表',
-      api: getDeptList,
+      api: getDeptTree,
       columns,
       formConfig: {
         labelWidth: 120,
@@ -66,6 +68,10 @@ export default defineComponent({
       },
     })
 
+    async function getDeptTree() {
+      const deptlst = await getDeptList()
+      return listToTree(deptlst, { pid: 'parentId' })
+    }
     function handleCreate() {
       openModal(true, {
         isUpdate: false,

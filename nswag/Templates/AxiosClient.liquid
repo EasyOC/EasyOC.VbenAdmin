@@ -8,7 +8,7 @@
 {% endif -%}
 
 {% if ExportTypes %}export {% endif %}class {{ Class }} {% if HasBaseClass %}extends {{ BaseClass }} {% endif %}{% if GenerateClientInterfaces %}implements I{{ Class }} {% endif %}{
-    private instance: AxiosInstance;
+    private instance: VAxios;
     private baseUrl: string;
     protected jsonParseReviver: {% if SupportsStrictNullChecks %}((key: string, value: any) => any) | undefined{% else %}(key: string, value: any) => any{% endif %} = undefined;
 
@@ -26,7 +26,7 @@
     }
 {% endif -%} {% endcomment %}
 {% if HasExtendedConstructor == false -%}
-    constructor(instance?:AxiosInstance) {
+    constructor(instance?:VAxios) {
         super();
         if(instance) {
             this.instance = instance;
