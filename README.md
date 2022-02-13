@@ -1,5 +1,5 @@
 以 vben admin next 分支为基础搭建的  OrchardCore SAP 前端框架
-
+服务端：https://github.com/EasyOC/EasyOC
 ## 框架
 
 - [x] oidc password 授权登录
