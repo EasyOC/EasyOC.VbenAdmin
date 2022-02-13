@@ -44,9 +44,10 @@ export default defineComponent({
 
   setup() {
     const [registerModal, { openModal }] = useModal()
-    const [registerTable, { reload }] = useTable({
+    const [registerTable, { reload, expandRows }] = useTable({
       title: '部门列表',
       api: getDeptTree,
+      rowKey: 'id',
       columns,
       formConfig: {
         labelWidth: 120,
@@ -70,7 +71,19 @@ export default defineComponent({
 
     async function getDeptTree() {
       const deptlst = await getDeptList()
-      return listToTree(deptlst, { pid: 'parentId' })
+      const expandKeys: string[] = []
+      deptlst
+        .filter((x) => !x.parentId)
+        .forEach((x) => {
+          expandKeys.push(x.id)
+          if (x.children) {
+            x.children.forEach((c) => {
+              expandKeys.push(c.id)
+            })
+          }
+        })
+      expandRows(expandKeys)
+      return deptlst
     }
     function handleCreate() {
       openModal(true, {

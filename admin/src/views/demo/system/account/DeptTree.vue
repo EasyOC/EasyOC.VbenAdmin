@@ -34,13 +34,22 @@ export default defineComponent({
     }
 
     onMounted(async () => {
-      const deptList = await getDeptList()
-      const result = listToTree(deptList, { pid: 'parentId' })
-      console.log(result, 'TreeBuilderResult')
-      treeData.value = result as unknown as TreeItem[]
-      const rootNode = result.find((x) => !x.parentId)
-      if (rootNode) {
-        expandedKeys.value = [rootNode.id]
+      const result = await getDeptList()
+      try {
+        console.log(result, 'TreeBuilderResult')
+        treeData.value = result as unknown as TreeItem[]
+        treeData.value
+          .filter((x) => !x.parentId)
+          .forEach((x) => {
+            expandedKeys.value.push(x.id)
+            if (x.children) {
+              x.children.forEach((c) => {
+                expandedKeys.value.push(c.id)
+              })
+            }
+          })
+      } catch (error) {
+        console.log(error)
       }
     })
     return { treeData, expandedKeys, handleSelect }

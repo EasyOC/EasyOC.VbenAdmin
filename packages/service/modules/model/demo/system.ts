@@ -43,6 +43,7 @@ export interface DeptListItem {
   remark: string
   status: number
   parentId: string
+  children: DeptListItem[] | undefined
 }
 
 export interface MenuListItem {

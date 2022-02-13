@@ -12,7 +12,7 @@ import type {
 } from './model'
 import { defaultRequest } from '../request'
 import { RolesServiceProxy, UsersServiceProxy } from './api/app-service-proxies'
-import { excuteGraphqlGetQuery, excuteGraphqlQuery } from './eoc/GraphqlService'
+import { excuteGraphqlQuery } from './eoc/GraphqlService'
 import { listToTree } from '@admin/utils/src/helper/tree'
 
 enum Api {
@@ -41,7 +41,7 @@ export const getAllRoleList = async () => {
   // defHttp.get<RoleListGetResultModel>({ url: Api.GetAllRoleList, params });
 }
 export const getDeptList = async (): Promise<DeptListItem[]> => {
-  const result = await excuteGraphqlGetQuery({
+  const result = await excuteGraphqlQuery({
     query: `query queryDepartment {
     queryDepartment {
       createdUtc
@@ -58,16 +58,6 @@ export const getDeptList = async (): Promise<DeptListItem[]> => {
     }
   }`,
   })
-  console.log('queryDepartment', result)
-  // const sample = {
-  //   createdUtc: '2022-01-10T11:16:08.5105019Z',
-  //   description: null,
-  //   displayText: '财务部',
-  //   modifiedUtc: '2022-01-10T11:16:08.5105019Z',
-  //   orderIndex: null,
-  //   publishedUtc: '2022-01-10T11:16:08.5142674Z',
-  //   status: true,
-  // }
   const depList = result.data.queryDepartment.map((x) => {
     const dept = {
       id: x.contentItemId,
@@ -82,9 +72,10 @@ export const getDeptList = async (): Promise<DeptListItem[]> => {
     }
     return dept
   })
-  console.log(depList, 'depList')
-  return depList
-  // defaultRequest.get<DeptListGetResultModel>({ url: Api.DeptList, params })
+
+  return listToTree(depList, {
+    pid: 'parentId',
+  })
 }
 
 export const getMenuList = async () => {
@@ -114,7 +105,7 @@ export const getMenuList = async () => {
   const treeMenu = listToTree(menuList, {
     id: 'contentItemId',
     rootFinder: (node) => !node.parentMenu?.contentItems[0]?.contentItemId,
-    pid: (parent, current) => {
+    parentFinder: (parent, current) => {
       return (
         parent.contentItemId ==
         current.parentMenu?.contentItems[0]?.contentItemId

@@ -1,4 +1,4 @@
-import { ContentTypeEnum } from '@admin/tokens'
+// import { ContentTypeEnum } from '@admin/tokens'
 import { ocApi } from '../../request'
 // import { BasicFetchResult } from '../model'
 
@@ -13,17 +13,17 @@ export const excuteGraphqlQuery = async (query: GraphQLQueryParams) => {
   return result.data
 }
 
-export const excuteGraphqlGetQuery = async (params: { query: string }) => {
-  const result = await ocApi.get({
-    url: GraphqlServiceAPI,
-    params: params,
-    headers: { 'Content-Type': ContentTypeEnum.FORM_URLENCODED },
-  })
-  return result.data
-}
+// export const excuteGraphqlGetQuery = async (params: { query: string }) => {
+//   const result = await ocApi.get({
+//     url: GraphqlServiceAPI,
+//     params: params,
+//     headers: { 'Content-Type': ContentTypeEnum.FORM_URLENCODED },
+//   })
+//   return result.data
+// }
 
 export const loadGraphQLSchema = async () => {
-  return excuteGraphqlGetQuery({ query: querySchema })
+  return excuteGraphqlQuery({ query: querySchema })
 }
 
 export type SqlCommonQueryParams = {
