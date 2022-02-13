@@ -127,7 +127,7 @@ async function getList(params) {
               }
             }`,
   })
-  return result.data.data.crmCustomers
+  return result.data.crmCustomers
 }
 function handleCreate() {
   // openModal(true, {
