@@ -125,7 +125,7 @@ export default defineComponent({
                 }
               }`,
       })
-      return result.data.data.crmCustomers
+      return result.data.crmCustomers
     }
     function handleCreate() {
       // openModal(true, {
