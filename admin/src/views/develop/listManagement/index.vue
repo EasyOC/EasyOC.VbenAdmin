@@ -112,12 +112,7 @@ async function getList(params) {
   }
 }`,
   })
-  // var result1 = {
-  //   items: result.data.data.vbenList,
-  //   total: result.data.data.vbenList.length,
-  // }
-  // console.log(result1, 'excuteGraphqlQueryexcuteGraphqlQueryexcuteGraphqlQuery')
-  return result.data.data.vbenList
+  return result.data.vbenList
 }
 
 function handleCreate() {
