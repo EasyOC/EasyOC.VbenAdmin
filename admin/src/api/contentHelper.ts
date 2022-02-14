@@ -8,51 +8,74 @@ import {
 import {
   ContentTypeDefinitionDto,
   ContentPartDefinitionDto,
+  ContentFieldsMappingDto,
+  ContentManagementServiceProxy,
 } from '@service/api/app-service-proxies'
 import { t } from '@admin/locale'
 import { camelCase, deepMerge } from '@admin/utils'
 
 export class ContentHelper {
-  public getAllFields(
-    def: ContentTypeDefinitionDto | ContentPartDefinitionDto,
-  ): ContentFieldsMapping[] {
-    return this.getFieldsFromType(def as ContentTypeDefinitionDto)
+  // public getAllFields(
+  //   def: ContentTypeDefinitionDto | ContentPartDefinitionDto,
+  // ): ContentFieldsMapping[] {
+  //   return this.getFieldsFromType(def as ContentTypeDefinitionDto)
+  // }
+
+  public async getAllFields(typeName: string) {
+    return await new ContentManagementServiceProxy().getFields(typeName)
   }
   public expandContentType(
     _contentItem: ContentItemUpperCase,
-    fields: ContentFieldsMapping[],
-    toCamelCase = false,
+    fields: ContentFieldsMapping[] | ContentFieldsMappingDto[],
+    // toCamelCase = false,
   ) {
     const expandedContentItem: any = {}
     fields.forEach((f) => {
-      if (toCamelCase) {
-        expandedContentItem[camelCase(f.fieldName)] = eval(
-          `_contentItem.${f.keyPath}`,
-        )
-      } else {
-        expandedContentItem[f.fieldName] = eval(`_contentItem.${f.keyPath}`)
-      }
+      expandedContentItem[f.fieldName] = eval(`_contentItem.${f.keyPath}`)
     })
-    expandedContentItem.isCamelCase = toCamelCase
     return expandedContentItem
   }
 
   public updateContentItem(
     _formModel: any,
-    targetContentItem: ContentItemUpperCase,
-    fields: ContentFieldsMapping[],
+    fields: ContentFieldsMapping[] | ContentFieldsMappingDto[],
+    typeName: string,
+    targetContentItem: ContentItemUpperCase = {},
   ) {
     fields.forEach((f) => {
-      if (_formModel.isCamelCase) {
-        eval(
-          `targetContentItem.${f.keyPath}=_formModel.${camelCase(
-            f.fieldName,
-          )}||null`,
-        )
-      } else {
-        eval(`targetContentItem.${f.keyPath}=_formModel.${f.fieldName}||null`)
+      {
+        if (f.fieldName == 'DisplayText' && !f.partName) {
+          targetContentItem.TitlePart = { Title: _formModel.DisplayText }
+          return
+        }
+        const val = eval(`_formModel.${f.fieldName}`)
+        if (val !== undefined) {
+          const pathArray = f.keyPath.split('.')
+
+          if (pathArray.length > 1) {
+            let temp = targetContentItem
+            for (let index = 0; index < pathArray.length; index++) {
+              let path = pathArray[index]
+              const isLast = index == pathArray.length - 1
+              if (path.includes('[0]')) {
+                path = path.replace('[0]', '')
+                temp[path] = [val]
+              } else {
+                if (!temp[path]) {
+                  temp[path] = isLast ? val : {}
+                }
+              }
+              //利用引用类型层级赋值
+              temp = temp[path]
+            }
+            console.log('targetContentItem', targetContentItem)
+          } else {
+            targetContentItem[f.keyPath] = val
+          }
+        }
       }
     })
+    targetContentItem.ContentType = typeName
     return targetContentItem
   }
 

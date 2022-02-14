@@ -9,7 +9,7 @@ export type GraphQLQueryParams = {
   variables?: LuceneCommonQueryParams
 }
 export const excuteGraphqlQuery = async (query: GraphQLQueryParams) => {
-  const result =  await ocApi.post({ url: GraphqlServiceAPI, data: query })
+  const result = await ocApi.post({ url: GraphqlServiceAPI, data: query })
   return result.data
 }
 

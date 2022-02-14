@@ -30,8 +30,8 @@ const develop: RouteRecordItem = {
       },
     },
     {
-      path: 'listDetails/:id',
-      name: 'listDetails',
+      path: 'listDetails/:id?',
+      name: 'ListDetails',
       meta: {
         hideMenu: true,
         title: t('routes.develop.listDetails'),
