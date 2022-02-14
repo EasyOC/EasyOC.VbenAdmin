@@ -3,13 +3,13 @@ import { Tag } from 'ant-design-vue'
 import { h } from 'vue'
 //import { Switch } from 'ant-design-vue';
 //import { setRoleStatus } from '../../../api/system';
-//import { useMessage } from '/@/hooks/web/useMessage';
+// import { useMessage } from '/@/hooks/web/useMessage'
 //import { InputProps } from 'ant-design-vue/lib/input/inputProps';
 
 export const columns: BasicColumn[] = [
   {
     title: '列表名称',
-    dataIndex: 'DisplayText',
+    dataIndex: 'displayText',
     width: 200,
     align: 'left',
   },
@@ -64,8 +64,7 @@ export const searchFormSchema: FormSchema[] = [
 
 export const formSchema = [
   {
-    field: 'displayText',
-    valueField: 'displayText',
+    field: 'DisplayText',
     component: 'Input',
     label: '列表名称',
     required: true,

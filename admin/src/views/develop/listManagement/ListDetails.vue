@@ -1,10 +1,17 @@
 <template>
   <PageWrapper :title="getTitle" @back="goBack">
     <template #extra>
-      <a-button type="primary" @click="save" :loading="loading">
+      <a-button
+        type="primary"
+        @click="save"
+        :disabled="loading"
+        :loading="loading"
+      >
         保存
       </a-button>
-      <a-button type="primary" :loading="loading" danger> 删除列表</a-button>
+      <a-button type="primary" :loading="loading" :disabled="loading" danger>
+        删除列表</a-button
+      >
     </template>
     <template #footer>
       <BasicForm @register="register">
@@ -160,6 +167,7 @@ import MonacoEditor from '@/components/MonacoEditor/index.vue'
 import { ContentHelper } from '@/api/contentHelper'
 import { BasicColumn } from '@/components/Table'
 import { camelCase, deepMerge } from '@admin/utils'
+import { useMessage } from '@/hooks/web/useMessage'
 import { formSchema } from './data'
 import { getGlobalConfig } from '@/internal'
 const route = useRoute()
@@ -167,6 +175,7 @@ const loading = ref<boolean>(false)
 const go = useGo()
 const { apiUrl } = getGlobalConfig()
 const GraphQLNotSupportFields = ['GeoPointField']
+const { createMessage } = useMessage()
 
 //所有字段
 const listAllFields = ref<ContentFieldsMapping[]>([])
@@ -342,7 +351,7 @@ async function save() {
     VbenListFields.value,
     contentItem.value,
   )
-
+  createMessage.success('保存成功')
   loading.value = false
 }
 // 页面左侧点击返回链接时的操作
