@@ -23,7 +23,10 @@ export class ContentHelper {
   // }
 
   public async getAllFields(typeName: string) {
-    return await new ContentManagementServiceProxy().getFields(typeName)
+    return deepMerge(
+      [],
+      await await new ContentManagementServiceProxy().getFields(typeName),
+    ) as ContentFieldsMapping[]
   }
   public expandContentType(
     _contentItem: ContentItemUpperCase,

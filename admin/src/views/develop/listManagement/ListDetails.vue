@@ -1,6 +1,6 @@
 <template>
   <PageWrapper :title="getTitle" @back="goBack">
-    <template #extra>
+    <template #rightFooter>
       <a-button
         type="primary"
         @click="save"
@@ -9,6 +9,7 @@
       >
         保存
       </a-button>
+
       <a-button type="primary" :loading="loading" :disabled="loading" danger>
         删除列表</a-button
       >
@@ -51,9 +52,9 @@
             <a-card title="字段列表" :bordered="false" size="small">
               <template #extra>
                 <a-button size="small" @click="typeSelectionChanged()"
-                  >刷新架构</a-button
+                  >刷新列表</a-button
                 >
-                <a-button size="small" @click="() => 1 + 1">添加字段</a-button>
+                <!-- <a-button size="small" @click="() => 1 + 1">添加字段</a-button> -->
               </template>
               <!--   <a-button @click="delCol(index)" type="link">
                         <DeleteOutlined style="color: #ed6f6f" />
@@ -64,7 +65,7 @@
               >
                 <div
                   class="list-group-item borderGray m-1 p-2 rounded-md"
-                  v-for="(element, index) in listFields"
+                  v-for="(element, index) in listAllFields"
                   :key="element.keyPath || ''"
                 >
                   <div>
@@ -235,16 +236,16 @@ const queryNames = ref<QueryDefDto[]>()
 const currentKey = ref('eidtList')
 onBeforeMount(async () => {
   loading.value = true
-  VbenListFields.value = await getAllFileds(listManageName)
+  VbenListFields.value = await contentHelper.getAllFields(listManageName)
   if (documentId.value) {
     contentItem.value = await getContent(documentId.value.toString())
     model.value = contentHelper.expandContentType(
       contentItem.value,
       VbenListFields.value,
     )
-    if (model.value.FieldList) {
-      listFields.value = JSON.parse(model.value.FieldList)
-    }
+    listAllFields.value = await contentHelper.getAllFields(
+      model.value.TargetContentType,
+    )
     console.log('model.value expandContentType', model.value)
   }
 
@@ -293,13 +294,15 @@ onMounted(() => {
 
 async function typeSelectionChanged(value?) {
   if (!value) {
-    value = unref(model).TargetContentType
+    const result = getFieldsValue()
+    value = result.TargetContentType
   }
   if (value) {
-    listAllFields.value = await getAllFileds(value)
+    listAllFields.value = await contentHelper.getAllFields(value)
   }
   if (listAllFields.value) {
-    listFields.value = unref(listFields).filter(
+    console.log('listAllFields.value: ', listAllFields.value)
+    listFields.value = unref(listAllFields).filter(
       (x) => !GraphQLNotSupportFields.includes(x.fieldType),
     )
     const jobj = listFields.value.map((field) => buildField(field))
@@ -307,13 +310,6 @@ async function typeSelectionChanged(value?) {
     model.value.GraphQL = buildGraphql(listFields.value)
     monacoEditor.value.getAction(['editor.action.formatDocument'])._run()
   }
-}
-
-async function getAllFileds(typeName: string) {
-  return deepMerge(
-    [],
-    await typeManagement.getFields(typeName),
-  ) as ContentFieldsMapping[]
 }
 
 const getTitle = computed(() => {
@@ -341,12 +337,10 @@ function editorUpdated(value) {
 // }
 // function showAdd() {}
 async function save() {
-  await submit()
   const result = getFieldsValue()
   loading.value = true
   model.value = deepMerge(model.value, result)
-  console.log('getFieldsValue result: ', model.value)
-  contentHelper.saveContentItem(
+  await contentHelper.saveContentItem(
     model.value,
     VbenListFields.value,
     contentItem.value,
