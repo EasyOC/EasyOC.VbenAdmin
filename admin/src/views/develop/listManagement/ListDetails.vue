@@ -333,8 +333,8 @@ async function save() {
   model.value.FieldList = JSON.stringify(listFields.value)
   contentHelper.updateContentItem(
     model.value,
-    contentItem.value,
     VbenListFields.value,
+    contentItem.value,
   )
   console.log(contentItem.value, 'Saved content')
   await createOrUpdateContent(contentItem.value)

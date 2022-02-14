@@ -39,8 +39,8 @@ export class ContentHelper {
   public updateContentItem(
     _formModel: any,
     fields: ContentFieldsMapping[] | ContentFieldsMappingDto[],
-    typeName: string,
     targetContentItem: ContentItemUpperCase = {},
+    typeName: string,
   ) {
     fields.forEach((f) => {
       {
@@ -75,7 +75,9 @@ export class ContentHelper {
         }
       }
     })
-    targetContentItem.ContentType = typeName
+    if (typeName) {
+      targetContentItem.ContentType = typeName
+    }
     return targetContentItem
   }
 
