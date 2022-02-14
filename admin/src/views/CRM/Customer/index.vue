@@ -31,11 +31,11 @@
         />
       </template>
     </BasicTable>
-    <EditModal @register="registerModal" />
+    <!-- <EditModal @register="registerModal" /> -->
   </PageWrapper>
 </template>
 <script setup lang="ts">
-import { reactive, onBeforeMount, onMounted } from 'vue'
+import { reactive, onBeforeMount, onMounted, ref } from 'vue'
 
 import { BasicTable, useTable, TableAction } from '@/components/Table'
 import { ContentHelper } from '@/api/contentHelper'
@@ -72,26 +72,50 @@ const fieldNames = [
   'custNum',
   'displayText',
 ]
+let listConfig=ref<any>({});
 let contentManagementService: ContentManagementServiceProxy
 onBeforeMount(async () => {
+  console.log(21111111111111);
   contentManagementService = new ContentManagementServiceProxy()
   dynamicSettings = await contentManagementService.getTypeDefinition({
     name: 'Customer',
     withSettings: true,
   })
   //TODO 从 API 读取 列定义
-  const gpCols = helper.getGraphqlTableCols(dynamicSettings, fieldNames)
-  dynamicColumns.push(...gpCols)
-  setProps({ columns: dynamicColumns, showTableSetting: true })
+   const listConfigs= await excuteGraphqlQuery({query:`query MyQuery {
+  vbenList(first: 1, where: {displayText: "CustomerList"}) {
+    createdUtc
+    displayText
+    enablePage
+    fieldList
+    graphQL
+    listMapping
+    modifiedUtc
+    publishedUtc
+    queryMethod
+    queryName
+    targetContentType
+  }
+}
+`})
+  if(listConfigs){
+    listConfig.value = listConfigs.data.vbenList[0]
+  }
+  console.log('listConfig11111111111111: ', listConfig.value );
+  const listMapping = JSON.parse(listConfig.value.listMapping);
+
+  // const gpCols = helper.getGraphqlTableCols(dynamicSettings, fieldNames)
+  dynamicColumns.push(...listMapping)
+  setProps({ columns: dynamicColumns,api: getList, showTableSetting: true })
+  reload()
 })
 
 const go = useGo()
 const [registerModal, { openModal }] = useModal()
 const searchInfo = reactive<Recordable>({})
 
-const [registerTable, { setProps }] = useTable({
-  title: '客户列表',
-  api: getList,
+const [registerTable, { setProps,reload }] = useTable({
+  title: '客户列表', 
   rowKey: 'id',
   formConfig: {
     labelWidth: 120,
@@ -114,6 +138,8 @@ const [registerTable, { setProps }] = useTable({
 })
 
 async function getList(params) {
+    console.log('listConfig: ', listConfig.value );
+
   const result = await excuteGraphqlQuery({
     variables: {
       from: (params.page - 1) * params.pageSize,
@@ -122,13 +148,14 @@ async function getList(params) {
     query: `query MyQuery($params:String) {
               crmCustomers(parameters:$params) {
                 items {
-                 ${fieldNames.join(' ')}
+                 ${listConfig.value.graphQL}
                 }
                 total
               }
             }`,
   })
-  return result.data.data.crmCustomers
+  console.log('result: ', result);
+  return result.data.crmCustomers
 }
 function handleCreate() {
   // openModal(true, {
