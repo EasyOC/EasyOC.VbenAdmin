@@ -141,7 +141,6 @@ const [registerTable, { setProps, reload }] = useTable({
 
 async function getList(params) {
   console.log('listConfig: ', listConfig.value)
-
   const result = await excuteGraphqlQuery({
     variables: {
       from: (params.page - 1) * params.pageSize,
@@ -149,9 +148,8 @@ async function getList(params) {
     },
     query: `query MyQuery($params:String) {
               crmCustomers(parameters:$params) {
-                items {
-                 ${listConfig.value.graphQL}
-                }
+                items 
+                 ${listConfig.value.graphQL}                
                 total
               }
             }`,

@@ -6,12 +6,10 @@
 import { BasicForm, FormSchema, useForm } from '@/components/Form/index'
 import { defineComponent, reactive, onMounted, onBeforeMount, ref } from 'vue'
 import { basicProps } from './props'
-import { ContentTypeDefinitionDto } from '@service/api/app-service-proxies'
+import { ContentFieldsMappingDto } from '@service/api/app-service-proxies'
 import { ContentManagementServiceProxy } from '@service/api/app-service-proxies'
 import {
   getContent,
-  createOrUpdateContent,
-  ContentFieldsMapping,
   FieldType,
   ContentItemUpperCase,
 } from '@service/eoc/contentApi'
@@ -23,40 +21,35 @@ export default defineComponent({
   props: basicProps,
   emits: ['advanced-change', 'reset', 'submit', 'register'],
   setup(props) {
-    const typeManager = new ContentManagementServiceProxy()
+    // const typeManager = new ContentManagementServiceProxy()
     const contentHelper = new ContentHelper()
+    const schemas = ref<FormSchema[]>([])
 
-    let contentItem = reactive(new ContentItemUpperCase())
+    let contentItem = ref<ContentItemUpperCase>({ ContentType: props.typeName })
     let formModel = ref({})
-    let typeDef = reactive(new ContentTypeDefinitionDto())
-    let fields = reactive<ContentFieldsMapping[]>([])
+    // let typeDef = reactive(new ContentTypeDefinitionDto())
+    let fields = ref<ContentFieldsMappingDto[]>([])
 
     onBeforeMount(async () => {
-      contentItem.ContentType = props.typeName
-      typeDef = await typeManager.getTypeDefinition({
-        name: props.typeName,
-        withSettings: true,
-      })
-      console.log(typeDef, '重新赋值后')
-      buildSchema(typeDef)
-      await setProps({ schemas })
+      fields.value = await contentHelper.getAllFields(props.typeName)
+      schemas.value = buildSchema()
+      await setProps({ schemas: schemas })
 
       if (props.contentItemId) {
-        contentItem = await getContent(props.contentItemId?.toString())
-        formModel.value = {
-          ...contentHelper.expandContentType(contentItem, fields),
-        }
-        setFieldsValue(formModel)
+        contentItem.value = await getContent(props.contentItemId?.toString())
+        ;(formModel.value = contentHelper.expandContentType(
+          contentItem.value,
+          fields.value,
+        )),
+          setFieldsValue(formModel)
       }
     })
 
     onMounted(async () => {})
-    const schemas: FormSchema[] = reactive([])
 
     const [register, { setProps, setFieldsValue, updateSchema, validate }] =
       useForm({
         labelWidth: 120,
-        schemas,
         submitFunc: handleSubmit,
         actionColOptions: {
           span: 24,
@@ -67,17 +60,16 @@ export default defineComponent({
     async function handleSubmit() {
       try {
         const data = await validate()
-        updateContentItem(formModel, contentItem, fields)
-        await createOrUpdateContent(contentItem)
+        contentHelper.saveContentItem(formModel, fields.value, contentItem)
         console.log(data)
       } catch (e) {
         console.log(e)
       }
     }
 
-    function buildSchema(contentType: ContentTypeDefinitionDto) {
-      fields = contentHelper.getAllFields(contentType)
-      fields.forEach((f) => {
+    function buildSchema() {
+      const tempSchemas: FormSchema[] = []
+      fields.value.forEach((f) => {
         const s = {
           label: f.displayName,
           field: f.fieldName,
@@ -93,13 +85,14 @@ export default defineComponent({
             updateTextFieldSchema(s, f)
             break
         }
-        schemas.push(s)
+        tempSchemas.push(s)
       })
+      return tempSchemas
     }
 
     function updateTextFieldSchema(
       schema: FormSchema,
-      field: ContentFieldsMapping,
+      field: ContentFieldsMappingDto,
     ) {
       const settings = field.fieldSettings
 

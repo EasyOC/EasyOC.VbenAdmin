@@ -136,7 +136,6 @@ import {
   ApiSelect,
   useForm,
 } from '@/components/Form/index'
-
 // import { BasicModal, useModalInner } from '@/components/Modal'
 
 // import { t } from '@admin/locale'
@@ -196,7 +195,7 @@ const contentHelper = new ContentHelper()
 
 const [register, { setFieldsValue, submit, updateSchema, getFieldsValue }] =
   useForm({
-    model: contentItem.value,
+    model: model,
     labelWidth: 100,
     schemas: formSchema,
     showActionButtonGroup: false,
@@ -327,16 +326,16 @@ function editorUpdated(value) {
     console.log(error)
   }
 }
-// function delCol(index) {
-//   listFields.value?.splice(index, 1)
-// }
+function delCol(index) {
+  listFields.value?.splice(index, 1)
+}
 // function showAdd() {}
 async function save() {
   await submit()
   const result = getFieldsValue()
+  console.log('getFieldsValue result: ', result)
   loading.value = true
   model.value = deepMerge(model.value, result)
-  console.log('getFieldsValue result: ', model.value)
   contentHelper.saveContentItem(
     model.value,
     VbenListFields.value,

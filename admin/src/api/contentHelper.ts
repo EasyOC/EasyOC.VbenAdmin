@@ -4,6 +4,7 @@ import {
   FieldType,
   ContentItemUpperCase,
   getValuePath,
+  createOrUpdateContent,
 } from '@service/eoc/contentApi'
 import {
   ContentTypeDefinitionDto,
@@ -36,50 +37,91 @@ export class ContentHelper {
     return expandedContentItem
   }
 
-  public updateContentItem(
+  public async saveContentItem(
     _formModel: any,
     fields: ContentFieldsMapping[] | ContentFieldsMappingDto[],
     targetContentItem: ContentItemUpperCase = {},
-    typeName: string,
+    typeName?: string,
+    beforeUpdate?: (contentItem: ContentItemUpperCase) => boolean,
   ) {
     fields.forEach((f) => {
       {
         if (f.fieldName == 'DisplayText' && !f.partName) {
           targetContentItem.TitlePart = { Title: _formModel.DisplayText }
+          targetContentItem.DisplayText = _formModel.DisplayText
           return
         }
-        const val = eval(`_formModel.${f.fieldName}`)
-        if (val !== undefined) {
-          const pathArray = f.keyPath.split('.')
 
-          if (pathArray.length > 1) {
-            let temp = targetContentItem
-            for (let index = 0; index < pathArray.length; index++) {
-              let path = pathArray[index]
-              const isLast = index == pathArray.length - 1
-              if (path.includes('[0]')) {
-                path = path.replace('[0]', '')
-                temp[path] = [val]
-              } else {
-                if (!temp[path]) {
-                  temp[path] = isLast ? val : {}
-                }
-              }
-              //利用引用类型层级赋值
-              temp = temp[path]
-            }
-            console.log('targetContentItem', targetContentItem)
-          } else {
-            targetContentItem[f.keyPath] = val
+        if (f.partName) {
+          if (!targetContentItem[f.partName]) {
+            targetContentItem[f.partName] = {}
           }
+          if (!targetContentItem[f.partName][f.fieldName]) {
+            targetContentItem[f.partName][f.fieldName] = {}
+          }
+          targetContentItem[f.partName][f.fieldName][f.lastValueKey] =
+            _formModel[f.fieldName]
+        } else {
+          targetContentItem[f.fieldName] = _formModel[f.fieldName]
         }
       }
     })
     if (typeName) {
       targetContentItem.ContentType = typeName
     }
+    if (beforeUpdate) {
+      beforeUpdate(targetContentItem)
+    }
+    console.log(targetContentItem, 'Saved content')
+    await createOrUpdateContent(targetContentItem)
     return targetContentItem
   }
+
+  // public async updateContentItem2(
+  //   _formModel: any,
+  //   fields: ContentFieldsMapping[] | ContentFieldsMappingDto[],
+  //   targetContentItem: ContentItemUpperCase = {},
+  //   typeName?: string,
+  // ) {
+  //   fields.forEach((f) => {
+  //     {
+  //       if (f.fieldName == 'DisplayText' && !f.partName) {
+  //         targetContentItem.TitlePart = { Title: _formModel.DisplayText }
+  //         targetContentItem.DisplayText = _formModel.DisplayText
+  //         return
+  //       }
+  //       const val = eval(`_formModel.${f.fieldName}`)
+  //       if (val !== undefined) {
+  //         const pathArray = f.keyPath.split('.')
+  //         if (pathArray.length > 1) {
+  //           let temp = targetContentItem
+  //           for (let index = 0; index < pathArray.length; index++) {
+  //             let path = pathArray[index]
+  //             const isLast = index == pathArray.length - 1
+  //             if (path.includes('[0]')) {
+  //               path = path.replace('[0]', '')
+  //               temp[path] = [val]
+  //             } else {
+  //               if (!temp[path]) {
+  //                 temp[path] = isLast ? val : {}
+  //               }
+  //             }
+  //             //利用引用类型层级赋值
+  //             temp = temp[path]
+  //           }
+  //         } else {
+  //           targetContentItem[f.keyPath] = val
+  //         }
+  //       }
+  //     }
+  //   })
+  //   if (typeName) {
+  //     targetContentItem.ContentType = typeName
+  //   }
+  //   console.log(targetContentItem, 'Saved content')
+  //   await createOrUpdateContent(targetContentItem)
+  //   return targetContentItem
+  // }
 
   public getFieldsFromType(
     typeDef: ContentTypeDefinitionDto,

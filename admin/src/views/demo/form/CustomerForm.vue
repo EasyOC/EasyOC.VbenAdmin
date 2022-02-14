@@ -19,7 +19,7 @@ import { PageWrapper } from '@/components/Page'
 
 const schemas: FormSchema[] = [
   {
-    field: 'field1',
+    field: 'field1', 
     component: 'Input',
     label: 'render方式',
     colProps: {
@@ -49,6 +49,16 @@ const schemas: FormSchema[] = [
         suffix: () => 'suffix',
       }
     },
+  },
+  {
+    field: 'field3',
+    component: 'Input',
+    label: '自定义Slot',
+    slot: 'f3',
+    colProps: {
+      span: 8,
+    },
+    rules: [{ required: true }],
   },
   {
     field: 'field3',

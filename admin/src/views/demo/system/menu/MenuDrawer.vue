@@ -73,13 +73,11 @@ export default defineComponent({
         const values = await validate()
         setDrawerProps({ confirmLoading: true })
         // Save to Db
-        const content = contentHelper.updateContentItem(
+        await contentHelper.saveContentItem(
           values,
           unref(contentFields),
-          typeName,
           unref(contentItem),
         )
-        await createOrUpdateContent(content)
         console.log(values)
         closeDrawer()
         emit('success')

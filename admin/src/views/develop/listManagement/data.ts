@@ -9,7 +9,7 @@ import { h } from 'vue'
 export const columns: BasicColumn[] = [
   {
     title: '列表名称',
-    dataIndex: 'displayText',
+    dataIndex: 'DisplayText',
     width: 200,
     align: 'left',
   },
@@ -64,7 +64,8 @@ export const searchFormSchema: FormSchema[] = [
 
 export const formSchema = [
   {
-    field: 'DisplayText',
+    field: 'displayText',
+    valueField: 'displayText',
     component: 'Input',
     label: '列表名称',
     required: true,
