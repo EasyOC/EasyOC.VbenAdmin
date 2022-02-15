@@ -1,4 +1,5 @@
 export default {
-  amisEditor: '低代码编辑器',
   amis: 'AMIS',
+  Internal: '编辑器(内嵌)',
+  amisEditor: '页面辑器(外链)',
 }

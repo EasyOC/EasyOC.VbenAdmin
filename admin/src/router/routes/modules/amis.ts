@@ -20,7 +20,7 @@ const amis: RouteRecordItem = {
       component: IFrame,
       meta: {
         frameSrc: '/amis/index.html',
-        title: t('routes.amis.iframe.doc'),
+        title: t('routes.amis.Internal'),
       },
     },
     {
