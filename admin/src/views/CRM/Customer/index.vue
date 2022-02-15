@@ -8,20 +8,20 @@
       <template #action="{ record }">
         <TableAction
           :actions="[
-            {
-              icon: 'clarity:info-standard-line',
-              tooltip: '查看用户详情',
-              onClick: handleView.bind(null, record),
-            },
+            // {
+            //   icon: 'clarity:info-standard-line',
+            //   tooltip: '查看用户详情',
+            //   onClick: handleView.bind(null, record),
+            // },
             {
               icon: 'clarity:note-edit-line',
-              tooltip: '编辑用户资料',
+              tooltip: '编辑客户资料',
               onClick: handleEdit.bind(null, record),
             },
             {
               icon: 'ant-design:delete-outlined',
               color: 'error',
-              tooltip: '删除此账号',
+              tooltip: '删除此客户',
               popConfirm: {
                 title: '是否确认删除',
                 confirm: handleDelete.bind(null, record),
@@ -31,19 +31,19 @@
         />
       </template>
     </BasicTable>
-    <!-- <EditModal @register="registerModal" /> -->
+    <EditModal @register="registerModal" />
   </PageWrapper>
 </template>
 <script setup lang="ts">
-import { reactive, onBeforeMount, onMounted, ref } from 'vue'
+import { reactive, onBeforeMount, ref } from 'vue'
 
 import { BasicTable, useTable, TableAction } from '@/components/Table'
-import { ContentHelper } from '@/api/contentHelper'
-import { getAccountList } from '@service/system'
-import {
-  ContentManagementServiceProxy,
-  ContentTypeDefinitionDto,
-} from '@service/api/app-service-proxies'
+// import { ContentHelper } from '@/api/contentHelper'
+// import { getAccountList } from '@service/system'
+// import {
+//   ContentManagementServiceProxy,
+//   ContentTypeDefinitionDto,
+// } from '@service/api/app-service-proxies'
 
 import { PageWrapper } from '@/components/Page'
 // import DeptTree from './DeptTree.vue'
@@ -51,36 +51,36 @@ import { useModal } from '@/components/Modal'
 import EditModal from './EditModal.vue'
 import { BasicColumn } from '@/components/Table'
 
-import { columns, searchFormSchema } from './data'
-import { useGo } from '@/hooks/web/usePage'
-import { ContentTypeService } from '@/api/ContentTypeService'
+import {  searchFormSchema } from './data'
+// import { useGo } from '@/hooks/web/usePage'
+// import { ContentTypeService } from '@/api/ContentTypeService'
 import {
   excuteGraphqlQuery,
-  LuceneCommonQueryParams,
+  // LuceneCommonQueryParams,
 } from '@service/eoc/GraphqlService'
 // import { useQuery } from '@urql/vue'
 
-const helper = new ContentHelper()
-let dynamicSettings: ContentTypeDefinitionDto
+// const helper = new ContentHelper()
+// let dynamicSettings: ContentTypeDefinitionDto
 const dynamicColumns = reactive<BasicColumn[]>([])
 
-const fieldNames = [
-  'published',
-  'publishedUtc',
-  'name',
-  'modifiedUtc',
-  'custNum',
-  'displayText',
-]
+// const fieldNames = [
+//   'published',
+//   'publishedUtc',
+//   'name',
+//   'modifiedUtc',
+//   'custNum',
+//   'displayText',
+// ]
 let listConfig=ref<any>({});
-let contentManagementService: ContentManagementServiceProxy
+// let contentManagementService: ContentManagementServiceProxy
 onBeforeMount(async () => {
-  console.log(21111111111111);
-  contentManagementService = new ContentManagementServiceProxy()
-  dynamicSettings = await contentManagementService.getTypeDefinition({
-    name: 'Customer',
-    withSettings: true,
-  })
+  // console.log(21111111111111);
+  // contentManagementService = new ContentManagementServiceProxy()
+  // dynamicSettings = await contentManagementService.getTypeDefinition({
+  //   name: 'Customer',
+  //   withSettings: true,
+  // })
   //TODO 从 API 读取 列定义
    const listConfigs= await excuteGraphqlQuery({query:`query MyQuery {
   vbenList(first: 1, where: {displayText: "CustomerList"}) {
@@ -101,16 +101,14 @@ onBeforeMount(async () => {
   if(listConfigs){
     listConfig.value = listConfigs.data.vbenList[0]
   }
-  console.log('listConfig11111111111111: ', listConfig.value );
   const listMapping = JSON.parse(listConfig.value.listMapping);
-
   // const gpCols = helper.getGraphqlTableCols(dynamicSettings, fieldNames)
   dynamicColumns.push(...listMapping)
   setProps({ columns: dynamicColumns,api: getList, showTableSetting: true })
   reload()
 })
 
-const go = useGo()
+// const go = useGo()
 const [registerModal, { openModal }] = useModal()
 const searchInfo = reactive<Recordable>({})
 
@@ -138,7 +136,6 @@ const [registerTable, { setProps,reload }] = useTable({
 })
 
 async function getList(params) {
-    console.log('listConfig: ', listConfig.value );
 
   const result = await excuteGraphqlQuery({
     variables: {
@@ -165,6 +162,7 @@ function handleCreate() {
 }
 
 function handleEdit(record: Recordable) {
+  console.log('record: ', record);
   console.log(record)
   openModal(true, {
     record,
@@ -176,7 +174,7 @@ function handleDelete(record: Recordable) {
   console.log(record)
 }
 
-function handleView(record: Recordable) {
-  go('/system/account_detail/' + record.id)
-}
+// function handleView(record: Recordable) {
+//   go('/system/account_detail/' + record.id)
+// }
 </script>
