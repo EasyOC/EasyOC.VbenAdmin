@@ -155,10 +155,10 @@ async function getList(params) {
 }
 
 function handleCreate() {
-  // openModal(true, {
-  //   isUpdate: false,
-  //   dynamicSettings,
-  // })
+  openModal(true, {
+    isUpdate: false,
+    // dynamicSettings,
+  })
 }
 
 function handleEdit(record: Recordable) {
