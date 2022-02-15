@@ -8,6 +8,7 @@
     "url": "https://github.com/anncwb"
   },
   "scripts": {
+    "bootstrap-amis": "pnpm run -C amis installpkg",
     "bootstrap": "pnpm install",
     "dev": "pnpm run -C admin dev",
     "gen:api": "cd nswag & refresh.bat",
