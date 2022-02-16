@@ -3,33 +3,34 @@ import { camelCase } from '@admin/utils'
 import { ContentFieldsMapping, FieldType } from '@service/eoc/contentApi'
 import { excuteGraphqlQuery } from '@service/eoc/GraphqlService'
 
-export default class VbenFormService {
+export class VbenFormService {
   // private typeName: string
   // constructor(typeName: string) {
   //   this.typeName = typeName
   // }
+  constructor(){}
   public static ContentItemIndexFields = 'ContentItemIndexFields'
-  public getFormSchema(fields: ContentFieldsMapping[]) {
+  public async getFormSchema(fields: ContentFieldsMapping[]) {
     const schemas: { [key: string]: FormSchema[] } = {
       [VbenFormService.ContentItemIndexFields]: [],
     }
-    fields.forEach((f) => {
+    fields.forEach(async(f) => {
       if (!f.partName) {
         schemas[VbenFormService.ContentItemIndexFields].push(
-          this.getPartFormSchema(f),
+         await this.getPartFormSchema(f),
         )
       } else {
         if (!schemas[f.partName]) {
           schemas[f.partName] = []
         }
-        schemas[f.partName].push(this.getPartFormSchema(f))
+        schemas[f.partName].push(await this.getPartFormSchema(f))
       }
     })
+    console.log('schemas: ', schemas);
     return schemas
   }
 
-  public getPartFormSchema(field: ContentFieldsMapping) {
-    console.log('field: ', field)
+  public async getPartFormSchema(field: ContentFieldsMapping) {
     const schema: FormSchema = {
       field: field.fieldName,
       label: field.displayName,
@@ -47,9 +48,33 @@ export default class VbenFormService {
         //TODO:绑定数据源 ,参考列表管理
         //根据 设置信息读取需要显示的下拉类型
         //根据指定的下拉类型绑定Graphql 查询
+        schema.component = 'Select'
+        if(field?.fieldSettings?.ContentPickerFieldSettings?.DisplayedContentTypes?.length > 0){
+          const list = await this.getApiSelectSource(field.fieldSettings.ContentPickerFieldSettings.DisplayedContentTypes[0], '')
+          let option:any = [];
+          list.forEach((item) => {
+            const model = { label:item.displayText, value:item.contentItemId }
+            option.push(model)
+          })
+          const options = { options:option };
+          schema.componentProps = options;
+        }
         break
-      case FieldType.ContentPickerField:
+      case FieldType.UserPickerField:
         //TODO: 参考 userProfile
+        schema.component = 'Select'
+        // if(field?.fieldSettings?.UserPickerFieldSettings?.DisplayedUserTypes?.length > 0){
+        const list = await this.getApiSelectUserSource('')
+        let option:any = [];
+        list.forEach((item) => {
+          const model = { label:item.displayText, value:item.owner }
+          option.push(model)
+        })
+        const options = { options:option };
+        schema.componentProps = options;
+        // }
+        break
+      default: 
         break
     }
     return schema
