@@ -24,3 +24,5 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
+admin/public/amis
+amis/.pnpm-debug.log
