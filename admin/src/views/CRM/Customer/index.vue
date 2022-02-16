@@ -51,64 +51,25 @@ import { useModal } from '@/components/Modal'
 import EditModal from './EditModal.vue'
 import { BasicColumn } from '@/components/Table'
 
-import { columns, searchFormSchema } from './data'
+import { searchFormSchema } from './data'
 import { useGo } from '@/hooks/web/usePage'
 import { ContentTypeService } from '@/api/ContentTypeService'
-import {
-  excuteGraphqlQuery,
-  LuceneCommonQueryParams,
-} from '@service/eoc/GraphqlService'
+import VbenListService, { VbenListConfigModel } from '@/api/VbenListService'
+
 // import { useQuery } from '@urql/vue'
-
-const helper = new ContentHelper()
-let dynamicSettings: ContentTypeDefinitionDto
-const dynamicColumns = reactive<BasicColumn[]>([])
-
-const fieldNames = [
-  'published',
-  'publishedUtc',
-  'name',
-  'modifiedUtc',
-  'custNum',
-  'displayText',
-]
-let listConfig = ref<any>({})
-let contentManagementService: ContentManagementServiceProxy
+// const typName = 'Customer'
+const dynamicColumns = ref<BasicColumn[]>([])
+const vbenListService = new VbenListService('CustomerList')
+const listConfig = ref<VbenListConfigModel>({} as VbenListConfigModel)
 onBeforeMount(async () => {
-  console.log(21111111111111)
-  contentManagementService = new ContentManagementServiceProxy()
-  dynamicSettings = await contentManagementService.getTypeDefinition({
-    name: 'Customer',
-    withSettings: true,
+  listConfig.value = await vbenListService.getListConfig()
+  dynamicColumns.value.push(...JSON.parse(listConfig.value.listMapping))
+  setProps({
+    columns: dynamicColumns.value,
+    api: vbenListService.getListData,
+    pagination: listConfig.value.enablePage,
+    showTableSetting: true,
   })
-  //TODO 从 API 读取 列定义
-  const listConfigs = await excuteGraphqlQuery({
-    query: `query MyQuery {
-  vbenList(first: 1, where: {displayText: "CustomerList"}) {
-    createdUtc
-    displayText
-    enablePage
-    fieldList
-    graphQL
-    listMapping
-    modifiedUtc
-    publishedUtc
-    queryMethod
-    queryName
-    targetContentType
-  }
-}
-`,
-  })
-  if (listConfigs) {
-    listConfig.value = listConfigs.data.vbenList[0]
-  }
-  console.log('listConfig11111111111111: ', listConfig.value)
-  const listMapping = JSON.parse(listConfig.value.listMapping)
-
-  // const gpCols = helper.getGraphqlTableCols(dynamicSettings, fieldNames)
-  dynamicColumns.push(...listMapping)
-  setProps({ columns: dynamicColumns, api: getList, showTableSetting: true })
   reload()
 })
 
@@ -118,7 +79,7 @@ const searchInfo = reactive<Recordable>({})
 
 const [registerTable, { setProps, reload }] = useTable({
   title: '客户列表',
-  rowKey: 'id',
+  rowKey: 'contentItemId',
   formConfig: {
     labelWidth: 120,
     schemas: searchFormSchema,
@@ -138,24 +99,6 @@ const [registerTable, { setProps, reload }] = useTable({
     slots: { customRender: 'action' },
   },
 })
-
-async function getList(params) {
-  console.log('listConfig: ', listConfig.value)
-  const result = await excuteGraphqlQuery({
-    variables: {
-      from: (params.page - 1) * params.pageSize,
-      skip: params.pageSize,
-    },
-    query: `query MyQuery($params:String) {
-              crmCustomers(parameters:$params) {
-                items 
-                 ${listConfig.value.graphQL}                
-                total
-              }
-            }`,
-  })
-  return result.data.crmCustomers
-}
 
 function handleCreate() {
   // openModal(true, {
