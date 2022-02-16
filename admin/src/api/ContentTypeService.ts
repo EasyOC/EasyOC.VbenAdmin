@@ -10,19 +10,19 @@ import {
   ContentFieldsMapping,
   ContentItemUpperCase,
   createOrUpdateContent,
+  deletContent,
+  getContent,
 } from '@service/eoc/contentApi'
 import { deepMerge } from '@admin/utils'
-import { excuteGraphqlQuery } from '@service/eoc/GraphqlService'
-import VbenListConfigModel from './models/VbenListConfigModel'
 export class GraphqlQuery {
   public query!: string
   public hasTotal = true
 }
 
 export class ContentTypeService {
+  ContentManagementService = new ContentManagementServiceProxy()
   constructor(contentType: string) {
     this.ContentType = contentType
-    this.ContentManagementService = new ContentManagementServiceProxy()
   }
   public ContentType: string
   public contentTypeDefinition!: ContentTypeDefinitionDto
@@ -41,26 +41,32 @@ export class ContentTypeService {
     console.log(appStore.graphqlSchema, 'appStore.graphqlSchema')
     return graphQLQuery
   }
-  public ContentManagementService: ContentManagementServiceProxy
 
   private fields: ContentFieldsMapping[] = []
 
-  public async getAllFields(typeName: string, reload = false) {
+  public async getAllFields(reload = false) {
     //字段全局缓存
     const appStore = useAppStore()
-    this.fields = appStore.typeFieldCache[typeName]
+    this.fields = appStore.typeFieldCache[this.ContentType]
 
     if (reload || !this.fields || this.fields.length == 0) {
       this.fields = (
-        await new ContentManagementServiceProxy().getFields(typeName)
+        await new ContentManagementServiceProxy().getFields(this.ContentType)
       ).map((x) => deepMerge(new ContentFieldsMapping(), x))
-      appStore.typeFieldCache[typeName] = this.fields
-      console.log(`typeName:${typeName},缓存已更新`, this.fields)
+      appStore.typeFieldCache[this.ContentType] = this.fields
+      console.log(`typeName:${this.ContentType},缓存已更新`, this.fields)
       // appStore.updateTypeFieldCache(typeName, this.fields)
     } else {
-      console.log(`typeName:${typeName},已从缓存读取`, this.fields)
+      console.log(`typeName:${this.ContentType},已从缓存读取`, this.fields)
     }
     return this.fields
+  }
+
+  public async getContent(contentItemId: string) {
+    return await getContent(contentItemId)
+  }
+  public async deletContent(contentItemId: string) {
+    return await deletContent(contentItemId)
   }
 
   public expandContentType(

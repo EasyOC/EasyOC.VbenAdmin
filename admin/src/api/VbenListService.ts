@@ -8,13 +8,14 @@ export interface VbenListConfigModel {
   queryMethod: string
   queryName: string
   targetContentType: string
+  pageTitle: string
   displayText: string
 }
 
 export default class VbenListService {
-  private listConfigName?: string
+  private listConfigName: string
 
-  constructor(listConfigName?: string) {
+  constructor(listConfigName: string) {
     this.listConfigName = listConfigName
   }
   private listConfig?: VbenListConfigModel
@@ -23,16 +24,14 @@ export default class VbenListService {
     if (!this.listConfig) {
       this.listConfig = await this.getListConfig()
     }
-    const variables: any = {}
+    const variables: any = { ...params }
     if (this.listConfig?.enablePage) {
       variables.from = (params.page - 1) * params.pageSize
       variables.skip = params.pageSize
     }
+    console.log('variables: ', variables)
     const result = await excuteGraphqlQuery({
-      variables: {
-        ...variables,
-        ...params,
-      },
+      variables,
       query: `query MyQuery($params:String) {
               ${this.listConfig?.queryName}(parameters:$params) {
                   ${
