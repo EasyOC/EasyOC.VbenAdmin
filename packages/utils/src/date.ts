@@ -25,6 +25,7 @@ export const formatToDate = (
 ): string => {
   if (isString(format) && format.startsWith(UTC_DATE_FORMAT_PREFIX)) {
     const dateFormat = format.replace(UTC_DATE_FORMAT_PREFIX, '')
+    // return dateUtil(date).tz(dayjs.tz.guess()).format(dateFormat)
     return dateUtil(date).tz("Asia/Shanghai").format(dateFormat)
   }
   return dateUtil(date).format(format)
