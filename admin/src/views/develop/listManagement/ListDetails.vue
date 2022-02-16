@@ -93,11 +93,7 @@
               <template #extra>
                 <a-button
                   size="small"
-                  @click="
-                    monacoEditor?.value
-                      .getAction(['editor.action.formatDocument'])
-                      ._run()
-                  "
+                  @click="formatSchema"
                   title="快捷键：shift+alt+f"
                   >格式化</a-button
                 >
@@ -199,7 +195,7 @@ const model = ref({
 const listManageName = 'VbenList'
 
 // 此处可以得到文档ID
-const documentId = ref(route.params?.id)
+const documentId = ref(route.params?.id.toString())
 let contentItem = ref<ContentItemUpperCase>({ ContentType: listManageName })
 const typeManagement = new ContentManagementServiceProxy()
 const contentHelper = new ContentHelper()
@@ -238,7 +234,7 @@ onBeforeMount(async () => {
   loading.value = true
   VbenListFields.value = await contentHelper.getAllFields(listManageName)
   if (documentId.value) {
-    contentItem.value = await getContent(documentId.value.toString())
+    contentItem.value = await getContent(documentId.value)
     model.value = contentHelper.expandContentType(
       contentItem.value,
       VbenListFields.value,
@@ -314,7 +310,7 @@ async function typeSelectionChanged(value?) {
 
 const getTitle = computed(() => {
   if (unref(contentItem).DisplayText) {
-    return `编辑：${contentItem.value.DisplayText}`
+    return `编辑：${unref(contentItem).DisplayText}`
   } else {
     return '新建列表'
   }
@@ -458,7 +454,9 @@ function buildGraphql(fields: ContentFieldsMapping[]) {
   )
   return tempGraphqlStr
 }
-
+function formatSchema() {
+  monacoEditor?.value.getAction(['editor.action.formatDocument'])._run()
+}
 async function queryNameChanged(name) {
   model.value.EnablePage = false
   const current = queryNames.value?.find((x) => camelCase(x.name || '') == name)

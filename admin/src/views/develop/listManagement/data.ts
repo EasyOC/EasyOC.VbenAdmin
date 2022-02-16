@@ -42,12 +42,14 @@ export const columns: BasicColumn[] = [
   {
     title: '修改时间',
     dataIndex: 'modifiedUtc',
+    format: 'date|utc|YYYY-MM-DD HH:mm:ss',
     width: 180,
     align: 'left',
   },
   {
     title: '创建时间',
     dataIndex: 'createdUtc',
+    format: 'date|utc|YYYY-MM-DD HH:mm:ss',
     width: 180,
     align: 'left',
   },

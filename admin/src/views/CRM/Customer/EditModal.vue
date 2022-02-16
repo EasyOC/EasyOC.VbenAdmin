@@ -21,8 +21,6 @@ import {
 import { BasicModal, useModalInner } from '@/components/Modal'
 import { BasicForm, useForm } from '@/components/Form/index'
 import { FormSchema } from '@/components/Table'
-import { excuteGraphqlQuery } from '@service/eoc/GraphqlService'
-import { ContentTypeService } from '@/api/ContentTypeService'
 // import { ContentForm, useForm } from '@/components/OrchardCore'
 
 export default defineComponent({
@@ -45,22 +43,22 @@ export default defineComponent({
     })
 
     async function getSchema() {
-      const fields = await contentTypeService.value.getAllFields()
-      // let schemas:FormSchema[] = [];
-      fields.forEach((item) => {
-        let sc: FormSchema = {} as FormSchema
-        if (Array.isArray(item.fieldName)) {
-          sc.field = item.fieldName
-        } else {
-          sc.field = item.dataIndex
-        }
-        sc.label = item.title
-        sc.component = 'Input'
-        sc.required = true
-        schemas.value.push(sc)
-      })
-      // console.log('schemas: ', schemas);
-      updateSchema(schemas)
+      // const fields = await contentTypeService.value.getAllFields()
+      // // let schemas:FormSchema[] = [];
+      // fields.forEach((item) => {
+      //   let sc: FormSchema = {} as FormSchema
+      //   if (Array.isArray(item.fieldName)) {
+      //     sc.field = item.fieldName
+      //   } else {
+      //     sc.field = item.dataIndex
+      //   }
+      //   sc.label = item.title
+      //   sc.component = 'Input'
+      //   sc.required = true
+      //   schemas.value.push(sc)
+      // })
+      // // console.log('schemas: ', schemas);
+      // updateSchema(schemas)
     }
 
     const [
@@ -97,11 +95,11 @@ export default defineComponent({
         const values = await validate()
         setModalProps({ confirmLoading: true })
         // Save to Db
-        await contentHelper.saveContentItem(
-          values,
-          unref(contentFields),
-          unref(contentItem),
-        )
+        // await contentHelper.saveContentItem(
+        //   values,
+        //   unref(contentFields),
+        //   unref(contentItem),
+        // )
         console.log(values)
         closeModal()
         emit('success')

@@ -49,7 +49,7 @@ export default defineComponent({
   components: { BasicTable, MenuDrawer, TableAction },
   setup() {
     const typeName = 'VbenMenu'
-    const contentFields = ref<ContentFieldsMappingDto[]>([])
+    const contentFields = ref<ContentFieldsMapping[]>([])
     const contentItem = ref<ContentItemUpperCase>({ ContentType: typeName })
     const contentHelper = new ContentHelper()
     const [registerDrawer, { openDrawer }] = useDrawer()

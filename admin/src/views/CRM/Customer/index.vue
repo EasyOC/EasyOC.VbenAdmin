@@ -1,6 +1,5 @@
 <template>
   <PageWrapper dense contentFullHeight fixedHeight contentClass="flex">
-    <!-- <DeptTree class="w-1/4 xl:w-1/5" @select="handleSelect" /> -->
     <BasicTable @register="registerTable" :searchInfo="searchInfo">
       <template #toolbar>
         <a-button type="primary" @click="handleCreate">添加客户</a-button>
@@ -8,11 +7,6 @@
       <template #action="{ record }">
         <TableAction
           :actions="[
-            // {
-            //   icon: 'clarity:info-standard-line',
-            //   tooltip: '查看用户详情',
-            //   onClick: handleView.bind(null, record),
-            // },
             {
               icon: 'clarity:note-edit-line',
               tooltip: '编辑客户资料',
@@ -31,7 +25,7 @@
         />
       </template>
     </BasicTable>
-    <EditModal @register="registerModal" />
+    <!-- <EditModal @register="registerModal" /> -->
   </PageWrapper>
 </template>
 <script setup lang="ts">
@@ -67,7 +61,7 @@ onBeforeMount(async () => {
   dynamicColumns.value.push(...JSON.parse(listConfig.value.listMapping))
   setProps({
     columns: dynamicColumns.value,
-    api: vbenListService.getListData,
+    api: getListData,
     pagination: listConfig.value.enablePage,
     showTableSetting: true,
   })
@@ -75,7 +69,10 @@ onBeforeMount(async () => {
   typeFields.value = await contentTypeService.getAllFields()
 })
 
-const [registerModal, { openModal }] = useModal()
+async function getListData(params) {
+  return await vbenListService.getListData(params)
+}
+// const [registerModal, { openModal }] = useModal()
 const searchInfo = reactive<Recordable>({})
 
 const [registerTable, { setProps, reload }] = useTable({
@@ -101,24 +98,24 @@ const [registerTable, { setProps, reload }] = useTable({
 })
 
 function handleCreate() {
-  openModal(true, {
-    isUpdate: false,
-    contentTypeService,
-    contentItem: contentItem.value,
-    typeFields: typeFields.value,
-  })
+  // openModal(true, {
+  //   isUpdate: false,
+  //   contentTypeService,
+  //   contentItem: contentItem.value,
+  //   typeFields: typeFields.value,
+  // })
 }
 
 async function handleEdit(record: Recordable) {
-  console.log(record)
-  contentItem.value = await contentTypeService.getContent(record.contentItemId)
-  const editModel = contentTypeService.expandContentType(contentItem.value)
-  openModal(true, {
-    record: editModel,
-    contentTypeService,
-    isUpdate: true,
-    typeFields: typeFields.value,
-  })
+  // console.log(record)
+  // contentItem.value = await contentTypeService.getContent(record.contentItemId)
+  // const editModel = contentTypeService.expandContentType(contentItem.value)
+  // openModal(true, {
+  //   record: editModel,
+  //   contentTypeService,
+  //   isUpdate: true,
+  //   typeFields: typeFields.value,
+  // })
 }
 
 async function handleDelete(record: Recordable) {

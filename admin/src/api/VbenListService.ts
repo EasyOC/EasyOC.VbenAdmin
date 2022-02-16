@@ -24,10 +24,14 @@ export default class VbenListService {
     if (!this.listConfig) {
       this.listConfig = await this.getListConfig()
     }
-    const variables: any = { ...params }
+    const variables: any = {}
     if (this.listConfig?.enablePage) {
-      variables.from = (params.page - 1) * params.pageSize
-      variables.skip = params.pageSize
+      params.from = (params.page - 1) * params.pageSize
+      params.skip = params.pageSize
+      params.page = params.pageSize = undefined
+    }
+    if (params) {
+      variables.params = JSON.stringify(params)
     }
     console.log('variables: ', variables)
     const result = await excuteGraphqlQuery({
@@ -44,27 +48,24 @@ export default class VbenListService {
                 }
               }`,
     })
-    return result.data[camelCase(this.listConfig?.targetContentType) || '']
+    return result.data[this.listConfig?.queryName]
   }
 
   public async getListConfig() {
-    if (!this.listConfig) {
-      const result = await excuteGraphqlQuery({
-        query: `query MyQuery {
-                  vbenList(first: 1, where: {displayText: "${this.listConfigName}"}) {
-                    displayText
-                    enablePage
-                    fieldList
-                    graphQL
-                    listMapping
-                    queryMethod
-                    queryName
-                    targetContentType
-                  }
-                }`,
-      })
-      this.listConfig = result.data.vbenList[0] as VbenListConfigModel
-    }
-    return this.listConfig
+    const result = await excuteGraphqlQuery({
+      query: `query MyQuery {
+                vbenList(first: 1, where: {displayText: "${this.listConfigName}"}) {
+                  displayText
+                  enablePage
+                  fieldList
+                  graphQL
+                  listMapping
+                  queryMethod
+                  queryName
+                  targetContentType
+                }
+              }`,
+    })
+    return (this.listConfig = result.data.vbenList[0] as VbenListConfigModel)
   }
 }
