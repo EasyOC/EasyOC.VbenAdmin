@@ -10,7 +10,7 @@
             :name="field.keyPath"
             v-bind="formItemLayout"
             :rules="{
-              required: true,//读取字段配置
+              required: true,
               message: 'domain can not be null',
               trigger: 'change',
             }"
