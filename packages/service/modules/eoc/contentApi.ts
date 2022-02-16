@@ -80,6 +80,7 @@ export enum FieldType {
   NumericField = 'NumericField',
   ContentPickerField = 'ContentPickerField',
   UserPickerField = 'UserPickerField',
+  HtmlField = 'HtmlField',
   TitlePart = 'TitlePart',
   CustomField = 'CustomField',
 }

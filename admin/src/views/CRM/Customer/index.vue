@@ -103,8 +103,12 @@ onBeforeMount(async () => {
   if (listConfigs) {
     listConfig.value = listConfigs.data.vbenList[0]
   }
-  console.log('listConfig11111111111111: ', listConfig.value)
+    console.log('listConfigs.data.vbenList[0]: ', listConfigs.data.vbenList[0]);
+  console.log('listConfig.value: ', listConfig.value);
+    console.log('listConfigs.data.vbenList[0]: ', listConfigs.data.vbenList[0].listMapping);
+  console.log('listConfig.value.listMapping: ', listConfig.value.listMapping);
   const listMapping = JSON.parse(listConfig.value.listMapping)
+  console.log('listMapping111111111111111111: ', listMapping,listConfig.value);
 
   // const gpCols = helper.getGraphqlTableCols(dynamicSettings, fieldNames)
   dynamicColumns.push(...listMapping)
@@ -128,7 +132,6 @@ const [registerTable, { setProps, reload }] = useTable({
   pagination: true,
   bordered: true,
   handleSearchInfoFn(info) {
-    console.log('handleSearchInfoFn', info)
     return info
   },
   actionColumn: {
@@ -140,7 +143,6 @@ const [registerTable, { setProps, reload }] = useTable({
 })
 
 async function getList(params) {
-  console.log('listConfig: ', listConfig.value)
   const result = await excuteGraphqlQuery({
     variables: {
       from: (params.page - 1) * params.pageSize,
@@ -154,6 +156,7 @@ async function getList(params) {
               }
             }`,
   })
+  console.log('result.data.crmCustomers: ', result.data.crmCustomers);
   return result.data.crmCustomers
 }
 
@@ -165,7 +168,6 @@ function handleCreate() {
 }
 
 function handleEdit(record: Recordable) {
-  console.log('record: ', record);
   console.log(record)
   openModal(true, {
     record,

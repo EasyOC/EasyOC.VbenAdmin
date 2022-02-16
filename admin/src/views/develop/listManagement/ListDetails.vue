@@ -121,7 +121,7 @@
                 :value="model.GraphQL"
                 language="GraphQL"
                 height="500"
-                @editorUpdated="(value) => (model.GraphQL = value)"
+                @change="(value) => (model.GraphQL = value)"
               />
             </a-card>
           </a-col>
@@ -376,8 +376,19 @@ function buildField(field: ContentFieldsMapping) {
           'displayText',
         ]
         break
+      case FieldType.DateTimefield:
+        newobj.dataIndex = camelCase(field.fieldName)
+        newobj.format = "date|YYYY-MM-DD HH:mm:ss"//[camelCase(field.fieldName), 'displayValue']
+        break
+      case FieldType.DateField:
+        newobj.dataIndex = camelCase(field.fieldName)
+        newobj.format = "date|YYYY-MM-DD"//[camelCase(field.fieldName), 'displayValue']
+        break
       default:
         newobj.dataIndex = camelCase(field.fieldName)
+    }
+    if(field.fieldName.endsWith('Utc')&&!field.partName){
+       newobj.format = "date|utc|YYYY-MM-DD HH:mm:ss"
     }
     const formValue = getFieldsValue()
     let isPart = false
@@ -437,6 +448,8 @@ function buildGraphql(fields: ContentFieldsMapping[]) {
               userProfiles: { displayText: false },
             }
             break
+            case FieldType.HtmlField:
+              break
           default:
             tempPart[fieldName] = false
         }
