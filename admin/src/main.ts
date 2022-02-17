@@ -1,3 +1,5 @@
+import 'amis/sdk/sdk.js'
+import 'amis/lib/themes/antd.css'
 import 'ant-design-vue/dist/antd.less'
 import 'virtual:windi-base.css'
 import 'virtual:windi-components.css'
@@ -18,8 +20,6 @@ import { setupI18n } from '@admin/locale'
 import { namespace } from '@admin/setting'
 import { createBEMPlugin } from '@admin/utils/bem'
 import { registerGlobalDirective } from '@admin/directives'
-import 'amis/sdk/sdk.js'
-import 'amis/lib/themes/antd.css'
 const bootstrap = async () => {
   const app = createApp(App)
 

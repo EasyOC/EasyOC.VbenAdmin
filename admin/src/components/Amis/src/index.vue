@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, onUnmounted, ref } from 'vue'
+import { onMounted, onBeforeUnmount, ref } from 'vue'
 console.log('ces ')
 const props = defineProps({
   amisjson: {
@@ -27,7 +27,7 @@ onMounted(() => {
     {
       // 这里是初始 props
     },
-    { 
+    {
       //https://baidu.gitee.io/amis/zh-CN/docs/start/getting-started#sdk
       // 下面是一些可选的外部控制函数
       // TODO 在 sdk 中可以不传，用来实现 ajax 请求，但在 npm 中这是必须提供的
@@ -75,7 +75,7 @@ onMounted(() => {
   )
   emit('amisMounted', amisScoped.value)
 })
-onUnmounted(() => {
+onBeforeUnmount(() => {
   amisScoped.value.unmount()
 })
 </script>
