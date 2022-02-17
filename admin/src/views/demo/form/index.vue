@@ -1,148 +1,74 @@
 <template>
-  <PageWrapper title="表单基础示例" contentFullHeight>
-    <CollapseContainer title="基础示例">
-      <a-form ref="formRef" name="dynamic_form_item" :model="contentItem">
-        <draggable :list="typeFields">
-          <a-form-item
-            v-for="(field, index) in typeFields"
-            :key="field.keyPath"
-            :label="field.displayName"
-            :name="field.keyPath"
-            v-bind="formItemLayout"
-            :rules="{
-              required: true,//读取字段配置
-              message: 'domain can not be null',
-              trigger: 'change',
-            }"
-          >
-            <a-input
-              v-model:value="
-                contentItem[field.partName][field.fieldName][field.lastValueKey]
-              "
-              placeholder="please input domain"
-            />
-            <!-- <MinusCircleOutlined
-        v-if="dynamicValidateForm.domains.length > 1"
-        class="dynamic-delete-button"
-        :disabled="dynamicValidateForm.domains.length === 1"
-        @click="removeDomain(domain)"
-      /> -->
-          </a-form-item>
-          <a-form-item v-bind="formItemLayoutWithOutLabel">
-            <a-button type="dashed" style="width: 60%" @click="addDomain">
-              <PlusOutlined />
-              Add field
-            </a-button>
-          </a-form-item>
-          <a-form-item v-bind="formItemLayoutWithOutLabel">
-            <a-button type="primary" html-type="submit" @click="submitForm"
-              >Submit</a-button
-            >
-            <a-button style="margin-left: 10px" @click="resetForm"
-              >Reset</a-button
-            >
-          </a-form-item>
-        </draggable>
-      </a-form>
-    </CollapseContainer>
-  </PageWrapper>
+  <Amis :amisjson="amisjson" @amisMounted="amisMounted" />
+  <!-- <CodeEditor @change="editorChange" v-model:value="editorJson" /> -->
 </template>
-<script lang="ts">
-import { CollapseContainer } from '@/components/Container'
-import { PageWrapper } from '@/components/Page'
+<script setup lang="ts">
+import { computed, ref } from 'vue'
+// import MonacoEditor from '@/components/MonacoEditor/index.vue'
+import { CodeEditor } from '@/components/CodeEditor'
+import { Amis } from '@/components/Amis'
+import { parser } from 'xijs'
 
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons-vue'
-import { defineComponent, onBeforeMount, reactive, ref } from 'vue'
-import type { FormInstance } from 'ant-design-vue'
-import {
-  ContentFieldsMapping,
-  ContentItemUpperCase,
-} from '@service/eoc/contentApi'
-import { ContentTypeService } from '@/api/ContentTypeService'
-import { VueDraggableNext as draggable } from 'vue-draggable-next'
-
-interface Domain {
-  value: string
-  key: number
-}
-export default defineComponent({
-  components: {
-    MinusCircleOutlined,
-    PlusOutlined,
-    draggable,
-    CollapseContainer,
-    PageWrapper,
-  },
-  setup() {
-    const typeName = 'Customer'
-    const typeFields = ref<ContentFieldsMapping[]>([])
-    const contentItem = ref<ContentItemUpperCase>({ ContentType: typeName })
-    const contentTypeService = new ContentTypeService(typeName)
-    onBeforeMount(async () => {
-      contentItem.value = await contentTypeService.getContent(
-        '4vjsa6e801dcgs1sm0h47118my',
-      )
-      typeFields.value = (await contentTypeService.getAllFields()).filter(
-        (x) => x.partName,
-      )
-    })
-    const formRef = ref<FormInstance>()
-    const formItemLayout = {
-      labelCol: {
-        // xs: { span: 24 },
-        sm: { span: 4 },
-      },
-      wrapperCol: {
-        // xs: { span: 24 },
-        sm: { span: 20 },
-      },
-    }
-    const formItemLayoutWithOutLabel = {
-      wrapperCol: {
-        xs: { span: 24, offset: 0 },
-        sm: { span: 20, offset: 4 },
-      },
-    }
-    const dynamicValidateForm = reactive<{ domains: Domain[] }>({
-      domains: [],
-    })
-    const submitForm = () => {
-      formRef.value
-        .validate()
-        .then(() => {
-          console.log('values', dynamicValidateForm.domains)
-        })
-        .catch((error) => {
-          console.log('error', error)
-        })
-    }
-    const resetForm = () => {
-      formRef.value.resetFields()
-    }
-    const removeDomain = (item: Domain) => {
-      let index = dynamicValidateForm.domains.indexOf(item)
-      if (index !== -1) {
-        dynamicValidateForm.domains.splice(index, 1)
-      }
-    }
-    const addDomain = () => {
-      dynamicValidateForm.domains.push({
-        value: '',
-        key: Date.now(),
-      })
-    }
-    return {
-      formRef,
-      formItemLayout,
-      formItemLayoutWithOutLabel,
-      dynamicValidateForm,
-      submitForm,
-      resetForm,
-      removeDomain,
-      typeFields,
-      contentItem,
-      addDomain,
+const editorJson = ref<any>(`
+    {
+  "type": "form", 
+  "api": {
+    "method": "post",
+    "url": "/connect/token",
+    "dataType": "form-data",
+    "replaceData": false,
+    "data": {
+      "grant_type": "password",
+      "client_id": "vue_client_app",
+      "scopes": "openid profile roles api permissions"
     }
   },
+  "title": "常规模式",
+  "mode": "normal",
+  "body": [
+    {
+      "type": "input-text",
+      "name": "username",
+      "required": true,
+      "placeholder": "请输入邮箱",
+      "label": "邮箱",
+      "size": "full"
+    },
+    {
+      "type": "input-password",
+      "name": "password",
+      "label": "密码",
+      "required": true,
+      "placeholder": "请输入密码",
+      "size": "full"
+    },
+    {
+      "type": "checkbox",
+      "name": "rememberMe",
+      "label": "记住登录"
+    },
+    {
+      "type": "submit",
+      "label": "登录"
+    }
+  ]
+}`)
+// const editor = ref<any>(null)
+const amisjson = computed(() => {
+  return parser.parse(editorJson.value)
 })
+// function editorDidMount(loadedEditor) {
+//   editor.value = loadedEditor
+//   // try {
+//   //   editor.value.setValue(editorJson.value)
+//   // } catch (error) {}
+// }
+function editorChange() {
+  // editorJson.value = value
+  amisScoped.value.updateProps(amisjson.value)
+}
+const amisScoped = ref<any>(null)
+function amisMounted(amisScope) {
+  amisScoped.value = amisScope
+}
 </script>

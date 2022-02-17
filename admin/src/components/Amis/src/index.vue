@@ -1,0 +1,89 @@
+<template>
+  <div ref="rendererBox"></div>
+</template>
+
+<script lang="ts" setup>
+import { defaultRequest, ocApi } from '@admin/service/request'
+import { onMounted, onBeforeUnmount, ref, unref } from 'vue'
+console.log('ces ')
+const props = defineProps({
+  amisjson: {
+    type: Object,
+    required: true,
+  },
+})
+const rendererBox = ref(null)
+
+const emit = defineEmits(['amisMounted'])
+const amisScoped = ref<any>(null)
+onMounted(() => {
+  // @ts-ignore
+  var amis = amisRequire('amis/embed')
+  console.log(amis)
+
+  amisScoped.value = amis.embed(
+    rendererBox.value,
+    {
+      // amis schema
+      ...unref(props).amisjson,
+    },
+    {
+      // 这里是初始 props
+    },
+    {
+      //https://baidu.gitee.io/amis/zh-CN/docs/start/getting-started#sdk
+      // 下面是一些可选的外部控制函数
+      // TODO 在 sdk 中可以不传，用来实现 ajax 请求，但在 npm 中这是必须提供的
+      fetcher: async (config) => {
+        console.log('config ', config)
+        return await ocApi.request(config)
+      },
+      // 全局 api 请求适配器
+      // 另外在 amis 配置项中的 api 也可以配置适配器，针对某个特定接口单独处理。
+      //TODO
+      requestAdaptor(api) {
+        return api
+      },
+      //
+      // 全局 api 适配器。
+      // 另外在 amis 配置项中的 api 也可以配置适配器，针对某个特定接口单独处理。
+      // responseAdaptor: (api, response, query, request) => {
+      //   return response
+      // },
+      //
+      // 用来接管页面跳转，比如用 location.href 或 window.open，或者自己实现 amis 配置更新
+      jumpTo: (to) => {
+        location.href = to
+      },
+      //
+      // 用来实现地址栏更新
+      updateLocation: (to, replace) => {},
+      //
+      // 用来判断是否目标地址当前地址。
+      // isCurrentUrl: url => {},
+      //
+      // 用来实现复制到剪切板
+      // copy: content => {},
+      //
+      // 用来实现通知
+      notify: (type, msg) => {},
+      //
+      // 用来实现提示
+      alert: (content) => {},
+      //
+      // 用来实现确认框。
+      confirm: (content) => {},
+      //
+      // 主题，默认是 default，还可以设置成 cxd 或 dark，但记得引用它们的 css，比如 sdk 目录下的 cxd.css
+      theme: 'antd',
+      //
+      // 用来实现用户行为跟踪，详细请查看左侧高级中的说明
+      // tracker: (eventTracker) => {},
+    },
+  )
+  emit('amisMounted', amisScoped.value)
+})
+onBeforeUnmount(() => {
+  amisScoped.value.unmount()
+})
+</script>
