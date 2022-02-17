@@ -7,7 +7,7 @@
   />
 </template>
 <script setup lang="ts">
-import { computed, defineComponent, unref, ref } from 'vue'
+import { computed, ref } from 'vue'
 import MonacoEditor from '@/components/MonacoEditor/index.vue'
 import { Amis } from '@/components/Amis'
 import { parser } from 'xijs'

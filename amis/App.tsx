@@ -13,6 +13,7 @@ export default function(): JSX.Element {
             fetcher: ({url, method, data, config}: any) => {
                 config = config || {};
                 config.headers = config.headers || {};
+                config.headers.Authorization=""
                 config.withCredentials = true;
 
                 if (method !== 'post' && method !== 'put' && method !== 'patch') {

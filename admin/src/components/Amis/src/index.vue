@@ -1,9 +1,9 @@
 <template>
-  <div id="box"></div>
+  <div ref="rendererBox"></div>
 </template>
 
 <script lang="ts" setup>
-import { onMounted, onBeforeUnmount, ref } from 'vue'
+import { onMounted, onBeforeUnmount, ref, unref } from 'vue'
 console.log('ces ')
 const props = defineProps({
   amisjson: {
@@ -11,6 +11,8 @@ const props = defineProps({
     required: true,
   },
 })
+const rendererBox = ref(null)
+
 const emit = defineEmits(['amisMounted'])
 const amisScoped = ref<any>(null)
 onMounted(() => {
@@ -19,10 +21,10 @@ onMounted(() => {
   console.log(amis)
 
   amisScoped.value = amis.embed(
-    '#box',
+    rendererBox.value,
     {
       // amis schema
-      ...props.amisjson,
+      ...unref(props).amisjson,
     },
     {
       // 这里是初始 props
