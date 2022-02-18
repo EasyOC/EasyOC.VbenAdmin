@@ -28,30 +28,26 @@
 </template>
 <script lang="ts">
 import { defineComponent, nextTick, ref, onBeforeMount } from 'vue'
-
 import { BasicTable, useTable, TableAction } from '@/components/Table'
 import { getMenuList } from '@service/system'
-
 import { useDrawer } from '@/components/Drawer'
 import MenuDrawer from './MenuDrawer.vue'
-
 import { columns, searchFormSchema } from './menu.data'
-import { ContentFieldsMappingDto } from '@service/api/app-service-proxies'
-import { ContentHelper } from '@/api/contentHelper'
 import {
+  ContentFieldsMapping,
   ContentItemUpperCase,
-  deletContent,
-  getContent,
 } from '@service/eoc/contentApi'
+import { ContentTypeService } from '@/api/ContentTypeService'
 
 export default defineComponent({
   name: 'MenuManagement',
   components: { BasicTable, MenuDrawer, TableAction },
   setup() {
     const typeName = 'VbenMenu'
-    const contentFields = ref<ContentFieldsMappingDto[]>([])
+    const contentFields = ref<ContentFieldsMapping[]>([])
     const contentItem = ref<ContentItemUpperCase>({ ContentType: typeName })
-    const contentHelper = new ContentHelper()
+    const contentTypeService = new ContentTypeService(typeName)
+
     const [registerDrawer, { openDrawer }] = useDrawer()
     const [registerTable, { reload, expandAll }] = useTable({
       title: '菜单列表',
@@ -78,7 +74,7 @@ export default defineComponent({
       },
     })
     onBeforeMount(async () => {
-      contentFields.value = await contentHelper.getAllFields(typeName)
+      contentFields.value = await contentTypeService.getAllFields()
     })
     function handleCreate() {
       openDrawer(true, {
@@ -89,11 +85,10 @@ export default defineComponent({
     }
 
     async function handleEdit(record: Recordable) {
-      contentItem.value = await getContent(record.contentItemId)
-      const editModel = contentHelper.expandContentType(
-        contentItem.value,
-        contentFields.value,
+      contentItem.value = await contentTypeService.getContent(
+        record.contentItemId,
       )
+      const editModel = contentTypeService.expandContentType(contentItem.value)
       openDrawer(true, {
         record: editModel,
         contentItem: contentItem.value,
@@ -103,7 +98,7 @@ export default defineComponent({
     }
 
     async function handleDelete(record: Recordable) {
-      await deletContent(record.contentItemId)
+      await contentTypeService.deletContent(record.contentItemId)
       reload()
     }
 

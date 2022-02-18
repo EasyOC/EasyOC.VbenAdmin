@@ -1,6 +1,5 @@
 <template>
   <PageWrapper dense contentFullHeight fixedHeight contentClass="flex">
-    <!-- <DeptTree class="w-1/4 xl:w-1/5" @select="handleSelect" /> -->
     <BasicTable @register="registerTable" :searchInfo="searchInfo">
       <template #toolbar>
         <a-button type="primary" @click="handleCreate">添加客户</a-button>
@@ -9,19 +8,14 @@
         <TableAction
           :actions="[
             {
-              icon: 'clarity:info-standard-line',
-              tooltip: '查看用户详情',
-              onClick: handleView.bind(null, record),
-            },
-            {
               icon: 'clarity:note-edit-line',
-              tooltip: '编辑用户资料',
+              tooltip: '编辑客户资料',
               onClick: handleEdit.bind(null, record),
             },
             {
               icon: 'ant-design:delete-outlined',
               color: 'error',
-              tooltip: '删除此账号',
+              tooltip: '删除此客户',
               popConfirm: {
                 title: '是否确认删除',
                 confirm: handleDelete.bind(null, record),
@@ -35,90 +29,55 @@
   </PageWrapper>
 </template>
 <script setup lang="ts">
-import { reactive, onBeforeMount, onMounted, ref } from 'vue'
+import { reactive, onBeforeMount, ref } from 'vue'
 
 import { BasicTable, useTable, TableAction } from '@/components/Table'
-import { ContentHelper } from '@/api/contentHelper'
-import { getAccountList } from '@service/system'
-import {
-  ContentManagementServiceProxy,
-  ContentTypeDefinitionDto,
-} from '@service/api/app-service-proxies'
-
 import { PageWrapper } from '@/components/Page'
 // import DeptTree from './DeptTree.vue'
 import { useModal } from '@/components/Modal'
 import EditModal from './EditModal.vue'
 import { BasicColumn } from '@/components/Table'
 
-import { columns, searchFormSchema } from './data'
-import { useGo } from '@/hooks/web/usePage'
+import { searchFormSchema } from './data'
+// import { useGo } from '@/hooks/web/usePage'
 import { ContentTypeService } from '@/api/ContentTypeService'
+import VbenListService, { VbenListConfigModel } from '@/api/VbenListService'
 import {
-  excuteGraphqlQuery,
-  LuceneCommonQueryParams,
-} from '@service/eoc/GraphqlService'
+  ContentFieldsMapping,
+  ContentItemUpperCase,
+} from '@service/eoc/contentApi'
+
 // import { useQuery } from '@urql/vue'
-
-const helper = new ContentHelper()
-let dynamicSettings: ContentTypeDefinitionDto
-const dynamicColumns = reactive<BasicColumn[]>([])
-
-const fieldNames = [
-  'published',
-  'publishedUtc',
-  'name',
-  'modifiedUtc',
-  'custNum',
-  'displayText',
-]
-let listConfig = ref<any>({})
-let contentManagementService: ContentManagementServiceProxy
+// const go = useGo()
+const typeName = 'Customer'
+const dynamicColumns = ref<BasicColumn[]>([])
+const vbenListService = new VbenListService('CustomerList')
+const listConfig = ref<VbenListConfigModel>({} as VbenListConfigModel)
+const typeFields = ref<ContentFieldsMapping[]>([])
+const contentItem = ref<ContentItemUpperCase>({ ContentType: typeName })
+const contentTypeService = new ContentTypeService(typeName)
 onBeforeMount(async () => {
-  console.log(21111111111111)
-  contentManagementService = new ContentManagementServiceProxy()
-  dynamicSettings = await contentManagementService.getTypeDefinition({
-    name: 'Customer',
-    withSettings: true,
+  listConfig.value = await vbenListService.getListConfig()
+  dynamicColumns.value.push(...JSON.parse(listConfig.value.listMapping))
+  setProps({
+    columns: dynamicColumns.value,
+    api: getListData,
+    pagination: listConfig.value.enablePage,
+    showTableSetting: true,
   })
-  //TODO 从 API 读取 列定义
-  const listConfigs = await excuteGraphqlQuery({
-    query: `query MyQuery {
-  vbenList(first: 1, where: {displayText: "CustomerList"}) {
-    createdUtc
-    displayText
-    enablePage
-    fieldList
-    graphQL
-    listMapping
-    modifiedUtc
-    publishedUtc
-    queryMethod
-    queryName
-    targetContentType
-  }
-}
-`,
-  })
-  if (listConfigs) {
-    listConfig.value = listConfigs.data.vbenList[0]
-  }
-  console.log('listConfig11111111111111: ', listConfig.value)
-  const listMapping = JSON.parse(listConfig.value.listMapping)
-
-  // const gpCols = helper.getGraphqlTableCols(dynamicSettings, fieldNames)
-  dynamicColumns.push(...listMapping)
-  setProps({ columns: dynamicColumns, api: getList, showTableSetting: true })
   reload()
+  typeFields.value = await contentTypeService.getAllFields()
 })
 
-const go = useGo()
-const [registerModal, { openModal }] = useModal()
+async function getListData(params) {
+  return await vbenListService.getListData(params)
+}
+// const [registerModal, { openModal }] = useModal()
 const searchInfo = reactive<Recordable>({})
 
 const [registerTable, { setProps, reload }] = useTable({
   title: '客户列表',
-  rowKey: 'id',
+  rowKey: 'contentItemId',
   formConfig: {
     labelWidth: 120,
     schemas: searchFormSchema,
@@ -128,7 +87,6 @@ const [registerTable, { setProps, reload }] = useTable({
   pagination: true,
   bordered: true,
   handleSearchInfoFn(info) {
-    console.log('handleSearchInfoFn', info)
     return info
   },
   actionColumn: {
@@ -139,44 +97,32 @@ const [registerTable, { setProps, reload }] = useTable({
   },
 })
 
-async function getList(params) {
-  console.log('listConfig: ', listConfig.value)
-  const result = await excuteGraphqlQuery({
-    variables: {
-      from: (params.page - 1) * params.pageSize,
-      skip: params.pageSize,
-    },
-    query: `query MyQuery($params:String) {
-              crmCustomers(parameters:$params) {
-                items 
-                 ${listConfig.value.graphQL}                
-                total
-              }
-            }`,
-  })
-  return result.data.crmCustomers
-}
-
 function handleCreate() {
   // openModal(true, {
   //   isUpdate: false,
-  //   dynamicSettings,
+  //   contentTypeService,
+  //   contentItem: contentItem.value,
+  //   typeFields: typeFields.value,
   // })
 }
 
-function handleEdit(record: Recordable) {
-  console.log(record)
-  openModal(true, {
-    record,
-    isUpdate: true,
-  })
+async function handleEdit(record: Recordable) {
+  // console.log(record)
+  // contentItem.value = await contentTypeService.getContent(record.contentItemId)
+  // const editModel = contentTypeService.expandContentType(contentItem.value)
+  // openModal(true, {
+  //   record: editModel,
+  //   contentTypeService,
+  //   isUpdate: true,
+  //   typeFields: typeFields.value,
+  // })
 }
 
-function handleDelete(record: Recordable) {
-  console.log(record)
+async function handleDelete(record: Recordable) {
+  await contentTypeService.deletContent(record.contentItemId)
 }
 
-function handleView(record: Recordable) {
-  go('/system/account_detail/' + record.id)
-}
+// function handleView(record: Recordable) {
+//   go('/system/account_detail/' + record.id)
+// }
 </script>

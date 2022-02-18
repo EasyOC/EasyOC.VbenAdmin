@@ -4,7 +4,7 @@
 
 <script lang="ts" setup>
 import { defaultRequest, ocApi } from '@admin/service/request'
-import { onMounted, onBeforeUnmount, ref, unref } from 'vue'
+import { onMounted, onUnmounted, ref, unref } from 'vue'
 console.log('ces ')
 const props = defineProps({
   amisjson: {
@@ -58,7 +58,9 @@ onMounted(() => {
       },
       //
       // 用来实现地址栏更新
-      updateLocation: (to, replace) => {},
+      updateLocation: (to, replace) => {
+        console.log('to, replace: ', to, replace)
+      },
       //
       // 用来判断是否目标地址当前地址。
       // isCurrentUrl: url => {},
@@ -67,24 +69,35 @@ onMounted(() => {
       // copy: content => {},
       //
       // 用来实现通知
-      notify: (type, msg) => {},
+      notify: (type, msg) => {
+        console.log('type, msg: ', type, msg)
+      },
+
       //
       // 用来实现提示
-      alert: (content) => {},
+      alert: (content) => {
+        console.log('content: ', content)
+      },
+
       //
       // 用来实现确认框。
-      confirm: (content) => {},
+      confirm: (content) => {
+        console.log('content: ', content)
+      },
+
       //
       // 主题，默认是 default，还可以设置成 cxd 或 dark，但记得引用它们的 css，比如 sdk 目录下的 cxd.css
       theme: 'antd',
       //
       // 用来实现用户行为跟踪，详细请查看左侧高级中的说明
-      // tracker: (eventTracker) => {},
+      tracker: (eventTracker) => {
+        console.log('eventTracker: ', eventTracker)
+      },
     },
   )
   emit('amisMounted', amisScoped.value)
 })
-onBeforeUnmount(() => {
+onUnmounted(() => {
   amisScoped.value.unmount()
 })
 </script>
