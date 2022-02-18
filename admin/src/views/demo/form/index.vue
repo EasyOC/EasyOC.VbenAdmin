@@ -1,7 +1,17 @@
 <template>
   <div>
+    <a-button type="" @click="showCode" >显示代码</a-button>
+    <a-button type="" @click="copyCode" >复制代码</a-button>
     <Amis :amisjson="amisjson" @amisMounted="amisMounted" />
-    <CodeEditor @change="editorChange" v-model:value="editorJson" />
+    
+    <a-drawer
+      v-model:visible="codeVisible"
+      size="large"
+      title="代码"
+      placement="right"
+    >
+      <CodeEditor @change="editorChange" v-model:value="editorJson" />
+    </a-drawer>
   </div>
 </template>
 <script setup lang="ts">
@@ -66,6 +76,30 @@ const editorJson = ref<any>(`
 const amisjson = computed(() => {
   return parser.parse(editorJson.value)
 })
+
+let  codeVisible = ref(false);
+function showCode() {
+  codeVisible.value = true;
+}
+
+function copyCode() {
+  const code = editorJson.value;
+
+  const aux = document.createElement("input");
+  // 获取复制内容
+  const content = code;
+  // 设置元素内容
+  aux.setAttribute("value", content);
+  // 将元素插入页面进行调用
+  document.body.appendChild(aux);
+  // 复制内容
+  aux.select();
+  // 将内容复制到剪贴板
+  document.execCommand("copy");
+  // 删除创建元素
+  document.body.removeChild(aux);
+}
+
 // function editorDidMount(loadedEditor) {
 //   editor.value = loadedEditor
 //   // try {
