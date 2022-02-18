@@ -18,11 +18,8 @@ import { BasicDrawer, useDrawerInner } from '@/components/Drawer'
 
 import { getMenuList } from '@service/system'
 import { ContentFieldsMappingDto } from '@service/api/app-service-proxies'
-import { ContentHelper } from '@/api/contentHelper'
-import {
-  ContentItemUpperCase,
-  createOrUpdateContent,
-} from '@service/eoc/contentApi'
+import { ContentItemUpperCase } from '@service/eoc/contentApi'
+import { ContentTypeService } from '@/api/ContentTypeService'
 
 export default defineComponent({
   name: 'MenuDrawer',
@@ -31,7 +28,8 @@ export default defineComponent({
   setup(_, { emit }) {
     const typeName = 'VbenMenu'
     const isUpdate = ref(true)
-    const contentHelper = new ContentHelper()
+    const contentTypeService = new ContentTypeService(typeName)
+
     const contentItem = ref<ContentItemUpperCase>({ ContentType: typeName })
     const contentFields = ref<ContentFieldsMappingDto[]>([])
     const [
@@ -73,11 +71,7 @@ export default defineComponent({
         const values = await validate()
         setDrawerProps({ confirmLoading: true })
         // Save to Db
-        await contentHelper.saveContentItem(
-          values,
-          unref(contentFields),
-          unref(contentItem),
-        )
+        await contentTypeService.saveContentItem(values, unref(contentItem))
         console.log(values)
         closeDrawer()
         emit('success')

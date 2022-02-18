@@ -1,24 +1,28 @@
-import type {
-  FormProps,
-  FormActionType,
-  UseFormReturnType,
-  FormSchema,
-} from '@/components/Form'
+import type { FormProps, FormSchema } from '@/components/Form'
 import type { DynamicProps } from '@admin/types'
 import { schemas } from '@/views/demo/page/form/basic/data'
-import { ContentTypeDefinitionDto } from '@service/api/app-service-proxies'
 import { FieldType, ContentFieldsMapping } from '@service/eoc/contentApi'
 import { SelectProps } from 'ant-design-vue'
-import { onUnmounted } from 'vue'
+import { onMounted, ref } from 'vue'
+import { ContentTypeService } from '@/api/ContentTypeService'
 
-type Props = Partial<DynamicProps<FormProps>>
-export function useContentForm(props?: Props) {
-  function register(instance: FormActionType) {}
-
+type Props = Partial<
+  DynamicProps<FormProps> & {
+    contentType: string
+  }
+>
+// const contentTypeService = ref<ContentTypeService>()
+const fields = ref<ContentFieldsMapping[]>([])
+export function useContentForm(props: Props) {
+  const { contentType } = props
+  // function register(instance: FormActionType) {}
+  const contentTypeService = new ContentTypeService(contentType || '')
+  onMounted(async () => {
+    fields.value = await contentTypeService.getAllFields()
+  })
   const methods = {
-    buildSchema(contentType: ContentTypeDefinitionDto) {
-      fields = contentHelper.getAllFields(contentType)
-      fields.forEach((f) => {
+    buildSchema() {
+      fields.value.forEach((f) => {
         const s = {
           label: f.displayName,
           field: f.fieldName,
