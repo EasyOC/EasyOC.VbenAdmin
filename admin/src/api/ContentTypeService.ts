@@ -72,11 +72,10 @@ export class ContentTypeService {
 
   public expandContentType(
     _contentItem: ContentItemUpperCase,
-    fields: ContentFieldsMapping[] | ContentFieldsMappingDto[],
     // toCamelCase = false,
   ) {
     const expandedContentItem: any = {}
-    fields.forEach((f) => {
+    this.fields.forEach((f) => {
       expandedContentItem[f.fieldName] = eval(`_contentItem.${f.keyPath}`)
     })
     return expandedContentItem
@@ -84,12 +83,11 @@ export class ContentTypeService {
 
   public async saveContentItem(
     _formModel: any,
-    fields: ContentFieldsMapping[] | ContentFieldsMappingDto[],
     targetContentItem: ContentItemUpperCase = {},
     typeName?: string,
     beforeUpdate?: (contentItem: ContentItemUpperCase) => boolean,
   ) {
-    fields.forEach((f) => {
+    this.fields.forEach((f) => {
       {
         if (f.fieldName == 'DisplayText' && !f.partName) {
           targetContentItem.TitlePart = { Title: _formModel.DisplayText }

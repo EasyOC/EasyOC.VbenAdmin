@@ -157,17 +157,19 @@ import {
   getContent,
   ContentItemUpperCase,
   FieldType,
-  createOrUpdateContent,
 } from '@service/eoc/contentApi'
 import { ContentFieldsMapping } from '@service/eoc/contentApi'
 import MonacoEditor from '@/components/MonacoEditor/index.vue'
-import { ContentHelper } from '@/api/contentHelper'
+
 import { BasicColumn } from '@/components/Table'
 import { camelCase, deepMerge } from '@admin/utils'
 import { useMessage } from '@/hooks/web/useMessage'
 import { formSchema } from './data'
 import { getGlobalConfig } from '@/internal'
+import { ContentTypeService } from '@/api/ContentTypeService'
 const route = useRoute()
+const listManageName = 'VbenList'
+const contentTypeService = new ContentTypeService(listManageName)
 const loading = ref<boolean>(false)
 const go = useGo()
 const { apiUrl } = getGlobalConfig()
@@ -192,13 +194,10 @@ const model = ref({
   EnablePage: false,
 })
 
-const listManageName = 'VbenList'
-
 // 此处可以得到文档ID
 const documentId = ref(route.params?.id.toString())
 let contentItem = ref<ContentItemUpperCase>({ ContentType: listManageName })
 const typeManagement = new ContentManagementServiceProxy()
-const contentHelper = new ContentHelper()
 
 const [register, { setFieldsValue, submit, updateSchema, getFieldsValue }] =
   useForm({
@@ -232,16 +231,11 @@ const queryNames = ref<QueryDefDto[]>()
 const currentKey = ref('eidtList')
 onBeforeMount(async () => {
   loading.value = true
-  VbenListFields.value = await contentHelper.getAllFields(listManageName)
+  VbenListFields.value = await contentTypeService.getAllFields()
   if (documentId.value) {
     contentItem.value = await getContent(documentId.value)
-    model.value = contentHelper.expandContentType(
-      contentItem.value,
-      VbenListFields.value,
-    )
-    listAllFields.value = await contentHelper.getAllFields(
-      model.value.TargetContentType,
-    )
+    model.value = contentTypeService.expandContentType(contentItem.value)
+    listAllFields.value = await contentTypeService.getAllFields()
     console.log('model.value expandContentType', model.value)
   }
 
@@ -294,7 +288,7 @@ async function typeSelectionChanged(value?) {
     value = result.TargetContentType
   }
   if (value) {
-    listAllFields.value = await contentHelper.getAllFields(value)
+    listAllFields.value = await contentTypeService.getAllFields(true)
   }
   if (listAllFields.value) {
     console.log('listAllFields.value: ', listAllFields.value)
@@ -332,11 +326,7 @@ async function save() {
   const result = getFieldsValue()
   loading.value = true
   model.value = deepMerge(model.value, result)
-  await contentHelper.saveContentItem(
-    model.value,
-    VbenListFields.value,
-    contentItem.value,
-  )
+  await contentTypeService.saveContentItem(model.value, contentItem.value)
   createMessage.success('保存成功')
   loading.value = false
 }

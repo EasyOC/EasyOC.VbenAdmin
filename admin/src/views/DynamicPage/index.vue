@@ -52,11 +52,9 @@ import { BasicColumn } from '@/components/Table'
 
 import { columns, searchFormSchema } from './data'
 import { useGo } from '@/hooks/web/usePage'
+import { excuteGraphqlQuery } from '@service/eoc/GraphqlService'
 import { ContentTypeService } from '@/api/ContentTypeService'
-import {
-  excuteGraphqlQuery,
-  LuceneCommonQueryParams,
-} from '@service/eoc/GraphqlService'
+// const contentTypeService = new ContentTypeService(typeName)
 // import { useQuery } from '@urql/vue'
 
 const helper = new ContentHelper()

@@ -4,17 +4,16 @@
 
 <script lang="ts">
 import { BasicForm, FormSchema, useForm } from '@/components/Form/index'
-import { defineComponent, reactive, onMounted, onBeforeMount, ref } from 'vue'
+import { defineComponent, onMounted, onBeforeMount, ref } from 'vue'
 import { basicProps } from './props'
-import { ContentFieldsMappingDto } from '@service/api/app-service-proxies'
-import { ContentManagementServiceProxy } from '@service/api/app-service-proxies'
 import {
   getContent,
   FieldType,
   ContentItemUpperCase,
+  ContentFieldsMapping,
 } from '@service/eoc/contentApi'
-import { ContentHelper } from '@/api/contentHelper'
 import { SelectProps } from 'ant-design-vue'
+import { ContentTypeService } from '@/api/ContentTypeService'
 export default defineComponent({
   name: 'ContentForm',
   components: { BasicForm },
@@ -22,24 +21,21 @@ export default defineComponent({
   emits: ['advanced-change', 'reset', 'submit', 'register'],
   setup(props) {
     // const typeManager = new ContentManagementServiceProxy()
-    const contentHelper = new ContentHelper()
     const schemas = ref<FormSchema[]>([])
-
+    const contentTypeService = new ContentTypeService(props.typeName)
     let contentItem = ref<ContentItemUpperCase>({ ContentType: props.typeName })
     let formModel = ref({})
-    // let typeDef = reactive(new ContentTypeDefinitionDto())
-    let fields = ref<ContentFieldsMappingDto[]>([])
+    let fields = ref<ContentFieldsMapping[]>([])
 
     onBeforeMount(async () => {
-      fields.value = await contentHelper.getAllFields(props.typeName)
+      fields.value = await contentTypeService.getAllFields()
       schemas.value = buildSchema()
       await setProps({ schemas: schemas })
 
       if (props.contentItemId) {
         contentItem.value = await getContent(props.contentItemId?.toString())
-        ;(formModel.value = contentHelper.expandContentType(
+        ;(formModel.value = contentTypeService.expandContentType(
           contentItem.value,
-          fields.value,
         )),
           setFieldsValue(formModel)
       }
@@ -60,7 +56,7 @@ export default defineComponent({
     async function handleSubmit() {
       try {
         const data = await validate()
-        contentHelper.saveContentItem(formModel, fields.value, contentItem)
+        await contentTypeService.saveContentItem(formModel, contentItem)
         console.log(data)
       } catch (e) {
         console.log(e)
@@ -92,7 +88,7 @@ export default defineComponent({
 
     function updateTextFieldSchema(
       schema: FormSchema,
-      field: ContentFieldsMappingDto,
+      field: ContentFieldsMapping,
     ) {
       const settings = field.fieldSettings
 
