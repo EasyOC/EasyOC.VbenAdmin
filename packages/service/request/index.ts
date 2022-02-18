@@ -5,7 +5,6 @@
 import type { AxiosResponse } from 'axios'
 import type { RequestOptions, RequestResult } from '@admin/types'
 import type { AxiosTransform, CreateAxiosOptions } from './axiosTransform'
-import { useGlobSetting } from ''
 import { VAxios } from './Axios'
 import { checkStatus } from './checkStatus'
 import { context } from '../_bridge'

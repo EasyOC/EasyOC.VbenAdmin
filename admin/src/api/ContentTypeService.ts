@@ -1,9 +1,8 @@
-import { BasicColumn, FormSchema } from '@/components/Table'
+// import { BasicColumn, FormSchema } from '@/components/Table'
 import { useAppStore } from '@/store/app'
 import { parser } from 'xijs'
 import {
   ContentTypeDefinitionDto,
-  ContentPartDefinitionDto,
   ContentManagementServiceProxy,
   ContentFieldsMappingDto,
 } from '@service/api/app-service-proxies'
@@ -11,6 +10,8 @@ import {
   ContentFieldsMapping,
   ContentItemUpperCase,
   createOrUpdateContent,
+  deletContent,
+  getContent,
 } from '@service/eoc/contentApi'
 import { deepMerge } from '@admin/utils'
 export class GraphqlQuery {
@@ -19,15 +20,16 @@ export class GraphqlQuery {
 }
 
 export class ContentTypeService {
+  ContentManagementService = new ContentManagementServiceProxy()
   constructor(contentType: string) {
     this.ContentType = contentType
-    this.ContentManagementService = new ContentManagementServiceProxy()
   }
   public ContentType: string
+  public contentTypeDefinition!: ContentTypeDefinitionDto
   public ContentTypeDefinitionDto!: ContentTypeDefinitionDto
 
   public async loadType() {
-    this.ContentTypeDefinitionDto =
+    this.contentTypeDefinition =
       await this.ContentManagementService.getTypeDefinition({
         name: this.ContentType,
         withSettings: true,
@@ -41,35 +43,39 @@ export class ContentTypeService {
     return graphQLQuery
   }
 
-  public ContentManagementService: ContentManagementServiceProxy
-
   private fields: ContentFieldsMapping[] = []
 
-  public async getAllFields(typeName: string, reload = false) {
+  public async getAllFields(reload = false) {
     //字段全局缓存
     const appStore = useAppStore()
-    this.fields = appStore.typeFieldCache[typeName]
+    this.fields = appStore.typeFieldCache[this.ContentType]
 
     if (reload || !this.fields || this.fields.length == 0) {
       this.fields = (
-        await new ContentManagementServiceProxy().getFields(typeName)
+        await new ContentManagementServiceProxy().getFields(this.ContentType)
       ).map((x) => deepMerge(new ContentFieldsMapping(), x))
-      appStore.typeFieldCache[typeName] = this.fields
-      console.log(`typeName:${typeName},缓存已更新`, this.fields)
+      appStore.typeFieldCache[this.ContentType] = this.fields
+      console.log(`typeName:${this.ContentType},缓存已更新`, this.fields)
       // appStore.updateTypeFieldCache(typeName, this.fields)
     } else {
-      console.log(`typeName:${typeName},已从缓存读取`, this.fields)
+      console.log(`typeName:${this.ContentType},已从缓存读取`, this.fields)
     }
     return this.fields
   }
 
+  public async getContent(contentItemId: string) {
+    return await getContent(contentItemId)
+  }
+  public async deletContent(contentItemId: string) {
+    return await deletContent(contentItemId)
+  }
+
   public expandContentType(
     _contentItem: ContentItemUpperCase,
-    fields: ContentFieldsMapping[] | ContentFieldsMappingDto[],
     // toCamelCase = false,
   ) {
     const expandedContentItem: any = {}
-    fields.forEach((f) => {
+    this.fields.forEach((f) => {
       expandedContentItem[f.fieldName] = eval(`_contentItem.${f.keyPath}`)
     })
     return expandedContentItem
@@ -77,12 +83,11 @@ export class ContentTypeService {
 
   public async saveContentItem(
     _formModel: any,
-    fields: ContentFieldsMapping[] | ContentFieldsMappingDto[],
     targetContentItem: ContentItemUpperCase = {},
     typeName?: string,
     beforeUpdate?: (contentItem: ContentItemUpperCase) => boolean,
   ) {
-    fields.forEach((f) => {
+    this.fields.forEach((f) => {
       {
         if (f.fieldName == 'DisplayText' && !f.partName) {
           targetContentItem.TitlePart = { Title: _formModel.DisplayText }

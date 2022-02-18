@@ -23,6 +23,7 @@ import { h } from 'vue'
 interface UserState {
   userInfo: Nullable<UserInfo>
   token?: string
+  timeout?:Date
   roleList: RoleEnum[]
   sessionTimeout?: boolean
   lastUpdateTime: number
@@ -33,7 +34,7 @@ export const useUserStore = defineStore({
   persist: {
     strategies: [
       {
-        paths: ['userInfo', 'token', 'roleList'],
+        paths: ['userInfo', 'token', 'roleList','timeout'],
       },
     ],
   },
@@ -42,6 +43,8 @@ export const useUserStore = defineStore({
     userInfo: null,
     // token
     token: undefined,
+    //timeout
+    timeout: undefined,
     // roleList
     roleList: [],
     // Whether the login expired
@@ -54,7 +57,13 @@ export const useUserStore = defineStore({
       return this.userInfo || ({} as UserInfo)
     },
     getToken(): string {
+      if(this.token) {
+        window.localStorage.setItem('token', this.token)
+      }
       return this.token as string
+    },
+    getTimeout(): Date {
+      return this.timeout as Date
     },
     getRoleList(): RoleEnum[] {
       return this.roleList.length > 0 ? this.roleList : []
@@ -69,6 +78,11 @@ export const useUserStore = defineStore({
   actions: {
     setToken(info: string | undefined) {
       this.token = info ? info : '' // for null or undefined value
+      if(info) window.localStorage.setItem('token', info)
+    },
+    setTimeout(timeout: Date | undefined) {
+      this.timeout = timeout;
+      if(timeout) window.localStorage.setItem('timeout', timeout.toString())
     },
     setRoleList(roleList: RoleEnum[]) {
       this.roleList = roleList
@@ -99,19 +113,28 @@ export const useUserStore = defineStore({
         const { goHome = true, mode, ...loginParams } = params
 
         const data = await loginApi(loginParams, mode)
-        const { access_token } = data
+        const { access_token, expires_in } = data
 
         // save token
         this.setToken(access_token)
+        this.setTimeout(new Date(new Date().getTime() + expires_in * 1000))
         return this.afterLoginAction(goHome)
       } catch (error) {
         return Promise.reject(error)
       }
     },
     async afterLoginAction(goHome?: boolean): Promise<UserInfo | null> {
-      if (!this.getToken) {
+      if (!(this.getToken && this.getTimeout)) {
+        this.logout(true)
         return null
       }
+
+      
+      if(this.getTimeout<new Date()) {
+        this.logout(true)
+        return null;
+      }
+
       // get user info
       const userInfo = await this.getUserInfoAction()
 
@@ -135,15 +158,20 @@ export const useUserStore = defineStore({
     },
 
     async getUserInfoAction(): Promise<UserInfo | null> {
-      if (!this.getToken) {
+      if (!(this.getToken && this.getTimeout)) {
+        this.logout(true)
         return null
+      }
+
+      if(this.getTimeout<new Date()) {
+        this.logout(true)
+        return null;
       }
 
       // const userInfo = await getUserInfo()
       const userInfo = {} as GetUserInfoModel //await getUserInfo();
 
       const data = decodeJwt(this.getToken)
-      console.log(data, 'jwtdata')
       if (!data) {
         throw Error('Verification failed, please Login again.')
       }
@@ -180,9 +208,12 @@ export const useUserStore = defineStore({
       if (this.getToken) {
         await doLogout().catch(() => {
           console.log('注销Token失败')
+        }).finally(() => {
+          this.setTimeout(undefined);
         })
       }
       this.setToken(undefined)
+      this.setTimeout(undefined)
       this.setSessionTimeout(false)
       this.setUserInfo(null)
       goLogin && router.push(PageEnum.BASE_LOGIN)

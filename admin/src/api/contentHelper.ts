@@ -13,7 +13,7 @@ import {
   ContentManagementServiceProxy,
 } from '@service/api/app-service-proxies'
 import { t } from '@admin/locale'
-import { camelCase, deepMerge } from '@admin/utils'
+import { camelCase, deepMerge, isObject } from '@admin/utils'
 
 export class ContentHelper {
   // public getAllFields(
@@ -23,7 +23,10 @@ export class ContentHelper {
   // }
 
   public async getAllFields(typeName: string) {
-    return await new ContentManagementServiceProxy().getFields(typeName)
+    return deepMerge(
+      [],
+      await await new ContentManagementServiceProxy().getFields(typeName),
+    ) as ContentFieldsMapping[]
   }
   public expandContentType(
     _contentItem: ContentItemUpperCase,
@@ -31,9 +34,15 @@ export class ContentHelper {
     // toCamelCase = false,
   ) {
     const expandedContentItem: any = {}
+    for (const key in _contentItem) {
+      if (!isObject(_contentItem[key])) {
+        expandedContentItem[key] = _contentItem[key]
+      }
+    }
     fields.forEach((f) => {
       expandedContentItem[f.fieldName] = eval(`_contentItem.${f.keyPath}`)
     })
+    console.log('expandedContentItem: ', expandedContentItem)
     return expandedContentItem
   }
 

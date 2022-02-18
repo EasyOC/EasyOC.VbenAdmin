@@ -1,10 +1,18 @@
 <template>
   <PageWrapper :title="getTitle" @back="goBack">
-    <template #extra>
-      <a-button type="primary" @click="save" :loading="loading">
+    <template #rightFooter>
+      <a-button
+        type="primary"
+        @click="save"
+        :disabled="loading"
+        :loading="loading"
+      >
         保存
       </a-button>
-      <a-button type="primary" :loading="loading" danger> 删除列表</a-button>
+
+      <a-button type="primary" :loading="loading" :disabled="loading" danger>
+        删除列表</a-button
+      >
     </template>
     <template #footer>
       <BasicForm @register="register">
@@ -44,9 +52,9 @@
             <a-card title="字段列表" :bordered="false" size="small">
               <template #extra>
                 <a-button size="small" @click="typeSelectionChanged()"
-                  >刷新架构</a-button
+                  >刷新列表</a-button
                 >
-                <a-button size="small" @click="() => 1 + 1">添加字段</a-button>
+                <!-- <a-button size="small" @click="() => 1 + 1">添加字段</a-button> -->
               </template>
               <!--   <a-button @click="delCol(index)" type="link">
                         <DeleteOutlined style="color: #ed6f6f" />
@@ -57,7 +65,7 @@
               >
                 <div
                   class="list-group-item borderGray m-1 p-2 rounded-md"
-                  v-for="(element, index) in listFields"
+                  v-for="(element, index) in listAllFields"
                   :key="element.keyPath || ''"
                 >
                   <div>
@@ -85,11 +93,7 @@
               <template #extra>
                 <a-button
                   size="small"
-                  @click="
-                    monacoEditor?.value
-                      .getAction(['editor.action.formatDocument'])
-                      ._run()
-                  "
+                  @click="formatSchema"
                   title="快捷键：shift+alt+f"
                   >格式化</a-button
                 >
@@ -113,7 +117,7 @@
                 :value="model.GraphQL"
                 language="GraphQL"
                 height="500"
-                @editorUpdated="(value) => (model.GraphQL = value)"
+                @change="(value) => (model.GraphQL = value)"
               />
             </a-card>
           </a-col>
@@ -153,20 +157,24 @@ import {
   getContent,
   ContentItemUpperCase,
   FieldType,
-  createOrUpdateContent,
 } from '@service/eoc/contentApi'
 import { ContentFieldsMapping } from '@service/eoc/contentApi'
 import MonacoEditor from '@/components/MonacoEditor/index.vue'
-import { ContentHelper } from '@/api/contentHelper'
+
 import { BasicColumn } from '@/components/Table'
 import { camelCase, deepMerge } from '@admin/utils'
+import { useMessage } from '@/hooks/web/useMessage'
 import { formSchema } from './data'
 import { getGlobalConfig } from '@/internal'
+import { ContentTypeService } from '@/api/ContentTypeService'
 const route = useRoute()
+const listManageName = 'VbenList'
+const contentTypeService = new ContentTypeService(listManageName)
 const loading = ref<boolean>(false)
 const go = useGo()
 const { apiUrl } = getGlobalConfig()
 const GraphQLNotSupportFields = ['GeoPointField']
+const { createMessage } = useMessage()
 
 //所有字段
 const listAllFields = ref<ContentFieldsMapping[]>([])
@@ -186,13 +194,10 @@ const model = ref({
   EnablePage: false,
 })
 
-const listManageName = 'VbenList'
-
 // 此处可以得到文档ID
-const documentId = ref(route.params?.id)
+const documentId = ref(route.params?.id.toString())
 let contentItem = ref<ContentItemUpperCase>({ ContentType: listManageName })
 const typeManagement = new ContentManagementServiceProxy()
-const contentHelper = new ContentHelper()
 
 const [register, { setFieldsValue, submit, updateSchema, getFieldsValue }] =
   useForm({
@@ -226,16 +231,11 @@ const queryNames = ref<QueryDefDto[]>()
 const currentKey = ref('eidtList')
 onBeforeMount(async () => {
   loading.value = true
-  VbenListFields.value = await getAllFileds(listManageName)
+  VbenListFields.value = await contentTypeService.getAllFields()
   if (documentId.value) {
-    contentItem.value = await getContent(documentId.value.toString())
-    model.value = contentHelper.expandContentType(
-      contentItem.value,
-      VbenListFields.value,
-    )
-    if (model.value.FieldList) {
-      listFields.value = JSON.parse(model.value.FieldList)
-    }
+    contentItem.value = await getContent(documentId.value)
+    model.value = contentTypeService.expandContentType(contentItem.value)
+    listAllFields.value = await contentTypeService.getAllFields()
     console.log('model.value expandContentType', model.value)
   }
 
@@ -284,13 +284,15 @@ onMounted(() => {
 
 async function typeSelectionChanged(value?) {
   if (!value) {
-    value = unref(model).TargetContentType
+    const result = getFieldsValue()
+    value = result.TargetContentType
   }
   if (value) {
-    listAllFields.value = await getAllFileds(value)
+    listAllFields.value = await contentTypeService.getAllFields(true)
   }
   if (listAllFields.value) {
-    listFields.value = unref(listFields).filter(
+    console.log('listAllFields.value: ', listAllFields.value)
+    listFields.value = unref(listAllFields).filter(
       (x) => !GraphQLNotSupportFields.includes(x.fieldType),
     )
     const jobj = listFields.value.map((field) => buildField(field))
@@ -300,16 +302,9 @@ async function typeSelectionChanged(value?) {
   }
 }
 
-async function getAllFileds(typeName: string) {
-  return deepMerge(
-    [],
-    await typeManagement.getFields(typeName),
-  ) as ContentFieldsMapping[]
-}
-
 const getTitle = computed(() => {
   if (unref(contentItem).DisplayText) {
-    return `编辑：${contentItem.value.DisplayText}`
+    return `编辑：${unref(contentItem).DisplayText}`
   } else {
     return '新建列表'
   }
@@ -327,22 +322,12 @@ function editorUpdated(value) {
     console.log(error)
   }
 }
-// function delCol(index) {
-//   listFields.value?.splice(index, 1)
-// }
-// function showAdd() {}
 async function save() {
-  await submit()
   const result = getFieldsValue()
   loading.value = true
   model.value = deepMerge(model.value, result)
-  console.log('getFieldsValue result: ', model.value)
-  contentHelper.saveContentItem(
-    model.value,
-    VbenListFields.value,
-    contentItem.value,
-  )
-
+  await contentTypeService.saveContentItem(model.value, contentItem.value)
+  createMessage.success('保存成功')
   loading.value = false
 }
 // 页面左侧点击返回链接时的操作
@@ -373,8 +358,19 @@ function buildField(field: ContentFieldsMapping) {
           'displayText',
         ]
         break
+      case FieldType.DateTimefield:
+        newobj.dataIndex = camelCase(field.fieldName)
+        newobj.format = 'date|YYYY-MM-DD HH:mm:ss' //[camelCase(field.fieldName), 'displayValue']
+        break
+      case FieldType.DateField:
+        newobj.dataIndex = camelCase(field.fieldName)
+        newobj.format = 'date|YYYY-MM-DD' //[camelCase(field.fieldName), 'displayValue']
+        break
       default:
         newobj.dataIndex = camelCase(field.fieldName)
+    }
+    if (field.fieldName.endsWith('Utc') && !field.partName) {
+      newobj.format = 'date|utc|YYYY-MM-DD HH:mm:ss'
     }
     const formValue = getFieldsValue()
     let isPart = false
@@ -434,6 +430,8 @@ function buildGraphql(fields: ContentFieldsMapping[]) {
               userProfiles: { displayText: false },
             }
             break
+          case FieldType.HtmlField:
+            break
           default:
             tempPart[fieldName] = false
         }
@@ -446,7 +444,9 @@ function buildGraphql(fields: ContentFieldsMapping[]) {
   )
   return tempGraphqlStr
 }
-
+function formatSchema() {
+  monacoEditor?.value.getAction(['editor.action.formatDocument'])._run()
+}
 async function queryNameChanged(name) {
   model.value.EnablePage = false
   const current = queryNames.value?.find((x) => camelCase(x.name || '') == name)

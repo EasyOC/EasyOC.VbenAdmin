@@ -2,7 +2,7 @@
 
 服务端：https://github.com/EasyOC/EasyOC
 
-QQ群：51387245
+QQ群：877196442
 ## 框架
 
 - [x] oidc password 授权登录

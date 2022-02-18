@@ -35,7 +35,10 @@ const initDirective = async () => {
 const initService = async () => {
   const { createMessage, createErrorModal } = useMessage()
   const { urlPrefix, apiUrl, uploadUrl, clientId, scopes, stsAuthority } =
-    getGlobalConfig()
+  getGlobalConfig()
+
+  window.localStorage.setItem('apiUrl', apiUrl)
+
   const { t } = useI18n()
   await initServiceModule({
     urlPrefix,
