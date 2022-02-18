@@ -11,9 +11,23 @@ export default function(): JSX.Element {
         {},
         {
             fetcher: ({url, method, data, config}: any) => {
+
+                // alert(11111)
+                // console.log('url: ', url);
+                // console.log('method: ', method);
+                // console.log('data: ', data);
+                // console.log('config: ', config);
                 config = config || {};
                 config.headers = config.headers || {};
                 config.withCredentials = true;
+
+                const token = window.localStorage.getItem('token');
+                const timeout = window.localStorage.getItem('timeout');
+                if ((!(token && timeout)) || new Date(timeout) <new Date()) {
+                    window.location.href = '/login';
+                    return;
+                }
+                config.headers.Authorization = 'Bearer ' + token;
 
                 if (method !== 'post' && method !== 'put' && method !== 'patch') {
                     if (data) {
@@ -46,7 +60,7 @@ export default function(): JSX.Element {
             confirm,
             copy: (contents: string, options: any = {}) => {
                 const ret = copy(contents, options);
-                ret && (!options || options.shutup !== true) && toast.info('内容已拷贝到剪切板');
+                ret && (!options || options.shutup !== true) && toast.info('内容已拷贝到剪切板1111');
                 return ret;
             }
         }
