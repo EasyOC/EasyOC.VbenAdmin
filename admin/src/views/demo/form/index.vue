@@ -17,21 +17,9 @@ import { Amis } from '@/components/Amis'
 import { parser } from 'xijs'
 
 const editorJson = ref<any>(`
-    {
-  "type": "form", 
-  "api": {
-    "method": "post",
-    "url": "/connect/token",
-    "dataType": "form-data",
-    "replaceData": false,
-    "data": {
-      "grant_type": "password",
-      "client_id": "vue_client_app",
-      "scopes": "openid profile roles api permissions"
-    }
-  },
+   {
+  "type": "form",
   "title": "常规模式",
-  "mode": "normal",
   "body": [
     {
       "type": "input-text",
@@ -52,13 +40,32 @@ const editorJson = ref<any>(`
     {
       "type": "checkbox",
       "name": "rememberMe",
-      "label": "记住登录"
+      "option": "记住登录",
+      "value": false
     },
     {
       "type": "submit",
       "label": "登录"
     }
-  ]
+  ],
+  "api": {
+    "method": "post",
+    "url": "/connect/token",
+    "dataType": "form-data",
+    "headers": {
+      "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
+    },
+    "replaceData": false,
+    "data": {
+      "grant_type": "password",
+      "client_id": "vue_client_app",
+      "scopes": "openid profile roles api permissions",
+      "username": "`+'${username}'+`",
+      "password": "`+'${password}'+`",
+      "rememberMe": "`+'${rememberMe}'+`"
+    }
+  },
+  "mode": "normal"
 }`)
 // const editor = ref<any>(null)
 const amisjson = computed(() => {
