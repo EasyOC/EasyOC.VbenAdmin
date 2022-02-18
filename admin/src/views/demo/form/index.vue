@@ -1,20 +1,13 @@
 <template>
   <div>
-    <a-button type="" @click="showCode" >显示代码</a-button>
-    <a-button type="" @click="copyCode" >复制代码</a-button>
+    <a-button type @click="showCode" v-if="v1" >显示代码</a-button>
+    <a-button type @click="copyCode">复制代码</a-button>
     <Amis :amisjson="amisjson" @amisMounted="amisMounted" />
-    
-    <a-drawer
-      v-model:visible="codeVisible"
-      size="large"
-      title="代码"
-      placement="right"
-    >
+    <Amis :amisjson="amisjson1" @amisMounted="amisMounted" />
+
+    <a-drawer v-model:visible="codeVisible" size="large" title="代码" placement="right">
       <!-- <CodeEditor @change="editorChange" v-model:value="editorJson" /> -->
-      <MonacoEditor
-        v-model:value="editorJson"
-        @change="editorChange"
-      />
+      <MonacoEditor v-model:value="editorJson" @change="editorChange" />
     </a-drawer>
   </div>
 </template>
@@ -24,7 +17,7 @@ import MonacoEditor from '@/components/MonacoEditor/index.vue'
 import { CodeEditor } from '@/components/CodeEditor'
 import { Amis } from '@/components/Amis'
 import { parser } from 'xijs'
-
+// window.enableAMISDebug = true
 const editorJson = ref<any>(`
    {
   "type": "form",
@@ -69,9 +62,9 @@ const editorJson = ref<any>(`
       "grant_type": "password",
       "client_id": "vue_client_app",
       "scopes": "openid profile roles api permissions",
-      "username": "`+'${username}'+`",
-      "password": "`+'${password}'+`",
-      "rememberMe": "`+'${rememberMe}'+`"
+      "username": "`+ '${username}' + `",
+      "password": "`+ '${password}' + `",
+      "rememberMe": "`+ '${rememberMe}' + `"
     }
   },
   "mode": "normal"
@@ -81,12 +74,27 @@ const amisjson = computed(() => {
   return parser.parse(editorJson.value)
 })
 
-let  codeVisible = ref(false);
+
+
+const amisjson1 = computed(() => {
+  return {
+    type: "button",
+    label: "按钮",
+    actionType: "",
+    onClick: copyCode
+  }
+})
+
+
+const codeVisible = ref(false);
+const v1 = ref(false);
 function showCode() {
   codeVisible.value = true;
 }
 
 function copyCode() {
+  v1.value = !v1.value;
+
   const code = editorJson.value;
 
   const aux = document.createElement("input");
