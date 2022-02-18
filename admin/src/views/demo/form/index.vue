@@ -1,6 +1,8 @@
 <template>
-  <Amis :amisjson="amisjson" @amisMounted="amisMounted" />
-  <!-- <CodeEditor @change="editorChange" v-model:value="editorJson" /> -->
+  <div>
+    <Amis :amisjson="amisjson" @amisMounted="amisMounted" />
+    <CodeEditor @change="editorChange" v-model:value="editorJson" />
+  </div>
 </template>
 <script setup lang="ts">
 import { computed, ref } from 'vue'
@@ -65,7 +67,7 @@ const amisjson = computed(() => {
 // }
 function editorChange() {
   // editorJson.value = value
-  amisScoped.value.updateProps(amisjson.value)
+  // amisScoped.value.updateProps(amisjson.value)
 }
 const amisScoped = ref<any>(null)
 function amisMounted(amisScope) {
