@@ -10,13 +10,17 @@
       title="代码"
       placement="right"
     >
-      <CodeEditor @change="editorChange" v-model:value="editorJson" />
+      <!-- <CodeEditor @change="editorChange" v-model:value="editorJson" /> -->
+      <MonacoEditor
+        v-model:value="editorJson"
+        @change="editorChange"
+      />
     </a-drawer>
   </div>
 </template>
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-// import MonacoEditor from '@/components/MonacoEditor/index.vue'
+import MonacoEditor from '@/components/MonacoEditor/index.vue'
 import { CodeEditor } from '@/components/CodeEditor'
 import { Amis } from '@/components/Amis'
 import { parser } from 'xijs'
@@ -106,9 +110,9 @@ function copyCode() {
 //   //   editor.value.setValue(editorJson.value)
 //   // } catch (error) {}
 // }
-function editorChange() {
-  // editorJson.value = value
-  // amisScoped.value.updateProps(amisjson.value)
+function editorChange(value) {
+  editorJson.value = value
+  amisScoped.value.updateProps(amisjson.value)
 }
 const amisScoped = ref<any>(null)
 function amisMounted(amisScope) {
