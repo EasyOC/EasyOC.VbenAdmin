@@ -35,6 +35,7 @@ onMounted(() => {
       // 下面是一些可选的外部控制函数
       // TODO 在 sdk 中可以不传，用来实现 ajax 请求，但在 npm 中这是必须提供的
       fetcher: async (config) => {
+        config.data = Object.assign({}, config.body);
         console.log('config ', config)
         return await ocApi.request(config)
       },
