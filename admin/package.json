@@ -39,6 +39,7 @@
     "@logicflow/extension": "^1.0.1",
     "@zxcvbn-ts/core": "^1.2.0",
     "amis": "^1.6.4",
+    "amis-editor": "^4.0.2-beta.4",
     "ant-design-vue": "3.0.0-beta.5",
     "codemirror": "^5.65.0",
     "copy-to-clipboard": "^3.3.1",
