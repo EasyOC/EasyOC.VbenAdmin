@@ -1,7 +1,7 @@
 <template>
   <div>
     <Amis :amisjson="amisjson" @amisMounted="amisMounted" />
-    <!-- <CodeEditor @change="editorChange" v-model:value="editorJson" /> -->、
+    <!-- <CodeEditor @change="editorChange" v-model:value="editorJson" /> -->
     <MonacoEditor
       v-model:value="editorJson"
       @change="editorChange"
@@ -16,7 +16,8 @@ import { CodeEditor } from '@/components/CodeEditor'
 import { Amis } from '@/components/Amis'
 import { parser } from 'xijs'
 
-const editorJson = ref<any>(`
+const editorJson = ref<any>(
+  `
    {
   "type": "form",
   "title": "常规模式",
@@ -60,13 +61,20 @@ const editorJson = ref<any>(`
       "grant_type": "password",
       "client_id": "vue_client_app",
       "scopes": "openid profile roles api permissions",
-      "username": "`+'${username}'+`",
-      "password": "`+'${password}'+`",
-      "rememberMe": "`+'${rememberMe}'+`"
+      "username": "` +
+    '${username}' +
+    `",
+      "password": "` +
+    '${password}' +
+    `",
+      "rememberMe": "` +
+    '${rememberMe}' +
+    `"
     }
   },
   "mode": "normal"
-}`)
+}`,
+)
 // const editor = ref<any>(null)
 const amisjson = computed(() => {
   return parser.parse(editorJson.value)

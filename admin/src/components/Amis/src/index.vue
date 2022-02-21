@@ -35,7 +35,7 @@ onMounted(() => {
       // 下面是一些可选的外部控制函数
       // TODO 在 sdk 中可以不传，用来实现 ajax 请求，但在 npm 中这是必须提供的
       fetcher: async (config) => {
-        config.data = Object.assign({}, config.body);
+        config.data = Object.assign({}, config.body)
         console.log('config ', config)
         return await ocApi.request(config)
       },
@@ -81,9 +81,10 @@ onMounted(() => {
 
       //
       // 用来实现确认框。
-      confirm: (content) => {
-        console.log('content: ', content)
-      },
+      // confirm: (content) => {
+      //   console.log('content: ', content)
+      //   return window.confirm(content)
+      // },
 
       //
       // 主题，默认是 default，还可以设置成 cxd 或 dark，但记得引用它们的 css，比如 sdk 目录下的 cxd.css
