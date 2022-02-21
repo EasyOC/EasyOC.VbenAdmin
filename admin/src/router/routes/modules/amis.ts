@@ -33,6 +33,16 @@ const amis: RouteRecordItem = {
         title: t('routes.amis.amisEditor'),
       },
     },
+    {
+      path: 'index1',
+      name: 'amisIndex',
+      component: () => import('@/views/amis/index.vue'),
+      meta: {
+        isLink: true,
+        // hideMenu: true,
+        title: t('routes.amis.amisIndex'),
+      },
+    },
   ],
 }
 

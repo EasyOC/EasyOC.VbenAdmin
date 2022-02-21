@@ -6,6 +6,7 @@
     <Amis :amisjson="amisjson1" @amisMounted="amisMounted" />
 
     <a-drawer v-model:visible="codeVisible" size="large" title="代码" placement="right">
+      <a-button size="small" @click="formatSchema" title="快捷键：shift+alt+f">格式化</a-button> 
       <!-- <CodeEditor @change="editorChange" v-model:value="editorJson" /> -->
       <MonacoEditor v-model:value="editorJson" @change="editorChange" />
     </a-drawer>
@@ -14,7 +15,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import MonacoEditor from '@/components/MonacoEditor/index.vue'
-import { CodeEditor } from '@/components/CodeEditor'
+// import { CodeEditor } from '@/components/CodeEditor'
 import { Amis } from '@/components/Amis'
 import { parser } from 'xijs'
 // window.enableAMISDebug = true
@@ -81,20 +82,18 @@ const amisjson1 = computed(() => {
     type: "button",
     label: "按钮",
     actionType: "",
-    onClick: copyCode
+    onClick: showCode()
   }
 })
 
 
 const codeVisible = ref(false);
-const v1 = ref(false);
+const v1 = ref(true);
 function showCode() {
   codeVisible.value = true;
 }
 
 function copyCode() {
-  v1.value = !v1.value;
-
   const code = editorJson.value;
 
   const aux = document.createElement("input");
@@ -122,6 +121,11 @@ function editorChange(value) {
   editorJson.value = value
   amisScoped.value.updateProps(amisjson.value)
 }
+
+function formatSchema() {
+  amisScoped?.value.getAction(['editor.action.formatDocument'])._run()
+}
+
 const amisScoped = ref<any>(null)
 function amisMounted(amisScope) {
   amisScoped.value = amisScope
