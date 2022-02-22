@@ -1,18 +1,9 @@
 <template>
   <PageWrapper :title="getTitle" @back="goBack">
     <template #rightFooter>
-      <a-button
-        type="primary"
-        @click="save"
-        :disabled="loading"
-        :loading="loading"
-      >
-        保存
-      </a-button>
+      <a-button type="primary" @click="save" :disabled="loading" :loading="loading">保存</a-button>
 
-      <a-button type="primary" :loading="loading" :disabled="loading" danger>
-        删除列表</a-button
-      >
+      <a-button type="primary" :loading="loading" :disabled="loading" danger>删除列表</a-button>
     </template>
     <template #footer>
       <BasicForm @register="register">
@@ -51,14 +42,12 @@
           <a-col style="width: 400px">
             <a-card title="字段列表" :bordered="false" size="small">
               <template #extra>
-                <a-button size="small" @click="typeSelectionChanged()"
-                  >刷新列表</a-button
-                >
+                <a-button size="small" @click="typeSelectionChanged()">刷新列表</a-button>
                 <!-- <a-button size="small" @click="() => 1 + 1">添加字段</a-button> -->
               </template>
               <!--   <a-button @click="delCol(index)" type="link">
                         <DeleteOutlined style="color: #ed6f6f" />
-                      </a-button> -->
+              </a-button>-->
               <draggable
                 class="dragArea list-group w-full"
                 style="height: 500px; overflow-y: scroll"
@@ -72,13 +61,12 @@
                     <b>
                       {{ element.displayName }}
                       <a-button @click="addField(element)" type="link">
-                        <swap-right-outlined
-                          style="color: rgb(50, 150, 231); font-size: large"
-                        /> </a-button
-                    ></b>
+                        <swap-right-outlined style="color: rgb(50, 150, 231); font-size: large" />
+                      </a-button>
+                    </b>
                     <!-- <span
                       ><a-switch v-model="element.visible">显示</a-switch></span
-                    > -->
+                    >-->
                   </div>
                   <p style="padding-left: 5px; color: gray">
                     {{ element.partName }} | {{ element.fieldName }} |
@@ -91,12 +79,7 @@
           <a-col class="w-3/8">
             <a-card title="字段映射" :bordered="false" size="small">
               <template #extra>
-                <a-button
-                  size="small"
-                  @click="formatSchema"
-                  title="快捷键：shift+alt+f"
-                  >格式化</a-button
-                >
+                <a-button size="small" @click="formatSchema" title="快捷键：shift+alt+f">格式化</a-button>
               </template>
               <MonacoEditor
                 language="json"
@@ -104,14 +87,13 @@
                 @editorDidMount="editorDidMounted"
                 @change="editorUpdated"
                 height="500"
-            /></a-card>
+              />
+            </a-card>
           </a-col>
           <a-col class="w-2/8">
             <a-card title="GraphQL" :bordered="false" size="small">
               <template #extra>
-                <a :href="`${apiUrl}/Admin/GraphQL`" target="AdminGraphQL"
-                  >在设计器中打开</a
-                >
+                <a :href="`${apiUrl}/Admin/GraphQL`" target="AdminGraphQL">在设计器中打开</a>
               </template>
               <MonacoEditor
                 :value="model.GraphQL"
@@ -336,7 +318,47 @@ function goBack() {
   go(route.meta.currentActiveMenu)
 }
 
+function buildAmisField(field: ContentFieldsMapping) {
+  const newobj: any = {
+    label: field.displayName,
+    name: camelCase(field.fieldName),
+    type: "text"
+  }
+  if (model.value.QueryMethod == 'Graphql') {
+    switch (field.fieldType) {
+      case FieldType.ContentPickerField:
+        newobj.name = `${camelCase(field.fieldName)
+          }.contentItems[0].displayText`
+
+        break
+      case FieldType.UserPickerField:
+        newobj.name = `${camelCase(field.fieldName)
+          }.userProfiles[0].displayText`
+        break
+      case FieldType.DateTimefield:
+        newobj.name = camelCase(field.fieldName)
+        newobj.format = 'YYYY-MM-DD HH:mm:ss' //[camelCase(field.fieldName), 'displayValue']
+        break
+      case FieldType.DateField:
+        newobj.name = camelCase(field.fieldName)
+        newobj.format = 'YYYY-MM-DD' //[camelCase(field.fieldName), 'displayValue']
+        break
+      default:
+        newobj.name = camelCase(field.fieldName)
+    }
+    if (field.fieldName.endsWith('Utc') && !field.partName) {
+      newobj.format = 'YYYY-MM-DD HH:mm'
+    }
+
+  }
+  console.log('newobj: ', newobj)
+  return newobj
+}
+
+
 function buildField(field: ContentFieldsMapping) {
+
+  return buildAmisField(field);
   const newobj: BasicColumn = {
     title: field.displayName,
   }
