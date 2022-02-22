@@ -119,6 +119,7 @@ export class ContentFieldsMapping {
   keyPath!: string
   lastValueKey!: string
   fieldName!: string
+  fieldNameCamelCase!: string | null
   displayName!: string
   fieldType!: FieldType
   editable!: boolean
