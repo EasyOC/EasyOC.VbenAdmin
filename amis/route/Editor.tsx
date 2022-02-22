@@ -6,7 +6,7 @@ import {RouteComponentProps} from 'react-router-dom';
 import {Layout, Switch, classnames as cx, toast} from 'amis';
 import '../renderer/MyRenderer';
 import '../editor/MyRenderer';
-
+import {getEnv} from 'mobx-state-tree';
 let currentIndex = -1;
 
 let host = `${window.location.protocol}//${window.location.host}`;
@@ -88,6 +88,7 @@ export default inject('store')(
                     $schemaUrl={schemaUrl}
                     iframeUrl={iframeUrl}
                     isMobile={store.isMobile}
+                    amisEnv={getEnv(store)}
                 />
             </Layout>
         );

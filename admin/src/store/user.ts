@@ -62,8 +62,8 @@ export const useUserStore = defineStore({
       }
       return this.token as string
     },
-    getTimeout(): Date {
-      return this.timeout as Date
+    getTimeout(): Date | null {
+      return this.timeout?new Date(this.timeout):null
     },
     getRoleList(): RoleEnum[] {
       return this.roleList.length > 0 ? this.roleList : []
@@ -129,8 +129,7 @@ export const useUserStore = defineStore({
         return null
       }
 
-      
-      if(this.getTimeout<new Date()) {
+      if(new Date(this.getTimeout)<new Date()) {
         this.logout(true)
         return null;
       }
@@ -163,7 +162,7 @@ export const useUserStore = defineStore({
         return null
       }
 
-      if(this.getTimeout<new Date()) {
+      if(new Date(this.getTimeout)<new Date()) {
         this.logout(true)
         return null;
       }

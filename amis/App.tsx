@@ -1,7 +1,7 @@
 import React from 'react';
 import {Provider} from 'mobx-react';
 import {toast, alert, confirm} from 'amis';
-import axios from 'axios';
+import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import {MainStore} from './store/index';
 import RootRoute from './route/index';
 import copy from 'copy-to-clipboard';
@@ -10,21 +10,33 @@ export default function(): JSX.Element {
     const store = ((window as any).store = MainStore.create(
         {},
         {
-            fetcher: ({url, method, data, config}: any) => {
-
+            fetcher: (config: any) => {
+                console.log('config: ', config);
+                const {url, method, data} = config;
                 // alert(11111)
-                // console.log('url: ', url);
+                console.log('url: ', url);
                 // console.log('method: ', method);
                 // console.log('data: ', data);
                 // console.log('config: ', config);
+                const apiUrl = window.localStorage.getItem("apiUrl");
+                console.log("apiurl",apiUrl)
+
+                const options:AxiosRequestConfig = { baseURL:apiUrl, joinPrefix: true,} as AxiosRequestConfig;
+                const axiosInstance: AxiosInstance= axios.create(options);
+                
+
                 config = config || {};
+                // config.requestOptions.apiUrl = apiUrl;
                 config.headers = config.headers || {};
-                config.headers.Authorization=""
+                // config.headers.Authorization=""
                 config.withCredentials = true;
 
                 const token = window.localStorage.getItem('token');
+                console.log('token: ', token);
                 const timeout = window.localStorage.getItem('timeout');
-                if ((!(token && timeout)) || new Date(timeout) <new Date()) {
+                console.log('timeout: ', timeout);
+                console.log('timeout: ', new Date(timeout?timeout:new Date()));
+                if ((!(token && timeout)) || new Date(timeout) <new Date()) {0
                     window.location.href = '/login';
                     return;
                 }
@@ -34,7 +46,7 @@ export default function(): JSX.Element {
                     if (data) {
                         config.params = data;
                     }
-                    return (axios as any)[method](url, config);
+                    return axiosInstance.request({url,method,data });
                 } else if (data && data instanceof FormData) {
                     // config.headers = config.headers || {};
                     // config.headers['Content-Type'] = 'multipart/form-data';
@@ -48,7 +60,16 @@ export default function(): JSX.Element {
                     config.headers['Content-Type'] = 'application/json';
                 }
 
-                return (axios as any)[method](url, data, config);
+                return axiosInstance.request({url,method,data });
+                // return (axios as any)[method](url, data, config);
+            },
+            responseAdaptor: (api, response, query, request) => {
+                console.log('response: ', response);
+                // if (response.status === 401) {
+                //     window.location.href = '/login';
+                // }
+
+                return response
             },
             isCancel: (e: any) => axios.isCancel(e),
             notify: (type: 'success' | 'error' | 'info', msg: string) => {
