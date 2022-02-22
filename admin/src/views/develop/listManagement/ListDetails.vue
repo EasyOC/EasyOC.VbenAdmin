@@ -151,7 +151,8 @@ import { getGlobalConfig } from '@/internal'
 import { ContentTypeService } from '@/api/ContentTypeService'
 const route = useRoute()
 const listManageName = 'VbenList'
-const contentTypeService = new ContentTypeService(listManageName)
+const listManageContentTypeService = new ContentTypeService(listManageName)
+const contentTypeService = ref<ContentTypeService>({} as ContentTypeService)
 const loading = ref<boolean>(false)
 const go = useGo()
 const { apiUrl } = getGlobalConfig()
@@ -213,11 +214,16 @@ const queryNames = ref<QueryDefDto[]>()
 const currentKey = ref('eidtList')
 onBeforeMount(async () => {
   loading.value = true
-  VbenListFields.value = await contentTypeService.getAllFields()
+  VbenListFields.value = await listManageContentTypeService.getAllFields()
   if (documentId.value) {
     contentItem.value = await getContent(documentId.value)
-    model.value = contentTypeService.expandContentType(contentItem.value)
-    listAllFields.value = await contentTypeService.getAllFields()
+    model.value = listManageContentTypeService.expandContentType(
+      contentItem.value,
+    )
+    contentTypeService.value = new ContentTypeService(
+      model.value.TargetContentType,
+    )
+    listAllFields.value = await contentTypeService.value.getAllFields()
     console.log('model.value expandContentType', model.value)
   }
 
@@ -270,7 +276,8 @@ async function typeSelectionChanged(value?) {
     value = result.TargetContentType
   }
   if (value) {
-    listAllFields.value = await contentTypeService.getAllFields(true)
+    contentTypeService.value = new ContentTypeService(value)
+    listAllFields.value = await contentTypeService.value.getAllFields(true)
   }
   if (listAllFields.value) {
     console.log('listAllFields.value: ', listAllFields.value)
@@ -308,7 +315,10 @@ async function save() {
   const result = getFieldsValue()
   loading.value = true
   model.value = deepMerge(model.value, result)
-  await contentTypeService.saveContentItem(model.value, contentItem.value)
+  await listManageContentTypeService.saveContentItem(
+    model.value,
+    contentItem.value,
+  )
   createMessage.success('保存成功')
   loading.value = false
 }
@@ -382,7 +392,7 @@ function buildField(field: ContentFieldsMapping) {
         break
       case FieldType.DateTimefield:
         newobj.dataIndex = camelCase(field.fieldName)
-        newobj.format = 'date|YYYY-MM-DD HH:mm:ss' //[camelCase(field.fieldName), 'displayValue']
+        newobj.format = 'date|YYYY-MM-DD HH:mm' //[camelCase(field.fieldName), 'displayValue']
         break
       case FieldType.DateField:
         newobj.dataIndex = camelCase(field.fieldName)
@@ -392,7 +402,7 @@ function buildField(field: ContentFieldsMapping) {
         newobj.dataIndex = camelCase(field.fieldName)
     }
     if (field.fieldName.endsWith('Utc') && !field.partName) {
-      newobj.format = 'date|utc|YYYY-MM-DD HH:mm:ss'
+      newobj.format = 'date|utc|YYYY-MM-DD HH:mm'
     }
     const formValue = getFieldsValue()
     let isPart = false
