@@ -1,12 +1,15 @@
 <template>
-  <Amis :amisjson="amisjson" @amisMounted="amisMounted" />
-  <!-- <CodeEditor @change="editorChange" v-model:value="editorJson" /> -->
+  <div>
+    <!-- <Amis :amisjson="amisjson" @amisMounted="amisMounted" /> -->
+    <Editor theme="antd" :value="editorJson" className="is-fixed" />
+    <!-- <CodeEditor @change="editorChange" v-model:value="editorJson" /> -->
+  </div>
 </template>
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 // import MonacoEditor from '@/components/MonacoEditor/index.vue'
 import { CodeEditor } from '@/components/CodeEditor'
-import { Amis } from '@/components/Amis'
+import { Amis, Editor } from '@/components/Amis'
 import { parser } from 'xijs'
 
 const editorJson = ref<any>(`

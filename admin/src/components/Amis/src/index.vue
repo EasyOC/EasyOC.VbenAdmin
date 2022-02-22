@@ -5,7 +5,7 @@
 <script lang="ts" setup>
 import { defaultRequest, ocApi } from '@admin/service/request'
 import { onMounted, onUnmounted, ref, unref } from 'vue'
-console.log('ces ')
+
 const props = defineProps({
   amisjson: {
     type: Object,

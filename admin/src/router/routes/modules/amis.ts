@@ -15,7 +15,7 @@ const amis: RouteRecordItem = {
 
   children: [
     {
-      path: 'index',
+      path: 'index1',
       name: 'renderTest',
       component: () => import('@/views/amis/index.vue'),
       meta: {
