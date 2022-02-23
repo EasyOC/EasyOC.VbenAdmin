@@ -1,15 +1,23 @@
 <template>
-  <div><Editor :value="testJson" :theme="theme" /></div>
+  <div>
+    <Editor :value="testJson" @onChange="change" :preview="false" :theme="theme" />
+  </div>
 </template>
 
 <script>
+// import { ReactWrapper } from 'vuera'
+import { ReactInVue } from 'vuera'
 import { Editor } from 'amis-editor'
 
 export default {
-  /* data, methods, etc */
-  components: { Editor },
+  name: 'amisEditor',
+  components: {
+    // react: ReactWrapper,
+    Editor: ReactInVue(Editor),
+  },
   data() {
     return {
+      component: Editor,
       theme: 'antd',
       testJson: {
         type: 'page',
@@ -35,13 +43,4 @@ export default {
     },
   },
 }
-
-// import { Editor } from 'amis-editor'
-// import ReactDOM from 'react-dom'
-// import { ref, onMounted } from 'vue'
-// const props = ref<any>({})
-
-// onMounted(() => {
-//   ReactDOM.render(() => <Editor {...props.value} />)
-// })
 </script>

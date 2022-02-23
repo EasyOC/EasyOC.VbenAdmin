@@ -20,6 +20,7 @@ import { setupI18n } from '@admin/locale'
 import { namespace } from '@admin/setting'
 import { createBEMPlugin } from '@admin/utils/bem'
 import { registerGlobalDirective } from '@admin/directives'
+import { VuePlugin } from 'vuera'
 const bootstrap = async () => {
   const app = createApp(App)
 
@@ -56,7 +57,7 @@ const bootstrap = async () => {
   setupErrorHandle(app)
 
   await router.isReady()
-
+  // app.use(VuePlugin)
   app.mount('#app')
 
   // When closing MOCK, Tree Shaking `mockjs` dep

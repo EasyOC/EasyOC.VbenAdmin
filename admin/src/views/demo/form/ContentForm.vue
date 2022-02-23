@@ -26,21 +26,16 @@
         class="dynamic-delete-button"
         :disabled="dynamicValidateForm.domains.length === 1"
         @click="removeDomain(domain)"
-      /> -->
+            />-->
           </a-form-item>
           <a-form-item v-bind="formItemLayoutWithOutLabel">
             <a-button type="dashed" style="width: 60%" @click="addDomain">
-              <PlusOutlined />
-              Add field
+              <PlusOutlined />Add field
             </a-button>
           </a-form-item>
           <a-form-item v-bind="formItemLayoutWithOutLabel">
-            <a-button type="primary" html-type="submit" @click="submitForm"
-              >Submit</a-button
-            >
-            <a-button style="margin-left: 10px" @click="resetForm"
-              >Reset</a-button
-            >
+            <a-button type="primary" html-type="submit" @click="submitForm">Submit</a-button>
+            <a-button style="margin-left: 10px" @click="resetForm">Reset</a-button>
           </a-form-item>
         </draggable>
       </a-form>

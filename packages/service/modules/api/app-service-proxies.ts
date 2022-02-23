@@ -565,6 +565,25 @@ export class ContentManagementServiceProxy extends AppServiceBase {
     }
 
     /**
+    * @return Success
+    */
+    listLuceneQueries(): Promise<QueryDefDto[]> {
+    
+        let url_ = this.baseUrl + "/api/ContentManagement/ListLuceneQueries";
+            url_ = url_.replace(/[?&]$/, "");
+        let options_ = <AxiosRequestConfig>{
+            method: "POST",
+            url: url_,
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+        return this.instance.request(options_).then((_response: AxiosResponse) => {
+            return this.transformResult(_response);
+        });
+    }
+
+    /**
     * 获取指定类型的字段清单
     * @param typeName (optional) 
     * @return Success
@@ -581,25 +600,6 @@ export class ContentManagementServiceProxy extends AppServiceBase {
                     url_ = url_.replace(/[?&]$/, "");
         let options_ = <AxiosRequestConfig>{
             method: "GET",
-            url: url_,
-            headers: {
-                "Accept": "text/plain"
-            }
-        };
-        return this.instance.request(options_).then((_response: AxiosResponse) => {
-            return this.transformResult(_response);
-        });
-    }
-
-    /**
-    * @return Success
-    */
-    listLuceneQueries(): Promise<QueryDefDto[]> {
-    
-        let url_ = this.baseUrl + "/api/ContentManagement/ListLuceneQueries";
-            url_ = url_.replace(/[?&]$/, "");
-        let options_ = <AxiosRequestConfig>{
-            method: "POST",
             url: url_,
             headers: {
                 "Accept": "text/plain"
@@ -2216,7 +2216,9 @@ export class ResetUserPasswordtInput {
 }
 
 export class RoleClaimDto {
-    claimType!: string | null;
+    /** 角色Claim类型，
+EasyOC.OrchardCore.OpenApi.Mappers.RoleClaimMapping */
+    claimType!: RoleClaimDtoClaimType;
     claimValue!: string | null;
 
     init(_data?: any, _mappings?: any) {
@@ -2245,6 +2247,7 @@ export class RoleDetailsDto {
     roleCategoryPermissions!: { [key: string]: PermissionDto[]; } | null;
     effectivePermissions!: string[] | null;
     role!: RoleDto;
+    vbenMenuIds!: string[] | null;
 
     init(_data?: any, _mappings?: any) {
         if (_data) {
@@ -2263,6 +2266,11 @@ export class RoleDetailsDto {
                     this.effectivePermissions!.push(item);
             }
             this.role = _data["role"] ? RoleDto.fromJS(_data["role"], _mappings) : <any>null;
+            if (Array.isArray(_data["vbenMenuIds"])) {
+                this.vbenMenuIds = [] as any;
+                for (let item of _data["vbenMenuIds"])
+                    this.vbenMenuIds!.push(item);
+            }
         }
     }
 
@@ -2288,6 +2296,11 @@ export class RoleDetailsDto {
                 data["effectivePermissions"].push(item);
         }
         data["role"] = this.role ? this.role.toJSON() : <any>null;
+        if (Array.isArray(this.vbenMenuIds)) {
+            data["vbenMenuIds"] = [];
+            for (let item of this.vbenMenuIds)
+                data["vbenMenuIds"].push(item);
+        }
         return data; 
     }
 }
@@ -2452,6 +2465,7 @@ export class UpdateRoleInput {
     roleName!: string | null;
     roleDescription!: string | null;
     normalizedRoleName!: string | null;
+    vbenMenuIds!: RoleClaimDto[] | null;
     roleClaims!: RoleClaimDto[] | null;
 
     init(_data?: any, _mappings?: any) {
@@ -2459,6 +2473,11 @@ export class UpdateRoleInput {
             this.roleName = _data["roleName"] !== undefined ? _data["roleName"] : <any>null;
             this.roleDescription = _data["roleDescription"] !== undefined ? _data["roleDescription"] : <any>null;
             this.normalizedRoleName = _data["normalizedRoleName"] !== undefined ? _data["normalizedRoleName"] : <any>null;
+            if (Array.isArray(_data["vbenMenuIds"])) {
+                this.vbenMenuIds = [] as any;
+                for (let item of _data["vbenMenuIds"])
+                    this.vbenMenuIds!.push(RoleClaimDto.fromJS(item, _mappings));
+            }
             if (Array.isArray(_data["roleClaims"])) {
                 this.roleClaims = [] as any;
                 for (let item of _data["roleClaims"])
@@ -2477,6 +2496,11 @@ export class UpdateRoleInput {
         data["roleName"] = this.roleName !== undefined ? this.roleName : <any>null;
         data["roleDescription"] = this.roleDescription !== undefined ? this.roleDescription : <any>null;
         data["normalizedRoleName"] = this.normalizedRoleName !== undefined ? this.normalizedRoleName : <any>null;
+        if (Array.isArray(this.vbenMenuIds)) {
+            data["vbenMenuIds"] = [];
+            for (let item of this.vbenMenuIds)
+                data["vbenMenuIds"].push(item.toJSON());
+        }
         if (Array.isArray(this.roleClaims)) {
             data["roleClaims"] = [];
             for (let item of this.roleClaims)
@@ -2649,6 +2673,11 @@ export enum SyncMappingDeriction {
     OrchardCoreToRDBMS = 0,
     RDBMSToOrchardCore = 1,
     TwoWay = 2,
+}
+
+export enum RoleClaimDtoClaimType {
+    Permission = 0,
+    VbenMenuId = 1,
 }
 
 export enum UsersBulkActionInputBulkAction {

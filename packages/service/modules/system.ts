@@ -35,11 +35,11 @@ export async function getAccountList(params: AccountParams) {
 //   params,
 // })
 export const getUserDetails = (id: string) => userService.getUser(id)
-export const getAllRoleList = async () => {
-  const roles = await new RolesServiceProxy().getRoles()
-  return roles
-  // defHttp.get<RoleListGetResultModel>({ url: Api.GetAllRoleList, params });
-}
+// export const getAllRoleList = async () => {
+//   const roles = await new RolesServiceProxy().getRoles()
+//   return roles
+//   // defHttp.get<RoleListGetResultModel>({ url: Api.GetAllRoleList, params });
+// }
 export const getDeptList = async (): Promise<DeptListItem[]> => {
   const result = await excuteGraphqlQuery({
     query: `query queryDepartment {

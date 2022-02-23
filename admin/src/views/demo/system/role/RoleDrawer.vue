@@ -4,10 +4,51 @@
     @register="registerDrawer"
     showFooter
     :title="getTitle"
-    width="500px"
+    width="800px"
     @ok="handleSubmit"
   >
-    <BasicForm @register="registerForm">
+    <a-form v-bind="layout" :model="roleDetails">
+      <a-form-item name="name" label="角色名称">
+        <a-input
+          v-model:value="roleDetails.name"
+          :rules="{
+            required: true, //读取字段配置
+            message: '角色名称不可为空',
+            trigger: 'change',
+          }"
+        />
+      </a-form-item>
+      <a-form-item name="roleDescription" label="角色描述">
+        <a-input v-model:value="roleDetails.roleDescription" />
+      </a-form-item>
+      <a-tabs class="offset-2" v-model:activeKey="pageState.acitvePane">
+        <a-tab-pane key="permitions" tab="权限">
+          <a-form-item name="effectivePermissions">
+            <BasicTree
+              v-model:value="roleDetails.effectivePermissions"
+              :treeData="treeData"
+              :fieldNames="{ title: 'menuName', key: 'contentItemId' }"
+              checkable
+              toolbar
+              title="菜单分配"
+            />
+          </a-form-item>
+        </a-tab-pane>
+        <a-tab-pane key="menus" tab="菜单">
+          <a-form-item name="vbenMenuIds">
+            <BasicTree
+              v-model:value="roleDetails.vbenMenuIds"
+              :treeData="treeData"
+              :fieldNames="{ title: 'menuName', key: 'contentItemId' }"
+              checkable
+              toolbar
+              title="菜单分配"
+            />
+          </a-form-item>
+        </a-tab-pane>
+      </a-tabs>
+    </a-form>
+    <!-- <AForm @register="registerForm">
       <template #menu="{ model, field }">
         <BasicTree
           v-model:value="model[field]"
@@ -18,36 +59,46 @@
           title="菜单分配"
         />
       </template>
-    </BasicForm>
+    </AForm>-->
   </BasicDrawer>
 </template>
 <script lang="ts">
-import { defineComponent, ref, computed, unref } from 'vue'
-import { BasicForm, useForm } from '@/components/Form/index'
-import { formSchema } from './role.data'
+import { defineComponent, ref, computed, unref, reactive } from 'vue'
+// import { BasicForm, useForm } from '@/components/Form/index'
+// import { formSchema } from './role.data'
 import { BasicDrawer, useDrawerInner } from '@/components/Drawer'
 import { BasicTree, TreeItem } from '@/components/Tree'
 
 import { getMenuList } from '@service/system'
+import {
+  PermissionDto,
+  RoleDetailsDto,
+  RoleDto,
+  RolesServiceProxy,
+} from '@service/api/app-service-proxies'
 
 export default defineComponent({
   name: 'RoleDrawer',
-  components: { BasicDrawer, BasicForm, BasicTree },
+  components: { BasicDrawer, BasicTree },
   emits: ['success', 'register'],
   setup(_, { emit }) {
+    const layout = {
+      labelCol: { span: 4 },
+      wrapperCol: { span: 20 },
+    }
+    const pageState = reactive({
+      acitvePane: 'permitions',
+    })
     const isUpdate = ref(true)
     const treeData = ref<TreeItem[]>([])
-
-    const [registerForm, { resetFields, setFieldsValue, validate }] = useForm({
-      labelWidth: 90,
-      schemas: formSchema,
-      showActionButtonGroup: false,
-    })
-
+    const roleDetails = ref<RoleDetailsDto>(new RoleDetailsDto())
+    const rolesService = new RolesServiceProxy()
+    const allPermissions =
+      ref<Nullable<{ [key: string]: PermissionDto[] }>>(null)
     const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(
       async (data) => {
-        resetFields()
         setDrawerProps({ confirmLoading: false })
+        allPermissions.value = data.allPermissions
         // 需要在setFieldsValue之前先填充treeData，否则Tree组件可能会报key not exist警告
         if (unref(treeData).length === 0) {
           treeData.value = (await getMenuList()) as any as TreeItem[]
@@ -55,23 +106,40 @@ export default defineComponent({
         isUpdate.value = !!data?.isUpdate
 
         if (unref(isUpdate)) {
-          setFieldsValue({
-            ...data.record,
-          })
+          const role = data.record as RoleDto
+          if (role.roleName) {
+            roleDetails.value = await rolesService.getRoleDetails(role.roleName)
+          }
+        } else {
+          roleDetails.value = new RoleDetailsDto()
         }
       },
     )
+    function buildPermissionTree(permissions: { [key: string]: PermissionDto[] }) {
+      let tree = []
+      for (const key in permissions) {
+        const treeRoot = { name: key, checkable: false, children: [] }
 
+        if (permissions[key]) {
+          treeRoot.forEach((item: PermissionDto) => {
+            treeRoot.children.push(item)
+
+          });
+          tree.push(treeRoot)
+        }
+
+
+      }
+    }
     const getTitle = computed(() =>
       !unref(isUpdate) ? '新增角色' : '编辑角色',
     )
 
     async function handleSubmit() {
       try {
-        const values = await validate()
         setDrawerProps({ confirmLoading: true })
         // TODO custom api
-        console.log(values)
+        // console.log(values)
         closeDrawer()
         emit('success')
       } finally {
@@ -81,10 +149,13 @@ export default defineComponent({
 
     return {
       registerDrawer,
-      registerForm,
+      // registerForm,
       getTitle,
       handleSubmit,
       treeData,
+      roleDetails,
+      layout,
+      pageState
     }
   },
 })
