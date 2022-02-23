@@ -1,54 +1,76 @@
 import React from 'react';
 import {Provider} from 'mobx-react';
 import {toast, alert, confirm} from 'amis';
-import axios from 'axios';
+import axios, {AxiosInstance, AxiosRequestConfig} from 'axios';
 import {MainStore} from './store/index';
 import RootRoute from './route/index';
 import copy from 'copy-to-clipboard';
 
-export default function(): JSX.Element {
+export default function (): JSX.Element {
     const store = ((window as any).store = MainStore.create(
         {},
         {
-            fetcher: ({url, method, data, config}: any) => {
-
+            fetcher: async (config: AxiosRequestConfig) => {
+                console.log('config: ', config);
+                const {url, method, data} = config;
                 // alert(11111)
-                // console.log('url: ', url);
+                console.log('url: ', url);
                 // console.log('method: ', method);
                 // console.log('data: ', data);
                 // console.log('config: ', config);
+                const apiUrl = window.localStorage.getItem('apiUrl');
+                console.log('apiurl', apiUrl);
+
                 config = config || {};
+                config.baseURL = apiUrl||'';
                 config.headers = config.headers || {};
-                config.headers.Authorization=""
+                // config.headers.Authorization=""
                 config.withCredentials = true;
 
                 const token = window.localStorage.getItem('token');
+                console.log('token: ', token);
                 const timeout = window.localStorage.getItem('timeout');
-                if ((!(token && timeout)) || new Date(timeout) <new Date()) {
+                console.log('timeout: ', timeout);
+                console.log('timeout: ', new Date(timeout ? timeout : new Date()));
+                if (!(token && timeout) || new Date(timeout) < new Date()) {
+                    0;
                     window.location.href = '/login';
                     return;
                 }
                 config.headers.Authorization = 'Bearer ' + token;
 
-                if (method !== 'post' && method !== 'put' && method !== 'patch') {
-                    if (data) {
-                        config.params = data;
-                    }
-                    return (axios as any)[method](url, config);
-                } else if (data && data instanceof FormData) {
-                    // config.headers = config.headers || {};
-                    // config.headers['Content-Type'] = 'multipart/form-data';
-                } else if (
-                    data &&
-                    typeof data !== 'string' &&
-                    !(data instanceof Blob) &&
-                    !(data instanceof ArrayBuffer)
-                ) {
-                    data = JSON.stringify(data);
+                // if (method !== 'post' && method !== 'put' && method !== 'patch') {
+                //     if (data) {
+                //         config.params = data;
+                //     }
+                //     return axiosInstance.request({url,method,data });
+                // } else if (data && data instanceof FormData) {
+                //     // config.headers = config.headers || {};
+                //     // config.headers['Content-Type'] = 'multipart/form-data';
+                // } else if (
+                //     data &&
+                //     typeof data !== 'string' &&
+                //     !(data instanceof Blob) &&
+                //     !(data instanceof ArrayBuffer)
+                // ) {
+                //     data = JSON.stringify(data);
                     config.headers['Content-Type'] = 'application/json';
+                // }
+
+                const axiosInstance: AxiosInstance = axios.create(config);
+                // return await (axiosInstance as any).request({url,method,data });
+                return await (axiosInstance as any)[method](url, data, config);
+            },
+            responseAdaptor: (api, response, query, request) => {
+                console.log('response: api', api);
+                console.log('response: response', response);
+                console.log('response: query', query);
+                console.log('response:request ', request);
+                if (response.status === 401) {
+                    window.location.href = '/login';
                 }
 
-                return (axios as any)[method](url, data, config);
+                return response;
             },
             isCancel: (e: any) => axios.isCancel(e),
             notify: (type: 'success' | 'error' | 'info', msg: string) => {

@@ -1,14 +1,9 @@
 <template>
   <div>
-    <Editor
-      :value="testJson"
-      @onChange="change"
-      :preview="false"
-      :theme="theme"
-    />
+    <Editor :value="testJson" @onChange="change" :preview="false" :theme="theme" />
   </div>
 </template>
-
+ 
 <script>
 // import { ReactWrapper } from 'vuera'
 import { ReactInVue } from 'vuera'

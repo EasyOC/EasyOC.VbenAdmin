@@ -19,7 +19,9 @@ export function schema2component(schema: any, transform?: Function, session: str
         env: any;
 
         getEnv() {
+
             if (this.env) {
+                console.log('this.env: ', this.env);
                 return this.env;
             }
 
