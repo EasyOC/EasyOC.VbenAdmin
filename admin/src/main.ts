@@ -11,6 +11,7 @@ import 'virtual:svg-icons-register'
 import App from './App.vue'
 import { initAdminModules } from './initAdminModules'
 import { createApp } from 'vue'
+// import { configureCompat } from '@admin/types/index'
 import { initAppConfigStore } from '@/logics/initAppConfig'
 import { setupErrorHandle } from '@/logics/error-handle'
 import { router, setupRouter } from '@/router'
@@ -20,16 +21,17 @@ import { setupI18n } from '@admin/locale'
 import { namespace } from '@admin/setting'
 import { createBEMPlugin } from '@admin/utils/bem'
 import { registerGlobalDirective } from '@admin/directives'
-import { VuePlugin } from 'vuera'
 const bootstrap = async () => {
   const app = createApp(App)
-
+  // configureCompat({
+  //   Mode: 2,
+  // })
   app.use(pinia)
-
+  app.config.globalProperties.prototype = app.config.globalProperties
   // ! Need to pay attention to the timing of execution
   // ! 需要注意调用时机
   await initAdminModules()
-
+  // app.use(VuePlugin)
   app.use(createBEMPlugin(namespace))
 
   // Initialize internal system configuration
@@ -57,7 +59,6 @@ const bootstrap = async () => {
   setupErrorHandle(app)
 
   await router.isReady()
-  // app.use(VuePlugin)
   app.mount('#app')
 
   // When closing MOCK, Tree Shaking `mockjs` dep

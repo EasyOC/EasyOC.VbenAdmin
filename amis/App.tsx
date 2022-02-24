@@ -22,11 +22,9 @@ export default function (): JSX.Element {
                 console.log('apiurl', apiUrl);
 
                 config = config || {};
-                config.baseURL = apiUrl||'';
+                config.baseURL = apiUrl || '';
                 config.headers = config.headers || {};
-                // config.headers.Authorization=""
-                config.withCredentials = true;
-
+                config.timeout = 10 * 1000;
                 const token = window.localStorage.getItem('token');
                 console.log('token: ', token);
                 const timeout = window.localStorage.getItem('timeout');
@@ -39,27 +37,27 @@ export default function (): JSX.Element {
                 }
                 config.headers.Authorization = 'Bearer ' + token;
 
-                // if (method !== 'post' && method !== 'put' && method !== 'patch') {
-                //     if (data) {
-                //         config.params = data;
-                //     }
-                //     return axiosInstance.request({url,method,data });
-                // } else if (data && data instanceof FormData) {
-                //     // config.headers = config.headers || {};
-                //     // config.headers['Content-Type'] = 'multipart/form-data';
-                // } else if (
-                //     data &&
-                //     typeof data !== 'string' &&
-                //     !(data instanceof Blob) &&
-                //     !(data instanceof ArrayBuffer)
-                // ) {
-                //     data = JSON.stringify(data);
-                    config.headers['Content-Type'] = 'application/json';
-                // }
-
+                if (method !== 'post' && method !== 'put' && method !== 'patch') {
+                    if (data) {
+                        config.params = data;
+                    }
+                    // return axiosInstance.request({url,method,data });
+                } else if (data && data instanceof FormData) {
+                    config.headers = config.headers || {};
+                    config.headers['Content-Type'] = 'multipart/form-data';
+                } else if (
+                    data &&
+                    typeof data !== 'string' &&
+                    !(data instanceof Blob) &&
+                    !(data instanceof ArrayBuffer)
+                ) {
+                    config.data = JSON.stringify(data);
+                config.headers['Content-Type'] = 'application/json';
+                }
+               
                 const axiosInstance: AxiosInstance = axios.create(config);
-                // return await (axiosInstance as any).request({url,method,data });
-                return await (axiosInstance as any)[method](url, data, config);
+                console.log('configconfigconfigconfig: ', config);
+                return await axiosInstance(config);
             },
             responseAdaptor: (api, response, query, request) => {
                 console.log('response: api', api);

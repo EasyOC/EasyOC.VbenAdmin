@@ -8,6 +8,7 @@
   },
   "scripts": {
     "dev": "vite",
+    "run:stage": "vite --mode staging",
     "build": "cross-env NODE_ENV=production vite build && esno ./scripts/post-build.ts",
     "build:test": "cross-env vite build --mode test && esno ./scripts/post-build.ts",
     "build:no-cache": "pnpm clean:cache && npm run build",
