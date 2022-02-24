@@ -27,20 +27,27 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, nextTick } from 'vue'
-
+import { defineComponent, nextTick, ref, onBeforeMount } from 'vue'
 import { BasicTable, useTable, TableAction } from '@/components/Table'
-import { getMenuList } from '../../../api/system'
-
+import { getMenuList } from '@service/system'
 import { useDrawer } from '@/components/Drawer'
 import MenuDrawer from './MenuDrawer.vue'
-
 import { columns, searchFormSchema } from './menu.data'
+import {
+  ContentFieldsMapping,
+  ContentItemUpperCase,
+} from '@service/eoc/contentApi'
+import { ContentTypeService } from '@/api/ContentTypeService'
 
 export default defineComponent({
   name: 'MenuManagement',
   components: { BasicTable, MenuDrawer, TableAction },
   setup() {
+    const typeName = 'VbenMenu'
+    const contentFields = ref<ContentFieldsMapping[]>([])
+    const contentItem = ref<ContentItemUpperCase>({ ContentType: typeName })
+    const contentTypeService = new ContentTypeService(typeName)
+
     const [registerDrawer, { openDrawer }] = useDrawer()
     const [registerTable, { reload, expandAll }] = useTable({
       title: '菜单列表',
@@ -66,22 +73,33 @@ export default defineComponent({
         fixed: undefined,
       },
     })
-
+    onBeforeMount(async () => {
+      contentFields.value = await contentTypeService.getAllFields()
+    })
     function handleCreate() {
       openDrawer(true, {
+        contentItem: contentItem.value,
         isUpdate: false,
+        contentFields: contentFields.value,
       })
     }
 
-    function handleEdit(record: Recordable) {
+    async function handleEdit(record: Recordable) {
+      contentItem.value = await contentTypeService.getContent(
+        record.contentItemId,
+      )
+      const editModel = contentTypeService.expandContentType(contentItem.value)
       openDrawer(true, {
-        record,
+        record: editModel,
+        contentItem: contentItem.value,
         isUpdate: true,
+        contentFields: contentFields.value,
       })
     }
 
-    function handleDelete(record: Recordable) {
-      console.log(record)
+    async function handleDelete(record: Recordable) {
+      await contentTypeService.deletContent(record.contentItemId)
+      reload()
     }
 
     function handleSuccess() {
@@ -95,6 +113,7 @@ export default defineComponent({
 
     return {
       registerTable,
+      getMenuList,
       registerDrawer,
       handleCreate,
       handleEdit,

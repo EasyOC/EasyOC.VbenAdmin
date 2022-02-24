@@ -2,7 +2,7 @@
   <div>
     <BasicTable @register="registerTable">
       <template #toolbar>
-        <a-button type="primary" @click="handleCreate"> 新增角色 </a-button>
+        <a-button type="primary" @click="handleCreate">新增角色</a-button>
       </template>
       <template #action="{ record }">
         <TableAction
@@ -27,31 +27,41 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, ref } from 'vue'
 
-import { BasicTable, useTable, TableAction } from '/@/components/Table'
-import { getAllRoleList } from '../../../api/system'
-import { useDrawer } from '/@/components/Drawer'
+import { BasicTable, useTable, TableAction } from '@/components/Table'
+// import { getAllRoleList } from '@service/system'
+
+import { useDrawer } from '@/components/Drawer'
 import RoleDrawer from './RoleDrawer.vue'
 
 import { columns, searchFormSchema } from './role.data'
+import {
+  PermissionDto,
+  RoleDto,
+  RolesServiceProxy,
+} from '@service/api/app-service-proxies'
 
 export default defineComponent({
   name: 'RoleManagement',
   components: { BasicTable, RoleDrawer, TableAction },
   setup() {
+    const rolesService = new RolesServiceProxy()
     const [registerDrawer, { openDrawer }] = useDrawer()
     const [registerTable, { reload }] = useTable({
       title: '角色列表',
-      api: getAllRoleList,
+      api: getRoles,
       columns,
       formConfig: {
         labelWidth: 120,
         schemas: searchFormSchema,
+        submitOnChange: true,
+        autoSubmitOnEnter: true,
       },
       useSearchForm: true,
       showTableSetting: true,
       bordered: true,
+      pagination: false,
       showIndexColumn: false,
       actionColumn: {
         width: 80,
@@ -61,17 +71,41 @@ export default defineComponent({
         fixed: undefined,
       },
     })
+    let roles: RoleDto[] = []
+    async function getRoles(params) {
+      if (roles.length == 0) {
+        roles = await rolesService.getRoles()
+      }
+      if (params.roleName) {
+        const filter = params.roleName.toLowerCase()
+        return roles.filter(
+          (x) =>
+            x.roleName?.toLowerCase().includes(filter) ||
+            x.roleDescription?.toLowerCase().includes(filter),
+        )
+      }
+      return roles
+    }
+    let allPermissions: { [key: string]: PermissionDto[] } | null = null
+    async function getAllPermissions() {
+      if (!allPermissions) {
+        allPermissions = await rolesService.getAllPermissions()
+      }
+      return allPermissions
+    }
 
-    function handleCreate() {
+    async function handleCreate() {
       openDrawer(true, {
         isUpdate: false,
+        allPermissions: await getAllPermissions(),
       })
     }
 
-    function handleEdit(record: Recordable) {
+    async function handleEdit(record: Recordable) {
       openDrawer(true, {
         record,
         isUpdate: true,
+        allPermissions: await getAllPermissions(),
       })
     }
 

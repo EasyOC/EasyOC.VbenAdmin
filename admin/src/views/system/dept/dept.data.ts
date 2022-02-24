@@ -1,4 +1,5 @@
-import { BasicColumn, FormSchema } from '@/components/Table'
+import { BasicColumn } from '@/components/Table'
+import { FormSchema } from '@/components/Table'
 import { h } from 'vue'
 import { Tag } from 'ant-design-vue'
 
@@ -19,8 +20,8 @@ export const columns: BasicColumn[] = [
     dataIndex: 'status',
     width: 80,
     customRender: ({ record }: any) => {
-      const status = record.status
-      const enable = ~~status === 0
+      console.log(record, 'Row:Role')
+      const enable = record.status
       const color = enable ? 'green' : 'red'
       const text = enable ? '启用' : '停用'
       return h(Tag, { color: color }, () => text)

@@ -10,7 +10,7 @@ const setup: RouteRecordItem = {
     orderNo: 90000,
     hideChildrenInMenu: true,
     icon: 'whh:paintroll',
-    title: t('routes.demo.setup.page'),
+    title: t('routes.default.setup.page'),
   },
   children: [
     {
@@ -18,7 +18,7 @@ const setup: RouteRecordItem = {
       name: 'SetupDemoPage',
       component: () => import('@/views/demo/setup/index.vue'),
       meta: {
-        title: t('routes.demo.setup.page'),
+        title: t('routes.default.setup.page'),
         icon: 'whh:paintroll',
         hideMenu: true,
       },

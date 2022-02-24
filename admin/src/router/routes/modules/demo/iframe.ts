@@ -10,7 +10,7 @@ const iframe: RouteRecordItem = {
   meta: {
     orderNo: 1000,
     icon: 'ion:tv-outline',
-    title: t('routes.demo.iframe.frame'),
+    title: t('routes.default.iframe.frame'),
   },
 
   children: [
@@ -20,7 +20,7 @@ const iframe: RouteRecordItem = {
       component: IFrame,
       meta: {
         frameSrc: 'https://vvbin.cn/doc-next/',
-        title: t('routes.demo.iframe.doc'),
+        title: t('routes.default.iframe.doc'),
       },
     },
     {
@@ -29,7 +29,7 @@ const iframe: RouteRecordItem = {
       component: IFrame,
       meta: {
         frameSrc: 'https://2x.antdv.com/docs/vue/introduce-cn/',
-        title: t('routes.demo.iframe.antv'),
+        title: t('routes.default.iframe.antv'),
       },
     },
     {
@@ -37,7 +37,7 @@ const iframe: RouteRecordItem = {
       name: 'DocExternal',
       component: IFrame,
       meta: {
-        title: t('routes.demo.iframe.docExternal'),
+        title: t('routes.default.iframe.docExternal'),
       },
     },
   ],

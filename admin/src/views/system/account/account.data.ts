@@ -1,4 +1,4 @@
-// import { CheckboxProps } from 'ant-design-vue/lib/checkbox';
+import { getAllRoleList, isAccountExist } from '@service/system'
 import { BasicColumn, FormSchema } from '@/components/Table'
 
 export const columns: BasicColumn[] = [
@@ -40,67 +40,41 @@ export const columns: BasicColumn[] = [
 
 export const searchFormSchema: FormSchema[] = [
   {
-    field: 'searchText',
-    label: '关键字',
+    field: 'account',
+    label: '用户名',
     component: 'Input',
     colProps: { span: 8 },
-    defaultValue: '',
   },
-  // {
-  //   field: 'order',
-  //   label: '排序',
-  //   component: 'Select',
-  //   componentProps: {
-  //     options: [
-  //       { value: 0, label: 'Name' },
-  //       { value: 1, label: 'Email' },
-  //     ],
-  //     defaultValue: 0,
-  //   } as SelectProps,
-  //   colProps: { span: 8 },
-  // },
-
-  // {
-  //   field: 'filter',
-  //   label: '过滤',
-  //   component: 'Select',
-  //   componentProps: {
-  //     options: [
-  //       { value: Filter.All, label: 'All' },
-  //       { value: Filter.Approved, label: 'Approved' },
-  //       { value: Filter.Pending, label: 'Pending' },
-  //       { value: Filter.EmailPending, label: 'EmailPending' },
-  //       { value: Filter.Enabled, label: 'Enabled' },
-  //       { value: Filter.Disabled, label: 'Disabled' },
-  //     ],
-  //     defaultActiveFirstOption: true,
-  //   } as SelectProps,
-  //   colProps: { span: 8 },
-  // },
+  {
+    field: 'nickname',
+    label: '昵称',
+    component: 'Input',
+    colProps: { span: 8 },
+  },
 ]
 
 export const accountFormSchema: FormSchema[] = [
   {
-    field: 'userName',
+    field: 'account',
     label: '用户名',
     component: 'Input',
-    helpMessage: ['不能输入带有admin的用户名'],
+    helpMessage: ['本字段演示异步验证', '不能输入带有admin的用户名'],
     rules: [
       {
         required: true,
         message: '请输入用户名',
       },
-      // {
-      //   validator(_, value) {
-      //     return new Promise((resolve, reject) => {
-      //       isAccountExist(value)
-      //         .then(() => resolve())
-      //         .catch((err) => {
-      //           reject(err.message || '验证失败');
-      //         });
-      //     });
-      //   },
-      // },
+      {
+        validator(_, value) {
+          return new Promise((resolve, reject) => {
+            isAccountExist(value)
+              .then(() => resolve())
+              .catch((err) => {
+                reject(err.message || '验证失败')
+              })
+          })
+        },
+      },
     ],
   },
   {
@@ -111,41 +85,47 @@ export const accountFormSchema: FormSchema[] = [
     ifShow: false,
   },
   {
+    label: '角色',
+    field: 'role',
+    component: 'ApiSelect',
+    componentProps: {
+      api: getAllRoleList,
+      labelField: 'roleName',
+      valueField: 'roleValue',
+    },
+    required: true,
+  },
+  {
+    field: 'dept',
+    label: '所属部门',
+    component: 'TreeSelect',
+    componentProps: {
+      fieldNames: {
+        label: 'deptName',
+        key: 'id',
+        value: 'id',
+      },
+      getPopupContainer: () => document.body,
+    },
+    required: true,
+  },
+  {
+    field: 'nickname',
+    label: '昵称',
+    component: 'Input',
+    required: true,
+  },
+
+  {
     label: '邮箱',
     field: 'email',
     component: 'Input',
     required: true,
   },
-  {
-    label: '角色',
-    field: 'roleNames',
-    component: 'CheckboxGroup',
-    required: true,
-  },
-  // {
-  //   field: 'dept',
-  //   label: '所属部门',
-  //   component: 'TreeSelect',
-  //   componentProps: {
-  //     fieldNames: {
-  //       label: 'deptName',
-  //       key: 'id',
-  //       value: 'id',
-  //     },
-  //     getPopupContainer: () => document.body,
-  //   },
-  //   required: true,
-  // },
-  // {
-  //   field: 'nickname',
-  //   label: '昵称',
-  //   component: 'Input',
-  //   required: true,
-  // },
 
-  // {
-  //   label: '备注',
-  //   field: 'remark',
-  //   component: 'InputTextArea',
-  // },
+  {
+    label: '备注',
+    field: 'remark',
+    component: 'InputTextArea',
+  },
 ]

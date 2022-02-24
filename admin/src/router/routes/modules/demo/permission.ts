@@ -10,7 +10,7 @@ const permission: RouteRecordItem = {
   meta: {
     orderNo: 15,
     icon: 'ion:key-outline',
-    title: t('routes.demo.permission.permission'),
+    title: t('routes.default.permission.permission'),
   },
 
   children: [
@@ -19,7 +19,7 @@ const permission: RouteRecordItem = {
       name: 'PermissionFrontDemo',
       component: getParentLayout(),
       meta: {
-        title: t('routes.demo.permission.front'),
+        title: t('routes.default.permission.front'),
       },
       children: [
         {
@@ -27,7 +27,7 @@ const permission: RouteRecordItem = {
           name: 'FrontPageAuth',
           component: () => import('@/views/demo/permission/front/index.vue'),
           meta: {
-            title: t('routes.demo.permission.frontPage'),
+            title: t('routes.default.permission.frontPage'),
           },
         },
         {
@@ -35,7 +35,7 @@ const permission: RouteRecordItem = {
           name: 'FrontBtnAuth',
           component: () => import('@/views/demo/permission/front/Btn.vue'),
           meta: {
-            title: t('routes.demo.permission.frontBtn'),
+            title: t('routes.default.permission.frontBtn'),
           },
         },
         {
@@ -44,7 +44,7 @@ const permission: RouteRecordItem = {
           component: () =>
             import('@/views/demo/permission/front/AuthPageA.vue'),
           meta: {
-            title: t('routes.demo.permission.frontTestA'),
+            title: t('routes.default.permission.frontTestA'),
             roles: [RoleEnum.SUPER],
           },
         },
@@ -54,7 +54,7 @@ const permission: RouteRecordItem = {
           component: () =>
             import('@/views/demo/permission/front/AuthPageB.vue'),
           meta: {
-            title: t('routes.demo.permission.frontTestB'),
+            title: t('routes.default.permission.frontTestB'),
             roles: [RoleEnum.TEST],
           },
         },
@@ -65,7 +65,7 @@ const permission: RouteRecordItem = {
       name: 'PermissionBackDemo',
       component: getParentLayout(),
       meta: {
-        title: t('routes.demo.permission.back'),
+        title: t('routes.default.permission.back'),
       },
       children: [
         {
@@ -73,7 +73,7 @@ const permission: RouteRecordItem = {
           name: 'BackAuthPage',
           component: () => import('@/views/demo/permission/back/index.vue'),
           meta: {
-            title: t('routes.demo.permission.backPage'),
+            title: t('routes.default.permission.backPage'),
           },
         },
         {
@@ -81,7 +81,7 @@ const permission: RouteRecordItem = {
           name: 'BackAuthBtn',
           component: () => import('@/views/demo/permission/back/Btn.vue'),
           meta: {
-            title: t('routes.demo.permission.backBtn'),
+            title: t('routes.default.permission.backBtn'),
           },
         },
       ],

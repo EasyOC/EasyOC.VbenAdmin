@@ -15,6 +15,7 @@ import { BasicForm, useForm } from '@/components/Form/index'
 import { formSchema } from './dept.data'
 
 import { getDeptList } from '@service/system'
+import { listToTree } from '@admin/utils'
 export default defineComponent({
   name: 'DeptModal',
   components: { BasicModal, BasicForm },
@@ -42,7 +43,7 @@ export default defineComponent({
             ...data.record,
           })
         }
-        const treeData = await getDeptList()
+        const treeData = listToTree(await getDeptList(), { pid: 'parentId' })
         updateSchema({
           field: 'parentDept',
           componentProps: { treeData },
