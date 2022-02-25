@@ -15,16 +15,16 @@ const amis: RouteRecordItem = {
 
   children: [
     {
-      path: 'index1',
-      name: 'renderTest',
+      path: 'index',
+      name: 'amisPageList',
       component: () => import('@/views/amis/index.vue'),
       meta: {
-        title: t('routes.amis.renderTest'),
+        title: t('routes.amis.amisPageList'),
       },
     },
     {
-      path: 'index',
-      name: 'amisPageList',
+      path: 'InternalEditor',
+      name: 'amisInternalEditor',
       component: IFrame,
       meta: {
         frameSrc: '/amis/index.html',
@@ -42,12 +42,12 @@ const amis: RouteRecordItem = {
       },
     },
     {
-      path: 'index1',
-      name: 'amisIndex',
-      component: () => import('@/views/amis/index.vue'),
+      path: 'Editor',
+      name: 'Editor',
+      component: () => import('@/views/amis/Editor.vue'),
       meta: {
         isLink: true,
-        // hideMenu: true,
+        hideMenu: true,
         title: t('routes.amis.amisIndex'),
       },
     },

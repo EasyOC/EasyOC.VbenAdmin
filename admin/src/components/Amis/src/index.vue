@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts" setup>
-import { defaultRequest, ocApi } from '@admin/service/request'
+import { ocApi } from '@admin/service/request'
 import { onMounted, onUnmounted, ref, unref } from 'vue'
 
 const props = defineProps({
@@ -102,3 +102,7 @@ onUnmounted(() => {
   amisScoped.value.unmount()
 })
 </script>
+<!-- <style>
+@import url('amis/lib/themes/antd.css');
+/* @import url('amis/lib/themes/default.css'); */
+</style> -->

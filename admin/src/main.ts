@@ -1,5 +1,6 @@
 import 'amis/sdk/sdk.js'
 import 'amis/lib/themes/antd.css'
+import 'amis/lib/helper.css'
 import 'ant-design-vue/dist/antd.less'
 import 'virtual:windi-base.css'
 import 'virtual:windi-components.css'

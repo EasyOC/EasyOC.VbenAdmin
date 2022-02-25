@@ -13,11 +13,7 @@ export default function (): JSX.Element {
             fetcher: async (config: AxiosRequestConfig) => {
                 console.log('config: ', config);
                 const {url, method, data} = config;
-                // alert(11111)
                 console.log('url: ', url);
-                // console.log('method: ', method);
-                // console.log('data: ', data);
-                // console.log('config: ', config);
                 const apiUrl = window.localStorage.getItem('apiUrl');
                 console.log('apiurl', apiUrl);
 

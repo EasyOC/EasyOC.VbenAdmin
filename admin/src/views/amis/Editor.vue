@@ -1,6 +1,21 @@
 <template>
-  <Amis :amisjson="amisjson" @amisMounted="amisMounted" />
-  <!-- <CodeEditor @change="editorChange" v-model:value="editorJson" /> -->
+  <div>
+    <a-button type @click="showCode" v-if="v1">显示代码</a-button>
+    <a-button type @click="copyCode">复制代码</a-button>
+    <Amis v-if="amitShow" :amisjson="amisjson" @amisMounted="amisMounted" />
+    <!-- <Amis :amisjson="amisjson1" @amisMounted="amisMounted" /> -->
+
+    <a-drawer
+      v-model:visible="codeVisible"
+      size="large"
+      title="代码"
+      placement="right"
+    >
+      <!-- <a-button size="small" @click="formatSchema" title="快捷键：shift+alt+f">格式化</a-button> -->
+      <CodeEditor @change="editorChange" v-model:value="editorJson" />
+      <!-- <MonacoEditor v-model:value="editorJson" @change="editorChange" /> -->
+    </a-drawer>
+  </div>
 </template>
 <script setup lang="ts">
 import { computed, ref } from 'vue'
@@ -8,16 +23,43 @@ import { computed, ref } from 'vue'
 import { CodeEditor } from '@/components/CodeEditor'
 import { Amis } from '@/components/Amis'
 import { parser } from 'xijs'
-
-const editorJson = ref<any>(`
+// window.enableAMISDebug = true
+const editorJson = ref<any>(
+  `
+   {
+  "type": "form",
+  "title": "常规模式",
+  "body": [
     {
-  "type": "crud",
+      "type": "input-text",
+      "name": "username",
+      "required": true,
+      "placeholder": "请输入邮箱",
+      "label": "邮箱",
+      "size": "full"
+    },
+    {
+      "type": "input-password",
+      "name": "password",
+      "label": "密码",
+      "required": true,
+      "placeholder": "请输入密码",
+      "size": "full"
+    },
+    {
+      "type": "checkbox",
+      "name": "rememberMe",
+      "option": "记住登录",
+      "value": false
+    },
+    {
+      "type": "submit",
+      "label": "登录"
+    }
+  ],
   "api": {
     "method": "post",
-    "url": "http://localhost:2919/api/graphql",
-    "data": {
-      "&": "$$"
-    },
+    "url": "/api/graphql",
     "dataType": "json",
     "replaceData": true,
     "responseData": {
@@ -60,7 +102,7 @@ const editorJson = ref<any>(`
     "config": {
       "url": "[object Object]",
       "method": "post",
-      "data": "{\"type\":\"crud\",\"api\":{\"method\":\"post\",\"url\":\"http://localhost:2919/api/graphql\",\"data\":{\"\":{\"variables\":{\"from\":0,\"skip\":10},\"query\":\"query MyQuery($params:String) {\\n              crmCustomers(parameters:$params) {\\n                items \\n                 {\\n  contentItemId \\n  contentItemVersionId \\n  contentType \\n  displayText \\n  latest \\n  published \\n  modifiedUtc \\n  publishedUtc \\n  createdUtc \\n  owner \\n  author \\n  name \\n  custNum \\n  marketSegment {\\n    contentItems {\\n      contentItemId \\n      displayText \\n    }\\n  }\\n  source {\\n    contentItems {\\n      contentItemId \\n      displayText \\n    }\\n  }\\n  industry {\\n    contentItems {\\n      contentItemId \\n      displayText \\n    }\\n  }\\n  custClass {\\n    contentItems {\\n      contentItemId \\n      displayText \\n    }\\n  }\\n  salesOwner {\\n    userIds \\n    userProfiles {\\n      displayText \\n    }\\n  }\\n  address {\\n    countryName \\n    province \\n    city \\n    postalCode \\n    details \\n    name \\n  }\\n}                \\n                total\\n              }\\n            }\"}},\"dataType\":\"json\",\"replaceData\":false},\"columns\":[{\"name\":\"id\",\"label\":\"ID\",\"type\":\"text\"},{\"name\":\"engine\",\"label\":\"渲染引擎\",\"type\":\"text\"}],\"bulkActions\":[],\"itemActions\":[]}",
+      "data": "{\"type\":\"crud\",\"api\":{\"method\":\"post\",\"url\":\"/api/graphql\",\"data\":{\"\":{\"variables\":{\"from\":0,\"skip\":10},\"query\":\"query MyQuery($params:String) {\\n              crmCustomers(parameters:$params) {\\n                items \\n                 {\\n  contentItemId \\n  contentItemVersionId \\n  contentType \\n  displayText \\n  latest \\n  published \\n  modifiedUtc \\n  publishedUtc \\n  createdUtc \\n  owner \\n  author \\n  name \\n  custNum \\n  marketSegment {\\n    contentItems {\\n      contentItemId \\n      displayText \\n    }\\n  }\\n  source {\\n    contentItems {\\n      contentItemId \\n      displayText \\n    }\\n  }\\n  industry {\\n    contentItems {\\n      contentItemId \\n      displayText \\n    }\\n  }\\n  custClass {\\n    contentItems {\\n      contentItemId \\n      displayText \\n    }\\n  }\\n  salesOwner {\\n    userIds \\n    userProfiles {\\n      displayText \\n    }\\n  }\\n  address {\\n    countryName \\n    province \\n    city \\n    postalCode \\n    details \\n    name \\n  }\\n}                \\n                total\\n              }\\n            }\"}},\"dataType\":\"json\",\"replaceData\":false},\"columns\":[{\"name\":\"id\",\"label\":\"ID\",\"type\":\"text\"},{\"name\":\"engine\",\"label\":\"渲染引擎\",\"type\":\"text\"}],\"bulkActions\":[],\"itemActions\":[]}",
       "headers": {
         "Accept": "application/json, text/plain, */*",
         "Content-Type": "application/json"
@@ -96,7 +138,7 @@ const editorJson = ref<any>(`
       "config": {
         "url": "[object Object]",
         "method": "post",
-        "data": "{\"type\":\"crud\",\"api\":{\"method\":\"post\",\"url\":\"http://localhost:2919/api/graphql\",\"data\":{\"\":{\"variables\":{\"from\":0,\"skip\":10},\"query\":\"query MyQuery($params:String) {\\n              crmCustomers(parameters:$params) {\\n                items \\n                 {\\n  contentItemId \\n  contentItemVersionId \\n  contentType \\n  displayText \\n  latest \\n  published \\n  modifiedUtc \\n  publishedUtc \\n  createdUtc \\n  owner \\n  author \\n  name \\n  custNum \\n  marketSegment {\\n    contentItems {\\n      contentItemId \\n      displayText \\n    }\\n  }\\n  source {\\n    contentItems {\\n      contentItemId \\n      displayText \\n    }\\n  }\\n  industry {\\n    contentItems {\\n      contentItemId \\n      displayText \\n    }\\n  }\\n  custClass {\\n    contentItems {\\n      contentItemId \\n      displayText \\n    }\\n  }\\n  salesOwner {\\n    userIds \\n    userProfiles {\\n      displayText \\n    }\\n  }\\n  address {\\n    countryName \\n    province \\n    city \\n    postalCode \\n    details \\n    name \\n  }\\n}                \\n                total\\n              }\\n            }\"}},\"dataType\":\"json\",\"replaceData\":false},\"columns\":[{\"name\":\"id\",\"label\":\"ID\",\"type\":\"text\"},{\"name\":\"engine\",\"label\":\"渲染引擎\",\"type\":\"text\"}],\"bulkActions\":[],\"itemActions\":[]}",
+        "data": "{\"type\":\"crud\",\"api\":{\"method\":\"post\",\"url\":\"/api/graphql\",\"data\":{\"\":{\"variables\":{\"from\":0,\"skip\":10},\"query\":\"query MyQuery($params:String) {\\n              crmCustomers(parameters:$params) {\\n                items \\n                 {\\n  contentItemId \\n  contentItemVersionId \\n  contentType \\n  displayText \\n  latest \\n  published \\n  modifiedUtc \\n  publishedUtc \\n  createdUtc \\n  owner \\n  author \\n  name \\n  custNum \\n  marketSegment {\\n    contentItems {\\n      contentItemId \\n      displayText \\n    }\\n  }\\n  source {\\n    contentItems {\\n      contentItemId \\n      displayText \\n    }\\n  }\\n  industry {\\n    contentItems {\\n      contentItemId \\n      displayText \\n    }\\n  }\\n  custClass {\\n    contentItems {\\n      contentItemId \\n      displayText \\n    }\\n  }\\n  salesOwner {\\n    userIds \\n    userProfiles {\\n      displayText \\n    }\\n  }\\n  address {\\n    countryName \\n    province \\n    city \\n    postalCode \\n    details \\n    name \\n  }\\n}                \\n                total\\n              }\\n            }\"}},\"dataType\":\"json\",\"replaceData\":false},\"columns\":[{\"name\":\"id\",\"label\":\"ID\",\"type\":\"text\"},{\"name\":\"engine\",\"label\":\"渲染引擎\",\"type\":\"text\"}],\"bulkActions\":[],\"itemActions\":[]}",
         "headers": {
           "Accept": "application/json, text/plain, */*",
           "Content-Type": "application/json"
@@ -1057,21 +1099,71 @@ const editorJson = ref<any>(`
     }
   ],
   "combineNum": 0
-}`)
+}`,
+)
 // const editor = ref<any>(null)
 const amisjson = computed(() => {
-  return parser.parse(editorJson.value)
+  return JSON.parse(editorJson.value)
 })
+
+const amisjson1 = computed(() => {
+  return {
+    type: 'button',
+    label: '按钮',
+    actionType: '',
+    onClick: showV1(),
+  }
+})
+
+const codeVisible = ref(false)
+const v1 = ref(true)
+function showCode() {
+  codeVisible.value = true
+}
+
+function showV1() {
+  v1.value = true
+}
+
+function copyCode() {
+  const code = editorJson.value
+
+  const aux = document.createElement('input')
+  // 获取复制内容
+  const content = code
+  // 设置元素内容
+  aux.setAttribute('value', content)
+  // 将元素插入页面进行调用
+  document.body.appendChild(aux)
+  // 复制内容
+  aux.select()
+  // 将内容复制到剪贴板
+  document.execCommand('copy')
+  // 删除创建元素
+  document.body.removeChild(aux)
+}
+
 // function editorDidMount(loadedEditor) {
 //   editor.value = loadedEditor
 //   // try {
 //   //   editor.value.setValue(editorJson.value)
 //   // } catch (error) {}
 // }
-function editorChange() {
-  // editorJson.value = value
+
+const amitShow = ref(true)
+function editorChange(value) {
+  amitShow.value = false
+  editorJson.value = value
+  console.log('amisjson: ', amisjson.value)
   amisScoped.value.updateProps(amisjson.value)
+
+  amitShow.value = true
 }
+
+function formatSchema() {
+  // amisScoped?.value.getAction(['editor.action.formatDocument'])._run()
+}
+
 const amisScoped = ref<any>(null)
 function amisMounted(amisScope) {
   amisScoped.value = amisScope
