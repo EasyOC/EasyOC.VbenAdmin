@@ -8,7 +8,7 @@ import type { AxiosTransform, CreateAxiosOptions } from './axiosTransform'
 import { VAxios } from './Axios'
 import { checkStatus } from './checkStatus'
 import { context } from '../_bridge'
-import { useI18n } from '@admin/locale'
+import { t, useI18n } from '@admin/locale'
 import {
   isString,
   isFunction,
@@ -16,9 +16,13 @@ import {
   deepMerge,
   setObjToUrlParams,
 } from '@admin/utils'
-import { RequestEnum, ResultEnum, ContentTypeEnum } from '@admin/tokens'
+import {
+  RequestEnum,
+  ResultEnum,
+  ContentTypeEnum,
+  OCNotifyType,
+} from '@admin/tokens'
 import { joinTimestamp, formatRequestDate } from './helper'
-
 /**
  * @description: 数据处理，方便区分多种处理方式
  */
@@ -176,6 +180,51 @@ const transform: AxiosTransform = {
    * @description: 响应拦截器处理
    */
   responseInterceptors: (res: AxiosResponse<any>) => {
+    console.log('responseInterceptors: ', res)
+    // extras: null
+    // message: null
+    // messages: []
+    // result: (9) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
+    // statusCode: 200
+    // succeeded: true
+    // timestamp: 1645716999773
+    const { extras, msg, succeeded, statusCode } = res.data
+    if (msg) {
+      const notifyFn = (notify) => {
+        switch (notify.type) {
+          case OCNotifyType.Success:
+            context.orchardNotify.successFunction({
+              title: t('sys.api.successTip'),
+              content: notify.message.value,
+            })
+            break
+          case OCNotifyType.Information:
+            context.orchardNotify.informationFunction({
+              title: t('sys.api.infoTip'),
+              content: notify.message.value,
+            })
+            break
+          case OCNotifyType.Warning:
+            context.orchardNotify.warningFunction({
+              title: t('sys.api.wanTip'),
+              content: notify.message.value,
+            })
+            break
+          case OCNotifyType.Error:
+            context.orchardNotify.errorFunction({
+              title: t('sys.api.errorTip'),
+              content: notify.value,
+            })
+            break
+        }
+      }
+      if (msg instanceof Array) {
+        msg.forEach(notifyFn)
+      } else if (msg['message']) {
+        notifyFn(msg)
+      }
+    }
+
     return res
   },
 

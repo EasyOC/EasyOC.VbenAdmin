@@ -1114,7 +1114,7 @@ export class RolesServiceProxy extends AppServiceBase {
     * @param body (optional) 
     * @return Success
     */
-    updateRole(body: UpdateRoleInput | undefined): Promise<void> {
+    updateRole(body: RoleDetailsDto | undefined): Promise<void> {
     
         let url_ = this.baseUrl + "/api/Roles/UpdateRole";
             url_ = url_.replace(/[?&]$/, "");
@@ -2215,57 +2215,21 @@ export class ResetUserPasswordtInput {
     }
 }
 
-export class RoleClaimDto {
-    /** 角色Claim类型，
-EasyOC.OrchardCore.OpenApi.Mappers.RoleClaimMapping */
-    claimType!: RoleClaimDtoClaimType;
-    claimValue!: string | null;
-
-    init(_data?: any, _mappings?: any) {
-        if (_data) {
-            this.claimType = _data["claimType"] !== undefined ? _data["claimType"] : <any>null;
-            this.claimValue = _data["claimValue"] !== undefined ? _data["claimValue"] : <any>null;
-        }
-    }
-
-    static fromJS(data: any, _mappings?: any): RoleClaimDto {
-        data = typeof data === 'object' ? data : {};
-        return createInstance<RoleClaimDto>(data, _mappings, RoleClaimDto);
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["claimType"] = this.claimType !== undefined ? this.claimType : <any>null;
-        data["claimValue"] = this.claimValue !== undefined ? this.claimValue : <any>null;
-        return data; 
-    }
-}
-
 export class RoleDetailsDto {
     name!: string | null;
     roleDescription!: string | null;
-    roleCategoryPermissions!: { [key: string]: PermissionDto[]; } | null;
-    effectivePermissions!: string[] | null;
-    role!: RoleDto;
+    permissions!: string[] | null;
     vbenMenuIds!: string[] | null;
 
     init(_data?: any, _mappings?: any) {
         if (_data) {
             this.name = _data["name"] !== undefined ? _data["name"] : <any>null;
             this.roleDescription = _data["roleDescription"] !== undefined ? _data["roleDescription"] : <any>null;
-            if (_data["roleCategoryPermissions"]) {
-                this.roleCategoryPermissions = {} as any;
-                for (let key in _data["roleCategoryPermissions"]) {
-                    if (_data["roleCategoryPermissions"].hasOwnProperty(key))
-                        this.roleCategoryPermissions![key] = _data["roleCategoryPermissions"][key] ? _data["roleCategoryPermissions"][key].map((i: any) => PermissionDto.fromJS(i, _mappings)) : [];
-                }
+            if (Array.isArray(_data["permissions"])) {
+                this.permissions = [] as any;
+                for (let item of _data["permissions"])
+                    this.permissions!.push(item);
             }
-            if (Array.isArray(_data["effectivePermissions"])) {
-                this.effectivePermissions = [] as any;
-                for (let item of _data["effectivePermissions"])
-                    this.effectivePermissions!.push(item);
-            }
-            this.role = _data["role"] ? RoleDto.fromJS(_data["role"], _mappings) : <any>null;
             if (Array.isArray(_data["vbenMenuIds"])) {
                 this.vbenMenuIds = [] as any;
                 for (let item of _data["vbenMenuIds"])
@@ -2283,19 +2247,11 @@ export class RoleDetailsDto {
         data = typeof data === 'object' ? data : {};
         data["name"] = this.name !== undefined ? this.name : <any>null;
         data["roleDescription"] = this.roleDescription !== undefined ? this.roleDescription : <any>null;
-        if (this.roleCategoryPermissions) {
-            data["roleCategoryPermissions"] = {};
-            for (let key in this.roleCategoryPermissions) {
-                if (this.roleCategoryPermissions.hasOwnProperty(key))
-                    data["roleCategoryPermissions"][key] = this.roleCategoryPermissions[key] !== undefined ? this.roleCategoryPermissions[key] : <any>null;
-            }
+        if (Array.isArray(this.permissions)) {
+            data["permissions"] = [];
+            for (let item of this.permissions)
+                data["permissions"].push(item);
         }
-        if (Array.isArray(this.effectivePermissions)) {
-            data["effectivePermissions"] = [];
-            for (let item of this.effectivePermissions)
-                data["effectivePermissions"].push(item);
-        }
-        data["role"] = this.role ? this.role.toJSON() : <any>null;
         if (Array.isArray(this.vbenMenuIds)) {
             data["vbenMenuIds"] = [];
             for (let item of this.vbenMenuIds)
@@ -2457,55 +2413,6 @@ export class TypeDto {
         data = typeof data === 'object' ? data : {};
         data["name"] = this.name !== undefined ? this.name : <any>null;
         data["fullName"] = this.fullName !== undefined ? this.fullName : <any>null;
-        return data; 
-    }
-}
-
-export class UpdateRoleInput {
-    roleName!: string | null;
-    roleDescription!: string | null;
-    normalizedRoleName!: string | null;
-    vbenMenuIds!: RoleClaimDto[] | null;
-    roleClaims!: RoleClaimDto[] | null;
-
-    init(_data?: any, _mappings?: any) {
-        if (_data) {
-            this.roleName = _data["roleName"] !== undefined ? _data["roleName"] : <any>null;
-            this.roleDescription = _data["roleDescription"] !== undefined ? _data["roleDescription"] : <any>null;
-            this.normalizedRoleName = _data["normalizedRoleName"] !== undefined ? _data["normalizedRoleName"] : <any>null;
-            if (Array.isArray(_data["vbenMenuIds"])) {
-                this.vbenMenuIds = [] as any;
-                for (let item of _data["vbenMenuIds"])
-                    this.vbenMenuIds!.push(RoleClaimDto.fromJS(item, _mappings));
-            }
-            if (Array.isArray(_data["roleClaims"])) {
-                this.roleClaims = [] as any;
-                for (let item of _data["roleClaims"])
-                    this.roleClaims!.push(RoleClaimDto.fromJS(item, _mappings));
-            }
-        }
-    }
-
-    static fromJS(data: any, _mappings?: any): UpdateRoleInput {
-        data = typeof data === 'object' ? data : {};
-        return createInstance<UpdateRoleInput>(data, _mappings, UpdateRoleInput);
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["roleName"] = this.roleName !== undefined ? this.roleName : <any>null;
-        data["roleDescription"] = this.roleDescription !== undefined ? this.roleDescription : <any>null;
-        data["normalizedRoleName"] = this.normalizedRoleName !== undefined ? this.normalizedRoleName : <any>null;
-        if (Array.isArray(this.vbenMenuIds)) {
-            data["vbenMenuIds"] = [];
-            for (let item of this.vbenMenuIds)
-                data["vbenMenuIds"].push(item.toJSON());
-        }
-        if (Array.isArray(this.roleClaims)) {
-            data["roleClaims"] = [];
-            for (let item of this.roleClaims)
-                data["roleClaims"].push(item.toJSON());
-        }
         return data; 
     }
 }
@@ -2673,11 +2580,6 @@ export enum SyncMappingDeriction {
     OrchardCoreToRDBMS = 0,
     RDBMSToOrchardCore = 1,
     TwoWay = 2,
-}
-
-export enum RoleClaimDtoClaimType {
-    Permission = 0,
-    VbenMenuId = 1,
 }
 
 export enum UsersBulkActionInputBulkAction {

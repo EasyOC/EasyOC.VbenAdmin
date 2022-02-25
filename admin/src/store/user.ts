@@ -23,7 +23,7 @@ import { h } from 'vue'
 interface UserState {
   userInfo: Nullable<UserInfo>
   token?: string
-  timeout?:Date
+  timeout?: Date
   roleList: RoleEnum[]
   sessionTimeout?: boolean
   lastUpdateTime: number
@@ -34,7 +34,7 @@ export const useUserStore = defineStore({
   persist: {
     strategies: [
       {
-        paths: ['userInfo', 'token', 'roleList','timeout'],
+        paths: ['userInfo', 'token', 'roleList', 'timeout'],
       },
     ],
   },
@@ -57,13 +57,13 @@ export const useUserStore = defineStore({
       return this.userInfo || ({} as UserInfo)
     },
     getToken(): string {
-      if(this.token) {
+      if (this.token) {
         window.localStorage.setItem('token', this.token)
       }
       return this.token as string
     },
     getTimeout(): Date | null {
-      return this.timeout?new Date(this.timeout):null
+      return this.timeout ? new Date(this.timeout) : null
     },
     getRoleList(): RoleEnum[] {
       return this.roleList.length > 0 ? this.roleList : []
@@ -78,11 +78,11 @@ export const useUserStore = defineStore({
   actions: {
     setToken(info: string | undefined) {
       this.token = info ? info : '' // for null or undefined value
-      if(info) window.localStorage.setItem('token', info)
+      if (info) window.localStorage.setItem('token', info)
     },
     setTimeout(timeout: Date | undefined) {
-      this.timeout = timeout;
-      if(timeout) window.localStorage.setItem('timeout', timeout.toString())
+      this.timeout = timeout
+      if (timeout) window.localStorage.setItem('timeout', timeout.toString())
     },
     setRoleList(roleList: RoleEnum[]) {
       this.roleList = roleList
@@ -129,9 +129,9 @@ export const useUserStore = defineStore({
         return null
       }
 
-      if(new Date(this.getTimeout)<new Date()) {
+      if (new Date(this.getTimeout) < new Date()) {
         this.logout(true)
-        return null;
+        return null
       }
 
       // get user info
@@ -162,15 +162,16 @@ export const useUserStore = defineStore({
         return null
       }
 
-      if(new Date(this.getTimeout)<new Date()) {
+      if (new Date(this.getTimeout) < new Date()) {
         this.logout(true)
-        return null;
+        return null
       }
 
       // const userInfo = await getUserInfo()
       const userInfo = {} as GetUserInfoModel //await getUserInfo();
 
       const data = decodeJwt(this.getToken)
+      console.log('data: ', data)
       if (!data) {
         throw Error('Verification failed, please Login again.')
       }
@@ -205,11 +206,13 @@ export const useUserStore = defineStore({
      */
     async logout(goLogin = false) {
       if (this.getToken) {
-        await doLogout().catch(() => {
-          console.log('注销Token失败')
-        }).finally(() => {
-          this.setTimeout(undefined);
-        })
+        await doLogout()
+          .catch(() => {
+            console.log('注销Token失败')
+          })
+          .finally(() => {
+            this.setTimeout(undefined)
+          })
       }
       this.setToken(undefined)
       this.setTimeout(undefined)

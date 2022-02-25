@@ -1,7 +1,9 @@
 <template>
   <div>
-    <Amis :amisjson="amisjson" @amisMounted="amisMounted" />
-    <CodeEditor @change="editorChange" v-model:value="editorJson" />
+    <Amis :amisjson="amisjson" :amisMounted="amisMounted" />
+    <div>
+      <!-- <CodeEditor @change="editorChange" v-model:value="editorJson" /> -->
+    </div>
   </div>
 </template>
 <script setup lang="ts">
@@ -16,10 +18,7 @@ const editorJson = ref<any>(`
   "type": "crud",
   "api": {
     "method": "post",
-    "url": "http://localhost:2919/api/graphql",
-    "data": {
-      "&": "$$"
-    },
+    "url": "/api/graphql",
     "dataType": "json",
     "replaceData": true,
     "responseData": {
@@ -62,7 +61,7 @@ const editorJson = ref<any>(`
     "config": {
       "url": "[object Object]",
       "method": "post",
-      "data": "{\"type\":\"crud\",\"api\":{\"method\":\"post\",\"url\":\"http://localhost:2919/api/graphql\",\"data\":{\"\":{\"variables\":{\"from\":0,\"skip\":10},\"query\":\"query MyQuery($params:String) {\\n              crmCustomers(parameters:$params) {\\n                items \\n                 {\\n  contentItemId \\n  contentItemVersionId \\n  contentType \\n  displayText \\n  latest \\n  published \\n  modifiedUtc \\n  publishedUtc \\n  createdUtc \\n  owner \\n  author \\n  name \\n  custNum \\n  marketSegment {\\n    contentItems {\\n      contentItemId \\n      displayText \\n    }\\n  }\\n  source {\\n    contentItems {\\n      contentItemId \\n      displayText \\n    }\\n  }\\n  industry {\\n    contentItems {\\n      contentItemId \\n      displayText \\n    }\\n  }\\n  custClass {\\n    contentItems {\\n      contentItemId \\n      displayText \\n    }\\n  }\\n  salesOwner {\\n    userIds \\n    userProfiles {\\n      displayText \\n    }\\n  }\\n  address {\\n    countryName \\n    province \\n    city \\n    postalCode \\n    details \\n    name \\n  }\\n}                \\n                total\\n              }\\n            }\"}},\"dataType\":\"json\",\"replaceData\":false},\"columns\":[{\"name\":\"id\",\"label\":\"ID\",\"type\":\"text\"},{\"name\":\"engine\",\"label\":\"渲染引擎\",\"type\":\"text\"}],\"bulkActions\":[],\"itemActions\":[]}",
+      "data": "{\"type\":\"crud\",\"api\":{\"method\":\"post\",\"url\":\"/api/graphql\",\"data\":{\"\":{\"variables\":{\"from\":0,\"skip\":10},\"query\":\"query MyQuery($params:String) {\\n              crmCustomers(parameters:$params) {\\n                items \\n                 {\\n  contentItemId \\n  contentItemVersionId \\n  contentType \\n  displayText \\n  latest \\n  published \\n  modifiedUtc \\n  publishedUtc \\n  createdUtc \\n  owner \\n  author \\n  name \\n  custNum \\n  marketSegment {\\n    contentItems {\\n      contentItemId \\n      displayText \\n    }\\n  }\\n  source {\\n    contentItems {\\n      contentItemId \\n      displayText \\n    }\\n  }\\n  industry {\\n    contentItems {\\n      contentItemId \\n      displayText \\n    }\\n  }\\n  custClass {\\n    contentItems {\\n      contentItemId \\n      displayText \\n    }\\n  }\\n  salesOwner {\\n    userIds \\n    userProfiles {\\n      displayText \\n    }\\n  }\\n  address {\\n    countryName \\n    province \\n    city \\n    postalCode \\n    details \\n    name \\n  }\\n}                \\n                total\\n              }\\n            }\"}},\"dataType\":\"json\",\"replaceData\":false},\"columns\":[{\"name\":\"id\",\"label\":\"ID\",\"type\":\"text\"},{\"name\":\"engine\",\"label\":\"渲染引擎\",\"type\":\"text\"}],\"bulkActions\":[],\"itemActions\":[]}",
       "headers": {
         "Accept": "application/json, text/plain, */*",
         "Content-Type": "application/json"
@@ -98,7 +97,7 @@ const editorJson = ref<any>(`
       "config": {
         "url": "[object Object]",
         "method": "post",
-        "data": "{\"type\":\"crud\",\"api\":{\"method\":\"post\",\"url\":\"http://localhost:2919/api/graphql\",\"data\":{\"\":{\"variables\":{\"from\":0,\"skip\":10},\"query\":\"query MyQuery($params:String) {\\n              crmCustomers(parameters:$params) {\\n                items \\n                 {\\n  contentItemId \\n  contentItemVersionId \\n  contentType \\n  displayText \\n  latest \\n  published \\n  modifiedUtc \\n  publishedUtc \\n  createdUtc \\n  owner \\n  author \\n  name \\n  custNum \\n  marketSegment {\\n    contentItems {\\n      contentItemId \\n      displayText \\n    }\\n  }\\n  source {\\n    contentItems {\\n      contentItemId \\n      displayText \\n    }\\n  }\\n  industry {\\n    contentItems {\\n      contentItemId \\n      displayText \\n    }\\n  }\\n  custClass {\\n    contentItems {\\n      contentItemId \\n      displayText \\n    }\\n  }\\n  salesOwner {\\n    userIds \\n    userProfiles {\\n      displayText \\n    }\\n  }\\n  address {\\n    countryName \\n    province \\n    city \\n    postalCode \\n    details \\n    name \\n  }\\n}                \\n                total\\n              }\\n            }\"}},\"dataType\":\"json\",\"replaceData\":false},\"columns\":[{\"name\":\"id\",\"label\":\"ID\",\"type\":\"text\"},{\"name\":\"engine\",\"label\":\"渲染引擎\",\"type\":\"text\"}],\"bulkActions\":[],\"itemActions\":[]}",
+        "data": "{\"type\":\"crud\",\"api\":{\"method\":\"post\",\"url\":\"/api/graphql\",\"data\":{\"\":{\"variables\":{\"from\":0,\"skip\":10},\"query\":\"query MyQuery($params:String) {\\n              crmCustomers(parameters:$params) {\\n                items \\n                 {\\n  contentItemId \\n  contentItemVersionId \\n  contentType \\n  displayText \\n  latest \\n  published \\n  modifiedUtc \\n  publishedUtc \\n  createdUtc \\n  owner \\n  author \\n  name \\n  custNum \\n  marketSegment {\\n    contentItems {\\n      contentItemId \\n      displayText \\n    }\\n  }\\n  source {\\n    contentItems {\\n      contentItemId \\n      displayText \\n    }\\n  }\\n  industry {\\n    contentItems {\\n      contentItemId \\n      displayText \\n    }\\n  }\\n  custClass {\\n    contentItems {\\n      contentItemId \\n      displayText \\n    }\\n  }\\n  salesOwner {\\n    userIds \\n    userProfiles {\\n      displayText \\n    }\\n  }\\n  address {\\n    countryName \\n    province \\n    city \\n    postalCode \\n    details \\n    name \\n  }\\n}                \\n                total\\n              }\\n            }\"}},\"dataType\":\"json\",\"replaceData\":false},\"columns\":[{\"name\":\"id\",\"label\":\"ID\",\"type\":\"text\"},{\"name\":\"engine\",\"label\":\"渲染引擎\",\"type\":\"text\"}],\"bulkActions\":[],\"itemActions\":[]}",
         "headers": {
           "Accept": "application/json, text/plain, */*",
           "Content-Type": "application/json"
@@ -1062,7 +1061,7 @@ const editorJson = ref<any>(`
 }`)
 // const editor = ref<any>(null)
 const amisjson = computed(() => {
-  return parser.parse(editorJson.value)
+  return JSON.parse(editorJson.value)
 })
 // function editorDidMount(loadedEditor) {
 //   editor.value = loadedEditor

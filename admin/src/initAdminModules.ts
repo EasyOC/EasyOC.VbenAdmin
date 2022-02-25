@@ -35,7 +35,7 @@ const initDirective = async () => {
 const initService = async () => {
   const { createMessage, createErrorModal } = useMessage()
   const { urlPrefix, apiUrl, uploadUrl, clientId, scopes, stsAuthority } =
-  getGlobalConfig()
+    getGlobalConfig()
 
   window.localStorage.setItem('apiUrl', apiUrl)
 
@@ -47,9 +47,16 @@ const initService = async () => {
     clientId,
     scopes,
     stsAuthority,
+
     getTokenFunction: () => {
       const userStore = useUserStoreWithOut()
       return userStore.getToken
+    },
+    orchardNotify: {
+      successFunction: createMessage.success,
+      informationFunction: createMessage.info,
+      warningFunction: createMessage.warn,
+      errorFunction: createMessage.error,
     },
     errorFunction: createMessage.error,
     errorModalFunction: createErrorModal,

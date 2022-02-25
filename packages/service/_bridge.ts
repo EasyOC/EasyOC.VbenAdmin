@@ -1,6 +1,12 @@
 import type { ErrorMessageMode } from '@admin/types'
 
 export interface ContextOptions {
+  orchardNotify: {
+    successFunction: AnyFunction<any>
+    informationFunction: AnyFunction<any>
+    warningFunction: AnyFunction<any>
+    errorFunction: AnyFunction<any>
+  }
   errorFunction: AnyFunction<any>
   errorModalFunction: AnyFunction<any>
   getTokenFunction: () => unknown
