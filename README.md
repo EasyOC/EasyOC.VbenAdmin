@@ -23,3 +23,7 @@ QQ群：877196442
 ### 通用功能
 - [ ] Excel 导入导出
 - [ ] 用户自定义列表顺序 （不同用户查看的不同列顺序）
+
+### VbenAdmin 代码生成器/自动组件
+![TCQ0DGL1BV2{BY{YT@0RXK](https://user-images.githubusercontent.com/15613121/155528839-093f9a80-761c-44ef-beaf-22ddd69c5a2e.jpg)
+![$Q3K$A{)62MKXU2Y9{YDL0G](https://user-images.githubusercontent.com/15613121/155528861-818e611e-ca2e-428f-b4f8-edae751f806a.jpg)
