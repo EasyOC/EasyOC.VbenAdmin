@@ -1,1165 +1,231 @@
 <template>
   <div>
-    <a-button type @click="showCode" v-if="v1">显示代码</a-button>
-    <a-button type @click="copyCode">复制代码</a-button>
-    <Amis v-if="amitShow" :amisjson="amisjson" @amisMounted="amisMounted" />
-    <!-- <Amis :amisjson="amisjson1" @amisMounted="amisMounted" /> -->
-
-    <a-drawer v-model:visible="codeVisible" size="large" title="代码" placement="right">
-      <a-button size="small" @click="formatSchema" title="快捷键：shift+alt+f">格式化</a-button>
-      <CodeEditor @change="editorChange" v-model:value="editorJson" />
-      <!-- <MonacoEditor v-model:value="editorJson" @change="editorChange" /> -->
-    </a-drawer>
+    <Amis :amisjson="amisjson" @amisMounted="amisMounted" />
   </div>
 </template>
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 // import MonacoEditor from '@/components/MonacoEditor/index.vue'
-import { CodeEditor } from '@/components/CodeEditor'
+// import { CodeEditor } from '@/components/CodeEditor'
 import { Amis } from '@/components/Amis'
-import { parser } from 'xijs'
+// import { parser } from 'xijs'
 // window.enableAMISDebug = true
-const editorJson = ref<any>(
-  `
-   {
-  "type": "form",
-  "title": "常规模式",
-  "body": [
-    {
-      "type": "input-text",
-      "name": "username",
-      "required": true,
-      "placeholder": "请输入邮箱",
-      "label": "邮箱",
-      "size": "full"
-    },
-    {
-      "type": "input-password",
-      "name": "password",
-      "label": "密码",
-      "required": true,
-      "placeholder": "请输入密码",
-      "size": "full"
-    },
-    {
-      "type": "checkbox",
-      "name": "rememberMe",
-      "option": "记住登录",
-      "value": false
-    },
-    {
-      "type": "submit",
-      "label": "登录"
-    }
-  ],
-  "api": {
-    "method": "post",
-    "url": "/api/graphql",
-    "dataType": "json",
-    "replaceData": true,
-    "responseData": {
-      "&": "$$"
-    }
-  },
-  "bulkActions": [
-    {
-      "type": "button",
-      "level": "danger",
-      "label": "批量删除",
-      "actionType": "ajax",
-      "confirmText": "确定要删除？",
-      "api": "/xxx/batch-delete"
-    },
-    {
-      "type": "button",
-      "label": "批量编辑",
-      "actionType": "dialog",
-      "dialog": {
-        "title": "批量编辑",
-        "size": "md",
-        "body": {
-          "type": "form",
-          "api": "/xxx/bacth-edit",
-          "body": [
-            {
-              "label": "字段1",
-              "text": "字段1",
-              "type": "input-text"
-            }
-          ]
-        }
-      }
-    }
-  ],
-  "itemActions": [
-  ],
-  "errorMsg": {
-    "config": {
-      "url": "[object Object]",
-      "method": "post",
-      "data": "{\"type\":\"crud\",\"api\":{\"method\":\"post\",\"url\":\"/api/graphql\",\"data\":{\"\":{\"variables\":{\"from\":0,\"skip\":10},\"query\":\"query MyQuery($params:String) {\\n              crmCustomers(parameters:$params) {\\n                items \\n                 {\\n  contentItemId \\n  contentItemVersionId \\n  contentType \\n  displayText \\n  latest \\n  published \\n  modifiedUtc \\n  publishedUtc \\n  createdUtc \\n  owner \\n  author \\n  name \\n  custNum \\n  marketSegment {\\n    contentItems {\\n      contentItemId \\n      displayText \\n    }\\n  }\\n  source {\\n    contentItems {\\n      contentItemId \\n      displayText \\n    }\\n  }\\n  industry {\\n    contentItems {\\n      contentItemId \\n      displayText \\n    }\\n  }\\n  custClass {\\n    contentItems {\\n      contentItemId \\n      displayText \\n    }\\n  }\\n  salesOwner {\\n    userIds \\n    userProfiles {\\n      displayText \\n    }\\n  }\\n  address {\\n    countryName \\n    province \\n    city \\n    postalCode \\n    details \\n    name \\n  }\\n}                \\n                total\\n              }\\n            }\"}},\"dataType\":\"json\",\"replaceData\":false},\"columns\":[{\"name\":\"id\",\"label\":\"ID\",\"type\":\"text\"},{\"name\":\"engine\",\"label\":\"渲染引擎\",\"type\":\"text\"}],\"bulkActions\":[],\"itemActions\":[]}",
-      "headers": {
-        "Accept": "application/json, text/plain, */*",
-        "Content-Type": "application/json"
-      },
-      "transformRequest": [
-        undefined
-      ],
-      "transformResponse": [
-        undefined
-      ],
-      "timeout": 0,
-      "withCredentials": true,
-      "adapter": undefined,
-      "xsrfCookieName": "XSRF-TOKEN",
-      "xsrfHeaderName": "X-XSRF-TOKEN",
-      "maxContentLength": -1,
-      "maxBodyLength": -1,
-      "validateStatus": undefined
-    },
-    "request": {
-    },
-    "response": {
-      "data": "",
-      "status": 404,
-      "statusText": "Not Found",
-      "headers": {
-        "access-control-allow-origin": "*",
-        "connection": "keep-alive",
-        "content-length": "0",
-        "date": "Thu, 17 Feb 2022 11:13:26 GMT",
-        "keep-alive": "timeout=5"
-      },
-      "config": {
-        "url": "[object Object]",
-        "method": "post",
-        "data": "{\"type\":\"crud\",\"api\":{\"method\":\"post\",\"url\":\"/api/graphql\",\"data\":{\"\":{\"variables\":{\"from\":0,\"skip\":10},\"query\":\"query MyQuery($params:String) {\\n              crmCustomers(parameters:$params) {\\n                items \\n                 {\\n  contentItemId \\n  contentItemVersionId \\n  contentType \\n  displayText \\n  latest \\n  published \\n  modifiedUtc \\n  publishedUtc \\n  createdUtc \\n  owner \\n  author \\n  name \\n  custNum \\n  marketSegment {\\n    contentItems {\\n      contentItemId \\n      displayText \\n    }\\n  }\\n  source {\\n    contentItems {\\n      contentItemId \\n      displayText \\n    }\\n  }\\n  industry {\\n    contentItems {\\n      contentItemId \\n      displayText \\n    }\\n  }\\n  custClass {\\n    contentItems {\\n      contentItemId \\n      displayText \\n    }\\n  }\\n  salesOwner {\\n    userIds \\n    userProfiles {\\n      displayText \\n    }\\n  }\\n  address {\\n    countryName \\n    province \\n    city \\n    postalCode \\n    details \\n    name \\n  }\\n}                \\n                total\\n              }\\n            }\"}},\"dataType\":\"json\",\"replaceData\":false},\"columns\":[{\"name\":\"id\",\"label\":\"ID\",\"type\":\"text\"},{\"name\":\"engine\",\"label\":\"渲染引擎\",\"type\":\"text\"}],\"bulkActions\":[],\"itemActions\":[]}",
-        "headers": {
-          "Accept": "application/json, text/plain, */*",
-          "Content-Type": "application/json"
-        },
-        "transformRequest": [
-          undefined
-        ],
-        "transformResponse": [
-          undefined
-        ],
-        "timeout": 0,
-        "withCredentials": true,
-        "adapter": undefined,
-        "xsrfCookieName": "XSRF-TOKEN",
-        "xsrfHeaderName": "X-XSRF-TOKEN",
-        "maxContentLength": -1,
-        "maxBodyLength": -1,
-        "validateStatus": undefined
-      },
-      "request": {
-      }
-    },
-    "isAxiosError": true,
-    "toJSON": undefined
-  },
-  "features": [
-    "create",
-    "filter",
-    "bulkDelete",
-    "bulkUpdate",
-    "update",
-    "view",
-    "delete"
-  ],
-  "headerToolbar": [
-    {
-      "label": "新增",
-      "type": "button",
-      "actionType": "dialog",
-      "level": "primary",
-      "dialog": {
-        "title": "新增",
-        "body": {
-          "type": "form",
-          "api": "POST:[object Object]",
-          "body": [
-            {
-              "type": "input-text",
-              "name": "contentItemId",
-              "label": "ID"
-            },
-            {
-              "type": "input-text",
-              "name": "displayText",
-              "label": "标题"
-            },
-            {
-              "type": "input-date",
-              "name": "createdUtc",
-              "label": "创建时间"
-            },
-            {
-              "type": "input-text",
-              "name": "industry.contentitems[0].displayText",
-              "label": "行业"
-            }
-          ]
-        }
-      }
-    },
-    "bulkActions",
-    "pagination"
-  ],
-  "perPageAvailable": [
-    10
-  ],
-  "messages": {
-  },
-  "primaryField": "contentItemId",
-  "filter": {
-    "title": "查询条件",
-    "body": [
-      {
-        "type": "input-text",
-        "name": "keywords",
-        "label": "关键字"
-      }
-    ]
-  },
-  "mode": "table",
-  "columns": [
-    {
-      "name": "contentItemId",
-      "label": "ID",
-      "type": "text"
-    },
-    {
-      "name": "displayText",
-      "label": "标题",
-      "type": "text"
-    },
-    {
-      "type": "date",
-      "label": "创建时间",
-      "buttons": [
-        {
-          "label": "编辑",
-          "type": "button",
-          "actionType": "dialog",
-          "level": "link",
-          "dialog": {
-            "title": "编辑",
-            "body": {
-              "type": "form",
-              "api": "xxx/update",
-              "body": [
-                {
-                  "name": "contentItemId",
-                  "label": "ID",
-                  "type": "input-text"
-                },
-                {
-                  "name": "displayText",
-                  "label": "标题",
-                  "type": "input-text"
-                }
-              ]
-            }
-          }
-        },
-        {
-          "label": "查看",
-          "type": "button",
-          "actionType": "dialog",
-          "level": "link",
-          "dialog": {
-            "title": "查看详情",
-            "body": {
-              "type": "form",
-              "api": "xxx/update",
-              "body": [
-                {
-                  "name": "contentItemId",
-                  "label": "ID",
-                  "type": "static"
-                },
-                {
-                  "name": "displayText",
-                  "label": "标题",
-                  "type": "static"
-                }
-              ]
-            }
-          }
-        },
-        {
-          "type": "button",
-          "label": "删除",
-          "actionType": "ajax",
-          "level": "link",
-          "className": "text-danger",
-          "confirmText": "确定要删除？",
-          "api": "POST:[object Object]"
-        }
-      ],
-      "name": "createdUtc"
-    },
-    {
-      "type": "text",
-      "label": "行业",
-      "buttons": [
-        {
-          "label": "编辑",
-          "type": "button",
-          "actionType": "dialog",
-          "level": "link",
-          "dialog": {
-            "title": "编辑",
-            "body": {
-              "type": "form",
-              "api": "xxx/update",
-              "body": [
-                {
-                  "name": "contentItemId",
-                  "label": "ID",
-                  "type": "input-text"
-                },
-                {
-                  "name": "displayText",
-                  "label": "标题",
-                  "type": "input-text"
-                },
-                {
-                  "label": "创建时间",
-                  "buttons": [
-                    {
-                      "label": "编辑",
-                      "type": "button",
-                      "actionType": "dialog",
-                      "level": "link",
-                      "dialog": {
-                        "title": "编辑",
-                        "body": {
-                          "type": "form",
-                          "api": "xxx/update",
-                          "body": [
-                            {
-                              "name": "contentItemId",
-                              "label": "ID",
-                              "type": "input-text"
-                            },
-                            {
-                              "name": "displayText",
-                              "label": "标题",
-                              "type": "input-text"
-                            }
-                          ]
-                        }
-                      }
-                    },
-                    {
-                      "label": "查看",
-                      "type": "button",
-                      "actionType": "dialog",
-                      "level": "link",
-                      "dialog": {
-                        "title": "查看详情",
-                        "body": {
-                          "type": "form",
-                          "api": "xxx/update",
-                          "body": [
-                            {
-                              "name": "contentItemId",
-                              "label": "ID",
-                              "type": "static"
-                            },
-                            {
-                              "name": "displayText",
-                              "label": "标题",
-                              "type": "static"
-                            }
-                          ]
-                        }
-                      }
-                    },
-                    {
-                      "type": "button",
-                      "label": "删除",
-                      "actionType": "ajax",
-                      "level": "link",
-                      "className": "text-danger",
-                      "confirmText": "确定要删除？",
-                      "api": "POST:[object Object]"
-                    }
-                  ],
-                  "name": "createdUtc",
-                  "type": "input-date"
-                }
-              ]
-            }
-          }
-        },
-        {
-          "label": "查看",
-          "type": "button",
-          "actionType": "dialog",
-          "level": "link",
-          "dialog": {
-            "title": "查看详情",
-            "body": {
-              "type": "form",
-              "api": "xxx/update",
-              "body": [
-                {
-                  "name": "contentItemId",
-                  "label": "ID",
-                  "type": "static"
-                },
-                {
-                  "name": "displayText",
-                  "label": "标题",
-                  "type": "static"
-                },
-                {
-                  "label": "创建时间",
-                  "buttons": [
-                    {
-                      "label": "编辑",
-                      "type": "button",
-                      "actionType": "dialog",
-                      "level": "link",
-                      "dialog": {
-                        "title": "编辑",
-                        "body": {
-                          "type": "form",
-                          "api": "xxx/update",
-                          "body": [
-                            {
-                              "name": "contentItemId",
-                              "label": "ID",
-                              "type": "input-text"
-                            },
-                            {
-                              "name": "displayText",
-                              "label": "标题",
-                              "type": "input-text"
-                            }
-                          ]
-                        }
-                      }
-                    },
-                    {
-                      "label": "查看",
-                      "type": "button",
-                      "actionType": "dialog",
-                      "level": "link",
-                      "dialog": {
-                        "title": "查看详情",
-                        "body": {
-                          "type": "form",
-                          "api": "xxx/update",
-                          "body": [
-                            {
-                              "name": "contentItemId",
-                              "label": "ID",
-                              "type": "static"
-                            },
-                            {
-                              "name": "displayText",
-                              "label": "标题",
-                              "type": "static"
-                            }
-                          ]
-                        }
-                      }
-                    },
-                    {
-                      "type": "button",
-                      "label": "删除",
-                      "actionType": "ajax",
-                      "level": "link",
-                      "className": "text-danger",
-                      "confirmText": "确定要删除？",
-                      "api": "POST:[object Object]"
-                    }
-                  ],
-                  "name": "createdUtc",
-                  "type": "static"
-                }
-              ]
-            }
-          }
-        },
-        {
-          "type": "button",
-          "label": "删除",
-          "actionType": "ajax",
-          "level": "link",
-          "className": "text-danger",
-          "confirmText": "确定要删除？",
-          "api": "POST:[object Object]"
-        }
-      ],
-      "name": "industry.contentitems[0].displayText"
-    },
-    {
-      "type": "operation",
-      "label": "操作",
-      "buttons": [
-        {
-          "label": "编辑",
-          "type": "button",
-          "actionType": "dialog",
-          "level": "link",
-          "dialog": {
-            "title": "编辑",
-            "body": {
-              "type": "form",
-              "api": "xxx/update",
-              "body": [
-                {
-                  "name": "contentItemId",
-                  "label": "ID",
-                  "type": "input-text"
-                },
-                {
-                  "name": "displayText",
-                  "label": "标题",
-                  "type": "input-text"
-                },
-                {
-                  "label": "创建时间",
-                  "buttons": [
-                    {
-                      "label": "编辑",
-                      "type": "button",
-                      "actionType": "dialog",
-                      "level": "link",
-                      "dialog": {
-                        "title": "编辑",
-                        "body": {
-                          "type": "form",
-                          "api": "xxx/update",
-                          "body": [
-                            {
-                              "name": "contentItemId",
-                              "label": "ID",
-                              "type": "input-text"
-                            },
-                            {
-                              "name": "displayText",
-                              "label": "标题",
-                              "type": "input-text"
-                            }
-                          ]
-                        }
-                      }
-                    },
-                    {
-                      "label": "查看",
-                      "type": "button",
-                      "actionType": "dialog",
-                      "level": "link",
-                      "dialog": {
-                        "title": "查看详情",
-                        "body": {
-                          "type": "form",
-                          "api": "xxx/update",
-                          "body": [
-                            {
-                              "name": "contentItemId",
-                              "label": "ID",
-                              "type": "static"
-                            },
-                            {
-                              "name": "displayText",
-                              "label": "标题",
-                              "type": "static"
-                            }
-                          ]
-                        }
-                      }
-                    },
-                    {
-                      "type": "button",
-                      "label": "删除",
-                      "actionType": "ajax",
-                      "level": "link",
-                      "className": "text-danger",
-                      "confirmText": "确定要删除？",
-                      "api": "POST:[object Object]"
-                    }
-                  ],
-                  "name": "createdUtc",
-                  "type": "input-date"
-                },
-                {
-                  "label": "行业",
-                  "buttons": [
-                    {
-                      "label": "编辑",
-                      "type": "button",
-                      "actionType": "dialog",
-                      "level": "link",
-                      "dialog": {
-                        "title": "编辑",
-                        "body": {
-                          "type": "form",
-                          "api": "xxx/update",
-                          "body": [
-                            {
-                              "name": "contentItemId",
-                              "label": "ID",
-                              "type": "input-text"
-                            },
-                            {
-                              "name": "displayText",
-                              "label": "标题",
-                              "type": "input-text"
-                            },
-                            {
-                              "label": "创建时间",
-                              "buttons": [
-                                {
-                                  "label": "编辑",
-                                  "type": "button",
-                                  "actionType": "dialog",
-                                  "level": "link",
-                                  "dialog": {
-                                    "title": "编辑",
-                                    "body": {
-                                      "type": "form",
-                                      "api": "xxx/update",
-                                      "body": [
-                                        {
-                                          "name": "contentItemId",
-                                          "label": "ID",
-                                          "type": "input-text"
-                                        },
-                                        {
-                                          "name": "displayText",
-                                          "label": "标题",
-                                          "type": "input-text"
-                                        }
-                                      ]
-                                    }
-                                  }
-                                },
-                                {
-                                  "label": "查看",
-                                  "type": "button",
-                                  "actionType": "dialog",
-                                  "level": "link",
-                                  "dialog": {
-                                    "title": "查看详情",
-                                    "body": {
-                                      "type": "form",
-                                      "api": "xxx/update",
-                                      "body": [
-                                        {
-                                          "name": "contentItemId",
-                                          "label": "ID",
-                                          "type": "static"
-                                        },
-                                        {
-                                          "name": "displayText",
-                                          "label": "标题",
-                                          "type": "static"
-                                        }
-                                      ]
-                                    }
-                                  }
-                                },
-                                {
-                                  "type": "button",
-                                  "label": "删除",
-                                  "actionType": "ajax",
-                                  "level": "link",
-                                  "className": "text-danger",
-                                  "confirmText": "确定要删除？",
-                                  "api": "POST:[object Object]"
-                                }
-                              ],
-                              "name": "createdUtc",
-                              "type": "input-date"
-                            }
-                          ]
-                        }
-                      }
-                    },
-                    {
-                      "label": "查看",
-                      "type": "button",
-                      "actionType": "dialog",
-                      "level": "link",
-                      "dialog": {
-                        "title": "查看详情",
-                        "body": {
-                          "type": "form",
-                          "api": "xxx/update",
-                          "body": [
-                            {
-                              "name": "contentItemId",
-                              "label": "ID",
-                              "type": "static"
-                            },
-                            {
-                              "name": "displayText",
-                              "label": "标题",
-                              "type": "static"
-                            },
-                            {
-                              "label": "创建时间",
-                              "buttons": [
-                                {
-                                  "label": "编辑",
-                                  "type": "button",
-                                  "actionType": "dialog",
-                                  "level": "link",
-                                  "dialog": {
-                                    "title": "编辑",
-                                    "body": {
-                                      "type": "form",
-                                      "api": "xxx/update",
-                                      "body": [
-                                        {
-                                          "name": "contentItemId",
-                                          "label": "ID",
-                                          "type": "input-text"
-                                        },
-                                        {
-                                          "name": "displayText",
-                                          "label": "标题",
-                                          "type": "input-text"
-                                        }
-                                      ]
-                                    }
-                                  }
-                                },
-                                {
-                                  "label": "查看",
-                                  "type": "button",
-                                  "actionType": "dialog",
-                                  "level": "link",
-                                  "dialog": {
-                                    "title": "查看详情",
-                                    "body": {
-                                      "type": "form",
-                                      "api": "xxx/update",
-                                      "body": [
-                                        {
-                                          "name": "contentItemId",
-                                          "label": "ID",
-                                          "type": "static"
-                                        },
-                                        {
-                                          "name": "displayText",
-                                          "label": "标题",
-                                          "type": "static"
-                                        }
-                                      ]
-                                    }
-                                  }
-                                },
-                                {
-                                  "type": "button",
-                                  "label": "删除",
-                                  "actionType": "ajax",
-                                  "level": "link",
-                                  "className": "text-danger",
-                                  "confirmText": "确定要删除？",
-                                  "api": "POST:[object Object]"
-                                }
-                              ],
-                              "name": "createdUtc",
-                              "type": "static"
-                            }
-                          ]
-                        }
-                      }
-                    },
-                    {
-                      "type": "button",
-                      "label": "删除",
-                      "actionType": "ajax",
-                      "level": "link",
-                      "className": "text-danger",
-                      "confirmText": "确定要删除？",
-                      "api": "POST:[object Object]"
-                    }
-                  ],
-                  "name": "industry.contentitems[0].displayText",
-                  "type": "input-text"
-                }
-              ]
-            }
-          }
-        },
-        {
-          "label": "查看",
-          "type": "button",
-          "actionType": "dialog",
-          "level": "link",
-          "dialog": {
-            "title": "查看详情",
-            "body": {
-              "type": "form",
-              "api": "xxx/update",
-              "body": [
-                {
-                  "name": "contentItemId",
-                  "label": "ID",
-                  "type": "static"
-                },
-                {
-                  "name": "displayText",
-                  "label": "标题",
-                  "type": "static"
-                },
-                {
-                  "label": "创建时间",
-                  "buttons": [
-                    {
-                      "label": "编辑",
-                      "type": "button",
-                      "actionType": "dialog",
-                      "level": "link",
-                      "dialog": {
-                        "title": "编辑",
-                        "body": {
-                          "type": "form",
-                          "api": "xxx/update",
-                          "body": [
-                            {
-                              "name": "contentItemId",
-                              "label": "ID",
-                              "type": "input-text"
-                            },
-                            {
-                              "name": "displayText",
-                              "label": "标题",
-                              "type": "input-text"
-                            }
-                          ]
-                        }
-                      }
-                    },
-                    {
-                      "label": "查看",
-                      "type": "button",
-                      "actionType": "dialog",
-                      "level": "link",
-                      "dialog": {
-                        "title": "查看详情",
-                        "body": {
-                          "type": "form",
-                          "api": "xxx/update",
-                          "body": [
-                            {
-                              "name": "contentItemId",
-                              "label": "ID",
-                              "type": "static"
-                            },
-                            {
-                              "name": "displayText",
-                              "label": "标题",
-                              "type": "static"
-                            }
-                          ]
-                        }
-                      }
-                    },
-                    {
-                      "type": "button",
-                      "label": "删除",
-                      "actionType": "ajax",
-                      "level": "link",
-                      "className": "text-danger",
-                      "confirmText": "确定要删除？",
-                      "api": "POST:[object Object]"
-                    }
-                  ],
-                  "name": "createdUtc",
-                  "type": "static"
-                },
-                {
-                  "label": "行业",
-                  "buttons": [
-                    {
-                      "label": "编辑",
-                      "type": "button",
-                      "actionType": "dialog",
-                      "level": "link",
-                      "dialog": {
-                        "title": "编辑",
-                        "body": {
-                          "type": "form",
-                          "api": "xxx/update",
-                          "body": [
-                            {
-                              "name": "contentItemId",
-                              "label": "ID",
-                              "type": "input-text"
-                            },
-                            {
-                              "name": "displayText",
-                              "label": "标题",
-                              "type": "input-text"
-                            },
-                            {
-                              "label": "创建时间",
-                              "buttons": [
-                                {
-                                  "label": "编辑",
-                                  "type": "button",
-                                  "actionType": "dialog",
-                                  "level": "link",
-                                  "dialog": {
-                                    "title": "编辑",
-                                    "body": {
-                                      "type": "form",
-                                      "api": "xxx/update",
-                                      "body": [
-                                        {
-                                          "name": "contentItemId",
-                                          "label": "ID",
-                                          "type": "input-text"
-                                        },
-                                        {
-                                          "name": "displayText",
-                                          "label": "标题",
-                                          "type": "input-text"
-                                        }
-                                      ]
-                                    }
-                                  }
-                                },
-                                {
-                                  "label": "查看",
-                                  "type": "button",
-                                  "actionType": "dialog",
-                                  "level": "link",
-                                  "dialog": {
-                                    "title": "查看详情",
-                                    "body": {
-                                      "type": "form",
-                                      "api": "xxx/update",
-                                      "body": [
-                                        {
-                                          "name": "contentItemId",
-                                          "label": "ID",
-                                          "type": "static"
-                                        },
-                                        {
-                                          "name": "displayText",
-                                          "label": "标题",
-                                          "type": "static"
-                                        }
-                                      ]
-                                    }
-                                  }
-                                },
-                                {
-                                  "type": "button",
-                                  "label": "删除",
-                                  "actionType": "ajax",
-                                  "level": "link",
-                                  "className": "text-danger",
-                                  "confirmText": "确定要删除？",
-                                  "api": "POST:[object Object]"
-                                }
-                              ],
-                              "name": "createdUtc",
-                              "type": "input-date"
-                            }
-                          ]
-                        }
-                      }
-                    },
-                    {
-                      "label": "查看",
-                      "type": "button",
-                      "actionType": "dialog",
-                      "level": "link",
-                      "dialog": {
-                        "title": "查看详情",
-                        "body": {
-                          "type": "form",
-                          "api": "xxx/update",
-                          "body": [
-                            {
-                              "name": "contentItemId",
-                              "label": "ID",
-                              "type": "static"
-                            },
-                            {
-                              "name": "displayText",
-                              "label": "标题",
-                              "type": "static"
-                            },
-                            {
-                              "label": "创建时间",
-                              "buttons": [
-                                {
-                                  "label": "编辑",
-                                  "type": "button",
-                                  "actionType": "dialog",
-                                  "level": "link",
-                                  "dialog": {
-                                    "title": "编辑",
-                                    "body": {
-                                      "type": "form",
-                                      "api": "xxx/update",
-                                      "body": [
-                                        {
-                                          "name": "contentItemId",
-                                          "label": "ID",
-                                          "type": "input-text"
-                                        },
-                                        {
-                                          "name": "displayText",
-                                          "label": "标题",
-                                          "type": "input-text"
-                                        }
-                                      ]
-                                    }
-                                  }
-                                },
-                                {
-                                  "label": "查看",
-                                  "type": "button",
-                                  "actionType": "dialog",
-                                  "level": "link",
-                                  "dialog": {
-                                    "title": "查看详情",
-                                    "body": {
-                                      "type": "form",
-                                      "api": "xxx/update",
-                                      "body": [
-                                        {
-                                          "name": "contentItemId",
-                                          "label": "ID",
-                                          "type": "static"
-                                        },
-                                        {
-                                          "name": "displayText",
-                                          "label": "标题",
-                                          "type": "static"
-                                        }
-                                      ]
-                                    }
-                                  }
-                                },
-                                {
-                                  "type": "button",
-                                  "label": "删除",
-                                  "actionType": "ajax",
-                                  "level": "link",
-                                  "className": "text-danger",
-                                  "confirmText": "确定要删除？",
-                                  "api": "POST:[object Object]"
-                                }
-                              ],
-                              "name": "createdUtc",
-                              "type": "static"
-                            }
-                          ]
-                        }
-                      }
-                    },
-                    {
-                      "type": "button",
-                      "label": "删除",
-                      "actionType": "ajax",
-                      "level": "link",
-                      "className": "text-danger",
-                      "confirmText": "确定要删除？",
-                      "api": "POST:[object Object]"
-                    }
-                  ],
-                  "name": "industry.contentitems[0].displayText",
-                  "type": "static"
-                }
-              ]
-            }
-          }
-        },
-        {
-          "type": "button",
-          "label": "删除",
-          "actionType": "ajax",
-          "level": "link",
-          "className": "text-danger",
-          "confirmText": "确定要删除？",
-          "api": "POST:[object Object]"
-        }
-      ]
-    }
-  ],
-  "combineNum": 0
-}`)
+// const editorJson = ref<any>()
 // const editor = ref<any>(null)
-const amisjson = computed(() => {
-  return JSON.parse(editorJson.value)
+const amisjson = ref<any>({
+  type: 'page',
+  title: '动态页管理',
+  body: [
+    {
+      type: 'crud',
+      api: '/api/graphql?query={   items: amisSchema(status: LATEST) {     displayText     createdUtc     id: contentItemId     name     description     published     publishedUtc     modifiedUtc     author   } }',
+      columns: [
+        {
+          name: 'displayText',
+          label: '显示名称',
+          type: 'text',
+        },
+        {
+          type: 'text',
+          label: '名称',
+          name: 'name',
+        },
+        {
+          type: 'text',
+          label: '描述',
+          name: 'description',
+        },
+        {
+          type: 'status',
+          name: 'published',
+          label: '已发布',
+        },
+        {
+          type: 'date',
+          label: '发布时间',
+          name: 'publishedUtc',
+        },
+        {
+          type: 'date',
+          label: '修改时间',
+          name: 'modifiedUtc',
+        },
+        {
+          name: 'createdUtc',
+          label: '创建时间',
+          type: 'date',
+        },
+        {
+          type: 'text',
+          name: 'author',
+          label: '创建人',
+        },
+        {
+          type: 'operation',
+          label: '操作',
+          buttons: [
+            {
+              label: '编辑',
+              type: 'button',
+              actionType: 'dialog',
+              level: 'link',
+              dialog: {
+                type: 'dialog',
+                title: '编辑',
+                body: [
+                  {
+                    type: 'form',
+                    api: {
+                      method: 'post',
+                      url: '/api/content',
+                    },
+                    body: [
+                      {
+                        name: 'ContentType',
+                        label: 'ContentType',
+                        type: 'hidden',
+                        value: 'AmisSchema',
+                      },
+                      {
+                        name: 'DisplayText',
+                        label: '显示名称',
+                        type: 'input-text',
+                        required: true,
+                      },
+                      {
+                        type: 'input-text',
+                        label: '名称',
+                        name: 'AmisSchema.Name.Text',
+                        required: true,
+                        description: '代码引用的关键字',
+                      },
+                      {
+                        type: 'textarea',
+                        label: '描述',
+                        name: 'AmisSchema.Description.Text',
+                      },
+                      {
+                        type: 'editor',
+                        label: 'JSON Schema',
+                        name: 'AmisSchema.Schema.Text',
+                      },
+                    ],
+                    initApi: {
+                      method: 'get',
+                      url: '/api/content/${id}',
+                      data: {},
+                      dataType: 'json',
+                    },
+                  },
+                ],
+                closeOnEsc: false,
+                closeOnOutside: false,
+                showCloseButton: true,
+                size: 'xl',
+              },
+              onClick: 'console.log(props)',
+            },
+            {
+              label: '查看',
+              type: 'button',
+              actionType: 'dialog',
+              level: 'link',
+              dialog: {
+                title: '查看详情',
+                body: {
+                  type: 'form',
+                  api: 'xxx/update',
+                  body: [
+                    {
+                      name: 'id',
+                      label: 'ID',
+                      type: 'static',
+                    },
+                    {
+                      name: 'engine',
+                      label: '渲染引擎',
+                      type: 'static',
+                    },
+                  ],
+                },
+              },
+            },
+            {
+              type: 'button',
+              label: '删除',
+              actionType: 'ajax',
+              level: 'link',
+              className: 'text-danger',
+              confirmText: '确定要删除？',
+              api: 'POST:',
+              onClick: 'console.log(props)',
+            },
+          ],
+        },
+      ],
+      bulkActions: [],
+      itemActions: [],
+      features: ['filter', 'create', 'update', 'view', 'delete'],
+      headerToolbar: [
+        {
+          label: '新增',
+          type: 'button',
+          actionType: 'dialog',
+          level: 'primary',
+          dialog: {
+            title: '新增',
+            body: [
+              {
+                type: 'form',
+                api: {
+                  method: 'post',
+                  url: '/api/content',
+                },
+                body: [
+                  {
+                    name: 'DisplayText',
+                    label: '显示名称',
+                    type: 'input-text',
+                    required: true,
+                  },
+                  {
+                    type: 'input-text',
+                    label: '名称',
+                    name: 'AmisSchema.Name.Text',
+                    required: true,
+                    description: '代码引用的关键字',
+                  },
+                  {
+                    type: 'textarea',
+                    label: '描述',
+                    name: 'AmisSchema.Description.Text',
+                  },
+                  {
+                    type: 'editor',
+                    label: 'JSON Schema',
+                    name: 'AmisSchema.Schema.Text',
+                  },
+                ],
+              },
+            ],
+            type: 'dialog',
+            closeOnEsc: false,
+            closeOnOutside: false,
+            showCloseButton: true,
+            size: 'xl',
+          },
+        },
+        'bulkActions',
+        'pagination',
+      ],
+    },
+  ],
 })
-
-const amisjson1 = computed(() => {
-  return {
-    type: 'button',
-    label: '按钮',
-    actionType: '',
-    onClick: showV1(),
-  }
-})
-
-const codeVisible = ref(false)
-const v1 = ref(true)
-function showCode() {
-  codeVisible.value = true
-}
-
-function showV1() {
-  v1.value = true
-}
-
-function copyCode() {
-  const code = editorJson.value
-
-  const aux = document.createElement('input')
-  // 获取复制内容
-  const content = code
-  // 设置元素内容
-  aux.setAttribute('value', content)
-  // 将元素插入页面进行调用
-  document.body.appendChild(aux)
-  // 复制内容
-  aux.select()
-  // 将内容复制到剪贴板
-  document.execCommand('copy')
-  // 删除创建元素
-  document.body.removeChild(aux)
-}
-
-// function editorDidMount(loadedEditor) {
-//   editor.value = loadedEditor
-//   // try {
-//   //   editor.value.setValue(editorJson.value)
-//   // } catch (error) {}
-// }
-
-const amitShow = ref(true)
-function editorChange(value) {
-  amitShow.value = false
-  editorJson.value = value
-  console.log('amisjson: ', amisjson.value)
-  amisScoped.value.updateProps(amisjson.value)
-
-  amitShow.value = true
-}
-
-function formatSchema() {
-  // amisScoped?.value.getAction(['editor.action.formatDocument'])._run()
-}
 
 const amisScoped = ref<any>(null)
 function amisMounted(amisScope) {
   amisScoped.value = amisScope
+  console.log('amisScoped.value: ', amisScoped.value)
+  console.log(JSON.stringify(amisjson))
 }
 </script>
