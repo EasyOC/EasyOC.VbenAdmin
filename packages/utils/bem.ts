@@ -1,6 +1,5 @@
-import type { Plugin } from 'vue'
+import { namespace } from '@admin/setting'
 
-let namespace = ''
 type Mod = string | { [key: string]: any }
 type Mods = Mod | Mod[]
 
@@ -54,9 +53,3 @@ export const createNamespace = (name: string) => {
   const prefixedName = `${namespace}-${name}`
   return [prefixedName, buildBEM(prefixedName)] as const
 }
-
-export const createBEMPlugin = (_namespace: string): Plugin => ({
-  install: () => {
-    namespace = _namespace
-  },
-})

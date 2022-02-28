@@ -1,14 +1,15 @@
 // axios配置  可自行根据项目进行更改，只需更改该文件即可，其他文件可以不动
-// The axios configuration can be changed according to the project,
-//just change the file, other files can be left unchanged
+// The axios configuration can be changed according to the project, just change the file, other files can be left unchanged
 
 import type { AxiosResponse } from 'axios'
 import type { RequestOptions, RequestResult } from '@admin/types'
 import type { AxiosTransform, CreateAxiosOptions } from './axiosTransform'
+
 import { VAxios } from './Axios'
 import { checkStatus } from './checkStatus'
 import { context } from '../_bridge'
 import { t, useI18n } from '@admin/locale'
+
 import {
   isString,
   isFunction,
@@ -54,7 +55,7 @@ const transform: AxiosTransform = {
       throw new Error(t('sys.api.apiRequestFailed'))
     }
     //  这里 code，result，message为 后台统一的字段，需要在 types.ts内修改为项目自己的接口返回格式
-    const { statusCode, result, message, succeeded } = data
+    const { statusCode, result, message, succeeded } = data as any
 
     // 这里逻辑可以根据项目进行修改
     const hasSuccess = succeeded && statusCode === ResultEnum.SUCCESS
@@ -72,7 +73,7 @@ const transform: AxiosTransform = {
         break
       default:
         if (message) {
-          timeoutMsg = message.join('\n')
+          timeoutMsg = message
         }
     }
 
@@ -92,20 +93,7 @@ const transform: AxiosTransform = {
 
   // 请求之前处理config
   beforeRequestHook: (config, options) => {
-    const {
-      apiUrl,
-      joinPrefix,
-      joinParamsToUrl,
-      formatDate,
-      joinTime = true,
-      urlPrefix,
-    } = options
-
-    if (joinPrefix) {
-      config.url = `${isString(urlPrefix) ? urlPrefix : urlPrefix?.()}${
-        config.url
-      }`
-    }
+    const { apiUrl, joinParamsToUrl, formatDate, joinTime = true } = options
 
     if (apiUrl) {
       const _apuUrl = isString(apiUrl)
@@ -188,7 +176,7 @@ const transform: AxiosTransform = {
     // statusCode: 200
     // succeeded: true
     // timestamp: 1645716999773
-    const { extras, msg, succeeded, statusCode } = res.data
+    const { extras, msg, succeeded, statusCode } = res.data as any
     if (msg) {
       const notifyFn = (notify) => {
         switch (notify.type) {
@@ -275,10 +263,10 @@ const createAxios = (opt?: Partial<CreateAxiosOptions>) => {
         // See https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication#authentication_schemes
         // authentication schemes，e.g: Bearer
         // authenticationScheme: 'Bearer',
-        authenticationScheme: 'Bearer',
+        authenticationScheme: '',
         timeout: 10 * 1000,
         // 基础接口地址
-        // baseURL: process.env.VITE_GLOB_API_URL .apiUrl,
+        // baseURL: globSetting.apiUrl,
 
         headers: { 'Content-Type': ContentTypeEnum.JSON },
         // 如果是form-data格式
@@ -287,8 +275,6 @@ const createAxios = (opt?: Partial<CreateAxiosOptions>) => {
         transform: clone(transform),
         // 配置项，下面的选项都可以在独立的接口请求中覆盖
         requestOptions: {
-          // 默认将prefix 添加到url
-          joinPrefix: true,
           // 是否返回原生响应头 比如：需要获取响应头时使用该属性
           isReturnNativeResponse: false,
           // 需要对返回数据进行处理
@@ -301,8 +287,6 @@ const createAxios = (opt?: Partial<CreateAxiosOptions>) => {
           errorMessageMode: 'message',
           // 接口地址
           apiUrl: () => context.apiUrl,
-          // 接口拼接地址
-          urlPrefix: () => context.urlPrefix,
           //  是否加入时间戳
           joinTime: true,
           // 忽略重复请求
@@ -322,7 +306,6 @@ export const defaultRequest = createAxios()
 // export const otherHttp = createAxios({
 //   requestOptions: {
 //     apiUrl: 'xxx',
-//     urlPrefix: 'xxx',
 //   },
 // });
 

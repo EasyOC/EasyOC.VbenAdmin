@@ -2,11 +2,9 @@ import type { Router, RouteLocationNormalized } from 'vue-router'
 
 import { useAppStoreWithOut } from '@/store/app'
 import { useUserStoreWithOut } from '@/store/user'
-import { useTransitionSetting } from '@/hooks/setting/useTransitionSetting'
 import { RequestCanceler } from '@admin/service'
 import { Modal, notification } from 'ant-design-vue'
 import { warn } from '@admin/utils'
-import { unref } from 'vue'
 import { setRouteChange } from '@/logics/mitt/routeChange'
 import { createPermissionGuard } from './permissionGuard'
 import { createStateGuard } from './stateGuard'
@@ -51,7 +49,6 @@ function createPageGuard(router: Router) {
 function createPageLoadingGuard(router: Router) {
   const userStore = useUserStoreWithOut()
   const appStore = useAppStoreWithOut()
-  const { getOpenPageLoading } = useTransitionSetting()
   router.beforeEach(async (to) => {
     if (!userStore.getToken) {
       return true
@@ -60,20 +57,14 @@ function createPageLoadingGuard(router: Router) {
       return true
     }
 
-    if (unref(getOpenPageLoading)) {
-      appStore.setPageLoadingAction(true)
-      return true
-    }
     return true
   })
   router.afterEach(async () => {
-    if (unref(getOpenPageLoading)) {
-      // TODO Looking for a better way
-      // The timer simulates the loading time to prevent flashing too fast,
-      setTimeout(() => {
-        appStore.setPageLoading(false)
-      }, 220)
-    }
+    // TODO Looking for a better way
+    // The timer simulates the loading time to prevent flashing too fast,
+    setTimeout(() => {
+      appStore.setPageLoading(false)
+    }, 220)
     return true
   })
 }
@@ -132,17 +123,20 @@ export function createMessageGuard(router: Router) {
 }
 
 export function createProgressGuard(router: Router) {
-  const { getOpenNProgress } = useTransitionSetting()
+  const { openNProgress } = projectSetting
+  if (!openNProgress) {
+    return true
+  }
   router.beforeEach(async (to) => {
     if (to.meta.loaded) {
       return true
     }
-    unref(getOpenNProgress) && nProgress.start()
+    openNProgress && nProgress.start()
     return true
   })
 
   router.afterEach(async () => {
-    unref(getOpenNProgress) && nProgress.done()
+    openNProgress && nProgress.done()
     return true
   })
 }

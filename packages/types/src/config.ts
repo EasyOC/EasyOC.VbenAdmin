@@ -6,7 +6,6 @@ import {
   ContentLayoutEnum,
   PermissionModeEnum,
   ThemeEnum,
-  RouterTransitionEnum,
   SettingButtonPositionEnum,
   SessionTimeoutProcessingEnum,
   CacheTypeEnum,
@@ -70,17 +69,6 @@ export interface LocaleSetting {
   availableLocales: LocaleType[]
 }
 
-export interface TransitionSetting {
-  //  Whether to open the page switching animation
-  enable: boolean
-  // Route basic switching animation
-  basicTransition: RouterTransitionEnum
-  // Whether to open page switching loading
-  openPageLoading: boolean
-  // Whether to open the top progress bar
-  openNProgress: boolean
-}
-
 export interface ProjectConfig {
   // Storage location of permission related information
   permissionCacheType: CacheTypeEnum
@@ -115,8 +103,8 @@ export interface ProjectConfig {
   menuSetting: MenuSetting
   // Multi-tab settings
   multiTabsSetting: MultiTabsSetting
-  // Animation configuration
-  transitionSetting: TransitionSetting
+  // Whether to open the top progress bar
+  openNProgress: false
   // pageLayout whether to enable keep-alive
   openKeepAlive: boolean
   // Lock screen time
@@ -125,8 +113,6 @@ export interface ProjectConfig {
   showBreadCrumb: boolean
   // Show breadcrumb icon
   showBreadCrumbIcon: boolean
-  // Use error-handler-plugin
-  useErrorHandle: boolean
   // Whether to open back to top
   useOpenBackTop: boolean
   // Is it possible to embed iframe pages
@@ -144,14 +130,8 @@ export interface GlobConfig {
   apiUrl: string
   // Upload url
   uploadUrl?: string
-  //  Service interface url prefix
-  urlPrefix?: string
   // Project abbreviation
   shortName: string
-  clientRoot: string
-  stsAuthority: string
-  clientId?: string
-  scopes: string
 }
 
 export interface GlobEnvConfig {
@@ -159,15 +139,8 @@ export interface GlobEnvConfig {
   VITE_GLOB_APP_TITLE: string
   // Service interface url
   VITE_GLOB_API_URL: string
-  // Service interface url prefix
-  VITE_GLOB_API_URL_PREFIX?: string
   // Project abbreviation
   VITE_GLOB_APP_SHORT_NAME: string
   // Upload url
   VITE_GLOB_UPLOAD_URL?: string
-
-  VITE_GLOB_OIDC_clientRoot: string
-  VITE_GLOB_OIDC_stsAuthority: string
-  VITE_GLOB_OIDC_CLIENTID?: string
-  VITE_GLOB_OIDC_SCOPES: string
 }

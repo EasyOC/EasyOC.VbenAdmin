@@ -6,5 +6,8 @@
   "types": "index.d.js",
   "unpkg": "index.js",
   "jsdelivr": "index.js",
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "clean": "pnpm rimraf node_modules"
+  }
 }

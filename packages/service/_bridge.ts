@@ -14,7 +14,6 @@ export interface ContextOptions {
   unauthorizedFunction: (msg?: string) => void
   timeoutFunction: () => void
   handleErrorFunction: (message?: string, mode?: ErrorMessageMode) => void
-  urlPrefix?: string
   apiUrl?: string
   uploadUrl?: string
   clientId?: string
@@ -31,7 +30,12 @@ export let context: ContextOptions = {
   errorLogFunction: () => {},
   handleErrorFunction: () => {},
   timeoutFunction: () => {},
-  urlPrefix: '',
+  orchardNotify: {
+    successFunction: console.log,
+    informationFunction: console.log,
+    warningFunction: console.log,
+    errorFunction: console.log,
+  },
   apiUrl: '',
   clientId: '',
   scopes: '',

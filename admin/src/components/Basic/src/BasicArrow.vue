@@ -1,16 +1,8 @@
-<!--
- * @Author: Vben
- * @Description: Arrow component with animation
--->
-<template>
-  <span :class="getClass">
-    <Icon icon="ion:chevron-forward" :style="$attrs.iconStyle" />
-  </span>
-</template>
 <script lang="ts" setup>
+import type { CSSProperties } from 'vue'
 import { computed } from 'vue'
-import { Icon } from '@/components/Icon'
 import { useDesign } from '@/hooks/web/useDesign'
+import { RightOutlined } from '@ant-design/icons-vue'
 
 const props = defineProps({
   /**
@@ -29,12 +21,14 @@ const props = defineProps({
    * Cancel padding/margin for inline
    */
   inset: { type: Boolean },
+
+  iconStyle: { type: Object as PropType<CSSProperties> },
 })
 
 const { prefixCls } = useDesign('basic-arrow')
 
 // get component class
-const getClass = computed(() => {
+const classes = computed(() => {
   const { expand, up, down, inset } = props
   return [
     prefixCls,
@@ -82,3 +76,9 @@ const getClass = computed(() => {
   }
 }
 </style>
+
+<template>
+  <span :class="classes">
+    <right-outlined :style="iconStyle" />
+  </span>
+</template>

@@ -21,8 +21,8 @@ function setI18nLanguage(locale: LocaleType) {
 }
 
 export const useLocale = () => {
-  const antdLocale = computed((): any => {
-    return i18n.global.getLocaleMessage(unref(getLocale))?.antdLocale ?? {}
+  const uiFrameLocale = computed((): any => {
+    return i18n.global.getLocaleMessage(unref(getLocale))?.uiFrameLocale ?? {}
   })
 
   // Switching the language will change the locale of useI18n
@@ -60,6 +60,6 @@ export const useLocale = () => {
     getLocale,
     showLocalePicker,
     changeLocale,
-    antdLocale,
+    uiFrameLocale,
   }
 }

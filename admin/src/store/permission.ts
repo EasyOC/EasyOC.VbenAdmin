@@ -14,7 +14,7 @@ import { transformRouteToMenu } from '@/router/helper/menuHelper'
 import { projectSetting } from '@admin/setting'
 import { PermissionModeEnum, PageEnum } from '@admin/tokens'
 import { asyncRoutes } from '@/router/routes'
-import { ERROR_LOG_ROUTE, PAGE_NOT_FOUND_ROUTE } from '@/router/routes/basic'
+import { PAGE_NOT_FOUND_ROUTE } from '@/router/routes/basic'
 import { filterTree } from '@admin/utils'
 import { getMenuList } from '@service/sys/menu'
 import { getPermCode } from '@service/sys/user'
@@ -201,7 +201,6 @@ export const usePermissionStore = defineStore({
           break
       }
 
-      routes.push(ERROR_LOG_ROUTE)
       patchHomeAffix(routes)
       return routes
     },

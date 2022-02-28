@@ -4,5 +4,5 @@
     "baseUrl": "."
   },
   "include": ["../packages", "../admin/typings"],
-  "exclude": ["node_modules", "**/*.js"]
+  "exclude": ["**/node_modules/**", "**/dist/**", "**/*.js"]
 }

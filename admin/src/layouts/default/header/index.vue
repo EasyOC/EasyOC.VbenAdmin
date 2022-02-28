@@ -42,11 +42,6 @@
     <div :class="`${prefixCls}-action`">
       <AppSearch :class="`${prefixCls}-action__item `" v-if="getShowSearch" />
 
-      <ErrorAction
-        v-if="getUseErrorHandle"
-        :class="`${prefixCls}-action__item error-action`"
-      />
-
       <Notify
         v-if="getShowNotice"
         :class="`${prefixCls}-action__item notify-item`"
@@ -97,7 +92,6 @@ import {
   LayoutBreadcrumb,
   FullScreen,
   Notify,
-  ErrorAction,
 } from './components'
 import { useAppInject } from '@/hooks/web/useAppInject'
 import { useDesign } from '@/hooks/web/useDesign'
@@ -118,7 +112,6 @@ export default defineComponent({
     FullScreen,
     Notify,
     AppSearch,
-    ErrorAction,
     SettingDrawer,
   },
   props: {
@@ -134,11 +127,7 @@ export default defineComponent({
       getMenuWidth,
       getIsMixSidebar,
     } = useMenuSetting()
-    const {
-      getUseErrorHandle,
-      getShowSettingButton,
-      getSettingButtonPosition,
-    } = useRootSetting()
+    const { getShowSettingButton, getSettingButtonPosition } = useRootSetting()
 
     const {
       getHeaderTheme,
@@ -211,7 +200,6 @@ export default defineComponent({
       showLocalePicker,
       getShowFullScreen,
       getShowNotice,
-      getUseErrorHandle,
       getLogoWidth,
       getIsMixSidebar,
       getShowSettingButton,

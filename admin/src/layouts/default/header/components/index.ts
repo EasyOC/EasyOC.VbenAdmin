@@ -8,8 +8,4 @@ export const LayoutBreadcrumb = createAsyncComponent(
 
 export const Notify = createAsyncComponent(() => import('./notify/index.vue'))
 
-export const ErrorAction = createAsyncComponent(
-  () => import('./ErrorAction.vue'),
-)
-
 export { FullScreen, UserDropDown }

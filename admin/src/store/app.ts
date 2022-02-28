@@ -2,7 +2,6 @@ import type {
   ProjectConfig,
   HeaderSetting,
   MenuSetting,
-  TransitionSetting,
   MultiTabsSetting,
   BeforeMiniState,
 } from '@admin/types'
@@ -12,20 +11,15 @@ import { darkMode } from '@admin/setting'
 import { defineStore } from 'pinia'
 import { pinia } from '@/internal'
 import { resetRouter } from '@/router'
-import { loadGraphQLSchema } from '@service/eoc/GraphqlService'
-import { ContentFieldsMapping } from '@service/eoc/contentApi'
 
 interface AppState {
   darkMode?: ThemeEnum
-  graphqlSchema: any
   // Page loading status
   pageLoading: boolean
   // project config
   projectConfig: ProjectConfig | null
   // When the window shrinks, remember some states, and restore these states when the window is restored
   beforeMiniInfo: BeforeMiniState
-
-  typeFieldCache: { [key: string]: ContentFieldsMapping[] }
 }
 let timeId: TimeoutHandle
 export const useAppStore = defineStore({
@@ -42,16 +36,12 @@ export const useAppStore = defineStore({
     pageLoading: false,
     projectConfig: {} as any,
     beforeMiniInfo: {},
-    graphqlSchema: null,
-    typeFieldCache: {},
   }),
   getters: {
     getPageLoading(): boolean {
       return this.pageLoading
     },
-    getGraphqlSchema(): any {
-      return this.graphqlSchema
-    },
+
     getDarkMode(): 'light' | 'dark' | string {
       return this.darkMode || darkMode
     },
@@ -72,29 +62,19 @@ export const useAppStore = defineStore({
       return this.getProjectConfig.menuSetting
     },
 
-    getTransitionSetting(): TransitionSetting {
-      return this.getProjectConfig.transitionSetting
-    },
-
     getMultiTabsSetting(): MultiTabsSetting {
       return this.getProjectConfig.multiTabsSetting
     },
   },
   actions: {
-    async loadGraphQLSchema() {
-      if (!this.graphqlSchema) {
-        this.graphqlSchema = await loadGraphQLSchema()
-      }
-    },
-    updateTypeFieldCache(typeName: string, fields: ContentFieldsMapping[]) {
-      this.typeFieldCache[typeName] = fields
-    },
     setPageLoading(loading: boolean): void {
       this.pageLoading = loading
     },
+
     setDarkMode(mode: ThemeEnum): void {
       this.darkMode = mode
     },
+
     setBeforeMiniInfo(state: BeforeMiniState): void {
       this.beforeMiniInfo = state
     },

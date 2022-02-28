@@ -5,9 +5,9 @@ import { resolve } from 'path'
 import { OUTPUT_DIR, wrapperEnv } from './config'
 import { configProxy, configVitePlugins } from './config/vite'
 import { generateModifyVars } from './config/modifyVars'
-// import { cyan } from 'chalk'
+import { cyan } from 'chalk'
 
-// console.log(cyan('当前处于开发测试阶段，请勿用于实际项目！\n'))
+console.log(cyan('当前处于开发测试阶段，请勿用于实际项目！\n'))
 
 export default defineConfig(async ({ command, mode }) => {
   const { dependencies, devDependencies, name, version } = pkg
@@ -17,13 +17,8 @@ export default defineConfig(async ({ command, mode }) => {
   // The boolean type read by loadEnv is a string. This function can be converted to boolean type
   const viteEnv = wrapperEnv(env)
 
-  const {
-    VITE_PORT,
-    VITE_PUBLIC_PATH,
-    VITE_USE_MOCK,
-    VITE_PROXY,
-    VITE_DROP_CONSOLE,
-  } = viteEnv
+  const { VITE_PUBLIC_PATH, VITE_PROXY, VITE_USE_MOCK, VITE_DROP_CONSOLE } =
+    viteEnv
 
   return {
     root,
@@ -31,29 +26,37 @@ export default defineConfig(async ({ command, mode }) => {
     resolve: {
       alias: {
         '@/': `${resolve(__dirname, 'src')}/`,
-        '@service': `@admin/service/modules`,
         'vue-i18n': 'vue-i18n/dist/vue-i18n.cjs.js',
         vue: 'vue/dist/vue.esm-bundler.js',
+        '@service': `@admin/service/modules`,
       },
     },
     server: {
+      port: 3000,
+      https: true,
       host: true,
+      proxy: configProxy(VITE_PROXY),
       fs: {
         strict: true,
       },
-      port: VITE_PORT,
-      proxy: configProxy(VITE_PROXY),
+    },
+    esbuild: {
+      pure: VITE_DROP_CONSOLE ? ['console.log', 'debugger'] : [],
     },
     build: {
       target: 'chrome80',
       cssTarget: 'chrome80',
       outDir: OUTPUT_DIR,
-      terserOptions: {
-        compress: {
-          keep_infinity: true,
-          drop_console: VITE_DROP_CONSOLE,
-        },
-      },
+      /**
+       * 当 minify=“minify:'terser'” 解开注释
+       * Uncomment when minify="minify:'terser'"
+       */
+      // terserOptions: {
+      //   compress: {
+      //     keep_infinity: true,
+      //     drop_console: VITE_DROP_CONSOLE,
+      //   },
+      // },
       brotliSize: false,
       chunkSizeWarningLimit: 2048,
       rollupOptions: {
@@ -100,13 +103,5 @@ export default defineConfig(async ({ command, mode }) => {
       exclude: ['vue-demi'],
     },
     plugins: configVitePlugins(viteEnv, command === 'build'),
-    // https://github.com/vitest-dev/vitest
-    test: {
-      include: ['tests/**/*.test.ts'],
-      environment: 'jsdom',
-      deps: {
-        inline: ['@vue', '@vueuse', 'vue-demi'],
-      },
-    },
   }
 })

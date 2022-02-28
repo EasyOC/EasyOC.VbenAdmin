@@ -34,20 +34,14 @@ const initDirective = async () => {
 
 const initService = async () => {
   const { createMessage, createErrorModal } = useMessage()
-  const { urlPrefix, apiUrl, uploadUrl, clientId, scopes, stsAuthority } =
-    getGlobalConfig()
-
-  window.localStorage.setItem('apiUrl', apiUrl)
-
-  const { t } = useI18n()
+  const { apiUrl, uploadUrl, clientId, scopes, stsAuthority } = getGlobalConfig()
+  window.localStorage.setItem('apiUrl', apiUrl)  const { t } = useI18n()
   await initServiceModule({
-    urlPrefix,
     apiUrl,
     uploadUrl,
     clientId,
     scopes,
     stsAuthority,
-
     getTokenFunction: () => {
       const userStore = useUserStoreWithOut()
       return userStore.getToken
