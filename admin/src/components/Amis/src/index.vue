@@ -8,9 +8,8 @@ import { ocApi } from '@admin/service/request'
 import { onMounted, onUnmounted, ref, unref } from 'vue'
 
 // import 'amis/lib/themes/default.css'
-import 'amis/lib/helper.css'
-import 'amis/sdk/iconfont.css'
-import 'amis/lib/themes/cxd.css'
+import 'amis/sdk/sdk.js'
+
 // import * as monaco from 'monaco-editor'
 // import 'amis/lib/themes/cxd.css'
 const props = defineProps({
@@ -110,12 +109,15 @@ onUnmounted(() => {
   amisScoped.value.unmount()
 })
 </script>
+
 <style scoped lang="less">
 // html {
 //   font-size: 16px;
 // }
+@import 'amis/lib/helper.css';
+@import 'amis/sdk/iconfont.css';
+@import 'amis/lib/themes/antd.css';
 @import './assets/css/global-class';
-
 .app-wrapper,
 .routes-wrapper {
   position: relative;

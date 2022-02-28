@@ -3,7 +3,7 @@ node_modules
 dist
 .cache
 
-
+.turbo
 .local
 # local env files
 .env.local

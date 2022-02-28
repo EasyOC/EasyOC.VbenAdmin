@@ -9,7 +9,7 @@ const feat: RouteRecordItem = {
   meta: {
     orderNo: 19,
     icon: 'ion:git-compare-outline',
-    title: t('routes.demo.feat.feat'),
+    title: t('routes.default.feat.feat'),
   },
 
   children: [
@@ -18,7 +18,7 @@ const feat: RouteRecordItem = {
       name: 'IconDemo',
       component: () => import('@/views/demo/feat/icon/index.vue'),
       meta: {
-        title: t('routes.demo.feat.icon'),
+        title: t('routes.default.feat.icon'),
       },
     },
     {
@@ -26,7 +26,7 @@ const feat: RouteRecordItem = {
       name: 'WebSocket',
       component: () => import('@/views/demo/feat/ws/index.vue'),
       meta: {
-        title: t('routes.demo.feat.ws'),
+        title: t('routes.default.feat.ws'),
       },
     },
     {
@@ -34,7 +34,7 @@ const feat: RouteRecordItem = {
       name: 'SessionTimeout',
       component: () => import('@/views/demo/feat/session-timeout/index.vue'),
       meta: {
-        title: t('routes.demo.feat.sessionTimeout'),
+        title: t('routes.default.feat.sessionTimeout'),
       },
     },
     {
@@ -42,7 +42,7 @@ const feat: RouteRecordItem = {
       name: 'Print',
       component: () => import('@/views/demo/feat/print/index.vue'),
       meta: {
-        title: t('routes.demo.feat.print'),
+        title: t('routes.default.feat.print'),
       },
     },
     {
@@ -50,7 +50,7 @@ const feat: RouteRecordItem = {
       name: 'TabsDemo',
       component: () => import('@/views/demo/feat/tabs/index.vue'),
       meta: {
-        title: t('routes.demo.feat.tabs'),
+        title: t('routes.default.feat.tabs'),
         hideChildrenInMenu: true,
       },
       children: [
@@ -60,7 +60,7 @@ const feat: RouteRecordItem = {
           component: () => import('@/views/demo/feat/tabs/TabDetail.vue'),
           meta: {
             currentActiveMenu: '/feat/tabs',
-            title: t('routes.demo.feat.tabDetail'),
+            title: t('routes.default.feat.tabDetail'),
             hideMenu: true,
             dynamicLevel: 3,
             realPath: '/feat/tabs/detail',
@@ -74,7 +74,7 @@ const feat: RouteRecordItem = {
       redirect: '/feat/breadcrumb/flat',
       component: getParentLayout(),
       meta: {
-        title: t('routes.demo.feat.breadcrumb'),
+        title: t('routes.default.feat.breadcrumb'),
       },
 
       children: [
@@ -83,7 +83,7 @@ const feat: RouteRecordItem = {
           name: 'BreadcrumbFlatDemo',
           component: () => import('@/views/demo/feat/breadcrumb/FlatList.vue'),
           meta: {
-            title: t('routes.demo.feat.breadcrumbFlat'),
+            title: t('routes.default.feat.breadcrumbFlat'),
           },
         },
         {
@@ -92,7 +92,7 @@ const feat: RouteRecordItem = {
           component: () =>
             import('@/views/demo/feat/breadcrumb/FlatListDetail.vue'),
           meta: {
-            title: t('routes.demo.feat.breadcrumbFlatDetail'),
+            title: t('routes.default.feat.breadcrumbFlatDetail'),
             hideMenu: true,
             hideTab: true,
             currentActiveMenu: '/feat/breadcrumb/flat',
@@ -104,7 +104,7 @@ const feat: RouteRecordItem = {
           component: () =>
             import('@/views/demo/feat/breadcrumb/ChildrenList.vue'),
           meta: {
-            title: t('routes.demo.feat.breadcrumbChildren'),
+            title: t('routes.default.feat.breadcrumbChildren'),
           },
           children: [
             {
@@ -114,7 +114,7 @@ const feat: RouteRecordItem = {
                 import('@/views/demo/feat/breadcrumb/ChildrenListDetail.vue'),
               meta: {
                 currentActiveMenu: '/feat/breadcrumb/children',
-                title: t('routes.demo.feat.breadcrumbChildrenDetail'),
+                title: t('routes.default.feat.breadcrumbChildrenDetail'),
                 //hideTab: true,
                 // hideMenu: true,
               },
@@ -129,7 +129,7 @@ const feat: RouteRecordItem = {
       name: 'ContextMenuDemo',
       component: () => import('@/views/demo/feat/context-menu/index.vue'),
       meta: {
-        title: t('routes.demo.feat.contextMenu'),
+        title: t('routes.default.feat.contextMenu'),
       },
     },
     {
@@ -137,7 +137,7 @@ const feat: RouteRecordItem = {
       name: 'DownLoadDemo',
       component: () => import('@/views/demo/feat/download/index.vue'),
       meta: {
-        title: t('routes.demo.feat.download'),
+        title: t('routes.default.feat.download'),
       },
     },
 
@@ -146,7 +146,7 @@ const feat: RouteRecordItem = {
       name: 'ImgPreview',
       component: () => import('@/views/demo/feat/img-preview/index.vue'),
       meta: {
-        title: t('routes.demo.feat.imgPreview'),
+        title: t('routes.default.feat.imgPreview'),
       },
     },
     {
@@ -154,7 +154,7 @@ const feat: RouteRecordItem = {
       name: 'CopyDemo',
       component: () => import('@/views/demo/feat/copy/index.vue'),
       meta: {
-        title: t('routes.demo.feat.copy'),
+        title: t('routes.default.feat.copy'),
       },
     },
     {
@@ -162,7 +162,7 @@ const feat: RouteRecordItem = {
       name: 'MsgDemo',
       component: () => import('@/views/demo/feat/msg/index.vue'),
       meta: {
-        title: t('routes.demo.feat.msg'),
+        title: t('routes.default.feat.msg'),
       },
     },
     {
@@ -170,7 +170,7 @@ const feat: RouteRecordItem = {
       name: 'WatermarkDemo',
       component: () => import('@/views/demo/feat/watermark/index.vue'),
       meta: {
-        title: t('routes.demo.feat.watermark'),
+        title: t('routes.default.feat.watermark'),
       },
     },
 
@@ -179,7 +179,7 @@ const feat: RouteRecordItem = {
       name: 'FullScreenDemo',
       component: () => import('@/views/demo/feat/full-screen/index.vue'),
       meta: {
-        title: t('routes.demo.feat.fullScreen'),
+        title: t('routes.default.feat.fullScreen'),
       },
     },
     {
@@ -189,7 +189,7 @@ const feat: RouteRecordItem = {
       component: getParentLayout(),
       meta: {
         // icon: 'mdi:microsoft-excel',
-        title: t('routes.demo.excel.excel'),
+        title: t('routes.default.excel.excel'),
       },
 
       children: [
@@ -198,7 +198,7 @@ const feat: RouteRecordItem = {
           name: 'CustomExport',
           component: () => import('@/views/demo/excel/CustomExport.vue'),
           meta: {
-            title: t('routes.demo.excel.customExport'),
+            title: t('routes.default.excel.customExport'),
           },
         },
         {
@@ -206,7 +206,7 @@ const feat: RouteRecordItem = {
           name: 'JsonExport',
           component: () => import('@/views/demo/excel/JsonExport.vue'),
           meta: {
-            title: t('routes.demo.excel.jsonExport'),
+            title: t('routes.default.excel.jsonExport'),
           },
         },
         {
@@ -214,7 +214,7 @@ const feat: RouteRecordItem = {
           name: 'ArrayExport',
           component: () => import('@/views/demo/excel/ArrayExport.vue'),
           meta: {
-            title: t('routes.demo.excel.arrayExport'),
+            title: t('routes.default.excel.arrayExport'),
           },
         },
         {
@@ -222,7 +222,7 @@ const feat: RouteRecordItem = {
           name: 'ImportExcel',
           component: () => import('@/views/demo/excel/ImportExcel.vue'),
           meta: {
-            title: t('routes.demo.excel.importExcel'),
+            title: t('routes.default.excel.importExcel'),
           },
         },
       ],
@@ -232,7 +232,7 @@ const feat: RouteRecordItem = {
       name: 'TestTab',
       component: () => import('@/views/demo/feat/tab-params/index.vue'),
       meta: {
-        title: t('routes.demo.feat.tab'),
+        title: t('routes.default.feat.tab'),
         carryParam: true,
         hidePathForChildren: true,
       },
@@ -242,7 +242,7 @@ const feat: RouteRecordItem = {
           name: 'TestTab1',
           component: () => import('@/views/demo/feat/tab-params/index.vue'),
           meta: {
-            title: t('routes.demo.feat.tab1'),
+            title: t('routes.default.feat.tab1'),
             carryParam: true,
             ignoreRoute: true,
           },
@@ -252,7 +252,7 @@ const feat: RouteRecordItem = {
           name: 'TestTab2',
           component: () => import('@/views/demo/feat/tab-params/index.vue'),
           meta: {
-            title: t('routes.demo.feat.tab2'),
+            title: t('routes.default.feat.tab2'),
             carryParam: true,
             ignoreRoute: true,
           },
@@ -264,7 +264,7 @@ const feat: RouteRecordItem = {
       name: 'TestParam',
       component: getParentLayout(),
       meta: {
-        title: t('routes.demo.feat.menu'),
+        title: t('routes.default.feat.menu'),
         ignoreKeepAlive: true,
       },
       children: [
@@ -273,7 +273,7 @@ const feat: RouteRecordItem = {
           name: 'TestParam_1',
           component: () => import('@/views/demo/feat/menu-params/index.vue'),
           meta: {
-            title: t('routes.demo.feat.menu1'),
+            title: t('routes.default.feat.menu1'),
             ignoreKeepAlive: true,
           },
         },
@@ -282,7 +282,7 @@ const feat: RouteRecordItem = {
           name: 'TestParam_2',
           component: () => import('@/views/demo/feat/menu-params/index.vue'),
           meta: {
-            title: t('routes.demo.feat.menu2'),
+            title: t('routes.default.feat.menu2'),
             ignoreKeepAlive: true,
           },
         },

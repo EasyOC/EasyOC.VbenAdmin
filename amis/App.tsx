@@ -48,9 +48,9 @@ export default function (): JSX.Element {
                     !(data instanceof ArrayBuffer)
                 ) {
                     config.data = JSON.stringify(data);
-                config.headers['Content-Type'] = 'application/json';
+                    config.headers['Content-Type'] = 'application/json';
                 }
-               
+
                 const axiosInstance: AxiosInstance = axios.create(config);
                 console.log('configconfigconfigconfig: ', config);
                 return await axiosInstance(config);
@@ -60,11 +60,11 @@ export default function (): JSX.Element {
                 console.log('response: response', response);
                 console.log('response: query', query);
                 console.log('response:request ', request);
-                if (response.status === 401) {
-                    window.location.href = '/login';
-                }
+                // if (response.status === 401) {
+                //     window.location.href = '/login';
+                // }
 
-                return response;
+                // return response;
             },
             isCancel: (e: any) => axios.isCancel(e),
             notify: (type: 'success' | 'error' | 'info', msg: string) => {
