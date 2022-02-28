@@ -1,0 +1,136 @@
+@import "./amis-class-name";
+
+:root {
+  // 参考 @import "~amis/scss/_properties.scss";
+  --fontSizeBase: 13px;
+  --fontSizeMd: 14px;
+  --fontSizeLg: 18px;
+  --fontSizeXl: 22px;
+  --fontSizeSm: 12px;
+  --fontSizeXs: 11px;
+
+  --gap-xs: 3px;
+  --gap-sm: 8px;
+  --gap-base: 12px;
+  --gap-md: 16px;
+  --gap-lg: 26px;
+
+  //--Form-item-gap: 14px;
+  --Panel-bodyPadding: 12px;
+
+  --Form-input-paddingX: 8px;
+  --Form-input-height: 28px;
+
+  //--Form-input-lineHeight: 1.4285714286;
+  //--Button-height: var(--Form-input-height);
+  //--Button-lineHeight: var(--Form-input-lineHeight);
+  --Button--lg-height: 32px;
+  //--Button--lg-lineHeight: 24 / 20;
+  //--Button--md-height: var(--Button-height);
+  //--Button--md-lineHeight: 1;
+  --Button--sm-height: 26px;
+  //--Button--sm-lineHeight: 18 / 12;
+  --Button--xs-height: 22px;
+  //--Button--xs-lineHeight: 18 / 11;
+
+  --Switch-height: 20px;
+  --Switch-width: 44px;
+
+  --Checkbox-size: 16px;
+
+  --ListControl-fontSize: 12px;
+  --ListControl-item-paddingX: 8px;
+  --ListControl-item-paddingY: 4px;
+
+  --Calendar-btn-height: 24px;
+
+  --InputRange-slider-height: 20px;
+  --InputRange-slider-width: 16px;
+  --InputRange-track-height: 8px;
+
+  --TableCell-paddingY: 8px;
+  --TableCell-paddingX: 8px;
+  --TableCell-height: 38px;
+
+  --Pagination-height: 24px;
+  --Pagination-minWidth: 24px;
+  --Pagination-padding: auto 4px;
+}
+
+:global {
+  /*   修改amis默认样式 */
+
+  //html {
+  //  font-size: 0.925rem;
+  //}
+
+  .@{amisScope} .monaco-inputbox > .wrapper {
+    padding: 0;
+  }
+
+  .@{amisScope} .@{tableContent} {
+    overflow-y: hidden;
+  }
+
+  .@{amisScope} .@{pageBody} {
+    padding-top: 0.5rem;
+  }
+
+  .@{amisScope} .@{button} {
+    line-height: 1;
+  }
+
+  .@{amisScope} .@{listControlItem}:hover:active:before, .@{amisScope} .@{listControlItem}.is-active:before {
+    width: 12px;
+    height: 12px;
+  }
+
+  .@{amisScope} .@{imageControlAddBtn} {
+    width: 112px;
+    height: 112px;
+  }
+
+  .@{amisScope} .@{fileControlSelectBtn} {
+    width: 112px;
+  }
+
+  .@{amisScope} .@{inputRangeSlider}:before {
+    line-height: 16px;
+  }
+
+  .@{amisScope} .@{rangeControl} .@{inputRangeInput} {
+    right: 1.625rem;
+    top: 16px;
+    height: 24px;
+
+    > input {
+      border-width: 1px;
+      border: var(--Form-input-borderWidth) solid var(--Form-input-borderColor);
+      border-radius: var(--Form-input-borderRadius);
+    }
+  }
+
+  .@{amisScope} .@{ratingControl} {
+    line-height: 1;
+  }
+
+  .@{amisScope} .@{crudPageSwitch} .@{select} {
+    height: 26px;
+    min-height: 26px;
+  }
+
+  .@{amisScope} .@{crudPageSwitch} .@{select} .@{selectValueWrap} {
+    top: -1px;
+  }
+
+  .button.toggle.left.codicon.codicon-find-collapsed:focus, .button.toggle.left.codicon.codicon-find-expanded:focus {
+    outline: #007fd4 solid 1px;
+    outline-offset: -1px;
+  }
+
+  /* --------------------------------------------------------------------------------------------------------------------- 修改antd默认样式 */
+
+  .ant-notification.ant-notification-topRight {
+    z-index: 9999;
+  }
+}

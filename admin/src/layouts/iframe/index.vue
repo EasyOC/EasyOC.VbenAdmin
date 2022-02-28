@@ -5,6 +5,7 @@
         v-if="frame.meta.frameSrc && hasRenderFrame(frame.name)"
         v-show="showIframe(frame)"
         :frameSrc="frame.meta.frameSrc"
+        @loaded="frameLoaded"
       />
     </template>
   </div>
@@ -22,8 +23,10 @@ export default defineComponent({
     const { getFramePages, hasRenderFrame, showIframe } = useFrameKeepAlive()
 
     const showFrame = computed(() => unref(getFramePages).length > 0)
-
-    return { getFramePages, hasRenderFrame, showIframe, showFrame }
+    function frameLoaded(a) {
+      console.log('loaded', a.contentWindow)
+    }
+    return { getFramePages, hasRenderFrame, showIframe, showFrame, frameLoaded }
   },
 })
 </script>

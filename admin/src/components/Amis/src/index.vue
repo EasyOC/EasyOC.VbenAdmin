@@ -4,8 +4,14 @@
 
 <script lang="ts" setup>
 import { ocApi } from '@admin/service/request'
+// import { PageWrapper } from '@/components/Page'
 import { onMounted, onUnmounted, ref, unref } from 'vue'
-
+// import 'amis/lib/themes/default.css'
+import 'amis/lib/helper.css'
+import 'amis/sdk/iconfont.css'
+import 'amis/lib/themes/cxd.css'
+// import * as monaco from 'monaco-editor'
+// import 'amis/lib/themes/cxd.css'
 const props = defineProps({
   amisjson: {
     type: Object,
@@ -31,6 +37,10 @@ onMounted(() => {
       // 这里是初始 props
     },
     {
+      //
+      // 主题，默认是 default，还可以设置成 cxd, antd 或 dark，但记得引用它们的 css，比如 sdk 目录下的 cxd.css
+      // theme: 'antd',
+      theme: 'cxd',
       //https://baidu.gitee.io/amis/zh-CN/docs/start/getting-started#sdk
       // 下面是一些可选的外部控制函数
       // TODO 在 sdk 中可以不传，用来实现 ajax 请求，但在 npm 中这是必须提供的
@@ -87,9 +97,6 @@ onMounted(() => {
       // },
 
       //
-      // 主题，默认是 default，还可以设置成 cxd 或 dark，但记得引用它们的 css，比如 sdk 目录下的 cxd.css
-      theme: 'antd',
-      //
       // 用来实现用户行为跟踪，详细请查看左侧高级中的说明
       tracker: (eventTracker) => {
         console.log('eventTracker: ', eventTracker)
@@ -102,7 +109,94 @@ onUnmounted(() => {
   amisScoped.value.unmount()
 })
 </script>
-<!-- <style>
-@import url('amis/lib/themes/antd.css');
-/* @import url('amis/lib/themes/default.css'); */
-</style> -->
+<style scoped lang="less">
+// html {
+//   font-size: 16px;
+// }
+@import './assets/css/global-class';
+
+.app-wrapper,
+.routes-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.navbtn {
+  float: right;
+  margin: 3px;
+  visibility: visible;
+}
+
+.a-Tabs--line > .a-Tabs-links > li > a:first-child {
+  margin-right: 30px;
+}
+
+.editor-header {
+  position: relative;
+  text-align: right;
+
+  .navbar-brand {
+    float: left !important;
+  }
+
+  > .editor-preview {
+    display: inline-block;
+    line-height: 50px;
+    margin-right: 15px;
+    color: #c1c4c9;
+  }
+}
+
+.editor-header-btns {
+  display: inline-block;
+  white-space: nowrap;
+
+  > .btn-item {
+    user-select: none;
+    cursor: pointer;
+    display: inline-block;
+    border-left: 1px solid #595c65;
+    line-height: 50px;
+    padding: 0 20px;
+    color: #c1c4c9;
+
+    > svg {
+      display: inline-block;
+      fill: #c1c4c9;
+      width: 20px;
+      position: relative;
+      top: 4px;
+    }
+
+    &:hover {
+      color: #fff;
+      background-color: rgb(46, 50, 67);
+
+      > svg {
+        fill: #fff;
+      }
+    }
+
+    &.disabled {
+      color: #8b8e99;
+      pointer-events: none;
+      cursor: default;
+
+      > svg {
+        fill: #8b8e99;
+      }
+    }
+  }
+}
+
+.ae-Editor.is-fixed .ae-Settings-inner .ae-Editor-config-tab > .tab-content,
+.ae-Editor.is-fixed .ae-Settings-inner .ae-Editor-code-tab > .tab-content {
+  bottom: 50px;
+}
+
+.editor-verions {
+  max-height: 100%;
+  overflow: auto;
+}
+</style>

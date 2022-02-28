@@ -8,6 +8,7 @@ import { computed, ref } from 'vue'
 // import MonacoEditor from '@/components/MonacoEditor/index.vue'
 // import { CodeEditor } from '@/components/CodeEditor'
 import { Amis } from '@/components/Amis'
+
 // import { parser } from 'xijs'
 // window.enableAMISDebug = true
 // const editorJson = ref<any>()
@@ -121,7 +122,7 @@ const amisjson = ref<any>({
                 closeOnEsc: false,
                 closeOnOutside: false,
                 showCloseButton: true,
-                size: 'xl',
+                size: 'lg',
               },
               onClick: 'console.log(props)',
             },
@@ -212,7 +213,7 @@ const amisjson = ref<any>({
             closeOnEsc: false,
             closeOnOutside: false,
             showCloseButton: true,
-            size: 'xl',
+            size: 'lg',
           },
         },
         'bulkActions',
@@ -225,7 +226,7 @@ const amisjson = ref<any>({
 const amisScoped = ref<any>(null)
 function amisMounted(amisScope) {
   amisScoped.value = amisScope
-  console.log('amisScoped.value: ', amisScoped.value)
-  console.log(JSON.stringify(amisjson))
+  // console.log('amisScoped.value: ', amisScoped.value)
+  // console.log(JSON.stringify(amisjson))
 }
 </script>

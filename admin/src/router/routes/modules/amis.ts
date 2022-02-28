@@ -27,12 +27,12 @@ const amis: RouteRecordItem = {
       name: 'amisInternalEditor',
       component: IFrame,
       meta: {
-        frameSrc: '/amis/index.html',
+        frameSrc: '/amisEditor/index.html',
         title: t('routes.amis.Internal'),
       },
     },
     {
-      path: window.location.origin + '/amis/index.html',
+      path: window.location.origin + '/amisEditor/index.html',
       name: 'amisEditor',
       component: IFrame,
       meta: {

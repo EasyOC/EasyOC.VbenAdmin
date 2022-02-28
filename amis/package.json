@@ -8,7 +8,7 @@
         "test": "echo \"Error: no test specified\" && exit 1",
         "start": "fis3 server start --www ./public --port 8082 --no-daemon",
         "dev": "fis3 release -cwd ./public",
-        "build-admin": "rimraf ../admin/public/amis && fis3 release -cwd ../admin/public/amis -c",
+        "build-admin": "rimraf ../admin/public/amisEditor && fis3 release -cwd ../admin/public/amisEditor -c",
         "gh-pages": "rimraf gh-pages && fis3 release gh-pages -c"
     },
     "repository": {
@@ -28,7 +28,7 @@
     "dependencies": {
         "@fortawesome/fontawesome-free": "^5.15.3",
         "amis": "1.4.2-beta.6",
-        "amis-editor": "3.3.12-beta.1",
+        "amis-editor": "^4.0.2-beta.10",
         "axios": "0.21.1",
         "bootstrap": "3.4.1",
         "copy-to-clipboard": "^3.2.0",
