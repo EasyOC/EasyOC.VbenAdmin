@@ -27,16 +27,6 @@ export const openWindow = (
   window.open(url, target, feature.join(','))
 }
 
-export const decodeJwt = (token: string) => {
-  const text = decodeURIComponent(window.atob(token.split('.')[1]))
-  const obj = JSON.parse(text)
-  return obj
-}
-
-export function camelCase(str: string): string {
-  const [first, ...rest] = str
-  return [first.toLocaleLowerCase(), ...rest].join()
-}
 /**
  * Add the object as a parameter to the URL
  * @param baseUrl url

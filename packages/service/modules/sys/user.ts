@@ -1,49 +1,38 @@
 import type { ErrorMessageMode } from '@admin/types'
 import type { LoginParams, LoginResultModel, GetUserInfoModel } from '../model'
-import { ContentTypeEnum } from '@admin/tokens'
-import { defaultRequest, ocApi } from '../../request'
-import { context } from '../../_bridge'
+
+import { defaultRequest } from '../../request'
 
 enum Api {
-  Login = '/connect/token',
-  Logout = '/connect/logout',
-  GetUserInfo = '/connect/userinfo',
+  Login = '/login',
+  Logout = '/logout',
+  GetUserInfo = '/getUserInfo',
   GetPermCode = '/getPermCode',
 }
 
 /**
  * @description: user login api
  */
-export async function loginApi(
+export function loginApi(
   params: LoginParams,
   mode: ErrorMessageMode = 'modal',
 ) {
-  const { username, password, rememberMe } = params
-  const result = await ocApi.post(
+  return defaultRequest.post<LoginResultModel>(
     {
       url: Api.Login,
-      headers: { 'Content-Type': ContentTypeEnum.FORM_URLENCODED },
-      data: {
-        grant_type: 'password',
-        client_id: context.clientId,
-        username: username,
-        password: password,
-        rememberMe: rememberMe,
-        scopes: context.scopes,
-      },
+      params,
     },
     {
       errorMessageMode: mode,
     },
   )
-  return result.data
 }
 
 /**
  * @description: getUserInfo
  */
 export function getUserInfo() {
-  return ocApi.get<GetUserInfoModel>(
+  return defaultRequest.get<GetUserInfoModel>(
     { url: Api.GetUserInfo },
     { errorMessageMode: 'none' },
   )
@@ -54,5 +43,5 @@ export function getPermCode() {
 }
 
 export function doLogout() {
-  return ocApi.get({ url: Api.Logout })
+  return defaultRequest.get({ url: Api.Logout })
 }

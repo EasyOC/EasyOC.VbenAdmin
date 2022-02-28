@@ -2,13 +2,6 @@ export * from './breakpointEnum'
 export * from './httpEnum'
 export * from './menuEnum'
 
-export enum OCNotifyType {
-  Success = 0,
-  Information = 1,
-  Warning = 2,
-  Error = 3,
-}
-
 export enum ContentLayoutEnum {
   // auto width
   FULL = 'full',
@@ -43,16 +36,6 @@ export enum PermissionModeEnum {
   BACK = 'BACK',
   // route mapping
   ROUTE_MAPPING = 'ROUTE_MAPPING',
-}
-
-//  Route switching animation
-export enum RouterTransitionEnum {
-  ZOOM_FADE = 'zoom-fade',
-  ZOOM_OUT = 'zoom-out',
-  FADE_SIDE = 'fade-slide',
-  FADE = 'fade',
-  FADE_BOTTOM = 'fade-bottom',
-  FADE_SCALE = 'fade-scale',
 }
 
 export enum RoleEnum {

@@ -14,30 +14,27 @@ export const PKG_VERSION = version
 
 // Read all environment variable configuration files to process.env
 export const wrapperEnv = (envConf: Recordable): ViteEnv => {
-  const ret: any = {}
+  const viteEnv: Partial<ViteEnv> = {}
 
-  for (const envName of Object.keys(envConf)) {
-    let realName = envConf[envName].replace(/\\n/g, '\n')
+  for (const key of Object.keys(envConf)) {
+    let realName = envConf[key].replace(/\\n/g, '\n')
     realName =
       realName === 'true' ? true : realName === 'false' ? false : realName
 
-    if (envName === 'VITE_PORT') {
-      realName = Number(realName)
-    }
-
-    if (envName === 'VITE_PROXY' && realName) {
+    if (key === 'VITE_PROXY' && realName) {
       try {
         realName = JSON.parse(realName.replace(/'/g, '"'))
       } catch (error) {
         realName = ''
       }
     }
-    ret[envName] = realName
+
+    viteEnv[key] = realName
     if (typeof realName === 'string') {
-      process.env[envName] = realName
+      process.env[key] = realName
     } else if (typeof realName === 'object') {
-      process.env[envName] = JSON.stringify(realName)
+      process.env[key] = JSON.stringify(realName)
     }
   }
-  return ret
+  return viteEnv as ViteEnv
 }

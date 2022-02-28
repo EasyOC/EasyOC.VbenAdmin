@@ -9,7 +9,6 @@ import {
   Ref,
 } from 'vue'
 import { on, off } from '@admin/utils'
-
 import { renderThumbStyle, BAR_MAP } from './util'
 
 export default defineComponent({

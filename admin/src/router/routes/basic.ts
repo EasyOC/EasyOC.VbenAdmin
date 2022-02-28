@@ -1,4 +1,3 @@
-import { t } from '@admin/locale'
 import { REDIRECT_NAME, PAGE_NOT_FOUND_NAME } from '@admin/tokens'
 import { LAYOUT } from '@/router/constant'
 
@@ -46,30 +45,6 @@ export const REDIRECT_ROUTE: RouteRecordItem = {
       meta: {
         title: REDIRECT_NAME,
         hideBreadcrumb: true,
-      },
-    },
-  ],
-}
-
-export const ERROR_LOG_ROUTE: RouteRecordItem = {
-  path: '/error-log',
-  name: 'ErrorLog',
-  component: LAYOUT,
-  redirect: '/error-log/list',
-  meta: {
-    title: 'ErrorLog',
-    hideBreadcrumb: true,
-    hideChildrenInMenu: true,
-  },
-  children: [
-    {
-      path: 'list',
-      name: 'ErrorLogList',
-      component: () => import('@/views/sys/error-log/index.vue'),
-      meta: {
-        title: t('routes.basic.errorLogList'),
-        hideBreadcrumb: true,
-        currentActiveMenu: '/error-log',
       },
     },
   ],

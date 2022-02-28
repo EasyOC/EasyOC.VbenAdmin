@@ -3,7 +3,7 @@ node_modules
 dist
 .cache
 
-
+.turbo
 .local
 # local env files
 .env.local
@@ -24,5 +24,3 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
-admin/public/amisEditor
-amis/.pnpm-debug.log

@@ -33,6 +33,10 @@
   "files.exclude": {
     "**/.cache": true,
     "**/.editorconfig": true,
+    "**/.eslintignore": true,
+    "**/.prettierignore": true,
+    "**/.stylelintignore": true,
+    "**/LICENSE": true,
     "**/.eslintcache": true,
     "**/bower_components": true,
     "**/.idea": true,
@@ -62,8 +66,7 @@
   "[vue]": {
     "editor.codeActionsOnSave": {
       "source.fixAll.eslint": false
-    },
-    "editor.defaultFormatter": "johnsoncodehk.volar"
+    }
   },
   "i18n-ally.localesPaths": ["packages/locale/src/lang"],
   "i18n-ally.keystyle": "nested",
@@ -113,7 +116,8 @@
     "styl",
     "unplugin",
     "unref",
-    "vitest"
+    "vitest",
+    "esbuild"
   ],
   "commentTranslate.multiLineMerge": true,
   "typescript.suggest.autoImports": false

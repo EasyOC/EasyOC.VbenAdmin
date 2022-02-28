@@ -20,8 +20,19 @@
     "types": ["vite/client"],
     "noImplicitAny": false,
     "skipLibCheck": true,
-    "removeComments": true
+    "removeComments": true,
+    "paths": {
+      "@admin/admin": ["./admin/src/"],
+      "@admin/directives": ["./packages/directives/src"],
+      "@admin/locale": ["./packages/locale/src"],
+      "@admin/service": ["./packages/service"],
+      "@admin/setting": ["./packages/setting/src"],
+      "@admin/tokens": ["./packages/tokens/src"],
+      "@admin/types": ["./packages/types/src"],
+      "@admin/use": ["./packages/use/src"],
+      "@admin/utils": ["./packages/utils/src"]
+    }
   },
-  "include": ["packages"],
-  "exclude": ["node_modules", "**/*.js"]
+  "include": ["packages", "admin"],
+  "exclude": ["**/node_modules/**", "**/dist/**", "**/*.js"]
 }

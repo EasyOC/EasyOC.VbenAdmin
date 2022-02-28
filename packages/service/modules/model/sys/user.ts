@@ -4,7 +4,6 @@
 export interface LoginParams {
   username: string
   password: string
-  rememberMe: boolean
 }
 
 export interface RoleInfo {
@@ -16,16 +15,16 @@ export interface RoleInfo {
  * @description: Login interface return value
  */
 export interface LoginResultModel {
-  access_token: string
-  expires_in: number
-  token_type: string
+  userId: string | number
+  token: string
+  role: RoleInfo
 }
 
 /**
  * @description: Get user information return value
  */
 export interface GetUserInfoModel {
-  roles: string[]
+  roles: RoleInfo[]
   // 用户id
   userId: string | number
   // 用户名
@@ -36,5 +35,4 @@ export interface GetUserInfoModel {
   avatar: string
   // 介绍
   desc?: string
-  email: string
 }

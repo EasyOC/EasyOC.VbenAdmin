@@ -4,12 +4,15 @@
   "main": "index.ts",
   "module": "index.ts",
   "license": "MIT",
+  "scripts": {
+    "clean": "pnpm rimraf node_modules"
+  },
   "dependencies": {
-    "@admin/utils": "workspace:*",
     "@admin/locale": "workspace:*",
     "@admin/tokens": "workspace:*",
     "@admin/types": "workspace:*",
-    "axios": "^0.24.0",
-    "qs": "^6.10.2"
+    "@admin/utils": "workspace:*",
+    "axios": "^0.25.0",
+    "qs": "^6.10.3"
   }
 }

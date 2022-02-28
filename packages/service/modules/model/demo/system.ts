@@ -1,12 +1,10 @@
 import { BasicPageParams, BasicFetchResult } from '../basic'
 
 export type AccountParams = BasicPageParams & {
-  selectedRole: string | undefined
-  sortField: string | undefined
-  sortOrder: string | undefined
-  departmentId: string | undefined
-  filter: string | undefined
+  account?: string
+  nickname?: string
 }
+
 export type RoleParams = {
   roleName?: string
   status?: string
@@ -38,12 +36,9 @@ export interface AccountListItem {
 export interface DeptListItem {
   id: string
   orderNo: string
-  deptName: string
   createTime: string
   remark: string
   status: number
-  parentId: string
-  children: DeptListItem[] | undefined
 }
 
 export interface MenuListItem {

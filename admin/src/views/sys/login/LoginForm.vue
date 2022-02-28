@@ -47,8 +47,8 @@ const loading = ref(false)
 const rememberMe = ref(false)
 
 const formData = reactive({
-  account: 'admin',
-  password: '123123/q',
+  account: 'vben',
+  password: '123456',
 })
 
 const { validForm } = useFormValid(formRef)
@@ -62,11 +62,9 @@ async function handleLogin() {
   if (!data) return
   try {
     loading.value = true
-    console.log(rememberMe.value, 'rememberMe')
     const userInfo = await userStore.login({
       password: data.password,
       username: data.account,
-      rememberMe: rememberMe.value,
       mode: 'none', //不要默认的错误提示
     })
     if (userInfo) {
@@ -159,7 +157,7 @@ async function handleLogin() {
           {{ t('sys.login.mobileSignInFormTitle') }}
         </Button>
       </ACol>
-      <ACol :md="8" :xs="24" class="!my-2 !md:my-0 xs:mx-0 md:mx-2">
+      <ACol :md="8" :xs="24" class="!my-2 md:!my-0 xs:mx-0 md:mx-2">
         <Button block @click="setLoginState(LoginStateEnum.QR_CODE)">
           {{ t('sys.login.qrSignInFormTitle') }}
         </Button>

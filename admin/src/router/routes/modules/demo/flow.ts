@@ -9,7 +9,7 @@ const charts: RouteRecordItem = {
   meta: {
     orderNo: 5000,
     icon: 'tabler:chart-dots',
-    title: t('routes.default.flow.name'),
+    title: t('routes.demo.flow.name'),
   },
   children: [
     {
@@ -17,7 +17,7 @@ const charts: RouteRecordItem = {
       name: 'flowChartDemo',
       component: () => import('@/views/demo/comp/flow-chart/index.vue'),
       meta: {
-        title: t('routes.default.flow.flowChart'),
+        title: t('routes.demo.flow.flowChart'),
       },
     },
   ],

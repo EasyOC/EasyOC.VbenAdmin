@@ -2,19 +2,6 @@ import type { VNodeChild, PropType as VuePropType, Plugin } from 'vue'
 import type { RouteRecordItem as IRouteRecordItem } from './router'
 
 declare global {
-  const afterAll: typeof import('vitest')['afterAll']
-  const afterEach: typeof import('vitest')['afterEach']
-  const assert: typeof import('vitest')['assert']
-  const beforeAll: typeof import('vitest')['beforeAll']
-  const beforeEach: typeof import('vitest')['beforeEach']
-  const describe: typeof import('vitest')['describe']
-  const expect: typeof import('vitest')['expect']
-  const it: typeof import('vitest')['it']
-  const suite: typeof import('vitest')['suite']
-  const test: typeof import('vitest')['test']
-  const vi: typeof import('vitest')['vi']
-  const vitest: typeof import('vitest')['vitest']
-
   type AnyFunction<T> = (...args: any[]) => T
 
   type LabelValueOptions = {
@@ -78,7 +65,6 @@ declare global {
   }
 
   interface ViteEnv {
-    VITE_PORT: number
     VITE_USE_MOCK: boolean
     VITE_USE_PWA: boolean
     VITE_PUBLIC_PATH: string

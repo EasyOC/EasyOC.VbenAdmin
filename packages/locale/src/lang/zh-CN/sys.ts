@@ -2,9 +2,6 @@ export default {
   api: {
     operationFailed: '操作失败',
     errorTip: '错误提示',
-    successTip: '成功',
-    infoTip: '提示',
-    wanTip: '警告',
     errorMessage: '操作失败,系统异常!',
     timeoutMessage: '登录超时,请重新登录!',
     apiTimeoutMessage: '接口请求超时,请刷新页面重试!',

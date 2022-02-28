@@ -1,37 +1,3 @@
-<template>
-  <div :class="bem()" class="flex px-2 py-1.5 items-center">
-    <slot name="headerTitle" v-if="slots.headerTitle"></slot>
-    <BasicTitle :helpMessage="helpMessage" v-if="!slots.headerTitle && title">
-      {{ title }}
-    </BasicTitle>
-    <div
-      class="flex items-center flex-1 cursor-pointer justify-self-stretch"
-      v-if="search || toolbar"
-    >
-      <div :class="getInputSearchCls" v-if="search">
-        <InputSearch
-          :placeholder="t('common.searchText')"
-          size="small"
-          allowClear
-          v-model:value="searchValue"
-        />
-      </div>
-      <Dropdown @click.prevent v-if="toolbar">
-        <Icon icon="ion:ellipsis-vertical" />
-        <template #overlay>
-          <Menu @click="handleMenuClick">
-            <template v-for="item in toolbarList" :key="item.value">
-              <MenuItem v-bind="{ key: item.value }">
-                {{ item.label }}
-              </MenuItem>
-              <MenuDivider v-if="item.divider" />
-            </template>
-          </Menu>
-        </template>
-      </Dropdown>
-    </div>
-  </div>
-</template>
 <script lang="ts" setup>
 import { computed, ref, watch, useSlots } from 'vue'
 import {
@@ -183,3 +149,38 @@ watch(
   },
 )
 </script>
+
+<template>
+  <div :class="bem()" class="flex px-2 py-1.5 items-center">
+    <slot name="headerTitle" v-if="slots.headerTitle"></slot>
+    <BasicTitle :helpMessage="helpMessage" v-if="!slots.headerTitle && title">
+      {{ title }}
+    </BasicTitle>
+    <div
+      class="flex items-center flex-1 cursor-pointer justify-self-stretch"
+      v-if="search || toolbar"
+    >
+      <div :class="getInputSearchCls" v-if="search">
+        <InputSearch
+          :placeholder="t('common.searchText')"
+          size="small"
+          allowClear
+          v-model:value="searchValue"
+        />
+      </div>
+      <Dropdown @click.prevent v-if="toolbar">
+        <Icon icon="ion:ellipsis-vertical" />
+        <template #overlay>
+          <Menu @click="handleMenuClick">
+            <template v-for="item in toolbarList" :key="item.value">
+              <MenuItem v-bind="{ key: item.value }">
+                {{ item.label }}
+              </MenuItem>
+              <MenuDivider v-if="item.divider" />
+            </template>
+          </Menu>
+        </template>
+      </Dropdown>
+    </div>
+  </div>
+</template>

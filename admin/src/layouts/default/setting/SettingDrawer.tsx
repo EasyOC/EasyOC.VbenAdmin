@@ -9,17 +9,15 @@ import {
   SelectItem,
   InputNumberItem,
 } from './components'
-
 import { AppDarkModeToggle } from '@/components/Application'
-
 import { MenuTypeEnum, TriggerEnum } from '@admin/tokens'
 
 import { useRootSetting } from '@/hooks/setting/useRootSetting'
 import { useMenuSetting } from '@/hooks/setting/useMenuSetting'
 import { useHeaderSetting } from '@/hooks/setting/useHeaderSetting'
 import { useMultipleTabSetting } from '@/hooks/setting/useMultipleTabSetting'
-import { useTransitionSetting } from '@/hooks/setting/useTransitionSetting'
 import { useI18n } from '@admin/locale'
+import { projectSetting } from '@admin/setting'
 
 import { baseHandler } from './handler'
 
@@ -28,7 +26,6 @@ import {
   contentModeOptions,
   topMenuAlignOptions,
   getMenuTriggerOptions,
-  routerTransitionOptions,
   menuTypeList,
   mixSidebarTriggerOptions,
 } from './enum'
@@ -40,6 +37,8 @@ import {
 } from '@admin/setting'
 
 const { t } = useI18n()
+
+const { openNProgress } = projectSetting
 
 export default defineComponent({
   name: 'SettingDrawer',
@@ -57,13 +56,6 @@ export default defineComponent({
       getShowDarkModeToggle,
       getThemeColor,
     } = useRootSetting()
-
-    const {
-      getOpenPageLoading,
-      getBasicTransition,
-      getEnableTransition,
-      getOpenNProgress,
-    } = useTransitionSetting()
 
     const {
       getIsHorizontal,
@@ -382,26 +374,7 @@ export default defineComponent({
           <SwitchItem
             title={t('layout.setting.progress')}
             event={HandlerEnum.OPEN_PROGRESS}
-            def={unref(getOpenNProgress)}
-          />
-          <SwitchItem
-            title={t('layout.setting.switchLoading')}
-            event={HandlerEnum.OPEN_PAGE_LOADING}
-            def={unref(getOpenPageLoading)}
-          />
-
-          <SwitchItem
-            title={t('layout.setting.switchAnimation')}
-            event={HandlerEnum.OPEN_ROUTE_TRANSITION}
-            def={unref(getEnableTransition)}
-          />
-
-          <SelectItem
-            title={t('layout.setting.animationType')}
-            event={HandlerEnum.ROUTER_TRANSITION}
-            def={unref(getBasicTransition)}
-            options={routerTransitionOptions}
-            disabled={!unref(getEnableTransition)}
+            def={unref(openNProgress)}
           />
         </>
       )

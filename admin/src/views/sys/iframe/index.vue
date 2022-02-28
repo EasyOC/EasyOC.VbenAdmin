@@ -1,9 +1,9 @@
 <template>
-  <div :className="prefixCls" :style="getWrapStyle">
+  <div :class="prefixCls" :style="getWrapStyle">
     <Spin :spinning="loading" size="large" :style="getWrapStyle">
       <iframe
         :src="frameSrc"
-        :className="`${prefixCls}__main`"
+        :class="`${prefixCls}__main`"
         ref="frameRef"
         @load="hideLoading"
       ></iframe>
@@ -21,7 +21,7 @@ import { useLayoutHeight } from '@/layouts/default/content/useContentViewHeight'
 defineProps({
   frameSrc: { type: String, default: '' },
 })
-const emit = defineEmits(['loaded'])
+
 const loading = ref(true)
 const topRef = ref(50)
 const heightRef = ref(window.innerHeight)
@@ -52,7 +52,6 @@ function calcHeight() {
 function hideLoading() {
   loading.value = false
   calcHeight()
-  emit('loaded', frameRef.value)
 }
 </script>
 <style lang="less" scoped>

@@ -9,7 +9,7 @@ import compressPlugin from 'vite-plugin-compression'
 export const configCompressPlugin = (
   compress: 'gzip' | 'brotli' | 'none',
   deleteOriginFile = false,
-): Plugin | Plugin[] => {
+) => {
   const compressList = compress.split(',')
 
   const plugins: Plugin[] = []

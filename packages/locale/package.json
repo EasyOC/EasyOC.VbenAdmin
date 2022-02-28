@@ -4,12 +4,18 @@
   "main": "index.ts",
   "module": "index.ts",
   "license": "MIT",
+  "scripts": {
+    "clean": "pnpm rimraf node_modules"
+  },
+  "optionalDependencies": {
+    "vue": "^3.2.29"
+  },
   "dependencies": {
     "@admin/setting": "workspace:*",
     "@admin/tokens": "workspace:*",
     "@admin/types": "workspace:*",
     "@admin/utils": "workspace:*",
-    "@vueuse/core": "^7.5.3",
+    "@vueuse/core": "^7.5.4",
     "vue-i18n": "^9.1.9"
   }
 }

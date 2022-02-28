@@ -12,7 +12,7 @@ const page: RouteRecordItem = {
   meta: {
     orderNo: 20,
     icon: 'ion:aperture-outline',
-    title: t('routes.default.page.page'),
+    title: t('routes.demo.page.page'),
   },
   children: [
     // =============================form start=============================
@@ -22,7 +22,7 @@ const page: RouteRecordItem = {
       redirect: '/page-demo/form/basic',
       component: getParentLayout(),
       meta: {
-        title: t('routes.default.page.form'),
+        title: t('routes.demo.page.form'),
       },
       children: [
         {
@@ -30,7 +30,7 @@ const page: RouteRecordItem = {
           name: 'FormBasicPage',
           component: () => import('@/views/demo/page/form/basic/index.vue'),
           meta: {
-            title: t('routes.default.page.formBasic'),
+            title: t('routes.demo.page.formBasic'),
           },
         },
         {
@@ -38,7 +38,7 @@ const page: RouteRecordItem = {
           name: 'FormStepPage',
           component: () => import('@/views/demo/page/form/step/index.vue'),
           meta: {
-            title: t('routes.default.page.formStep'),
+            title: t('routes.demo.page.formStep'),
           },
         },
         {
@@ -46,7 +46,7 @@ const page: RouteRecordItem = {
           name: 'FormHightPage',
           component: () => import('@/views/demo/page/form/high/index.vue'),
           meta: {
-            title: t('routes.default.page.formHigh'),
+            title: t('routes.demo.page.formHigh'),
           },
         },
       ],
@@ -59,7 +59,7 @@ const page: RouteRecordItem = {
       component: getParentLayout(),
       redirect: '/page-demo/desc/basic',
       meta: {
-        title: t('routes.default.page.desc'),
+        title: t('routes.demo.page.desc'),
       },
       children: [
         {
@@ -67,7 +67,7 @@ const page: RouteRecordItem = {
           name: 'DescBasicPage',
           component: () => import('@/views/demo/page/desc/basic/index.vue'),
           meta: {
-            title: t('routes.default.page.descBasic'),
+            title: t('routes.demo.page.descBasic'),
           },
         },
         {
@@ -75,7 +75,7 @@ const page: RouteRecordItem = {
           name: 'DescHighPage',
           component: () => import('@/views/demo/page/desc/high/index.vue'),
           meta: {
-            title: t('routes.default.page.descHigh'),
+            title: t('routes.demo.page.descHigh'),
           },
         },
       ],
@@ -90,7 +90,7 @@ const page: RouteRecordItem = {
       component: getParentLayout(),
 
       meta: {
-        title: t('routes.default.page.result'),
+        title: t('routes.demo.page.result'),
       },
       children: [
         {
@@ -98,7 +98,7 @@ const page: RouteRecordItem = {
           name: 'ResultSuccessPage',
           component: () => import('@/views/demo/page/result/success/index.vue'),
           meta: {
-            title: t('routes.default.page.resultSuccess'),
+            title: t('routes.demo.page.resultSuccess'),
           },
         },
         {
@@ -106,7 +106,7 @@ const page: RouteRecordItem = {
           name: 'ResultFailPage',
           component: () => import('@/views/demo/page/result/fail/index.vue'),
           meta: {
-            title: t('routes.default.page.resultFail'),
+            title: t('routes.demo.page.resultFail'),
           },
         },
       ],
@@ -120,7 +120,7 @@ const page: RouteRecordItem = {
       component: getParentLayout(),
       redirect: '/page-demo/account/setting',
       meta: {
-        title: t('routes.default.page.account'),
+        title: t('routes.demo.page.account'),
       },
       children: [
         {
@@ -128,7 +128,7 @@ const page: RouteRecordItem = {
           name: 'AccountCenterPage',
           component: () => import('@/views/demo/page/account/center/index.vue'),
           meta: {
-            title: t('routes.default.page.accountCenter'),
+            title: t('routes.demo.page.accountCenter'),
           },
         },
         {
@@ -137,7 +137,7 @@ const page: RouteRecordItem = {
           component: () =>
             import('@/views/demo/page/account/setting/index.vue'),
           meta: {
-            title: t('routes.default.page.accountSetting'),
+            title: t('routes.demo.page.accountSetting'),
           },
         },
       ],
@@ -150,7 +150,7 @@ const page: RouteRecordItem = {
       component: getParentLayout(),
       redirect: '/page-demo/exception/404',
       meta: {
-        title: t('routes.default.page.exception'),
+        title: t('routes.demo.page.exception'),
       },
       children: [
         {
@@ -194,7 +194,7 @@ const page: RouteRecordItem = {
             status: ExceptionEnum.NET_WORK_ERROR,
           },
           meta: {
-            title: t('routes.default.page.netWorkError'),
+            title: t('routes.demo.page.netWorkError'),
           },
         },
         {
@@ -205,7 +205,7 @@ const page: RouteRecordItem = {
             status: ExceptionEnum.PAGE_NOT_DATA,
           },
           meta: {
-            title: t('routes.default.page.notData'),
+            title: t('routes.demo.page.notData'),
           },
         },
       ],
@@ -218,7 +218,7 @@ const page: RouteRecordItem = {
       component: getParentLayout(),
       redirect: '/page-demo/list/card',
       meta: {
-        title: t('routes.default.page.list'),
+        title: t('routes.demo.page.list'),
       },
       children: [
         {
@@ -226,7 +226,7 @@ const page: RouteRecordItem = {
           name: 'ListBasicPage',
           component: () => import('@/views/demo/page/list/basic/index.vue'),
           meta: {
-            title: t('routes.default.page.listBasic'),
+            title: t('routes.demo.page.listBasic'),
           },
         },
         {
@@ -234,7 +234,7 @@ const page: RouteRecordItem = {
           name: 'ListCardPage',
           component: () => import('@/views/demo/page/list/card/index.vue'),
           meta: {
-            title: t('routes.default.page.listCard'),
+            title: t('routes.demo.page.listCard'),
           },
         },
         {
@@ -242,7 +242,7 @@ const page: RouteRecordItem = {
           name: 'ListSearchPage',
           component: () => import('@/views/demo/page/list/search/index.vue'),
           meta: {
-            title: t('routes.default.page.listSearch'),
+            title: t('routes.demo.page.listSearch'),
           },
         },
       ],

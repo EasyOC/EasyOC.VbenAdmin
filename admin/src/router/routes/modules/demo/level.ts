@@ -9,7 +9,7 @@ const permission: RouteRecordItem = {
   meta: {
     orderNo: 2000,
     icon: 'ion:menu-outline',
-    title: t('routes.default.level.level'),
+    title: t('routes.demo.level.level'),
   },
 
   children: [

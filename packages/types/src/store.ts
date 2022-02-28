@@ -1,5 +1,4 @@
 import { ErrorTypeEnum, MenuModeEnum, MenuTypeEnum } from '@admin/tokens'
-import { GetUserInfoModel } from 'service/modules/model'
 
 // Lock screen information
 export interface LockInfo {
@@ -34,15 +33,14 @@ export interface RoleInfo {
   value: string
 }
 
-export interface UserInfo extends GetUserInfoModel {
+export interface UserInfo {
   userId: string | number
   username: string
   realName: string
   avatar: string
   desc?: string
   homePath?: string
-  // roles: RoleInfo[]
-  roles: string[]
+  roles: RoleInfo[]
 }
 
 export interface BeforeMiniState {

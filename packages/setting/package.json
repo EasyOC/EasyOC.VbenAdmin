@@ -4,8 +4,14 @@
   "main": "index.ts",
   "module": "index.ts",
   "license": "MIT",
+  "scripts": {
+    "clean": "pnpm rimraf node_modules"
+  },
   "dependencies": {
     "@admin/types": "workspace:*",
     "@admin/tokens": "workspace:*"
+  },
+  "optionalDependencies": {
+    "vue": "^3.2.29"
   }
 }

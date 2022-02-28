@@ -7,9 +7,15 @@
   "unpkg": "index.js",
   "jsdelivr": "index.js",
   "license": "MIT",
+  "scripts": {
+    "clean": "rimraf node_modules"
+  },
   "dependencies": {
     "@admin/locale": "workspace:*",
     "@admin/utils": "workspace:*",
-    "@vueuse/core": "^7.5.3"
+    "@vueuse/core": "^7.5.4"
+  },
+  "optionalDependencies": {
+    "vue": "^3.2.29"
   }
 }

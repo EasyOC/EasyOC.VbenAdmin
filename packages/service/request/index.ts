@@ -1,14 +1,14 @@
 // axios配置  可自行根据项目进行更改，只需更改该文件即可，其他文件可以不动
-// The axios configuration can be changed according to the project,
-//just change the file, other files can be left unchanged
+// The axios configuration can be changed according to the project, just change the file, other files can be left unchanged
 
 import type { AxiosResponse } from 'axios'
 import type { RequestOptions, RequestResult } from '@admin/types'
 import type { AxiosTransform, CreateAxiosOptions } from './axiosTransform'
+
 import { VAxios } from './Axios'
 import { checkStatus } from './checkStatus'
 import { context } from '../_bridge'
-import { t, useI18n } from '@admin/locale'
+import { useI18n } from '@admin/locale'
 import {
   isString,
   isFunction,
@@ -16,13 +16,9 @@ import {
   deepMerge,
   setObjToUrlParams,
 } from '@admin/utils'
-import {
-  RequestEnum,
-  ResultEnum,
-  ContentTypeEnum,
-  OCNotifyType,
-} from '@admin/tokens'
+import { RequestEnum, ResultEnum, ContentTypeEnum } from '@admin/tokens'
 import { joinTimestamp, formatRequestDate } from './helper'
+
 /**
  * @description: 数据处理，方便区分多种处理方式
  */
@@ -54,10 +50,11 @@ const transform: AxiosTransform = {
       throw new Error(t('sys.api.apiRequestFailed'))
     }
     //  这里 code，result，message为 后台统一的字段，需要在 types.ts内修改为项目自己的接口返回格式
-    const { statusCode, result, message, succeeded } = data
+    const { code, result, message } = data
 
     // 这里逻辑可以根据项目进行修改
-    const hasSuccess = succeeded && statusCode === ResultEnum.SUCCESS
+    const hasSuccess =
+      data && Reflect.has(data, 'code') && code === ResultEnum.SUCCESS
     if (hasSuccess) {
       return result
     }
@@ -65,14 +62,14 @@ const transform: AxiosTransform = {
     // 在此处根据自己项目的实际情况对不同的code执行不同的操作
     // 如果不希望中断当前请求，请return数据，否则直接抛出异常即可
     let timeoutMsg = ''
-    switch (statusCode) {
+    switch (code) {
       case ResultEnum.TIMEOUT:
         timeoutMsg = t('sys.api.timeoutMessage')
         context.timeoutFunction?.()
         break
       default:
         if (message) {
-          timeoutMsg = message.join('\n')
+          timeoutMsg = message
         }
     }
 
@@ -92,20 +89,7 @@ const transform: AxiosTransform = {
 
   // 请求之前处理config
   beforeRequestHook: (config, options) => {
-    const {
-      apiUrl,
-      joinPrefix,
-      joinParamsToUrl,
-      formatDate,
-      joinTime = true,
-      urlPrefix,
-    } = options
-
-    if (joinPrefix) {
-      config.url = `${isString(urlPrefix) ? urlPrefix : urlPrefix?.()}${
-        config.url
-      }`
-    }
+    const { apiUrl, joinParamsToUrl, formatDate, joinTime = true } = options
 
     if (apiUrl) {
       const _apuUrl = isString(apiUrl)
@@ -180,51 +164,6 @@ const transform: AxiosTransform = {
    * @description: 响应拦截器处理
    */
   responseInterceptors: (res: AxiosResponse<any>) => {
-    console.log('responseInterceptors: ', res)
-    // extras: null
-    // message: null
-    // messages: []
-    // result: (9) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
-    // statusCode: 200
-    // succeeded: true
-    // timestamp: 1645716999773
-    const { extras, msg, succeeded, statusCode } = res.data
-    if (msg) {
-      const notifyFn = (notify) => {
-        switch (notify.type) {
-          case OCNotifyType.Success:
-            context.orchardNotify.successFunction({
-              title: t('sys.api.successTip'),
-              content: notify.message.value,
-            })
-            break
-          case OCNotifyType.Information:
-            context.orchardNotify.informationFunction({
-              title: t('sys.api.infoTip'),
-              content: notify.message.value,
-            })
-            break
-          case OCNotifyType.Warning:
-            context.orchardNotify.warningFunction({
-              title: t('sys.api.wanTip'),
-              content: notify.message.value,
-            })
-            break
-          case OCNotifyType.Error:
-            context.orchardNotify.errorFunction({
-              title: t('sys.api.errorTip'),
-              content: notify.value,
-            })
-            break
-        }
-      }
-      if (msg instanceof Array) {
-        msg.forEach(notifyFn)
-      } else if (msg['message']) {
-        notifyFn(msg)
-      }
-    }
-
     return res
   },
 
@@ -275,10 +214,10 @@ const createAxios = (opt?: Partial<CreateAxiosOptions>) => {
         // See https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication#authentication_schemes
         // authentication schemes，e.g: Bearer
         // authenticationScheme: 'Bearer',
-        authenticationScheme: 'Bearer',
+        authenticationScheme: '',
         timeout: 10 * 1000,
         // 基础接口地址
-        // baseURL: process.env.VITE_GLOB_API_URL .apiUrl,
+        // baseURL: globSetting.apiUrl,
 
         headers: { 'Content-Type': ContentTypeEnum.JSON },
         // 如果是form-data格式
@@ -287,8 +226,6 @@ const createAxios = (opt?: Partial<CreateAxiosOptions>) => {
         transform: clone(transform),
         // 配置项，下面的选项都可以在独立的接口请求中覆盖
         requestOptions: {
-          // 默认将prefix 添加到url
-          joinPrefix: true,
           // 是否返回原生响应头 比如：需要获取响应头时使用该属性
           isReturnNativeResponse: false,
           // 需要对返回数据进行处理
@@ -301,8 +238,6 @@ const createAxios = (opt?: Partial<CreateAxiosOptions>) => {
           errorMessageMode: 'message',
           // 接口地址
           apiUrl: () => context.apiUrl,
-          // 接口拼接地址
-          urlPrefix: () => context.urlPrefix,
           //  是否加入时间戳
           joinTime: true,
           // 忽略重复请求
@@ -322,14 +257,5 @@ export const defaultRequest = createAxios()
 // export const otherHttp = createAxios({
 //   requestOptions: {
 //     apiUrl: 'xxx',
-//     urlPrefix: 'xxx',
 //   },
 // });
-
-export const ocApi = createAxios({
-  requestOptions: {
-    isReturnNativeResponse: true,
-    isTransformResponse: false,
-  },
-  transform: undefined,
-})

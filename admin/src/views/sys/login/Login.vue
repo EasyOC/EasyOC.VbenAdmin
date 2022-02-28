@@ -31,6 +31,7 @@ const title = computed(() => globSetting?.title ?? '')
       :show-text="false"
       v-if="!sessionTimeout && showLocalePicker"
     />
+
     <AppDarkModeToggle
       class="absolute top-3 right-7 enter-x"
       v-if="!sessionTimeout"
@@ -55,9 +56,7 @@ const title = computed(() => globSetting?.title ?? '')
                 {{ t('sys.login.signInTitle') }}</span
               >
             </div>
-            <div
-              class="mt-5 font-normal text-white text-md dark:text-gray-500 -enter-x"
-            >
+            <div class="mt-5 font-normal text-white text-md -enter-x">
               {{ t('sys.login.signInDesc') }}
             </div>
           </div>

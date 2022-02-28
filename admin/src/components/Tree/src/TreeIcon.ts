@@ -1,5 +1,4 @@
 import type { VNode, FunctionalComponent } from 'vue'
-
 import { h } from 'vue'
 import { isString } from '@admin/utils'
 import { Icon } from '@/components/Icon'

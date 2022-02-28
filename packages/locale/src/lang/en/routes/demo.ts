@@ -11,13 +11,11 @@ export default {
   comp: {
     comp: 'Component',
     basic: 'Basic',
-    transition: 'Animation',
     countTo: 'Count To',
 
     scroll: 'Scroll',
     scrollBasic: 'Basic',
     scrollAction: 'Scroll Function',
-    virtualScroll: 'Virtual Scroll',
 
     tree: 'Tree',
 
@@ -28,14 +26,6 @@ export default {
     modal: 'Modal',
     drawer: 'Drawer',
     desc: 'Desc',
-
-    lazy: 'Lazy',
-    lazyBasic: 'Basic',
-    lazyTransition: 'Animation',
-
-    verify: 'Verify',
-    verifyDrag: 'Drag ',
-    verifyRotate: 'Picture Restore',
 
     qrcode: 'QR code',
     strength: 'Password strength',
@@ -72,14 +62,11 @@ export default {
     print: 'Print',
     contextMenu: 'Context Menu',
     download: 'Download',
-    clickOutSide: 'ClickOutSide',
     imgPreview: 'Picture Preview',
     copy: 'Clipboard',
     msg: 'Message prompt',
     watermark: 'Watermark',
-    ripple: 'Ripple',
     fullScreen: 'Full Screen',
-    errorLog: 'Error Log',
     tab: 'Tab with parameters',
     tab1: 'Tab with parameter 1',
     tab2: 'Tab with parameter 2',
