@@ -33,7 +33,8 @@ export default defineConfig(async ({ command, mode }) => {
     },
     server: {
       port: 3000,
-      https: true,
+      open: true,
+      // https: true,
       host: true,
       proxy: configProxy(VITE_PROXY),
       fs: {

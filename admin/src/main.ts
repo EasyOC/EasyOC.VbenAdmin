@@ -1,3 +1,5 @@
+import 'amis/sdk/sdk.js'
+// import 'amis/lib/themes/antd.css'
 import 'ant-design-vue/dist/antd.less'
 import '@/styles/index.less'
 // Register icon sprite

@@ -3,12 +3,11 @@
 </template>
 
 <script lang="ts" setup>
-import { ocApi } from '@admin/service/request'
+import { ocApi } from '@admin/service/request/index'
 // import { PageWrapper } from '@/components/Page'
 import { onMounted, onUnmounted, ref, unref } from 'vue'
 
 // import 'amis/lib/themes/default.css'
-import 'amis/sdk/sdk.js'
 
 // import * as monaco from 'monaco-editor'
 // import 'amis/lib/themes/cxd.css'
@@ -40,7 +39,7 @@ onMounted(() => {
       //
       // 主题，默认是 default，还可以设置成 cxd, antd 或 dark，但记得引用它们的 css，比如 sdk 目录下的 cxd.css
       // theme: 'antd',
-      theme: 'cxd',
+      theme: 'antd',
       //https://baidu.gitee.io/amis/zh-CN/docs/start/getting-started#sdk
       // 下面是一些可选的外部控制函数
       // TODO 在 sdk 中可以不传，用来实现 ajax 请求，但在 npm 中这是必须提供的
@@ -108,16 +107,19 @@ onMounted(() => {
 onUnmounted(() => {
   amisScoped.value.unmount()
 })
+
+// import './assets/css/global-class'
 </script>
 
 <style scoped lang="less">
 // html {
 //   font-size: 16px;
 // }
-@import 'amis/lib/helper.css';
+
 @import 'amis/sdk/iconfont.css';
+@import 'amis/lib/helper.css';
 @import 'amis/lib/themes/antd.css';
-@import './assets/css/global-class';
+
 .app-wrapper,
 .routes-wrapper {
   position: relative;
