@@ -1,3 +1,5 @@
 import { withInstall } from '@admin/utils'
-import AMISFrameRenderer from './src/AMISFrameRenderer.vue'
-export const Amis = withInstall(AMISFrameRenderer)
+import FrameRenderer from './src/AMISFrameRenderer.vue'
+import AmisRenderer from './src/index.vue'
+export const AMISFrameRenderer = withInstall(FrameRenderer)
+export const Amis = withInstall(AmisRenderer)

@@ -29,7 +29,7 @@ const bootstrap = async () => {
     origin: (origin, cb) => {
       cb(null, true)
     },
-    credentials: true,
+    // credentials: true,
   })
 
   app.use(helmet())

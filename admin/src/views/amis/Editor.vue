@@ -113,8 +113,7 @@ const editorJson = ref<any>(
       "transformResponse": [
         undefined
       ],
-      "timeout": 0,
-      "withCredentials": true,
+      "timeout": 0, 
       "adapter": undefined,
       "xsrfCookieName": "XSRF-TOKEN",
       "xsrfHeaderName": "X-XSRF-TOKEN",
@@ -149,9 +148,7 @@ const editorJson = ref<any>(
         "transformResponse": [
           undefined
         ],
-        "timeout": 0,
-        "withCredentials": true,
-        "adapter": undefined,
+        "timeout": 0,  
         "xsrfCookieName": "XSRF-TOKEN",
         "xsrfHeaderName": "X-XSRF-TOKEN",
         "maxContentLength": -1,

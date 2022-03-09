@@ -76,7 +76,7 @@ export default {
         fetcher: ({ url, method, data, config, headers }) => {
           config = config || {}
           config.headers = config.headers || {}
-          config.withCredentials = true
+          // config.withCredentials = true
 
           if (config.cancelExecutor) {
             config.cancelToken = new axios.CancelToken(config.cancelExecutor)

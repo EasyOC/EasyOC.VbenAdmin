@@ -14,7 +14,8 @@ import { setupRouterGuard } from '@/router/guard'
 import { pinia, registerGlobalComponents } from '@/internal'
 import { setupI18n } from '@admin/locale'
 import { registerGlobalDirective } from '@admin/directives'
-
+import microApp from '@micro-zoe/micro-app'
+microApp.start()
 const bootstrap = async () => {
   const app = createApp(App)
 
