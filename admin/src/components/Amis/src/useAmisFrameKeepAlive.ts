@@ -4,7 +4,7 @@ import { uniqBy } from '@admin/utils'
 import { useMultipleTabSetting } from '@/hooks/setting/useMultipleTabSetting'
 import { useRouter } from 'vue-router'
 
-export function useFrameKeepAlive() {
+export function useAmisFrameKeepAlive() {
   const router = useRouter()
   const { currentRoute } = router
   const { getShowMultipleTab } = useMultipleTabSetting()

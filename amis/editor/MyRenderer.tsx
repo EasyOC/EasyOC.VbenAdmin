@@ -38,7 +38,6 @@ export default class MyRendererEditor extends BasicEditor {
                             }
                         ]
                     },
-
                     {
                         title: '外观',
                         controls: []

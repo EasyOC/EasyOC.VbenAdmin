@@ -40,6 +40,11 @@ declare module 'vue-router' {
     ignoreRoute?: boolean
     // Hide path for children
     hidePathForChildren?: boolean
+    //amis props
+    isAmisPage?: boolean
+    amisProps?: {
+      schema: any
+    }
   }
 }
 

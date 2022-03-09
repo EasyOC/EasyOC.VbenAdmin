@@ -17,7 +17,7 @@ export interface ContextOptions {
   apiUrl?: string
   uploadUrl?: string
   clientId?: string
-  scopes?: string
+  scope?: string
   clientRoot?: string
   stsAuthority?: string
 }
@@ -38,7 +38,7 @@ export let context: ContextOptions = {
   },
   apiUrl: '',
   clientId: '',
-  scopes: '',
+  scope: '',
   clientRoot: '',
   stsAuthority: '',
 }

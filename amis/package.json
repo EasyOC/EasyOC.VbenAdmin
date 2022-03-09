@@ -8,7 +8,7 @@
         "test": "echo \"Error: no test specified\" && exit 1",
         "start": "fis3 server start --www ./public --port 8082 --no-daemon",
         "dev": "fis3 release -cwd ./public",
-        "build-admin": "rimraf ../admin/public/amisEditor && fis3 release -cwd ../admin/public/amisEditor -c",
+        "build-admin": "rimraf ../admin/public/amisRenderer && fis3 release -cwd ../admin/public/amisRenderer -c",
         "gh-pages": "rimraf gh-pages && fis3 release gh-pages -c"
     },
     "repository": {
@@ -27,8 +27,8 @@
     "homepage": "https://github.com/fex-team/amis-editor-demo#readme",
     "dependencies": {
         "@fortawesome/fontawesome-free": "^5.15.3",
-        "amis": "1.4.2-beta.6",
-        "amis-editor": "^4.0.2-beta.10",
+        "amis": "1.8.0-beta.2",
+        "amis-editor": "^4.0.2-beta.16",
         "axios": "0.21.1",
         "bootstrap": "3.4.1",
         "copy-to-clipboard": "^3.2.0",

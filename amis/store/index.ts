@@ -28,7 +28,7 @@ export const MainStore = types
     })
     .views(self => ({
         get fetcher() {
-                        alert(111111111111)
+            alert(111111111111);
             return getEnv(self).fetcher;
         },
         get notify() {

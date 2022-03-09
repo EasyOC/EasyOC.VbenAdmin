@@ -14,13 +14,14 @@
 import { defineComponent, unref, computed } from 'vue'
 import FramePage from '@/views/sys/iframe/index.vue'
 
-import { useFrameKeepAlive } from './useFrameKeepAlive'
+import { useAmisFrameKeepAlive } from './useAmisFrameKeepAlive'
 
 export default defineComponent({
   name: 'AMISFrameRenderer',
   components: { FramePage },
   setup() {
-    const { getFramePages, hasRenderFrame, showIframe } = useFrameKeepAlive()
+    const { getFramePages, hasRenderFrame, showIframe } =
+      useAmisFrameKeepAlive()
 
     const showFrame = computed(() => unref(getFramePages).length > 0)
     function frameLoaded(a) {

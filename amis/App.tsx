@@ -77,7 +77,7 @@ export default function (): JSX.Element {
             confirm,
             copy: (contents: string, options: any = {}) => {
                 const ret = copy(contents, options);
-                ret && (!options || options.shutup !== true) && toast.info('内容已拷贝到剪切板1111');
+                ret && (!options || options.shutup !== true) && toast.info('内容已拷贝到剪切板');
                 return ret;
             }
         }

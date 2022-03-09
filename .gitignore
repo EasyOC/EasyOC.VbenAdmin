@@ -26,3 +26,4 @@ pnpm-debug.log*
 *.sw?
 admin/public/amisEditor
 amis/.pnpm-debug.log
+admin/public/amisRenderer/*

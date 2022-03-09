@@ -9,13 +9,12 @@ const oidcClient = new Oidc.UserManager({
   authority: useGlobSetting().stsAuthority,
   client_id: useGlobSetting().clientId,
   redirect_uri: useGlobSetting().clientRoot + 'signin-callback',
-  scope: useGlobSetting().scopes,
+  scope: useGlobSetting().scope,
   post_logout_redirect_uri: useGlobSetting().clientRoot + 'signout-callback',
   filterProtocolClaims: true,
   loadUserInfo: true,
   response_type: useGlobSetting().responseType,
   client_secret: "123123/q",
-  
 })
 
 Oidc.Log.logger = console;

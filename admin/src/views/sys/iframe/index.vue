@@ -21,6 +21,7 @@ import { useLayoutHeight } from '@/layouts/default/content/useContentViewHeight'
 defineProps({
   frameSrc: { type: String, default: '' },
 })
+// defineEmits({"loaded",})
 
 const loading = ref(true)
 const topRef = ref(50)

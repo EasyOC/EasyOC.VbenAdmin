@@ -136,7 +136,7 @@ export interface GlobConfig {
   clientRoot: string
   stsAuthority: string
   clientId?: string
-  scopes: string
+  scope: string
 }
 
 export interface GlobEnvConfig {
@@ -152,5 +152,5 @@ export interface GlobEnvConfig {
   VITE_GLOB_OIDC_clientRoot?: string
   VITE_GLOB_OIDC_stsAuthority?: string
   VITE_GLOB_OIDC_CLIENTID?: string
-  VITE_GLOB_OIDC_SCOPES?: string
+  VITE_GLOB_OIDC_SCOPE?: string
 }

@@ -29,10 +29,12 @@ export async function loginApi(
         username: username,
         password: password,
         rememberMe: rememberMe,
-        scopes: context.scopes,
+        scope: context.scope,
       },
     },
     {
+      // withToken: false,
+      // isTransformResponse: false,
       errorMessageMode: mode,
     },
   )
