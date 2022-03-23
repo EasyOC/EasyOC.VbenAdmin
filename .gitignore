@@ -24,6 +24,5 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
-admin/public/amisEditor
+admin/public/amis-editor-renderer
 amis/.pnpm-debug.log
-admin/public/amisRenderer/*
