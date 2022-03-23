@@ -25,7 +25,7 @@
     "no-unused-vars": "off",
     "no-use-before-define": "off",
     "space-before-function-paren": "off",
-
+    "semi": [0],
     "@typescript-eslint/ban-ts-ignore": "off",
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/no-explicit-any": "off",
