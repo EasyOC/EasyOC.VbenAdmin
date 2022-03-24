@@ -19,7 +19,7 @@ export default defineConfig(async ({ command, mode }) => {
 
   const { VITE_PUBLIC_PATH, VITE_PROXY, VITE_USE_MOCK, VITE_DROP_CONSOLE } =
     viteEnv
-
+  const prefix = `monaco-editor/esm/vs`
   return {
     root,
     base: VITE_PUBLIC_PATH,
@@ -100,6 +100,12 @@ export default defineConfig(async ({ command, mode }) => {
         'dayjs/locale/en',
         'dayjs/locale/zh-cn',
         'lodash-es',
+        `${prefix}/language/json/json.worker`,
+        `${prefix}/language/css/css.worker`,
+        `${prefix}/language/html/html.worker`,
+        `${prefix}/language/typescript/ts.worker`,
+        `${prefix}/editor/editor.worker`,
+        `monaco-editor/min/vs/loader.js`,
       ],
       exclude: ['vue-demi'],
     },

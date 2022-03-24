@@ -73,7 +73,7 @@ export const configVitePlugins = (viteEnv: ViteEnv, isBuild: boolean) => {
     vitePlugins.push(configPwaConfig(viteEnv))
   }
   //Add Monaco
-  vitePlugins.push(monacoEditorPlugin())
+  // vitePlugins.push(monacoEditorPlugin())
 
   return vitePlugins
 }
