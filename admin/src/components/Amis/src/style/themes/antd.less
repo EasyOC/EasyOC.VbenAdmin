@@ -1,6 +1,5 @@
 @charset "UTF-8";
 
- 
 :root{
   --black: #000;
   --white: #fff;
@@ -1530,10 +1529,11 @@
   --Table-onChecked-borderColor: var(--Table-borderColor);
   --Switch-bgColor: #bfbfbf;
  }
- .amis-renderer-box { 
+ .amis-renderer-box  { 
 /**
  * @file 使用 extract-antd-color.py 转换
  */
+
 
 /* BASICS */
 .CodeMirror {
@@ -20212,6 +20212,14 @@ input[type=button].antd-Button--block {
 .antd-ColumnToggler {
   position: relative;
   display: inline-block;
+  .antd-ColumnToggler-caret{
+    position: relative;
+    top: -10px;
+    left: 5px;
+  }
+}
+.antd-ColumnToggler{
+
 }
 .antd-ColumnToggler-caret {
   margin-left: var(--DropDown-caret-marginLeft);
@@ -20223,9 +20231,11 @@ input[type=button].antd-Button--block {
   width: 0.625rem;
   height: 0.625rem;
   top: 0.125em;
+  // top: -8px;
 }
-.antd-ColumnToggler.is-opened .antd-ColumnToggler-caret {
+.antd-ColumnToggler .is-opened .antd-ColumnToggler-caret {
   transform: rotate(180deg);
+  top: -7.5px;
 }
 .antd-ColumnToggler.is-actived > .antd-Button {
   color: var(--link-color);
@@ -20297,7 +20307,7 @@ input[type=button].antd-Button--block {
   box-shadow: none;
 }
 .antd-ColumnToggler > .antd-Button {
-  min-width: unset;
+  min-width: 40px;
 }
 .antd-ColumnToggler-modal {
   display: flex;

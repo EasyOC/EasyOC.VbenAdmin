@@ -4,12 +4,8 @@
   </div>
 </template>
 <script lang="ts" setup>
-// import './style/themes/antd.less'
-// import './style/themes/cxd.less'
-// import './style/themes/ang.less'
-// import './style/themes/dark.less'
-// import './style/themes/default.less'
 import 'amis/sdk/sdk.js'
+import './style/themes/antd.less'
 
 import { ocApi } from '@admin/service/request/index'
 import { onMounted, ref, unref, onBeforeUnmount } from 'vue'
@@ -120,5 +116,14 @@ onMounted(() => {
 onBeforeUnmount(() => {
   amisScoped.value.unmount()
 })
+// import './style/themes/antd.less'
+// import './style/themes/cxd.less'
+// import './style/themes/ang.less'
+// import './style/themes/dark.less'
+// import './style/themes/default.less'
 </script>
- 
+<style lang="less" scoped>
+// @import './style/themes/antd.less';
+  
+</style>
+<!--<style scoped lang="less" src="./style/themes/antd.less"></style> -->
