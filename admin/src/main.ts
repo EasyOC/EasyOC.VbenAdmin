@@ -1,5 +1,5 @@
-import 'amis/sdk/sdk.js'
-// import 'amis/lib/themes/antd.css'
+// import 'amis/sdk/sdk.js'
+// import 'amis/lib/themes/cxd.css'
 import 'ant-design-vue/dist/antd.less'
 import '@/styles/index.less'
 // Register icon sprite
@@ -14,8 +14,6 @@ import { setupRouterGuard } from '@/router/guard'
 import { pinia, registerGlobalComponents } from '@/internal'
 import { setupI18n } from '@admin/locale'
 import { registerGlobalDirective } from '@admin/directives'
-import microApp from '@micro-zoe/micro-app'
-microApp.start()
 const bootstrap = async () => {
   const app = createApp(App)
 

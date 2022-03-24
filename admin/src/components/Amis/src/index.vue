@@ -1,14 +1,27 @@
 <template>
-  <div ref="rendererBox"></div>
+  <div className="amis-renderer-box">
+    <div ref="rendererBox"></div>
+  </div>
 </template>
-
 <script lang="ts" setup>
+// import './style/themes/antd.less'
+// import './style/themes/cxd.less'
+// import './style/themes/ang.less'
+// import './style/themes/dark.less'
+// import './style/themes/default.less'
+import 'amis/sdk/sdk.js'
+
 import { ocApi } from '@admin/service/request/index'
-// import { PageWrapper } from '@/components/Page'
-import { onMounted, onUnmounted, ref, unref } from 'vue'
+import { onMounted, ref, unref, onBeforeUnmount } from 'vue'
+// const theme: 'default' | 'cxd' | 'antd' | 'ang' | 'dark' = "default"
+// switch (theme) {
+//   case "default":
+//     break;
+
+// }
 
 // import 'amis/lib/themes/default.css'
-
+// import 'amis/lib/themes/antd.css'
 // import * as monaco from 'monaco-editor'
 // import 'amis/lib/themes/cxd.css'
 const props = defineProps({
@@ -104,104 +117,8 @@ onMounted(() => {
   )
   emit('amisMounted', amisScoped.value)
 })
-onUnmounted(() => {
+onBeforeUnmount(() => {
   amisScoped.value.unmount()
 })
-
-// import './assets/css/global-class'
 </script>
-
-<style scoped lang="less">
-// html {
-//   font-size: 16px;
-// }
-
-@import 'amis/sdk/iconfont.css';
-@import 'amis/lib/helper.css';
-@import 'amis/lib/themes/antd.css';
-
-.app-wrapper,
-.routes-wrapper {
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
-
-.navbtn {
-  float: right;
-  margin: 3px;
-  visibility: visible;
-}
-
-.a-Tabs--line > .a-Tabs-links > li > a:first-child {
-  margin-right: 30px;
-}
-
-.editor-header {
-  position: relative;
-  text-align: right;
-
-  .navbar-brand {
-    float: left !important;
-  }
-
-  > .editor-preview {
-    display: inline-block;
-    line-height: 50px;
-    margin-right: 15px;
-    color: #c1c4c9;
-  }
-}
-
-.editor-header-btns {
-  display: inline-block;
-  white-space: nowrap;
-
-  > .btn-item {
-    user-select: none;
-    cursor: pointer;
-    display: inline-block;
-    border-left: 1px solid #595c65;
-    line-height: 50px;
-    padding: 0 20px;
-    color: #c1c4c9;
-
-    > svg {
-      display: inline-block;
-      fill: #c1c4c9;
-      width: 20px;
-      position: relative;
-      top: 4px;
-    }
-
-    &:hover {
-      color: #fff;
-      background-color: rgb(46, 50, 67);
-
-      > svg {
-        fill: #fff;
-      }
-    }
-
-    &.disabled {
-      color: #8b8e99;
-      pointer-events: none;
-      cursor: default;
-
-      > svg {
-        fill: #8b8e99;
-      }
-    }
-  }
-}
-
-.ae-Editor.is-fixed .ae-Settings-inner .ae-Editor-config-tab > .tab-content,
-.ae-Editor.is-fixed .ae-Settings-inner .ae-Editor-code-tab > .tab-content {
-  bottom: 50px;
-}
-
-.editor-verions {
-  max-height: 100%;
-  overflow: auto;
-}
-</style>
+ 
