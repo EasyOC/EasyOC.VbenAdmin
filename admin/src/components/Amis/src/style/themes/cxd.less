@@ -20564,20 +20564,25 @@ input[type=button].cxd-Button--block {
   position: relative;
   display: inline-block;
 }
+.cxd-ColumnToggler.is-opened .cxd-ColumnToggler-caret {
+  transform: rotate(180deg);
+  top: -5.5px;
+}
 .cxd-ColumnToggler-caret {
   margin-left: var(--DropDown-caret-marginLeft);
   display: inline-block;
   vertical-align: top;
   transition: transform var(--animation-duration) ease;
+  position: relative;
+  top: -11px;
+    left: 5px;
 }
 .cxd-ColumnToggler-caret > svg {
   width: 0.625rem;
   height: 0.625rem;
   top: 0.125em;
 }
-.cxd-ColumnToggler.is-opened .cxd-ColumnToggler-caret {
-  transform: rotate(180deg);
-}
+
 .cxd-ColumnToggler.is-actived > .cxd-Button {
   color: var(--link-color);
 }
@@ -20648,8 +20653,9 @@ input[type=button].cxd-Button--block {
   box-shadow: none;
 }
 .cxd-ColumnToggler > .cxd-Button {
-  min-width: unset;
+  min-width: 48px;
 }
+
 .cxd-ColumnToggler-modal {
   display: flex;
   flex-flow: column nowrap;
