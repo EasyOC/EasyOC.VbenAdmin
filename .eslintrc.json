@@ -22,6 +22,7 @@
     "plugin:prettier/recommended"
   ],
   "rules": {
+    // "quotes": [1, "double"],
     "no-unused-vars": "off",
     "no-use-before-define": "off",
     "space-before-function-paren": "off",

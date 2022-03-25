@@ -6,20 +6,38 @@
 <script lang="ts" setup>
 import 'amis/sdk/sdk.js'
 import './style/themes/antd.less'
-
 import { ocApi } from '@admin/service/request/index'
 import { onMounted, ref, unref, onBeforeUnmount } from 'vue'
-// const theme: 'default' | 'cxd' | 'antd' | 'ang' | 'dark' = "default"
-// switch (theme) {
-//   case "default":
-//     break;
-
-// }
-
+import '@fortawesome/fontawesome-free/css/all.min.css'
+import '@fortawesome/fontawesome-free/css/v4-shims.css'
 // import 'amis/lib/themes/default.css'
 // import 'amis/lib/themes/antd.css'
-// import * as monaco from 'monaco-editor'
+import 'monaco-editor'
 // import 'amis/lib/themes/cxd.css'
+// import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'
+// import jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker'
+// import cssWorker from 'monaco-editor/esm/vs/language/css/css.worker?worker'
+// import htmlWorker from 'monaco-editor/esm/vs/language/html/html.worker?worker'
+// import tsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker'
+
+// ;(self as any).MonacoEnvironment = {
+//   getWorker(_, label) {
+//     if (label === 'json') {
+//       return new jsonWorker()
+//     }
+//     if (label === 'css' || label === 'scss' || label === 'less') {
+//       return new cssWorker()
+//     }
+//     if (label === 'html' || label === 'handlebars' || label === 'razor') {
+//       return new htmlWorker()
+//     }
+//     if (label === 'typescript' || label === 'javascript') {
+//       return new tsWorker()
+//     }
+//     return new editorWorker()
+//   },
+// }
+
 const props = defineProps({
   amisjson: {
     type: Object,
@@ -124,6 +142,5 @@ onBeforeUnmount(() => {
 </script>
 <style lang="less" scoped>
 // @import './style/themes/antd.less';
-  
 </style>
 <!--<style scoped lang="less" src="./style/themes/antd.less"></style> -->

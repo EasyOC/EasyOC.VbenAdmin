@@ -1,9 +1,17 @@
 <template>
   <PageWrapper :title="getTitle" @back="goBack">
     <template #rightFooter>
-      <a-button type="primary" @click="save" :disabled="loading" :loading="loading">保存</a-button>
+      <a-button
+        type="primary"
+        @click="save"
+        :disabled="loading"
+        :loading="loading"
+        >保存</a-button
+      >
 
-      <a-button type="primary" :loading="loading" :disabled="loading" danger>删除列表</a-button>
+      <a-button type="primary" :loading="loading" :disabled="loading" danger
+        >删除列表</a-button
+      >
     </template>
     <template #footer>
       <BasicForm @register="register">
@@ -38,22 +46,24 @@
     </template>
     <div class="desc-wrap">
       <template v-if="currentKey == 'eidtList'">
-        <a-row class="bg-white p-4">
-          <a-col style="width: 400px">
+        <a-row>
+          <a-col :span="4" class="bg-white" style="min-width: 300px">
             <a-card title="字段列表" :bordered="false" size="small">
               <template #extra>
-                <a-button size="small" @click="typeSelectionChanged()">刷新列表</a-button>
+                <a-button size="small" @click="typeSelectionChanged()"
+                  >刷新列表</a-button
+                >
                 <!-- <a-button size="small" @click="() => 1 + 1">添加字段</a-button> -->
               </template>
               <!--   <a-button @click="delCol(index)" type="link">
                         <DeleteOutlined style="color: #ed6f6f" />
               </a-button>-->
               <draggable
-                class="dragArea list-group w-full"
+                class="w-full dragArea list-group"
                 style="height: 500px; overflow-y: scroll"
               >
                 <div
-                  class="list-group-item borderGray m-1 p-2 rounded-md"
+                  class="p-2 m-1 rounded-md list-group-item borderGray"
                   v-for="(element, index) in listAllFields"
                   :key="element.keyPath || ''"
                 >
@@ -61,7 +71,9 @@
                     <b>
                       {{ element.displayName }}
                       <a-button @click="addField(element)" type="link">
-                        <swap-right-outlined style="color: rgb(50, 150, 231); font-size: large" />
+                        <swap-right-outlined
+                          style="color: rgb(50, 150, 231); font-size: large"
+                        />
                       </a-button>
                     </b>
                     <!-- <span
@@ -76,10 +88,15 @@
               </draggable>
             </a-card>
           </a-col>
-          <a-col class="w-3/8">
+          <a-col :span="12">
             <a-card title="字段映射" :bordered="false" size="small">
               <template #extra>
-                <a-button size="small" @click="formatSchema" title="快捷键：shift+alt+f">格式化</a-button>
+                <a-button
+                  size="small"
+                  @click="formatSchema"
+                  title="快捷键：shift+alt+f"
+                  >格式化</a-button
+                >
               </template>
               <MonacoEditor
                 language="json"
@@ -90,10 +107,12 @@
               />
             </a-card>
           </a-col>
-          <a-col class="w-2/8">
+          <a-col :span="8" style="min-width: 300px">
             <a-card title="GraphQL" :bordered="false" size="small">
               <template #extra>
-                <a :href="`${apiUrl}/Admin/GraphQL`" target="AdminGraphQL">在设计器中打开</a>
+                <a :href="`${apiUrl}/Admin/GraphQL`" target="AdminGraphQL"
+                  >在设计器中打开</a
+                >
               </template>
               <MonacoEditor
                 :value="model.GraphQL"
@@ -106,7 +125,7 @@
         </a-row>
       </template>
       <template v-if="currentKey == 'preview'">
-        <div class="bg-white p-4">
+        <div class="p-4 bg-white">
           <h2>预览</h2>
           <table></table>
         </div>
@@ -270,7 +289,7 @@ onMounted(() => {
 //   addField(field)
 // }
 
-async function typeSelectionChanged(value?) {
+async function typeSelectionChanged(value) {
   if (!value) {
     const result = getFieldsValue()
     value = result.TargetContentType
@@ -332,18 +351,20 @@ function buildAmisField(field: ContentFieldsMapping) {
   const newobj: any = {
     label: field.displayName,
     name: camelCase(field.fieldName),
-    type: "text"
+    type: 'text',
   }
   if (model.value.QueryMethod == 'Graphql') {
     switch (field.fieldType) {
       case FieldType.ContentPickerField:
-        newobj.name = `${camelCase(field.fieldName)
-          }.contentItems[0].displayText`
+        newobj.name = `${camelCase(
+          field.fieldName,
+        )}.contentItems[0].displayText`
 
         break
       case FieldType.UserPickerField:
-        newobj.name = `${camelCase(field.fieldName)
-          }.userProfiles[0].displayText`
+        newobj.name = `${camelCase(
+          field.fieldName,
+        )}.userProfiles[0].displayText`
         break
       case FieldType.DateTimefield:
         newobj.name = camelCase(field.fieldName)
@@ -359,16 +380,13 @@ function buildAmisField(field: ContentFieldsMapping) {
     if (field.fieldName.endsWith('Utc') && !field.partName) {
       newobj.format = 'YYYY-MM-DD HH:mm'
     }
-
   }
   console.log('newobj: ', newobj)
   return newobj
 }
 
-
 function buildField(field: ContentFieldsMapping) {
-
-  return buildAmisField(field);
+  return buildAmisField(field)
   const newobj: BasicColumn = {
     title: field.displayName,
   }

@@ -1,0 +1,253 @@
+{
+  "type": "page",
+  "title": "动态页管理",
+  "body": [
+    {
+      "type": "crud",
+      "api": "/api/graphql?query={   items: amisSchema(status: LATEST) {     displayText     createdUtc     id: contentItemId     name     description     published     publishedUtc     modifiedUtc     author   } }",
+      "columns": [
+        {
+          "name": "displayText",
+          "label": "显示名称",
+          "type": "text"
+        },
+        {
+          "type": "text",
+          "label": "名称",
+          "name": "name"
+        },
+        {
+          "type": "text",
+          "label": "描述",
+          "name": "description"
+        },
+        {
+          "type": "status",
+          "name": "published",
+          "label": "已发布"
+        },
+        {
+          "type": "date",
+          "label": "发布时间",
+          "name": "publishedUtc"
+        },
+        {
+          "type": "date",
+          "label": "修改时间",
+          "name": "modifiedUtc"
+        },
+        {
+          "name": "createdUtc",
+          "label": "创建时间",
+          "type": "date"
+        },
+        {
+          "type": "text",
+          "name": "author",
+          "label": "创建人"
+        },
+        {
+          "type": "operation",
+          "label": "操作",
+          "buttons": [
+            {
+              "label": "编辑",
+              "type": "button",
+              "actionType": "dialog",
+              "level": "link",
+              "dialog": {
+                "type": "dialog",
+                "title": "编辑",
+                "body": [
+                  {
+                    "type": "form",
+                    "api": {
+                      "method": "post",
+                      "url": "api/ContentManagement/PostContent",
+                      "dataType": "json"
+                    },
+                    "body": [
+                      {
+                        "name": "contentType",
+                        "label": "ContentType",
+                        "type": "hidden",
+                        "value": "AmisSchema"
+                      },
+                      {
+                        "name": "contentItemId",
+                        "label": "contentItemId",
+                        "type": "hidden"
+                      },
+                      {
+                        "type": "input-text",
+                        "label": "显示名称",
+                        "name": "displayText",
+                        "required": true
+                      },
+                      {
+                        "type": "input-text",
+                        "label": "名称",
+                        "name": "name",
+                        "required": true,
+                        "description": "代码引用的关键字"
+                      },
+                      {
+                        "type": "textarea",
+                        "label": "描述",
+                        "name": "description"
+                      },
+                      {
+                        "type": "editor",
+                        "label": "JSON Schema",
+                        "name": "schema",
+                        "language": "json"
+                      }
+                    ],
+                    "initApi": {
+                      "method": "get",
+                      "url": "/api/graphql?query={   contentItem(contentItemId: \"${id}\") {     ... on AmisSchema {       createdUtc       description       displayText       name       schema       contentItemId       contentType       latest       published       contentItemVersionId     }   } }",
+                      "data": null,
+                      "dataType": "json",
+                      "replaceData": true,
+                      "onPreRequest": "",
+                      "responseData": null,
+                      "onSuccess": "return {data:source.data.contentItem}"
+                    },
+                    "name": "EditForm"
+                  }
+                ],
+                "closeOnEsc": true,
+                "closeOnOutside": false,
+                "showCloseButton": true,
+                "size": "xl",
+                "data": null
+              },
+              "onClick": "console.log(props,'Editing')"
+            },
+            {
+              "label": "查看",
+              "type": "button",
+              "actionType": "dialog",
+              "level": "link",
+              "dialog": {
+                "title": "查看详情",
+                "body": {
+                  "type": "form",
+                  "api": "xxx/update",
+                  "body": [
+                    {
+                      "name": "id",
+                      "label": "ID",
+                      "type": "static"
+                    },
+                    {
+                      "name": "engine",
+                      "label": "渲染引擎",
+                      "type": "static"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "button",
+              "label": "删除",
+              "actionType": "ajax",
+              "level": "link",
+              "className": "text-danger",
+              "confirmText": "确定要删除？",
+              "api": "POST:",
+              "onClick": "console.log(props)"
+            }
+          ]
+        }
+      ],
+      "bulkActions": [],
+      "itemActions": [],
+      "features": ["filter", "create", "update", "view", "delete"],
+      "headerToolbar": [
+        {
+          "label": "新增",
+          "type": "button",
+          "actionType": "dialog",
+          "level": "primary",
+          "dialog": {
+            "title": "编辑",
+            "body": [
+              {
+                "type": "form",
+                "api": {
+                  "method": "post",
+                  "url": "api/ContentManagement/PostContent",
+                  "dataType": "json"
+                },
+                "body": [
+                  {
+                    "name": "contentType",
+                    "label": "ContentType",
+                    "type": "hidden",
+                    "value": "AmisSchema"
+                  },
+                  {
+                    "type": "input-text",
+                    "label": "显示名称",
+                    "name": "displayText",
+                    "required": true
+                  },
+                  {
+                    "type": "input-text",
+                    "label": "名称",
+                    "name": "name",
+                    "required": true,
+                    "description": "代码引用的关键字"
+                  },
+                  {
+                    "type": "textarea",
+                    "label": "描述",
+                    "name": "description"
+                  },
+                  {
+                    "type": "editor",
+                    "label": "JSON Schema",
+                    "name": "schema",
+                    "language": "json"
+                  }
+                ],
+                "name": "CreationForm"
+              }
+            ],
+            "type": "dialog",
+            "closeOnEsc": true,
+            "closeOnOutside": false,
+            "showCloseButton": true,
+            "size": "xl",
+            "data": null
+          }
+        },
+        "bulkActions",
+        "pagination"
+      ]
+    }
+  ],
+  "definitions": {
+    "sysRoleIdPicker": {
+      "limits": "/_global/system/sysRoleIdPicker",
+      "type": "select",
+      "name": "roleIds",
+      "clearable": true,
+      "multiple": true,
+      "searchable": true,
+      "label": "角色名",
+      "placeholder": "请选择角色",
+      "searchPromptText": "输入角色ID/角色名",
+      "source": {
+        "url": "GET ovapi/system/role/filter",
+        "actionDesc": "查看系统角色",
+        "mockSource": {}
+      }
+    }
+  },
+  "messages": {},
+  "style": {},
+  "regions": ["body", "toolbar", "header"]
+}

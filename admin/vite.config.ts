@@ -1,14 +1,18 @@
 import pkg from './package.json'
 import dayjs from 'dayjs'
-import { loadEnv, defineConfig } from 'vite'
-import { resolve } from 'path'
+import { loadEnv, defineConfig, UserConfigExport } from 'vite'
+import path, { resolve } from 'path'
 import { OUTPUT_DIR, wrapperEnv } from './config'
 import { configProxy, configVitePlugins } from './config/vite'
 import { generateModifyVars } from './config/modifyVars'
-import { cyan } from 'chalk'
+// import { cyan } from 'chalk'
+import monacoEditorPlugin from 'vite-plugin-monaco-editor'
+// import MonacoEditorNlsPlugin, {
+//   esbuildPluginMonacoEditorNls,
+//   Languages,
+// } from 'vite-plugin-monaco-editor-nls'
 
-console.log(cyan('当前处于开发测试阶段，请勿用于实际项目！\n'))
-
+// console.log(cyan('当前处于开发测试阶段，请勿用于实际项目！\n'))
 export default defineConfig(async ({ command, mode }) => {
   const { dependencies, devDependencies, name, version } = pkg
   const root = process.cwd()
@@ -19,7 +23,8 @@ export default defineConfig(async ({ command, mode }) => {
 
   const { VITE_PUBLIC_PATH, VITE_PROXY, VITE_USE_MOCK, VITE_DROP_CONSOLE } =
     viteEnv
-  const prefix = `monaco-editor/esm/vs`
+  const prefix = 'monaco-editor/esm/vs'
+
   return {
     root,
     base: VITE_PUBLIC_PATH,
@@ -28,7 +33,7 @@ export default defineConfig(async ({ command, mode }) => {
         '@/': `${resolve(__dirname, 'src')}/`,
         'vue-i18n': 'vue-i18n/dist/vue-i18n.cjs.js',
         vue: 'vue/dist/vue.esm-bundler.js',
-        '@service': `@admin/service/modules`,
+        '@service': '@admin/service/modules',
       },
     },
     server: {
@@ -62,6 +67,9 @@ export default defineConfig(async ({ command, mode }) => {
       chunkSizeWarningLimit: 2048,
       rollupOptions: {
         output: {
+          filename: '[name].js',
+          publicPath: '/',
+          path: path.resolve(__dirname, 'dist'),
           manualChunks: {
             vue: ['vue', 'pinia', 'vue-router', '@vue/shared'],
             // antdv: ['ant-design-vue'],
@@ -105,10 +113,66 @@ export default defineConfig(async ({ command, mode }) => {
         `${prefix}/language/html/html.worker`,
         `${prefix}/language/typescript/ts.worker`,
         `${prefix}/editor/editor.worker`,
-        `monaco-editor/min/vs/loader.js`,
+        'monaco-editor/min/vs/loader.js',
       ],
       exclude: ['vue-demi'],
+      // esbuildOptions: {
+      //   plugins: [
+      //     esbuildPluginMonacoEditorNls({
+      //       locale: Languages.zh_hans,
+      //     }),
+      //   ],
+      // },
     },
-    plugins: configVitePlugins(viteEnv, command === 'build'),
-  }
+    plugins: [
+      ...configVitePlugins(viteEnv, command === 'build'),
+      // MonacoEditorNlsPlugin({ locale: Languages.zh_hans }),
+      //Add Monaco
+      monacoEditorPlugin({
+        customWorkers: [
+          {
+            label: 'vs',
+            entry: 'monaco-editor/min/vs/editor/editor.main.js'.replace(
+              /\/vs\/.*$/,
+              '',
+            ),
+          },
+          {
+            label: 'graphql.worker',
+            entry: 'monaco-graphql/esm/graphql.worker',
+          },
+          {
+            label: 'editor.worker',
+            entry: 'monaco-editor/esm/vs/editor/editor.worker',
+          },
+          {
+            label: 'json.worker',
+            entry: 'monaco-editor/esm/vs/language/json/json.worker',
+          },
+          {
+            label: 'css.worker',
+            entry: 'monaco-editor/esm/vs/language/css/css.worker',
+          },
+          {
+            label: 'html.worker',
+            entry: 'monaco-editor/esm/vs/language/html/html.worker',
+          },
+          {
+            label: 'ts.worker',
+            entry: 'monaco-editor/esm/vs/language/typescript/ts.worker',
+          },
+          {
+            label: 'loader',
+            entry: 'monaco-editor/min/vs/loader',
+          },
+          {
+            label: 'vs/base/worker/workerMain',
+            entry: 'monaco-editor/min/vs/base/worker/workerMain.js',
+          },
+        ],
+        publicPath: 'node_modules/.vite/thirds/monaco-editor',
+        globalAPI: true,
+      }),
+    ],
+  } as UserConfigExport
 })

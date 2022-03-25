@@ -11,6 +11,8 @@ import { darkMode } from '@admin/setting'
 import { defineStore } from 'pinia'
 import { pinia } from '@/internal'
 import { resetRouter } from '@/router'
+// import { loadGraphQLSchema } from '@service/eoc/GraphqlService'
+import { ContentFieldsMapping } from '@service/eoc/contentApi'
 
 interface AppState {
   darkMode?: ThemeEnum
@@ -20,6 +22,7 @@ interface AppState {
   projectConfig: ProjectConfig | null
   // When the window shrinks, remember some states, and restore these states when the window is restored
   beforeMiniInfo: BeforeMiniState
+  typeFieldCache: { [key: string]: ContentFieldsMapping[] }
 }
 let timeId: TimeoutHandle
 export const useAppStore = defineStore({
@@ -36,6 +39,7 @@ export const useAppStore = defineStore({
     pageLoading: false,
     projectConfig: {} as any,
     beforeMiniInfo: {},
+    typeFieldCache: {},
   }),
   getters: {
     getPageLoading(): boolean {
@@ -67,6 +71,9 @@ export const useAppStore = defineStore({
     },
   },
   actions: {
+    updateTypeFieldCache(typeName: string, fields: ContentFieldsMapping[]) {
+      this.typeFieldCache[typeName] = fields
+    },
     setPageLoading(loading: boolean): void {
       this.pageLoading = loading
     },

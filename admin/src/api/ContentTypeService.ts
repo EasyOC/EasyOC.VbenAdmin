@@ -1,10 +1,10 @@
 // import { BasicColumn, FormSchema } from '@/components/Table'
 import { useAppStore } from '@/store/app'
-import { parser } from 'xijs'
+// import { parser } from 'xijs'
 import {
   ContentTypeDefinitionDto,
   ContentManagementServiceProxy,
-  ContentFieldsMappingDto,
+  // ContentFieldsMappingDto,
 } from '@service/api/app-service-proxies'
 import {
   ContentFieldsMapping,
@@ -36,12 +36,12 @@ export class ContentTypeService {
       })
   }
 
-  public async getTableSchema(graphQLQuery: GraphqlQuery) {
-    const appStore = useAppStore()
-    await appStore.loadGraphQLSchema()
-    console.log(appStore.graphqlSchema, 'appStore.graphqlSchema')
-    return graphQLQuery
-  }
+  // public async getTableSchema(graphQLQuery: GraphqlQuery) {
+  //   const appStore = useAppStore()
+  //   await appStore.loadGraphQLSchema()
+  //   console.log(appStore.graphqlSchema, 'appStore.graphqlSchema')
+  //   return graphQLQuery
+  // }
 
   private fields: ContentFieldsMapping[] = []
 
@@ -51,9 +51,10 @@ export class ContentTypeService {
     this.fields = appStore.typeFieldCache[this.ContentType]
 
     if (reload || !this.fields || this.fields.length == 0) {
-      this.fields = (
-        await new ContentManagementServiceProxy().getFields(this.ContentType)
-      ).map((x) => deepMerge(new ContentFieldsMapping(), x))
+      const temp = await new ContentManagementServiceProxy().getFields(
+        this.ContentType,
+      )
+      this.fields = temp.map((x) => deepMerge(new ContentFieldsMapping(), x))
       appStore.typeFieldCache[this.ContentType] = this.fields
       console.log(`typeName:${this.ContentType},缓存已更新`, this.fields)
       // appStore.updateTypeFieldCache(typeName, this.fields)

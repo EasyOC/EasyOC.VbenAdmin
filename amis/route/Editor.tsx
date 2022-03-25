@@ -12,11 +12,11 @@ let currentIndex = -1;
 let host = `${window.location.protocol}//${window.location.host}`;
 let iframeUrl = './editor.html';
 
-// // 如果在 gh-pages 里面
-// if (/^\/amis-editor-renderer/.test(window.location.pathname)) {
-//     host += '/amis-editor';
-//     iframeUrl = '/amis-editor-renderer' + iframeUrl;
-// }
+// 如果在 gh-pages 里面
+if (/^\/amis-editor-renderer/.test(window.location.pathname)) {
+    host += '/amis-editor-renderer/amis-editor';
+    iframeUrl = '/amis-editor-renderer' + iframeUrl;
+}
 
 const schemaUrl = `${host}/schema.json`;
 

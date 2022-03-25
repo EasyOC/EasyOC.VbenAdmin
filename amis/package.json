@@ -8,7 +8,7 @@
         "test": "echo \"Error: no test specified\" && exit 1",
         "start": "fis3 server start --www ./public --port 8082 --no-daemon",
         "dev": "fis3 release -cwd ./public",
-        "admin:dev": "rimraf ../admin/public/amis-editor-renderer && fis3 release -w ../admin/public/amis-editor-renderer",
+        "admin:dev": "rimraf ../admin/public/amis-editor-renderer && fis3 release -cwd ../admin/public/amis-editor-renderer",
         "build-admin": "rimraf ../admin/public/amis-editor-renderer && fis3 release gh-pages -c -cwd"
     },
     "repository": {

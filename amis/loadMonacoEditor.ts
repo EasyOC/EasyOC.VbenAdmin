@@ -9,7 +9,7 @@ export function __mod__async__load(callback: (exports: any) => void) {
 }
 
 function __uri(url: string) {
-    return url;
+    return '/amis-editor-renderer/' + url;
 }
 
 // 用于发布 sdk 版本的时候替换，因为不确定 sdk 版本怎么部署，而 worker 地址路径不可知。
@@ -27,6 +27,7 @@ function onLoad(req: any, callback: (result: any) => void) {
         },
         paths: {
             vs: __uri('monaco-editor/min/vs/editor/editor.main.js').replace(/\/vs\/.*$/, ''),
+            'vs/basic-languages/graphql/graphql': __uri('monaco-editor/min/vs/basic-languages/graphql/graphql'),
             'vs/base/worker/workerMain': __uri('monaco-editor/min/vs/base/worker/workerMain.js'),
             'vs/basic-languages/apex/apex': __uri('monaco-editor/min/vs/basic-languages/apex/apex'),
             'vs/basic-languages/azcli/azcli': __uri('monaco-editor/min/vs/basic-languages/azcli/azcli'),
