@@ -55,16 +55,8 @@ export default function (): JSX.Element {
                 console.log('configconfigconfigconfig: ', config);
                 return await axiosInstance(config);
             },
-            responseAdaptor: (api, response, query, request) => {
-                console.log('response: api', api);
-                console.log('response: response', response);
-                console.log('response: query', query);
-                console.log('response:request ', request);
-                // if (response.status === 401) {
-                //     window.location.href = '/login';
-                // }
-
-                // return response;
+            adaptor: (payload, response, api) => {
+                return response.data;
             },
             isCancel: (e: any) => axios.isCancel(e),
             notify: (type: 'success' | 'error' | 'info', msg: string) => {

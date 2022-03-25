@@ -5,14 +5,17 @@
 </template>
 <script lang="ts" setup>
 import 'amis/sdk/sdk.js'
-import './style/themes/antd.less'
-import { ocApi } from '@admin/service/request/index'
+// import './style/themes/antd.less'
+import './style/themes/cxd.less'
+import { defaultRequest, ocApi } from '@admin/service/request/index'
 import { onMounted, ref, unref, onBeforeUnmount } from 'vue'
 import '@fortawesome/fontawesome-free/css/all.min.css'
 import '@fortawesome/fontawesome-free/css/v4-shims.css'
+import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
 // import 'amis/lib/themes/default.css'
 // import 'amis/lib/themes/antd.css'
 import 'monaco-editor'
+import { useGo } from '@/hooks/web/usePage'
 // import 'amis/lib/themes/cxd.css'
 // import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'
 // import jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker'
@@ -66,14 +69,58 @@ onMounted(() => {
       //
       // 主题，默认是 default，还可以设置成 cxd, antd 或 dark，但记得引用它们的 css，比如 sdk 目录下的 cxd.css
       // theme: 'antd',
-      theme: 'antd',
+      theme: 'cxd',
       //https://baidu.gitee.io/amis/zh-CN/docs/start/getting-started#sdk
       // 下面是一些可选的外部控制函数
       // TODO 在 sdk 中可以不传，用来实现 ajax 请求，但在 npm 中这是必须提供的
-      fetcher: async (config) => {
-        config.data = Object.assign({}, config.body)
-        console.log('config ', config)
-        return await ocApi.request(config)
+      fetcher: async (config: AxiosRequestConfig) => {
+        console.log('config: ', config)
+        const { url, method, data } = config
+        console.log('url: ', url)
+        config = config || {}
+        config.headers = config.headers || {}
+        config.timeout = 10 * 1000
+        if (method !== 'post' && method !== 'put' && method !== 'patch') {
+          if (data) {
+            config.params = data
+          }
+          // return axiosInstance.request({url,method,data });
+        } else if (data && data instanceof FormData) {
+          config.headers = config.headers || {}
+          config.headers['Content-Type'] = 'multipart/form-data'
+        } else if (
+          data &&
+          typeof data !== 'string' &&
+          !(data instanceof Blob) &&
+          !(data instanceof ArrayBuffer)
+        ) {
+          config.data = JSON.stringify(data)
+          config.headers['Content-Type'] = 'application/json'
+        }
+        console.log('configconfigconfigconfig: ', config)
+        if (!config.url?.startsWith('/')) {
+          config.url = '/' + config.url
+        }
+        if (url?.toLowerCase().startsWith('/api/graphql')) {
+          const result = await ocApi.request(config)
+          console.log('graphql result', result)
+          const finalResult = {
+            data: result.data.data,
+            status: result.status == 200 ? 0 : result.status,
+            msg: result.statusText,
+          }
+          console.log('graphql finalResult', finalResult)
+          return finalResult
+        } else {
+          const result = await ocApi.request(config)
+          console.log('defaultRequest result ', result)
+          const finalResult = {
+            data: result.data,
+            ...result,
+          }
+          console.log('defaultRequest finalResult', finalResult)
+          return finalResult
+        }
       },
       // 全局 api 请求适配器
       // 另外在 amis 配置项中的 api 也可以配置适配器，针对某个特定接口单独处理。
@@ -84,13 +131,14 @@ onMounted(() => {
       //
       // 全局 api 适配器。
       // 另外在 amis 配置项中的 api 也可以配置适配器，针对某个特定接口单独处理。
-      // responseAdaptor: (api, response, query, request) => {
-      //   return response
-      // },
+      adaptor: (payload, response, api) => {
+        console.log('adaptoradaptoradaptor', response)
+        return response.data
+      },
       //
       // 用来接管页面跳转，比如用 location.href 或 window.open，或者自己实现 amis 配置更新
       jumpTo: (to) => {
-        location.href = to
+        useGo(to)
       },
       //
       // 用来实现地址栏更新
@@ -141,6 +189,6 @@ onBeforeUnmount(() => {
 // import './style/themes/default.less'
 </script>
 <style lang="less" scoped>
-// @import './style/themes/antd.less';
+// @import './style/themes/antd_var.less';
 </style>
 <!--<style scoped lang="less" src="./style/themes/antd.less"></style> -->

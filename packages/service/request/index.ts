@@ -168,7 +168,7 @@ const transform: AxiosTransform = {
    * @description: 响应拦截器处理
    */
   responseInterceptors: (res: AxiosResponse<any>) => {
-    console.log('responseInterceptors: ', res)
+    console.log('响应拦截器处理 responseInterceptors: ', res)
     // extras: null
     // message: null
     // messages: []

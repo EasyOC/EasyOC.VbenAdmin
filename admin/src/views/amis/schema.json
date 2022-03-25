@@ -63,7 +63,7 @@
                     "type": "form",
                     "api": {
                       "method": "post",
-                      "url": "api/ContentManagement/PostContent",
+                      "url": "/api/ContentManagement/PostContent",
                       "dataType": "json"
                     },
                     "body": [
@@ -85,6 +85,18 @@
                         "required": true
                       },
                       {
+                        "type": "switch",
+                        "label": "发布状态",
+                        "name": "published",
+                        "option": "",
+                        "id": "u:079f8569c6bd",
+                        "optionAtLeft": false,
+                        "trueValue": true,
+                        "falseValue": false,
+                        "onText": "已发布",
+                        "offText": "未发布"
+                      },
+                      {
                         "type": "input-text",
                         "label": "名称",
                         "name": "name",
@@ -97,7 +109,7 @@
                         "name": "description"
                       },
                       {
-                        "type": "editor",
+                        "type": "textarea",
                         "label": "JSON Schema",
                         "name": "schema",
                         "language": "json"
@@ -105,13 +117,14 @@
                     ],
                     "initApi": {
                       "method": "get",
-                      "url": "/api/graphql?query={   contentItem(contentItemId: \"${id}\") {     ... on AmisSchema {       createdUtc       description       displayText       name       schema       contentItemId       contentType       latest       published       contentItemVersionId     }   } }",
+                      "url": "/api/graphql?query={   contentItem:contentItemAllVersion(contentItemId: \"${id}\") {     ... on AmisSchema {      createdUtc       description       displayText       name       schema       contentItemId       contentType       latest       published       contentItemVersionId     }   } }",
                       "data": null,
                       "dataType": "json",
                       "replaceData": true,
                       "onPreRequest": "",
                       "responseData": null,
-                      "onSuccess": "return {data:source.data.contentItem}"
+                      "adaptor": "console.log(response,'responseresponseresponse') \n return {data:response.data.contentItem}",
+                      "sendOn": "!!this.id"
                     },
                     "name": "EditForm"
                   }
@@ -120,7 +133,8 @@
                 "closeOnOutside": false,
                 "showCloseButton": true,
                 "size": "xl",
-                "data": null
+                "data": null,
+                "bodyClassName": "text-lg font-normal"
               },
               "onClick": "console.log(props,'Editing')"
             },
@@ -156,15 +170,26 @@
               "level": "link",
               "className": "text-danger",
               "confirmText": "确定要删除？",
-              "api": "POST:",
+              "api": {
+                "method": "delete",
+                "url": "/api/content/${id}"
+              },
               "onClick": "console.log(props)"
             }
           ]
         }
       ],
-      "bulkActions": [],
-      "itemActions": [],
-      "features": ["filter", "create", "update", "view", "delete"],
+      "bulkActions": [
+      ],
+      "itemActions": [
+      ],
+      "features": [
+        "filter",
+        "create",
+        "update",
+        "view",
+        "delete"
+      ],
       "headerToolbar": [
         {
           "label": "新增",
@@ -178,7 +203,7 @@
                 "type": "form",
                 "api": {
                   "method": "post",
-                  "url": "api/ContentManagement/PostContent",
+                  "url": "/api/ContentManagement/PostContent",
                   "dataType": "json"
                 },
                 "body": [
@@ -207,7 +232,7 @@
                     "name": "description"
                   },
                   {
-                    "type": "editor",
+                    "type": "textarea",
                     "label": "JSON Schema",
                     "name": "schema",
                     "language": "json"
@@ -230,24 +255,14 @@
     }
   ],
   "definitions": {
-    "sysRoleIdPicker": {
-      "limits": "/_global/system/sysRoleIdPicker",
-      "type": "select",
-      "name": "roleIds",
-      "clearable": true,
-      "multiple": true,
-      "searchable": true,
-      "label": "角色名",
-      "placeholder": "请选择角色",
-      "searchPromptText": "输入角色ID/角色名",
-      "source": {
-        "url": "GET ovapi/system/role/filter",
-        "actionDesc": "查看系统角色",
-        "mockSource": {}
-      }
-    }
   },
-  "messages": {},
-  "style": {},
-  "regions": ["body", "toolbar", "header"]
+  "messages": {
+  },
+  "style": {
+  },
+  "regions": [
+    "body",
+    "toolbar",
+    "header"
+  ]
 }
