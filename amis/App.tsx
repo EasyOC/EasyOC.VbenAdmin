@@ -5,59 +5,16 @@ import axios, {AxiosInstance, AxiosRequestConfig} from 'axios';
 import {MainStore} from './store/index';
 import RootRoute from './route/index';
 import copy from 'copy-to-clipboard';
+import { requestApi } from 'service/api';
 
 export default function (): JSX.Element {
     const store = ((window as any).store = MainStore.create(
         {},
         {
-            fetcher: async (config: AxiosRequestConfig) => {
-                console.log('config: ', config);
-                const {url, method, data} = config;
-                console.log('url: ', url);
-                const apiUrl = window.localStorage.getItem('apiUrl');
-                console.log('apiurl', apiUrl);
-
-                config = config || {};
-                config.baseURL = apiUrl || '';
-                config.headers = config.headers || {};
-                config.timeout = 10 * 1000;
-                const token = window.localStorage.getItem('token');
-                console.log('token: ', token);
-                const timeout = window.localStorage.getItem('timeout');
-                console.log('timeout: ', timeout);
-                console.log('timeout: ', new Date(timeout ? timeout : new Date()));
-                if (!(token && timeout) || new Date(timeout) < new Date()) {
-                    0;
-                    window.location.href = '/login';
-                    return;
-                }
-                config.headers.Authorization = 'Bearer ' + token;
-
-                if (method !== 'post' && method !== 'put' && method !== 'patch') {
-                    if (data) {
-                        config.params = data;
-                    }
-                    // return axiosInstance.request({url,method,data });
-                } else if (data && data instanceof FormData) {
-                    config.headers = config.headers || {};
-                    config.headers['Content-Type'] = 'multipart/form-data';
-                } else if (
-                    data &&
-                    typeof data !== 'string' &&
-                    !(data instanceof Blob) &&
-                    !(data instanceof ArrayBuffer)
-                ) {
-                    config.data = JSON.stringify(data);
-                    config.headers['Content-Type'] = 'application/json';
-                }
-
-                const axiosInstance: AxiosInstance = axios.create(config);
-                console.log('configconfigconfigconfig: ', config);
-                return await axiosInstance(config);
-            },
-            adaptor: (payload, response, api) => {
-                return response.data;
-            },
+            fetcher: requestApi,
+            // adaptor: (payload, response, api) => {
+            //     return response.data;
+            // },
             isCancel: (e: any) => axios.isCancel(e),
             notify: (type: 'success' | 'error' | 'info', msg: string) => {
                 toast[type]
@@ -71,7 +28,8 @@ export default function (): JSX.Element {
                 const ret = copy(contents, options);
                 ret && (!options || options.shutup !== true) && toast.info('内容已拷贝到剪切板');
                 return ret;
-            }
+            },
+            enableAMISDebug: true
         }
     ));
 
