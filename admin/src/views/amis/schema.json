@@ -4,7 +4,14 @@
   "body": [
     {
       "type": "crud",
-      "api": "/api/graphql?query={   items: amisSchema(status: LATEST) {     displayText     createdUtc     id: contentItemId     name     description     published     publishedUtc     modifiedUtc     author   } }",
+      "api": {
+        "method": "get",
+        "url": "/api/graphql",
+        "data": {
+          "query": "{   items: amisSchema(status: LATEST) {contentItemVersionId displayText     createdUtc     contentItemId     name     description     published     publishedUtc     modifiedUtc     author   } }"
+        },
+        "dataType": "json"
+      },
       "columns": [
         {
           "name": "displayText",
@@ -60,6 +67,54 @@
                 "title": "编辑",
                 "body": [
                   {
+                    "type": "property",
+                    "id": "u:1577f3084cdd",
+                    "title": "",
+                    "items": [
+                      {
+                        "label": "编号",
+                        "content": "${contentItemId}",
+                        "span": 1
+                      },
+                      {
+                        "label": "版本号",
+                        "content": "${contentItemId}",
+                        "span": 1
+                      },
+                      {
+                        "label": "创建人",
+                        "content": "${author}",
+                        "span": 1
+                      },
+                      {
+                        "label": "创建时间",
+                        "content": "${createdUtc}",
+                        "span": 1
+                      },
+                      {
+                        "span": 1,
+                        "label": "修改时间",
+                        "content": "${modifiedUtc}"
+                      },
+                      {
+                        "span": 1,
+                        "label": "发布时间",
+                        "content": "${publishedUtc}"
+                      },
+                      {
+                        "span": 1,
+                        "label": "最新版本",
+                        "content": "${latest?\"是\":\"否\"}"
+                      }
+                    ],
+                    "column": 3,
+                    "mode": "table",
+                    "closeOnEsc": false,
+                    "closeOnOutside": false,
+                    "showCloseButton": true,
+                    "className": "m-b-md"
+                  },
+                  {
                     "type": "form",
                     "api": {
                       "method": "post",
@@ -74,9 +129,9 @@
                         "value": "AmisSchema"
                       },
                       {
-                        "name": "contentItemId",
+                        "type": "hidden",
                         "label": "contentItemId",
-                        "type": "hidden"
+                        "name": "contentItemId"
                       },
                       {
                         "type": "input-text",
@@ -112,36 +167,44 @@
                         "type": "textarea",
                         "label": "JSON Schema",
                         "name": "schema",
-                        "language": "json"
+                        "language": "json",
+                        "minRows": 3,
+                        "maxRows": 20,
+                        "minLength": 5,
+                        "maxLength": "",
+                        "showCounter": true,
+                        "mode": "",
+                        "inline": false
                       }
                     ],
                     "initApi": {
                       "method": "get",
-                      "url": "/api/graphql?query={   contentItem:contentItemAllVersion(contentItemId: \"${id}\") {     ... on AmisSchema {      createdUtc       description       displayText       name       schema       contentItemId       contentType       latest       published       contentItemVersionId     }   } }",
+                      "url": "/api/graphql?query={  contentItem(contentItemId: \"${contentItemId}\") {     ... on AmisSchema {      createdUtc       description       displayText       name       schema       contentItemId       contentType       latest owner published       contentItemVersionId     }   } }",
                       "data": null,
                       "dataType": "json",
                       "replaceData": true,
                       "onPreRequest": "",
                       "responseData": null,
                       "adaptor": "console.log(response,'responseresponseresponse') \n return {data:response.data.contentItem}",
-                      "sendOn": "!!this.id"
+                      "sendOn": "!!this.contentItemId"
                     },
-                    "name": "EditForm"
+                    "name": "EditForm",
+                    "actions": [
+                    ]
                   }
                 ],
                 "closeOnEsc": true,
                 "closeOnOutside": false,
                 "showCloseButton": true,
                 "size": "xl",
-                "data": null,
-                "bodyClassName": "text-lg font-normal"
+                "data": null
               },
               "onClick": "console.log(props,'Editing')"
             },
             {
-              "label": "查看",
+              "label": "设计器",
               "type": "button",
-              "actionType": "dialog",
+              "actionType": "",
               "level": "link",
               "dialog": {
                 "title": "查看详情",
@@ -161,7 +224,9 @@
                     }
                   ]
                 }
-              }
+              },
+              "url": "/amis-editor-renderer/index.html#/edit/${contentItemId}",
+              "onClick": "window.open(`/amis-editor-renderer/index.html#/edit/${props.data.contentItemId}?v=${props.data.contentItemVersionId}`)"
             },
             {
               "type": "button",
@@ -172,7 +237,7 @@
               "confirmText": "确定要删除？",
               "api": {
                 "method": "delete",
-                "url": "/api/content/${id}"
+                "url": "/api/content/${contentItemId}"
               },
               "onClick": "console.log(props)"
             }
@@ -251,7 +316,19 @@
         },
         "bulkActions",
         "pagination"
-      ]
+      ],
+      "perPageAvailable": [
+        10
+      ],
+      "messages": {
+      },
+      "primaryField": "contentItemId"
+    },
+    {
+      "type": "button",
+      "label": "测试Amis按钮触发Vben事件处理",
+      "actionType": "",
+      "id": "u:cd65046ddfd3"
     }
   ],
   "definitions": {

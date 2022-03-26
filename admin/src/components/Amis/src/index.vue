@@ -7,8 +7,8 @@
 import 'amis/sdk/sdk.js'
 // import './style/themes/antd.less'
 import './style/themes/cxd.less'
-import { defaultRequest, ocApi } from '@admin/service/request/index'
-import { onMounted, ref, unref, onBeforeUnmount } from 'vue'
+import { ocApi } from '@admin/service/request/index'
+import { onMounted, ref, unref, onUnmounted } from 'vue'
 import '@fortawesome/fontawesome-free/css/all.min.css'
 import '@fortawesome/fontawesome-free/css/v4-shims.css'
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
@@ -16,6 +16,8 @@ import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
 // import 'amis/lib/themes/antd.css'
 import 'monaco-editor'
 import { useGo } from '@/hooks/web/usePage'
+import { EventTrack } from 'amis/lib/types'
+import { TrackerEventArgs } from './AmisTypes'
 // import 'amis/lib/themes/cxd.css'
 // import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'
 // import jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker'
@@ -48,8 +50,10 @@ const props = defineProps({
   },
 })
 const rendererBox = ref(null)
-
-const emit = defineEmits(['amisMounted'])
+const emit = defineEmits<{
+  (e: 'amisMounted', value: any): void
+  (e: 'eventTrackerEvent', value: TrackerEventArgs): void
+}>()
 const amisScoped = ref<any>(null)
 onMounted(() => {
   // @ts-ignore
@@ -66,6 +70,7 @@ onMounted(() => {
       // 这里是初始 props
     },
     {
+      enableAMISDebug: process.env.NODE_ENV !== 'production',
       //
       // 主题，默认是 default，还可以设置成 cxd, antd 或 dark，但记得引用它们的 css，比如 sdk 目录下的 cxd.css
       // theme: 'antd',
@@ -172,14 +177,16 @@ onMounted(() => {
 
       //
       // 用来实现用户行为跟踪，详细请查看左侧高级中的说明
-      tracker: (eventTracker) => {
-        console.log('eventTracker: ', eventTracker)
+      tracker: (tracker: EventTrack, eventProps: any) => {
+        console.log('eventTracker: ', tracker)
+        console.log('eventProps: ', eventProps)
+        emit('eventTrackerEvent', { tracker, eventProps })
       },
     },
   )
   emit('amisMounted', amisScoped.value)
 })
-onBeforeUnmount(() => {
+onUnmounted(() => {
   amisScoped.value.unmount()
 })
 // import './style/themes/antd.less'
