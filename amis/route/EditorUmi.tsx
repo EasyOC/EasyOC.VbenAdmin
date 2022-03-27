@@ -9,7 +9,23 @@ import {apiRequest} from 'service/api';
 import {RouteComponentProps} from 'react-router';
 import {inject, observer} from 'mobx-react';
 import {IMainStore} from 'store';
- 
+
+const schema = {
+    type: 'page',
+    title: 'Simple Form Page',
+    body: [
+        {
+            type: 'form',
+            body: [
+                {
+                    type: 'input-text',
+                    name: 'a',
+                    label: 'Text'
+                }
+            ]
+        }
+    ]
+};
 
 const plugins: PluginClass[] | undefined = []; // 通过plugin注入
 
@@ -20,10 +36,7 @@ class AmisEditor extends React.Component {
         preview: true,
         mobile: false,
         id: '',
-        schema: {
-            type: 'page',
-            regions: ['body', 'toolbar', 'header']
-        },
+        schema: {},
         schemaObject: {schema: '', displayText: '', contentitemId: ''}
     };
 
@@ -50,15 +63,25 @@ class AmisEditor extends React.Component {
         });
         console.log('result?.data', result?.data);
         this.state.schemaObject = result?.data.contentItem;
-        if (this.state.schemaObject?.schema) {
-            this.state.schema = JSON.parse(this.state.schemaObject.schema);
-        }
+        if (this.state.schemaObject.schema) {
+            JSON.parse(this.state.schemaObject.schema);
+        } 
         this.togglePreview(false);
     }
+    get getSchema() {
+        console.log('getSchema result?.data', this.state.schemaObject.schema);
 
+        if (this.state.schemaObject.schema) {
+            return JSON.parse(this.state.schemaObject.schema);
+        } else {
+            return {};
+        }
+    }
     handleChange = (value: any) => {
         this.setState({
-            schema: value
+            schemaObject: {
+                schema: value
+            }
         });
     };
     togglePreview = (value: any) => {
@@ -76,7 +99,7 @@ class AmisEditor extends React.Component {
             method: 'post',
             url: `/api/ContentManagement/PostContent?draft=${draft}`,
             data: {
-                schema: JSON.stringify(this.state.schema),
+                schema: JSON.stringify(this.state.schemaObject.schema),
                 contentItemId: this.state.id,
                 contentType: 'AmisSchema'
             },
@@ -85,7 +108,7 @@ class AmisEditor extends React.Component {
             },
             timeout: 10000
         }).then(() => {
-            toast.success(draft ? '保存成功' : '发布成功', '提示');
+            toast.success('保存成功', '提示');
         });
     }
 
@@ -127,7 +150,7 @@ class AmisEditor extends React.Component {
                 <Editor
                     theme={'cxd'}
                     preview={preview}
-                    value={this.state.schema}
+                    value={this.getSchema}
                     onChange={this.handleChange}
                     className="is-fixed"
                     // $schemaUrl={schemaUrl}

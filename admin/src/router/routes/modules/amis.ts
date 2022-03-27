@@ -23,11 +23,11 @@ const amis: RouteRecordItem = {
       },
     },
     {
-      path: 'InternalEditor',
+      path: 'InternalEditor/:id',
       name: 'amisInternalEditor',
       component: IFrame,
       meta: {
-        frameSrc: '/amis-editor-renderer/index.html',
+        frameSrc: '/amis-editor-renderer/index.html#/edit/',
         title: t('routes.amis.Internal'),
       },
     },

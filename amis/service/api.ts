@@ -1,6 +1,6 @@
 import axios, {AxiosRequestConfig, AxiosInstance} from 'axios';
 
-export async function requestApi(config: AxiosRequestConfig) {
+export async function apiRequest(config: AxiosRequestConfig) {
     console.log('config: ', config);
     const {url, method, data} = config;
     console.log('url: ', url);

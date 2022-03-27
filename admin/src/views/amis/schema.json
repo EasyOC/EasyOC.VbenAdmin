@@ -226,7 +226,7 @@
                 }
               },
               "url": "/amis-editor-renderer/index.html#/edit/${contentItemId}",
-              "onClick": "window.open(`/amis-editor-renderer/index.html#/edit/${props.data.contentItemId}?v=${props.data.contentItemVersionId}`)"
+              "onClick": "window.open(`/amis-editor-renderer/index.html#/edit/${props.data.contentItemId}`)"
             },
             {
               "type": "button",
@@ -268,7 +268,7 @@
                 "type": "form",
                 "api": {
                   "method": "post",
-                  "url": "/api/ContentManagement/PostContent",
+                  "url": "/api/ContentManagement/PostContent?draft=true",
                   "dataType": "json"
                 },
                 "body": [
