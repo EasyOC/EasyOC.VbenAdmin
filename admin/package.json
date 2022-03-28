@@ -48,6 +48,8 @@
     "pinia": "2.0.9",
     "print-js": "^1.6.0",
     "qrcode": "^1.5.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
     "showdown": "^1.9.1",
     "sortablejs": "^1.14.0",
     "tinymce": "^5.10.2",

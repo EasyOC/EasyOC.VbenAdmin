@@ -6,7 +6,7 @@ const amis: RouteRecordItem = {
   path: '/amis',
   name: 'Amis',
   component: LAYOUT,
-  redirect: '/amis/amis',
+  redirect: '/amis/index',
   meta: {
     orderNo: 1000,
     icon: 'ion:tv-outline',
@@ -27,28 +27,30 @@ const amis: RouteRecordItem = {
       name: 'AmisDynamicSchema',
       component: () => import('@/views/amis/AmisDynamic.vue'),
       meta: {
-        title: t('routes.amis.AmisDynamic'),
+        hideMenu: true,
+        title: t('routes.amis.AmisPreview'),
       },
     },
-    {
-      path: 'InternalEditor/:id',
-      name: 'amisInternalEditor',
-      component: IFrame,
-      meta: {
-        frameSrc: '/amis-editor-renderer/index.html#/edit/',
-        title: t('routes.amis.Internal'),
-      },
-    },
-    {
-      path: window.location.origin + '/amis-editor-renderer/index.html',
-      name: 'amisEditor',
-      component: IFrame,
-      meta: {
-        isLink: true,
-        // hideMenu: true,
-        title: t('routes.amis.amisEditor'),
-      },
-    },
+    // 暂不启用 ，hash 路由无法跳转 ，可能需要重写 Amis 编辑器项目的 路由功能
+    // {
+    //   path: 'InternalEditor/:id',
+    //   name: 'amisInternalEditor',
+    //   component: IFrame,
+    //   meta: {
+    //     frameSrc: '/amis-editor-renderer/index.html#/edit/',
+    //     title: t('routes.amis.Internal'),
+    //   },
+    // },
+    // {
+    //   path: window.location.origin + '/amis-editor-renderer/index.html',
+    //   name: 'amisEditor',
+    //   component: IFrame,
+    //   meta: {
+    //     isLink: true,
+    //     // hideMenu: true,
+    //     title: t('routes.amis.amisEditor'),
+    //   },
+    // },
     {
       path: 'Editor',
       name: 'Editor',

@@ -2,7 +2,7 @@
   <div :class="prefixCls" :style="getWrapStyle">
     <Spin :spinning="loading" size="large" :style="getWrapStyle">
       <iframe
-        :src="frameSrc"
+        :src="dynamicSrc"
         :class="`${prefixCls}__main`"
         ref="frameRef"
         @load="hideLoading"
@@ -11,17 +11,24 @@
   </div>
 </template>
 <script lang="ts" setup>
-import type { CSSProperties } from 'vue'
+import { CSSProperties, onBeforeMount } from 'vue'
 import { ref, unref, computed } from 'vue'
 import { Spin } from 'ant-design-vue'
 import { useWindowResize } from '@admin/use'
 import { useDesign } from '@/hooks/web/useDesign'
 import { useLayoutHeight } from '@/layouts/default/content/useContentViewHeight'
-
-defineProps({
+import { useRouter } from 'vue-router'
+const props = defineProps({
   frameSrc: { type: String, default: '' },
 })
+const dynamicSrc = ref<string>(props.frameSrc)
+const { currentRoute } = useRouter()
 // defineEmits({"loaded",})
+onBeforeMount(() => {
+  if (currentRoute.value.params.id) {
+    dynamicSrc.value = props.frameSrc + currentRoute.value.params.id
+  }
+})
 
 const loading = ref(true)
 const topRef = ref(50)

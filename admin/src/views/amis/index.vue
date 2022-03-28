@@ -10,7 +10,7 @@
 </template>
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Amis } from '@/components/Amis'
+import { Amis, AmisRenderer } from '@/components/Amis'
 import schema from './schema.json'
 import { TrackerEventArgs } from '@/components/Amis/src/types'
 // import { parser } from 'xijs'

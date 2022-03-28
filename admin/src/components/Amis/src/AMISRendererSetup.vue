@@ -1,5 +1,7 @@
 <template>
-  <div class="box" ref="renderBox"></div>
+  <div className="amis-renderer-box">
+    <div ref="renderBox"></div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -7,10 +9,16 @@ import { render as renderSchema } from 'amis'
 // import copy from 'copy-to-clipboard'
 import ReactDOM from 'react-dom'
 import * as qs from 'qs'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, unref } from 'vue'
 import { toast, alert, confirm } from 'amis'
 import axios from 'axios'
 import { useGo } from '@/hooks/web/usePage'
+import getEnv from './amisEnv'
+
+import 'amis/sdk/sdk.js'
+// import './style/themes/antd.less'
+import './style/themes/cxd.less'
+import { RenderOptions } from 'amis/lib/factory'
 const go = useGo()
 
 const props = defineProps({
@@ -24,16 +32,18 @@ const props = defineProps({
     type: Function,
   },
 })
-const env = ref<any>({})
+const VbenEnv = getEnv()
+const env = ref<RenderOptions>(initEnv())
+
 const renderBox = ref(null)
+initEnv()
 onMounted(() => {
-  initEnv()
   ReactDOM.render(
     renderSchema(
-      props.schema,
+      unref(props).schema as any,
       {
         onAction: props.onAction || handleAction,
-        theme: 'antd',
+        theme: 'cxd',
       },
       env.value,
     ),
@@ -41,8 +51,8 @@ onMounted(() => {
   )
 })
 
-function initEnv() {
-  env.value = {
+function initEnv(): RenderOptions {
+  return {
     session: 'global',
     updateLocation: props.updateLocation || updateRoute,
     isCurrentUrl: (to) => {
@@ -69,38 +79,7 @@ function initEnv() {
       }
       return false
     },
-    fetcher: ({ url, method, data, config, headers }) => {
-      config = config || {}
-      config.headers = config.headers || {}
-      // config.withCredentials = true
-
-      if (config.cancelExecutor) {
-        config.cancelToken = new axios.CancelToken(config.cancelExecutor)
-      }
-
-      config.headers = headers || {}
-      config.method = method
-
-      if (method === 'get' && data) {
-        config.params = data
-      } else if (data && data instanceof FormData) {
-        // config.headers = config.headers || {};
-        // config.headers['Content-Type'] = 'multipart/form-data';
-      } else if (
-        data &&
-        typeof data !== 'string' &&
-        !(data instanceof Blob) &&
-        !(data instanceof ArrayBuffer)
-      ) {
-        data = JSON.stringify(data)
-        // config.headers = config.headers || {};
-        config.headers['Content-Type'] = 'application/json'
-      }
-
-      data && (config.data = data)
-
-      return axios(url, config)
-    },
+    fetcher: VbenEnv.fetcher,
     isCancel: (e) => axios.isCancel(e),
     alert,
     notify: (type, msg) => {
@@ -109,6 +88,7 @@ function initEnv() {
         : console.warn('[Notify]', type, msg)
       console.log('[notify]', type, msg)
     },
+    mobile: false,
     confirm,
     // copy: (contents, options = {}) => {
     //   const ret = copy(contents, options)

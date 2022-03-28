@@ -47,7 +47,6 @@ class AmisEditor extends React.Component {
                         createdUtc
                         description
                         displayText
-                        name
                         schema
                         contentItemId
                         contentType

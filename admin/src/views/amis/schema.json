@@ -16,22 +16,21 @@
           "&": "$$"
         },
         "dataType": "json",
-        "requestAdaptor": "\r\nconsole.log(\"api.发送适配器\",api)\r\nconst filterParams=[`status: ${api.data.status}`]\r\nif(api.data.displayText){\r\n     filterParams.push(`where: {displayText_contains: \"${api.data.displayText}\"}`)\r\n}\r\nif(api.data.orderBy){\r\n    filterParams.push(`orderBy:{${api.body.orderBy}:${api.body.orderDir.toUpperCase()}}`)\r\n}\r\nconsole.log(\"filterParams.join(',')\",filterParams.join(','))\r\nconst  query=`\r\n    {   items: amisSchema(\r\n        ${filterParams.join(',')}\r\n        )\r\n         {contentItemVersionId displayText   \r\n           createdUtc\r\n           contentItemId\r\n           name\r\n           latest\r\n           published\r\n           publishedUtc\r\n           modifiedUtc\r\n           author\r\n        } \r\n    }\r\n    ` \r\napi.data={query}\r\nconsole.log(\"api.发送适配器2\",api)\r\nreturn api"
+        "requestAdaptor": "\r\nconsole.log(\"api.发送适配器\",api)\r\nconst filterParams=[`status: ${api.data.status}`]\r\nif(api.data.displayText){\r\n     filterParams.push(`where: {displayText_contains: \"${api.data.displayText}\"}`)\r\n}\r\nif(api.data.orderBy){\r\n    filterParams.push(`orderBy:{${api.body.orderBy}:${api.body.orderDir.toUpperCase()}}`)\r\n}\r\nconsole.log(\"filterParams.join(',')\",filterParams.join(','))\r\nconst  query=`\r\n    {   items: amisSchema(\r\n        ${filterParams.join(',')}\r\n        )\r\n         {contentItemVersionId displayText   \r\n           createdUtc\r\n           contentItemId\r\n    latest\r\n           published\r\n           publishedUtc\r\n           modifiedUtc\r\n           author\r\n        } \r\n    }\r\n    ` \r\napi.data={query}\r\nconsole.log(\"api.发送适配器2\",api)\r\nreturn api"
       },
       "columns": [
         {
           "name": "displayText",
-          "label": "显示名称",
-          "type": "text",
+          "label": "名称",
+          "type": "tpl",
           "placeholder": "-",
           "sortable": true,
           "popOver": false,
-          "quickEdit": false
-        },
-        {
-          "type": "text",
-          "label": "名称",
-          "name": "name"
+          "quickEdit": false,
+          "inline": true,
+          "style": {
+          },
+          "tpl": "<p><a title=\"${displayText}\" href=\"../amis/adv/${displayText}\" target=\"_blank\" rel=\"noopener\">${displayText}</a></p>"
         },
         {
           "type": "status",
@@ -91,7 +90,7 @@
                       },
                       {
                         "label": "版本号",
-                        "content": "${contentItemId}",
+                        "content": "${contentItemVersionId}",
                         "span": 1
                       },
                       {
@@ -148,7 +147,7 @@
                       },
                       {
                         "type": "input-text",
-                        "label": "显示名称",
+                        "label": "名称",
                         "name": "displayText",
                         "required": true
                       },
@@ -163,13 +162,6 @@
                         "falseValue": false,
                         "onText": "已发布",
                         "offText": "未发布"
-                      },
-                      {
-                        "type": "input-text",
-                        "label": "名称",
-                        "name": "name",
-                        "required": true,
-                        "description": "代码引用的关键字"
                       },
                       {
                         "type": "textarea",
@@ -192,7 +184,7 @@
                     ],
                     "initApi": {
                       "method": "get",
-                      "url": "/api/graphql?query={  contentItem(contentItemId: \"${contentItemId}\") {     ... on AmisSchema {      createdUtc       description       displayText       name       schema       contentItemId       contentType       latest owner published       contentItemVersionId     }   } }",
+                      "url": "/api/graphql?query={  contentItem(contentItemId: \"${contentItemId}\") {     ... on AmisSchema {      createdUtc       description       displayText     schema       contentItemId       contentType       latest owner published       contentItemVersionId     }   } }",
                       "data": null,
                       "dataType": "json",
                       "replaceData": true,
@@ -214,6 +206,17 @@
               },
               "onClick": "console.log(props,'Editing')"
             },
+						{
+							"type": "button",
+							"label": "预览",
+							"actionType": "url",
+							"level": "link",
+							"id": "u:bfd10d15009c",
+							"placeholder": "-",
+							"disabledOn": "!this.latest",
+							"url": "/amis/adv/${displayText}",
+							"blank": false
+						},
             {
               "label": "设计器",
               "type": "button",
@@ -238,7 +241,6 @@
                   ]
                 }
               },
-              "url": "/amis-editor-renderer/index.html#/edit/${contentItemId}",
               "onClick": "window.open(`/amis-editor-renderer/index.html#/edit/${props.data.contentItemId}`)",
               "disabledOn": "!this.latest",
               "perPageAvailable": [
@@ -310,16 +312,9 @@
                   },
                   {
                     "type": "input-text",
-                    "label": "显示名称",
+                    "label": "名称",
                     "name": "displayText",
                     "required": true
-                  },
-                  {
-                    "type": "input-text",
-                    "label": "名称",
-                    "name": "name",
-                    "required": true,
-                    "description": "代码引用的关键字"
                   },
                   {
                     "type": "textarea",
@@ -330,10 +325,20 @@
                     "type": "textarea",
                     "label": "JSON Schema",
                     "name": "schema",
-                    "language": "json"
+                    "language": "json",
+                    "minRows": 3,
+                    "maxRows": 20,
+                    "minLength": 5,
+                    "maxLength": "",
+                    "showCounter": true,
+                    "mode": "",
+                    "inline": false
                   }
                 ],
-                "name": "CreationForm"
+                "initApi": "",
+                "name": "EditForm",
+                "actions": [
+                ]
               }
             ],
             "type": "dialog",
@@ -344,8 +349,7 @@
             "data": null
           }
         },
-        "bulkActions",
-        "pagination"
+        "bulkActions"
       ],
       "perPageAvailable": [
         10
@@ -359,7 +363,7 @@
           {
             "type": "input-text",
             "name": "displayText",
-            "label": "显示名称",
+            "label": "名称",
             "size": "lg"
           },
           {
@@ -413,7 +417,8 @@
           "tpl": "内容",
           "align": "right"
         }
-      ]
+      ],
+      "filterColumnCount": 3
     },
     {
       "type": "button",
