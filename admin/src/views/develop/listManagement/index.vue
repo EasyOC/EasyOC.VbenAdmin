@@ -35,7 +35,7 @@ import { reactive, onBeforeMount, ref } from 'vue'
 import { BasicTable, useTable, TableAction } from '@/components/Table'
 // import { ContentHelper } from '@/api/contentHelper'
 import {
-  ContentManagementServiceProxy,
+  ContentTypeManagementServiceProxy,
   ContentTypeDefinitionDto,
 } from '@service/api/app-service-proxies'
 
@@ -51,7 +51,7 @@ const contentTypeName = 'VbenList'
 let dynamicSettings: ContentTypeDefinitionDto
 const dynamicColumns = ref<BasicColumn[]>(columns)
 
-const contentManagementService = new ContentManagementServiceProxy()
+const contentManagementService = new ContentTypeManagementServiceProxy()
 onBeforeMount(async () => {
   dynamicSettings = await contentManagementService.getTypeDefinition({
     name: contentTypeName,

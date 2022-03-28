@@ -38,7 +38,7 @@ import { reactive, onBeforeMount, onMounted, defineComponent } from 'vue'
 import { BasicTable, useTable, TableAction } from '@/components/Table'
 import { ContentHelper } from '@/api/contentHelper'
 import {
-  ContentManagementServiceProxy,
+  ContentTypeManagementServiceProxy,
   ContentTypeDefinitionDto,
 } from '@service/api/app-service-proxies'
 
@@ -71,9 +71,9 @@ export default defineComponent({
       'custNum',
       'displayText',
     ]
-    let contentManagementService: ContentManagementServiceProxy
+    let contentManagementService: ContentTypeManagementServiceProxy
     onBeforeMount(async () => {
-      contentManagementService = new ContentManagementServiceProxy()
+      contentManagementService = new ContentTypeManagementServiceProxy()
       dynamicSettings = await contentManagementService.getTypeDefinition({
         name: 'Customer',
         withSettings: true,

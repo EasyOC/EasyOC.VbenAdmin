@@ -10,7 +10,7 @@ import {
   ContentTypeDefinitionDto,
   ContentPartDefinitionDto,
   ContentFieldsMappingDto,
-  ContentManagementServiceProxy,
+  ContentTypeManagementServiceProxy,
 } from '@service/api/app-service-proxies'
 import { t } from '@admin/locale'
 import { camelCase, deepMerge, isObject } from '@admin/utils'
@@ -25,7 +25,7 @@ export class ContentHelper {
   public async getAllFields(typeName: string) {
     return deepMerge(
       [],
-      await await new ContentManagementServiceProxy().getFields(typeName),
+      await await new ContentTypeManagementServiceProxy().getFields(typeName),
     ) as ContentFieldsMapping[]
   }
   public expandContentType(

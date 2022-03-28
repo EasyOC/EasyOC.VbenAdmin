@@ -10,28 +10,28 @@
     {
       "type": "crud",
       "api": {
-        "method": "get",
+        "method": "post",
         "url": "/api/graphql",
         "data": {
-          "query": "{   items: amisSchema(status: LATEST) {contentItemVersionId displayText     createdUtc     contentItemId     name     description     published     publishedUtc     modifiedUtc     author   } }"
+          "&": "$$"
         },
-        "dataType": "json"
+        "dataType": "json",
+        "requestAdaptor": "\r\nconsole.log(\"api.发送适配器\",api)\r\nconst filterParams=[`status: ${api.data.status}`]\r\nif(api.data.displayText){\r\n     filterParams.push(`where: {displayText_contains: \"${api.data.displayText}\"}`)\r\n}\r\nif(api.data.orderBy){\r\n    filterParams.push(`orderBy:{${api.body.orderBy}:${api.body.orderDir.toUpperCase()}}`)\r\n}\r\nconsole.log(\"filterParams.join(',')\",filterParams.join(','))\r\nconst  query=`\r\n    {   items: amisSchema(\r\n        ${filterParams.join(',')}\r\n        )\r\n         {contentItemVersionId displayText   \r\n           createdUtc\r\n           contentItemId\r\n           name\r\n           latest\r\n           published\r\n           publishedUtc\r\n           modifiedUtc\r\n           author\r\n        } \r\n    }\r\n    ` \r\napi.data={query}\r\nconsole.log(\"api.发送适配器2\",api)\r\nreturn api"
       },
       "columns": [
         {
           "name": "displayText",
           "label": "显示名称",
-          "type": "text"
+          "type": "text",
+          "placeholder": "-",
+          "sortable": true,
+          "popOver": false,
+          "quickEdit": false
         },
         {
           "type": "text",
           "label": "名称",
           "name": "name"
-        },
-        {
-          "type": "text",
-          "label": "描述",
-          "name": "description"
         },
         {
           "type": "status",
@@ -41,22 +41,30 @@
         {
           "type": "date",
           "label": "发布时间",
-          "name": "publishedUtc"
+          "name": "publishedUtc",
+          "placeholder": "-",
+          "sortable": true
         },
         {
           "type": "date",
           "label": "修改时间",
-          "name": "modifiedUtc"
+          "name": "modifiedUtc",
+          "placeholder": "-",
+          "sortable": true
         },
         {
           "name": "createdUtc",
           "label": "创建时间",
-          "type": "date"
+          "type": "date",
+          "placeholder": "-",
+          "sortable": true
         },
         {
           "type": "text",
           "name": "author",
-          "label": "创建人"
+          "label": "创建人",
+          "placeholder": "-",
+          "sortable": true
         },
         {
           "type": "operation",
@@ -105,6 +113,11 @@
                         "span": 1,
                         "label": "发布时间",
                         "content": "${publishedUtc}"
+                      },
+                      {
+                        "span": 1,
+                        "label": "最新版本",
+                        "content": "${latest?\"是\":\"否\"}"
                       }
                     ],
                     "column": 3,
@@ -138,6 +151,18 @@
                         "label": "显示名称",
                         "name": "displayText",
                         "required": true
+                      },
+                      {
+                        "type": "switch",
+                        "label": "发布状态",
+                        "name": "published",
+                        "option": "",
+                        "id": "u:079f8569c6bd",
+                        "optionAtLeft": false,
+                        "trueValue": true,
+                        "falseValue": false,
+                        "onText": "已发布",
+                        "offText": "未发布"
                       },
                       {
                         "type": "input-text",
@@ -214,7 +239,23 @@
                 }
               },
               "url": "/amis-editor-renderer/index.html#/edit/${contentItemId}",
-              "onClick": "window.open(`/amis-editor-renderer/index.html#/edit/${props.data.contentItemId}`)"
+              "onClick": "window.open(`/amis-editor-renderer/index.html#/edit/${props.data.contentItemId}`)",
+              "disabledOn": "!this.latest",
+              "perPageAvailable": [
+                10
+              ]
+            },
+            {
+              "type": "button",
+              "label": "复制",
+              "actionType": "dialog",
+              "level": "link",
+              "dialog": {
+                "title": "系统提示",
+                "body": "对你点击了"
+              },
+              "id": "u:86d05e9edaa7",
+              "placeholder": "-"
             },
             {
               "type": "button",
@@ -227,7 +268,8 @@
                 "method": "delete",
                 "url": "/api/content/${contentItemId}"
               },
-              "onClick": "console.log(props)"
+              "onClick": "console.log(props)",
+              "disabledOn": "!this.latest"
             }
           ]
         }
@@ -310,7 +352,68 @@
       ],
       "messages": {
       },
-      "primaryField": "contentItemId"
+      "primaryField": "contentItemId",
+      "filter": {
+        "title": "查询条件",
+        "body": [
+          {
+            "type": "input-text",
+            "name": "displayText",
+            "label": "显示名称",
+            "size": "lg"
+          },
+          {
+            "type": "select",
+            "label": "状态",
+            "name": "status",
+            "options": [
+              {
+                "label": "只看最新版",
+                "value": "LATEST"
+              },
+              {
+                "label": "所有发布版",
+                "value": "PUBLISHED"
+              },
+              {
+                "label": "所有草稿",
+                "value": "DRAFT"
+              }
+            ],
+            "id": "u:b1a90587336d",
+            "perPageAvailable": [
+              10
+            ],
+            "checkAll": false,
+            "value": "LATEST",
+            "searchable": false,
+            "size": "md"
+          }
+        ],
+        "checkAll": false,
+        "submitOnChange": true,
+        "perPageAvailable": [
+          10
+        ],
+        "mode": "inline",
+        "panelClassName": ""
+      },
+      "keepItemSelectionOnPageChange": true,
+      "labelTpl": "${displayText}",
+      "filterTogglable": true,
+      "footerToolbar": [
+        {
+          "type": "statistics"
+        },
+        {
+          "type": "pagination"
+        },
+        {
+          "type": "load-more",
+          "tpl": "内容",
+          "align": "right"
+        }
+      ]
     },
     {
       "type": "button",

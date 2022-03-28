@@ -22,8 +22,6 @@ import { computed, ref } from 'vue'
 // import MonacoEditor from '@/components/MonacoEditor/index.vue'
 import { CodeEditor } from '@/components/CodeEditor'
 import { Amis } from '@/components/Amis'
-import { parser } from 'xijs'
-// window.enableAMISDebug = true
 const editorJson = ref<any>(
   `
    {

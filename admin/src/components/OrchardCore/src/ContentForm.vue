@@ -20,7 +20,7 @@ export default defineComponent({
   props: basicProps,
   emits: ['advanced-change', 'reset', 'submit', 'register'],
   setup(props) {
-    // const typeManager = new ContentManagementServiceProxy()
+    // const typeManager = new ContentTypeManagementServiceProxy()
     const schemas = ref<FormSchema[]>([])
     const contentTypeService = new ContentTypeService(props.typeName)
     let contentItem = ref<ContentItemUpperCase>({ ContentType: props.typeName })

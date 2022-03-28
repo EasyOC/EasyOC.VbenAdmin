@@ -3,7 +3,7 @@ import { useAppStore } from '@/store/app'
 // import { parser } from 'xijs'
 import {
   ContentTypeDefinitionDto,
-  ContentManagementServiceProxy,
+  ContentTypeManagementServiceProxy,
   // ContentFieldsMappingDto,
 } from '@service/api/app-service-proxies'
 import {
@@ -20,7 +20,7 @@ export class GraphqlQuery {
 }
 
 export class ContentTypeService {
-  ContentManagementService = new ContentManagementServiceProxy()
+  ContentManagementService = new ContentTypeManagementServiceProxy()
   constructor(contentType: string) {
     this.ContentType = contentType
   }
@@ -51,7 +51,7 @@ export class ContentTypeService {
     this.fields = appStore.typeFieldCache[this.ContentType]
 
     if (reload || !this.fields || this.fields.length == 0) {
-      const temp = await new ContentManagementServiceProxy().getFields(
+      const temp = await new ContentTypeManagementServiceProxy().getFields(
         this.ContentType,
       )
       this.fields = temp.map((x) => deepMerge(new ContentFieldsMapping(), x))

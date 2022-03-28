@@ -407,6 +407,52 @@ export class ContentManagementServiceProxy extends AppServiceBase {
         this.baseUrl = ""
     }
     /**
+    * @param draft (optional) 
+    * @param body (optional) 
+    * @return Success
+    */
+    postContent(draft: boolean | undefined, body: { [key: string]: any; } | undefined): Promise<string> {
+    
+        let url_ = this.baseUrl + "/api/ContentManagement/PostContent?";
+        
+        
+        
+        
+         if (draft !== undefined && draft !== null)
+            url_ += "draft=" + encodeURIComponent("" + draft) + "&";
+                    url_ = url_.replace(/[?&]$/, "");
+        const content_ = JSON.stringify(body);
+        let options_ = <AxiosRequestConfig>{
+            data: content_,
+            method: "POST",
+            url: url_,
+            headers: {
+                "Content-Type": "application/json-patch+json", 
+                "Accept": "text/plain"
+            }
+        };
+        return this.instance.request(options_).then((_response: AxiosResponse) => {
+            return this.transformResult(_response);
+        });
+    }
+
+}
+
+export class ContentTypeManagementServiceProxy extends AppServiceBase {
+    private instance: VAxios;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(instance?:VAxios) {
+        super();
+        if(instance) {
+            this.instance = instance;
+        } else {
+            this.instance = this.ajax;
+        }
+        this.baseUrl = ""
+    }
+    /**
     * 列出所有类型定义
     * @param stereotype (optional) 
     * @param filter (optional) 
@@ -417,7 +463,7 @@ export class ContentManagementServiceProxy extends AppServiceBase {
     getAllTypes(params:{ stereotype: string | undefined, filter: string | undefined, page: number | undefined, pageSize: number | undefined }): Promise<PagedResultOfContentTypeListItemDto> {
         const { stereotype, filter, page, pageSize } = {...params}; 
 
-        let url_ = this.baseUrl + "/api/ContentManagement/GetAllTypes?";
+        let url_ = this.baseUrl + "/api/ContentTypeManagement/GetAllTypes?";
         
         
         
@@ -464,7 +510,7 @@ export class ContentManagementServiceProxy extends AppServiceBase {
     getAllParts(params:{ page: number | undefined, pageSize: number | undefined, filter: string | undefined }): Promise<PagedResultOfContentPartDefinitionDto> {
         const { page, pageSize, filter } = {...params}; 
 
-        let url_ = this.baseUrl + "/api/ContentManagement/GetAllParts?";
+        let url_ = this.baseUrl + "/api/ContentTypeManagement/GetAllParts?";
         
         
         
@@ -504,7 +550,7 @@ export class ContentManagementServiceProxy extends AppServiceBase {
     getPartDefinition(params:{ name: string | undefined, withSettings: boolean | undefined }): Promise<ContentPartDefinitionDto> {
         const { name, withSettings } = {...params}; 
 
-        let url_ = this.baseUrl + "/api/ContentManagement/GetPartDefinition?";
+        let url_ = this.baseUrl + "/api/ContentTypeManagement/GetPartDefinition?";
         
         
         
@@ -538,7 +584,7 @@ export class ContentManagementServiceProxy extends AppServiceBase {
     getTypeDefinition(params:{ name: string | undefined, withSettings: boolean | undefined }): Promise<ContentTypeDefinitionDto> {
         const { name, withSettings } = {...params}; 
 
-        let url_ = this.baseUrl + "/api/ContentManagement/GetTypeDefinition?";
+        let url_ = this.baseUrl + "/api/ContentTypeManagement/GetTypeDefinition?";
         
         
         
@@ -569,7 +615,7 @@ export class ContentManagementServiceProxy extends AppServiceBase {
     */
     listLuceneQueries(): Promise<QueryDefDto[]> {
     
-        let url_ = this.baseUrl + "/api/ContentManagement/ListLuceneQueries";
+        let url_ = this.baseUrl + "/api/ContentTypeManagement/ListLuceneQueries";
             url_ = url_.replace(/[?&]$/, "");
         let options_ = <AxiosRequestConfig>{
             method: "POST",
@@ -590,7 +636,7 @@ export class ContentManagementServiceProxy extends AppServiceBase {
     */
     getFields(typeName: string | undefined): Promise<ContentFieldsMappingDto[]> {
     
-        let url_ = this.baseUrl + "/api/ContentManagement/GetFields?";
+        let url_ = this.baseUrl + "/api/ContentTypeManagement/GetFields?";
         
         
         
@@ -1139,6 +1185,67 @@ export class RolesServiceProxy extends AppServiceBase {
     
         let url_ = this.baseUrl + "/api/Roles/GetAllPermissions";
             url_ = url_.replace(/[?&]$/, "");
+        let options_ = <AxiosRequestConfig>{
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+        return this.instance.request(options_).then((_response: AxiosResponse) => {
+            return this.transformResult(_response);
+        });
+    }
+
+}
+
+export class UserInfoServiceProxy extends AppServiceBase {
+    private instance: VAxios;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(instance?:VAxios) {
+        super();
+        if(instance) {
+            this.instance = instance;
+        } else {
+            this.instance = this.ajax;
+        }
+        this.baseUrl = ""
+    }
+    /**
+    * @return Success
+    */
+    getUserInfo(): Promise<UserDetailsDto> {
+    
+        let url_ = this.baseUrl + "/api/UserInfo/GetUserInfo";
+            url_ = url_.replace(/[?&]$/, "");
+        let options_ = <AxiosRequestConfig>{
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+        return this.instance.request(options_).then((_response: AxiosResponse) => {
+            return this.transformResult(_response);
+        });
+    }
+
+    /**
+    * @param userName (optional) 
+    * @return Success
+    */
+    getUserMenuList(userName: string | undefined): Promise<UserDetailsDto> {
+    
+        let url_ = this.baseUrl + "/api/UserInfo/GetUserMenuList?";
+        
+        
+        
+        
+         if (userName !== undefined && userName !== null)
+            url_ += "userName=" + encodeURIComponent("" + userName) + "&";
+                    url_ = url_.replace(/[?&]$/, "");
         let options_ = <AxiosRequestConfig>{
             method: "GET",
             url: url_,

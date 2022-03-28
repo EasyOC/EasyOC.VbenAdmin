@@ -23,6 +23,14 @@ const amis: RouteRecordItem = {
       },
     },
     {
+      path: 'adv/:pageName?',
+      name: 'AmisDynamicSchema',
+      component: () => import('@/views/amis/AmisDynamic.vue'),
+      meta: {
+        title: t('routes.amis.AmisDynamic'),
+      },
+    },
+    {
       path: 'InternalEditor/:id',
       name: 'amisInternalEditor',
       component: IFrame,

@@ -1,4 +1,4 @@
-import { ContentManagementServiceProxy } from './api/app-service-proxies'
+import { ContentTypeManagementServiceProxy } from './api/app-service-proxies'
 
 export async function getAllTypes(params: {
   stereotype: string | undefined
@@ -6,7 +6,7 @@ export async function getAllTypes(params: {
   page: number | undefined
   pageSize: number | undefined
 }) {
-  const data = await new ContentManagementServiceProxy().getAllTypes(params)
+  const data = await new ContentTypeManagementServiceProxy().getAllTypes(params)
   console.log(data, 'getAllTypes')
   return data
 }

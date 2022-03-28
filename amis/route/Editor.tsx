@@ -9,7 +9,6 @@ import {apiRequest} from 'service/api';
 import {RouteComponentProps} from 'react-router';
 import {inject, observer} from 'mobx-react';
 import {IMainStore} from 'store';
- 
 
 const plugins: PluginClass[] | undefined = []; // 通过plugin注入
 
@@ -20,23 +19,30 @@ class AmisEditor extends React.Component {
         preview: true,
         mobile: false,
         id: '',
+        version: '',
         schema: {
             type: 'page',
             regions: ['body', 'toolbar', 'header']
         },
         schemaObject: {schema: '', displayText: '', contentitemId: ''}
     };
-
+    getGpParams() {
+        let queryparamsStr = `contentItemId:\"${this.state.id}\"`;
+        // if (this.state.version) {
+        //     queryparamsStr += `,contentItemVersionId:"${this.state.version}"`;
+        // }
+        return queryparamsStr;
+    }
     async componentWillMount() {
         console.log('getSchemagetSchemagetSchema');
-        const {match} = this.props as RouteComponentProps<{id: string}>;
+        const {match} = this.props as RouteComponentProps<{id: string; version?: string}>;
         console.log('this.props: ', this.props);
         this.state.id = match.params.id;
+        this.state.version = match.params.version;
         const result = await apiRequest({
             method: 'get',
             url: `/api/graphql?query={  
-                    contentItem(contentItemId: 
-                    \"${this.state.id}\") 
+                contentItem: contentItemAllVersion(${this.getGpParams()}) 
                     {     ... on AmisSchema {
                         createdUtc
                         description

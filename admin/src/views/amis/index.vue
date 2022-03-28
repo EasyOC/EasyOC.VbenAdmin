@@ -1,6 +1,7 @@
 <template>
   <div>
     <Amis
+      ref="amisRender"
       :amisjson="amisjson"
       @amisMounted="amisMounted"
       @eventTrackerEvent="eventTrackerEvent"
@@ -8,7 +9,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 import { Amis } from '@/components/Amis'
 import schema from './schema.json'
 import { TrackerEventArgs } from '@/components/Amis/src/types'

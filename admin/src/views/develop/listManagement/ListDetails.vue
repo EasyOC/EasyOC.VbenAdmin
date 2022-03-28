@@ -116,7 +116,7 @@
               </template>
               <MonacoEditor
                 :value="model.GraphQL"
-                language="GraphQL"
+                language="graphql"
                 height="500"
                 @change="(value) => (model.GraphQL = value)"
               />
@@ -151,7 +151,7 @@ import { useGo } from '@/hooks/web/usePage'
 import { SwapRightOutlined, DeleteOutlined } from '@ant-design/icons-vue'
 import { VueDraggableNext as draggable } from 'vue-draggable-next'
 import {
-  ContentManagementServiceProxy,
+  ContentTypeManagementServiceProxy,
   QueryDefDto,
 } from '@service/api/app-service-proxies'
 import {
@@ -199,7 +199,7 @@ const model = ref({
 // 此处可以得到文档ID
 const documentId = ref(route.params?.id.toString())
 let contentItem = ref<ContentItemUpperCase>({ ContentType: listManageName })
-const typeManagement = new ContentManagementServiceProxy()
+const typeManagement = new ContentTypeManagementServiceProxy()
 
 const [register, { setFieldsValue, submit, updateSchema, getFieldsValue }] =
   useForm({

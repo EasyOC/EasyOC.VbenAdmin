@@ -17,7 +17,7 @@ export default observer(function ({store}: {store: IMainStore}) {
                 <React.Suspense fallback={<Spinner overlay className="m-t-lg" size="lg" />}>
                     <Switch>
                         <Redirect to={`/hello-world`} from={`/`} exact />
-                        <Route path="/edit/:id" component={Editor} />
+                        <Route path="/edit/:id/:version?" component={Editor} />
                         <Route path="/v/:id" component={View} />
                         <Route component={Preview} />
                     </Switch>
