@@ -22,15 +22,12 @@
         {
           "name": "displayText",
           "label": "名称",
-          "type": "tpl",
           "placeholder": "-",
           "sortable": true,
           "popOver": false,
           "quickEdit": false,
           "inline": true,
-          "style": {
-          },
-          "tpl": "<p><a title=\"${displayText}\" href=\"../amis/adv/${displayText}\" target=\"_blank\" rel=\"noopener\">${displayText}</a></p>"
+          "type": "text"
         },
         {
           "type": "status",
@@ -206,41 +203,22 @@
               },
               "onClick": "console.log(props,'Editing')"
             },
-						{
-							"type": "button",
-							"label": "预览",
-							"actionType": "url",
-							"level": "link",
-							"id": "u:bfd10d15009c",
-							"placeholder": "-",
-							"disabledOn": "!this.latest",
-							"url": "/amis/adv/${displayText}",
-							"blank": false
-						},
             {
-              "label": "设计器",
+              "label": "预览",
               "type": "button",
+              "actionType": "url",
+              "level": "link",
+              "url": "/amis/adv/${displayText}",
+              "disabledOn": "!this.latest",
+              "blank": false,
+              "id": "u:bfd10d15009c",
+              "placeholder": "-"
+            },
+            {
+              "type": "button",
+              "label": "设计器",
               "actionType": "",
               "level": "link",
-              "dialog": {
-                "title": "查看详情",
-                "body": {
-                  "type": "form",
-                  "api": "xxx/update",
-                  "body": [
-                    {
-                      "name": "id",
-                      "label": "ID",
-                      "type": "static"
-                    },
-                    {
-                      "name": "engine",
-                      "label": "渲染引擎",
-                      "type": "static"
-                    }
-                  ]
-                }
-              },
               "onClick": "window.open(`/amis-editor-renderer/index.html#/edit/${props.data.contentItemId}`)",
               "disabledOn": "!this.latest",
               "perPageAvailable": [

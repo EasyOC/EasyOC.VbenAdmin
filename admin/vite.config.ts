@@ -5,6 +5,7 @@ import path, { resolve } from 'path'
 import { OUTPUT_DIR, wrapperEnv } from './config'
 import { configProxy, configVitePlugins } from './config/vite'
 import { generateModifyVars } from './config/modifyVars'
+// import react from '@vitejs/plugin-react'
 // import { cyan } from 'chalk'
 import monacoEditorPlugin from 'vite-plugin-monaco-editor'
 // import MonacoEditorNlsPlugin, {
@@ -127,6 +128,7 @@ export default defineConfig(async ({ command, mode }) => {
     plugins: [
       ...configVitePlugins(viteEnv, command === 'build'),
       // MonacoEditorNlsPlugin({ locale: Languages.zh_hans }),
+      // react(),
       //Add Monaco
       monacoEditorPlugin({
         customWorkers: [

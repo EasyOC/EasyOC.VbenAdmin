@@ -1,11 +1,14 @@
 <template>
-  <div class="box" ref="renderBox"></div>
+  <div className="amis-renderer-box">
+    <div ref="rendererBox"></div>
+  </div>
 </template>
 
 <script>
 import { render as renderSchema } from 'amis'
-import copy from 'copy-to-clipboard'
-
+// import copy from 'copy-to-clipboard'
+// import './style/themes/antd.less'
+import './style/themes/cxd.less'
 import ReactDOM from 'react-dom'
 import * as qs from 'qs'
 import { toast, alert, confirm } from 'amis'
@@ -40,7 +43,7 @@ export default {
         },
         this.env,
       ),
-      this.$refs.renderBox,
+      this.$refs.rendererBox,
     )
   },
 
@@ -114,13 +117,13 @@ export default {
           console.log('[notify]', type, msg)
         },
         confirm,
-        copy: (contents, options = {}) => {
-          const ret = copy(contents, options)
-          ret &&
-            (!options || options.shutup !== true) &&
-            toast.info('内容已拷贝到剪切板')
-          return ret
-        },
+        // copy: (contents, options = {}) => {
+        //   const ret = copy(contents, options)
+        //   ret &&
+        //     (!options || options.shutup !== true) &&
+        //     toast.info('内容已拷贝到剪切板')
+        //   return ret
+        // },
       }
     },
 
@@ -175,7 +178,4 @@ export default {
   },
 }
 </script>
-<style lang="less" scoped>
-.container {
-}
-</style>
+ 

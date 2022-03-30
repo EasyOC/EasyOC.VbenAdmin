@@ -42,7 +42,7 @@ class AmisEditor extends React.Component {
         const result = await apiRequest({
             method: 'get',
             url: `/api/graphql?query={  
-                contentItem: contentItemAllVersion(${this.getGpParams()}) 
+                contentItem(${this.getGpParams()}) 
                     {     ... on AmisSchema {
                         createdUtc
                         description

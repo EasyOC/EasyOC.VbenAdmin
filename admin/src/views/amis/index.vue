@@ -10,13 +10,21 @@
 </template>
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Amis, AmisRenderer } from '@/components/Amis'
+import {
+  Amis,
+  // AmisRenderer,
+  // AMISRendererSetup,
+  // AMISRenderer1,
+} from '@/components/Amis'
 import schema from './schema.json'
 import { TrackerEventArgs } from '@/components/Amis/src/types'
-// import { parser } from 'xijs'
-// window.enableAMISDebug = true
-// const editorJson = ref<any>()
-// const editor = ref<any>(null)
+
+// <AmisRenderer
+//   ref="amisRender"
+//   :amisjson="amisjson"
+//   @amisMounted="amisMounted"
+//   @eventTrackerEvent="eventTrackerEvent"
+// />
 
 const amisjson = ref<any>(schema)
 function eventTrackerEvent(tracker: TrackerEventArgs) {

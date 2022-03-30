@@ -5,17 +5,18 @@
 </template>
 
 <script setup lang="ts">
-import { render as renderSchema } from 'amis'
 // import copy from 'copy-to-clipboard'
-import ReactDOM from 'react-dom'
 import * as qs from 'qs'
 import { ref, onMounted, unref } from 'vue'
-import { toast, alert, confirm } from 'amis'
+import { toast, alert, confirm, render as renderSchema } from 'amis'
+import ReactDOM from 'react-dom'
 import axios from 'axios'
 import { useGo } from '@/hooks/web/usePage'
 import getEnv from './amisEnv'
 
-import 'amis/sdk/sdk.js'
+import 'amis/lib/helper.css'
+import 'amis/sdk/iconfont.css'
+// import 'amis/sdk/sdk.js'
 // import './style/themes/antd.less'
 import './style/themes/cxd.less'
 import { RenderOptions } from 'amis/lib/factory'
@@ -24,6 +25,9 @@ const go = useGo()
 const props = defineProps({
   schema: {
     type: Object,
+    required: true,
+    // eslint-disable-next-line vue/require-valid-default-prop
+    default: {},
   },
   updateLocation: {
     type: Function,
@@ -33,22 +37,15 @@ const props = defineProps({
   },
 })
 const VbenEnv = getEnv()
-const env = ref<RenderOptions>(initEnv())
+const env = ref<RenderOptions>({
+  ...getEnv(), //, ...VbenEnv
+})
 
 const renderBox = ref(null)
-initEnv()
 onMounted(() => {
-  ReactDOM.render(
-    renderSchema(
-      unref(props).schema as any,
-      {
-        onAction: props.onAction || handleAction,
-        theme: 'cxd',
-      },
-      env.value,
-    ),
-    renderBox.value,
-  )
+  console.log('try to render amis', props)
+  const schema: any = unref(props).schema || {}
+  ReactDOM.render(renderSchema(schema, {}, env.value), renderBox.value)
 })
 
 function initEnv(): RenderOptions {
@@ -107,9 +104,9 @@ function updateRoute(location, replace) {
   go(location)
 }
 
-function handleAction(e, action) {
-  env.value.alert(`没有识别的动作：${JSON.stringify(action)}`)
-}
+// function handleAction(e, action) {
+//   env.value.alert(`没有识别的动作：${JSON.stringify(action)}`)
+// }
 
 function normalizeLink(to) {
   if (/^\/api\//.test(to)) {
