@@ -38,6 +38,8 @@
     "@logicflow/core": "^1.0.1",
     "@logicflow/extension": "^1.0.1",
     "@zxcvbn-ts/core": "^1.2.0",
+    "amis": "^1.6.4",
+    "amis-editor": "^4.0.2-beta.4",
     "ant-design-vue": "3.0.0-beta.5",
     "codemirror": "^5.65.0",
     "cropperjs": "^1.5.12",
@@ -57,6 +59,7 @@
     "vue-draggable-next": "^2.1.1",
     "vue-json-pretty": "^1.8.2",
     "vue-router": "^4.0.12",
+    "xijs": "^1.1.1",
     "xlsx": "^0.17.4"
   },
   "devDependencies": {
@@ -69,7 +72,6 @@
     "@types/mockjs": "^1.0.4",
     "@types/nprogress": "^0.2.0",
     "@types/qrcode": "^1.4.2",
-    "monaco-editor": "^0.32.1",
     "@types/qs": "^6.9.7",
     "@types/showdown": "^1.9.4",
     "@types/sortablejs": "^1.10.7",
@@ -83,6 +85,7 @@
     "dotenv": "^10.0.0",
     "esno": "^0.13.0",
     "less": "^4.1.2",
+    "monaco-editor": "^0.32.1",
     "rollup-plugin-visualizer": "^5.5.2",
     "vite": "^2.7.10",
     "vite-plugin-compression": "^0.4.0",
