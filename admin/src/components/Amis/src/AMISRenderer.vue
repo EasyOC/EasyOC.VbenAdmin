@@ -39,7 +39,7 @@ export default {
         this.schema,
         {
           onAction: this.onAction || this.handleAction,
-          theme: this.theme,
+          theme: this.theme 
         },
         this.env,
       ),

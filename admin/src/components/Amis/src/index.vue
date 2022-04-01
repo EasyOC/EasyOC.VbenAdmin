@@ -15,7 +15,7 @@ import '@fortawesome/fontawesome-free/css/v4-shims.css'
 import { EventTrack } from 'amis/lib/types'
 import { TrackerEventArgs } from './types'
 import getEnv from './amisEnv'
-
+import './Components/VButton2'
 const props = defineProps({
   amisjson: {
     type: Object,
