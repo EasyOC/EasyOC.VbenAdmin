@@ -28,6 +28,7 @@
     "@admin/tokens": "workspace:*",
     "@admin/use": "workspace:*",
     "@admin/utils": "workspace:*",
+    "vuera-vue3":"file:../vuera-vue3",
     "@ant-design/colors": "^6.0.0",
     "@ant-design/icons-vue": "^6.0.1",
     "@fortawesome/fontawesome-free": "^6.1.1",
