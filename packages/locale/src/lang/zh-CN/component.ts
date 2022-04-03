@@ -27,11 +27,6 @@ export default {
     cancelText: '关闭',
     okText: '确认',
   },
-  excel: {
-    exportModalTitle: '导出数据',
-    fileType: '文件类型',
-    fileName: '文件名',
-  },
   form: {
     putAway: '收起',
     unfold: '展开',

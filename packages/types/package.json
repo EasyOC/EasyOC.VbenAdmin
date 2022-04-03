@@ -1,16 +1,13 @@
 {
-  "name": "@admin/types",
-  "version": "3.0.0-alpha.3",
+  "name": "@pkg/types",
+  "version": "3.0.0-alpha.4",
   "main": "index.ts",
   "module": "index.ts",
-  "types": "index.d.js",
-  "unpkg": "index.js",
-  "jsdelivr": "index.js",
   "license": "MIT",
   "scripts": {
-    "clean": "pnpm rimraf node_modules"
+    "clean": "pnpm rimraf node_modules && pnpm rimraf dist && pnpm rimraf .turbo"
   },
   "dependencies": {
-    "@admin/tokens": "workspace:*"
+    "@pkg/tokens": "workspace:*"
   }
 }

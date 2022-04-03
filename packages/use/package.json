@@ -1,21 +1,18 @@
 {
-  "name": "@admin/use",
-  "version": "3.0.0-alpha.3",
+  "name": "@pkg/use",
+  "version": "3.0.0-alpha.4",
   "main": "index.ts",
   "module": "index.ts",
-  "types": "index.d.js",
-  "unpkg": "index.js",
-  "jsdelivr": "index.js",
   "license": "MIT",
   "scripts": {
-    "clean": "rimraf node_modules"
+    "clean": "pnpm rimraf node_modules && pnpm rimraf dist && pnpm rimraf .turbo"
   },
   "dependencies": {
-    "@admin/locale": "workspace:*",
-    "@admin/utils": "workspace:*",
-    "@vueuse/core": "^7.5.4"
+    "@pkg/locale": "workspace:*",
+    "@pkg/utils": "workspace:*",
+    "@vueuse/core": "^8.1.2"
   },
   "optionalDependencies": {
-    "vue": "^3.2.29"
+    "vue": "^3.2.31"
   }
 }

@@ -1,4 +1,4 @@
-import { namespace } from '@admin/setting'
+import { namespace } from '@pkg/setting'
 
 type Mod = string | { [key: string]: any }
 type Mods = Mod | Mod[]

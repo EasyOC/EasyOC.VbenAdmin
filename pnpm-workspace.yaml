@@ -1,4 +1,6 @@
 packages:
-  - 'packages/**'
-  - 'admin/**'
-  - 'server/**'
+  - 'packages/*'
+  - 'packages/components/*'
+  - 'apps/*'
+  - 'configs/*'
+  - 'scripts'

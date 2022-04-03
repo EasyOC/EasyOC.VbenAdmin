@@ -1,0 +1,19 @@
+{
+  "name": "@components/common",
+  "version": "3.0.0-alpha.4",
+  "main": "index.ts",
+  "module": "index.ts",
+  "license": "MIT",
+  "scripts": {
+    "clean": "pnpm rimraf node_modules && pnpm rimraf dist && pnpm rimraf .turbo"
+  },
+  "dependencies": {
+    "@pkg/locale": "workspace:*",
+    "@pkg/use": "workspace:*",
+    "@pkg/utils": "workspace:*",
+    "qrcode": "^1.5.0"
+  },
+  "devDependencies": {
+    "@types/qrcode": "^1.4.2"
+  }
+}

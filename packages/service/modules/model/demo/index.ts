@@ -1,5 +1,0 @@
-export * from './account'
-export * from './area'
-export * from './options'
-export * from './system'
-export * from './table'

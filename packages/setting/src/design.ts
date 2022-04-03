@@ -1,4 +1,4 @@
-import { ThemeEnum } from '@admin/tokens'
+import { ThemeEnum } from '@pkg/tokens'
 
 export const namespace = 'vben'
 

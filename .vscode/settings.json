@@ -59,15 +59,13 @@
     "**/pnpm-lock.yaml": true
   },
   "stylelint.enable": true,
-  "stylelint.packageManager": "pnpm",
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
   },
   "[vue]": {
     "editor.codeActionsOnSave": {
       "source.fixAll.eslint": false
-    },
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    }
   },
   "i18n-ally.localesPaths": ["packages/locale/src/lang"],
   "i18n-ally.keystyle": "nested",
@@ -85,7 +83,6 @@
     "tailwindcss",
     "esnext",
     "antv",
-    "tinymce",
     "qrcode",
     "sider",
     "pinia",
@@ -97,10 +94,8 @@
     "vitejs",
     "sortablejs",
     "mockjs",
-    "codemirror",
     "iconify",
     "commitlint",
-    "vditor",
     "echarts",
     "cropperjs",
     "logicflow",
@@ -115,7 +110,6 @@
     "antdv",
     "demi",
     "styl",
-    "unplugin",
     "unref",
     "vitest",
     "esbuild"

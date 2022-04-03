@@ -1,4 +1,4 @@
-import type { ProjectConfig } from '@admin/types'
+import type { ProjectConfig } from '@pkg/types'
 import {
   CacheTypeEnum,
   MenuTypeEnum,
@@ -10,7 +10,7 @@ import {
   ThemeEnum,
   SettingButtonPositionEnum,
   SessionTimeoutProcessingEnum,
-} from '@admin/tokens'
+} from '@pkg/tokens'
 
 import {
   SIDE_BAR_BG_COLOR_LIST,

@@ -1,59 +1,44 @@
-import { deepMerge } from '../deepMerge'
-
-class TreeHelperConfig {
-  id?: string
-  children?: string
-  pid?: string
-  parentFinder?: (parent, current) => boolean
-  rootFinder?: (item) => boolean
+interface TreeHelperConfig {
+  id: string
+  children: string
+  pid: string
 }
 
-const mergeConfig = (config: Partial<TreeHelperConfig>) =>
-  deepMerge(
-    {
-      id: 'id',
-      children: 'children',
-      pid: 'pid',
-    },
-    config,
-  ) as TreeHelperConfig
+const DEFAULT_CONFIG: TreeHelperConfig = {
+  id: 'id',
+  children: 'children',
+  pid: 'pid',
+}
+
+const getConfig = (config: Partial<TreeHelperConfig>) =>
+  Object.assign({}, DEFAULT_CONFIG, config)
 
 // tree from list
-export const listToTree = <T>(list: T[], config: TreeHelperConfig): T[] => {
-  // eslint-disable-next-line prefer-const
-  config = mergeConfig(config)
-  if (!config.rootFinder) {
-    config.rootFinder = (item) => !item[config.pid || '']
+export const listToTree = <T = any>(
+  list: any[],
+  config: Partial<TreeHelperConfig> = {},
+): T[] => {
+  const conf = getConfig(config) as TreeHelperConfig
+  const nodeMap = new Map()
+  const result: T[] = []
+  const { id, children, pid } = conf
+
+  for (const node of list) {
+    node[children] = node[children] || []
+    nodeMap.set(node[id], node)
   }
-  const rootNodes = list.filter(config.rootFinder)
-
-  rootNodes.forEach((root) => {
-    getChildren(list, root, config)
-  })
-  return rootNodes
-}
-
-function getChildren(list, parent, config: Partial<TreeHelperConfig> = {}) {
-  const conf = mergeConfig(config)
-  const { id, children, pid, parentFinder } = conf
-  const childNodes = list.filter((x) => {
-    if (parentFinder) {
-      return parentFinder(parent, x)
-    } else if (typeof pid === 'string') {
-      return x[pid || ''] == parent[id || '']
-    }
-  })
-  childNodes.forEach((element) => {
-    getChildren(list, element, config)
-  })
-  parent[children || ''] = childNodes
+  for (const node of list) {
+    const parent = nodeMap.get(node[pid])
+    ;(parent ? parent[children] : result).push(node)
+  }
+  return result
 }
 
 export const treeToList = <T = any>(
   tree: any,
   config: Partial<TreeHelperConfig> = {},
 ): T => {
-  config = mergeConfig(config)
+  config = getConfig(config)
   const { children } = config
   const result: any = [...tree]
   for (let i = 0; i < result.length; i++) {
@@ -68,7 +53,7 @@ export const findTreeNode = <T = any>(
   func: AnyFunction<any>,
   config: Partial<TreeHelperConfig> = {},
 ): T | null => {
-  config = mergeConfig(config)
+  config = getConfig(config)
   const { children } = config
   const list = [...tree]
   for (const node of list) {
@@ -83,7 +68,7 @@ export const findAllTreeNode = <T = any>(
   func: AnyFunction<any>,
   config: Partial<TreeHelperConfig> = {},
 ): T[] => {
-  config = mergeConfig(config)
+  config = getConfig(config)
   const { children } = config
   const list = [...tree]
   const result: T[] = []
@@ -99,7 +84,7 @@ export const findTreeParentPath = <T = any>(
   func: AnyFunction<any>,
   config: Partial<TreeHelperConfig> = {},
 ): T | T[] | null => {
-  config = mergeConfig(config)
+  config = getConfig(config)
   const path: T[] = []
   const list = [...tree]
   const visitedSet = new Set()
@@ -126,7 +111,7 @@ export const findAllTreeParentPath = (
   func: AnyFunction<any>,
   config: Partial<TreeHelperConfig> = {},
 ) => {
-  config = mergeConfig(config)
+  config = getConfig(config)
   const path: any[] = []
   const list = [...tree]
   const result: any[] = []
@@ -152,7 +137,7 @@ export const filterTree = <T = any>(
   func: (n: T) => boolean,
   config: Partial<TreeHelperConfig> = {},
 ): T[] => {
-  config = mergeConfig(config)
+  config = getConfig(config)
   const children = config.children as string
   function listFilter(list: T[]) {
     return list
@@ -170,7 +155,7 @@ export const forEachTree = <T = any>(
   func: (n: T) => any,
   config: Partial<TreeHelperConfig> = {},
 ) => {
-  config = mergeConfig(config)
+  config = getConfig(config)
   const list: any[] = [...tree]
   const { children } = config
   for (let i = 0; i < list.length; i++) {

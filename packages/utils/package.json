@@ -1,28 +1,25 @@
 {
-  "name": "@admin/utils",
-  "version": "3.0.0-alpha.3",
+  "name": "@pkg/utils",
+  "version": "3.0.0-alpha.4",
   "main": "index.ts",
   "module": "index.ts",
-  "types": "index.d.js",
-  "unpkg": "index.js",
-  "jsdelivr": "index.js",
   "license": "MIT",
   "scripts": {
-    "clean": "rimraf node_modules"
+    "clean": "pnpm rimraf node_modules && pnpm rimraf dist && pnpm rimraf .turbo"
   },
   "dependencies": {
-    "@admin/setting": "workspace:*",
-    "@vue/runtime-core": "^3.2.29",
-    "@vue/shared": "^3.2.29",
-    "@vueuse/core": "^7.5.4",
-    "@vueuse/shared": "^7.5.4",
-    "dayjs": "^1.10.7",
+    "@pkg/setting": "workspace:*",
+    "@vue/runtime-core": "^3.2.31",
+    "@vue/shared": "^3.2.31",
+    "@vueuse/core": "^8.1.2",
+    "@vueuse/shared": "^8.1.2",
+    "dayjs": "^1.11.0",
     "lodash-es": "^4.17.21"
   },
   "devDependencies": {
-    "@types/lodash-es": "^4.17.5"
+    "@types/lodash-es": "^4.17.6"
   },
   "optionalDependencies": {
-    "vue": "^3.2.29"
+    "vue": "^3.2.31"
   }
 }

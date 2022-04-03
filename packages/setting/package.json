@@ -1,17 +1,17 @@
 {
-  "name": "@admin/setting",
-  "version": "3.0.0-alpha.3",
+  "name": "@pkg/setting",
+  "version": "3.0.0-alpha.4",
   "main": "index.ts",
   "module": "index.ts",
   "license": "MIT",
   "scripts": {
-    "clean": "pnpm rimraf node_modules"
+    "clean": "pnpm rimraf node_modules && pnpm rimraf dist && pnpm rimraf .turbo"
   },
   "dependencies": {
-    "@admin/types": "workspace:*",
-    "@admin/tokens": "workspace:*"
+    "@pkg/tokens": "workspace:*",
+    "@pkg/types": "workspace:*"
   },
   "optionalDependencies": {
-    "vue": "^3.2.29"
+    "vue": "^3.2.31"
   }
 }
