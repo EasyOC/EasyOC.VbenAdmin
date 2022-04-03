@@ -6,16 +6,15 @@
 <script lang="ts" setup>
 import 'amis/sdk/sdk.js'
 // import './style/themes/antd.less'
-import './style/themes/cxd.less'
-import { onMounted, ref, unref, onUnmounted } from 'vue'
-import '@fortawesome/fontawesome-free/css/all.min.css'
-import '@fortawesome/fontawesome-free/css/v4-shims.css'
+// import './style/themes/cxd.less'
+import { onMounted, ref, unref, onUnmounted, onBeforeUnmount } from 'vue'
+
 // import 'amis/lib/themes/default.css'
 // import 'amis/lib/themes/antd.css'
 import { EventTrack } from 'amis/lib/types'
 import { TrackerEventArgs } from './types'
 import getEnv from './amisEnv'
-import './Components/VButton2'
+// import './Components/VButton2'
 const props = defineProps({
   amisjson: {
     type: Object,
@@ -36,6 +35,8 @@ onMounted(() => {
 
   amisScoped.value = amis.embed(
     rendererBox.value,
+    // '#amis',
+    // document.querySelector('#amis'),
     {
       // amis schema
       ...unref(props).amisjson,
@@ -61,3 +62,6 @@ onUnmounted(() => {
   amisScoped.value.unmount()
 })
 </script>
+<style scoped src="./style/themes/cxd.less" lang="less" />
+<style scoped src="@fortawesome/fontawesome-free/css/all.min.css" lang="css" />
+<style scoped src="@fortawesome/fontawesome-free/css/v4-shims.css" lang="css" />

@@ -4,7 +4,7 @@ import { useGo } from '@/hooks/web/usePage'
 import { router } from '@/router'
 export default function getEnv() {
   return {
-    enableAMISDebug: process.env.NODE_ENV !== 'production',
+    // enableAMISDebug: process.env.NODE_ENV !== 'production',
     //
     // 主题，默认是 default，还可以设置成 cxd, antd 或 dark，但记得引用它们的 css，比如 sdk 目录下的 cxd.css
     // theme: 'antd',
@@ -40,8 +40,8 @@ export default function getEnv() {
       if (!config.url?.startsWith('/')) {
         config.url = '/' + config.url
       }
+      const result = await ocApi.request(config)
       if (url?.toLowerCase().startsWith('/api/graphql')) {
-        const result = await ocApi.request(config)
         console.log('graphql result', result)
         const finalResult = {
           data: result.data.data,
@@ -51,10 +51,9 @@ export default function getEnv() {
         console.log('graphql finalResult', finalResult)
         return finalResult
       } else {
-        const result = await ocApi.request(config)
         console.log('defaultRequest result ', result)
         const finalResult = {
-          data: result.data,
+          data: result.data.data,
           ...result,
         }
         console.log('defaultRequest finalResult', finalResult)

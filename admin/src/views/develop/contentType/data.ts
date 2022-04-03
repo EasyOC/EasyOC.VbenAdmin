@@ -39,6 +39,21 @@ export const searchFormSchema: FormSchema[] = [
     component: 'Input',
     colProps: { span: 12 },
   },
+  {
+    field: 'stereotype',
+    label: '类型',
+    component: 'Select',
+    componentProps: {
+      options: [
+        { label: '全部', value: '' },
+        { label: '非部件', value: 'None' },
+        { label: 'Widget', value: 'Widget' },
+        { label: 'CustomUserSettings', value: 'CustomUserSettings' },
+        { label: 'MenuItem', value: 'MenuItem' },
+      ],
+    },
+    colProps: { span: 12 },
+  },
 ]
 
 export const formSchema: FormSchema[] = [

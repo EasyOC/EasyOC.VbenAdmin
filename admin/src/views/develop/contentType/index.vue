@@ -1,9 +1,9 @@
 <template>
   <div>
     <BasicTable @register="registerTable">
-      <template #toolbar>
+      <!-- <template #toolbar>
         <a-button type="primary" @click="handleCreate"> 新增角色 </a-button>
-      </template>
+      </template> -->
       <template #action="{ record }">
         <TableAction
           :actions="[

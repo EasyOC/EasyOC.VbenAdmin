@@ -36,7 +36,7 @@
     "@logicflow/core": "^1.0.7",
     "@logicflow/extension": "^1.0.7",
     "@zxcvbn-ts/core": "^1.2.0",
-    "amis": "^1.8.0-beta.5",
+    "amis": "^1.8.0",
     "ant-design-vue": "3.0.0-beta.8",
     "codemirror": "^5.65.1",
     "cropperjs": "^1.5.12",

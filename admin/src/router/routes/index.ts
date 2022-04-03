@@ -36,6 +36,7 @@ export const LoginRoute: RouteRecordItem = {
   component: () => import('@/views/sys/login/Login.vue'),
   meta: {
     title: t('routes.basic.login'),
+    ignoreKeepAlive: true,
   },
 }
 
