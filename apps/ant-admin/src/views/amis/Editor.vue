@@ -12,15 +12,14 @@
       placement="right"
     >
       <!-- <a-button size="small" @click="formatSchema" title="快捷键：shift+alt+f">格式化</a-button> -->
-      <CodeEditor @change="editorChange" v-model:value="editorJson" />
-      <!-- <MonacoEditor v-model:value="editorJson" @change="editorChange" /> -->
+      <MonacoEditor v-model:value="editorJson" @change="editorChange" />
     </a-drawer>
   </div>
 </template>
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-// import MonacoEditor from '@/components/MonacoEditor/index.vue'
-import { CodeEditor } from '@/components/CodeEditor'
+import MonacoEditor from '@/components/MonacoEditor/index.vue'
+// import { CodeEditor } from '@/components/'
 import { Amis } from '@/components/Amis'
 const editorJson = ref<any>(
   `
