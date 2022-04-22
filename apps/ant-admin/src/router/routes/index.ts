@@ -8,6 +8,11 @@ const routeModuleRecord = import.meta.globEager('./modules/**/*.ts')
 const routeModules: RouteRecordItem[] = []
 
 Object.keys(routeModuleRecord).forEach((key) => {
+  // console.log(routeModuleRecord[key], 'routeModuleRecord[key]')
+  // console.log(key, 'routeModuleRecordkeykeykeykeykey')
+  if (key.startsWith('./modules/demo')) {
+    return
+  }
   const routeModule = routeModuleRecord[key].default || {}
   routeModules.push(
     ...(Array.isArray(routeModule) ? [...routeModule] : [routeModule]),

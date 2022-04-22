@@ -29,6 +29,7 @@
     "@ant-design/icons-vue": "^6.1.0",
     "@components/antd": "workspace:*",
     "@components/common": "workspace:*",
+    "@fortawesome/fontawesome-free": "^6.1.1",
     "@iconify/iconify": "^2.2.0",
     "@pkg/apis": "workspace:*",
     "@pkg/directives": "workspace:*",
@@ -38,15 +39,19 @@
     "@pkg/tokens": "workspace:*",
     "@pkg/use": "workspace:*",
     "@pkg/utils": "workspace:*",
+    "amis": "^1.9.0-beta.14",
     "ant-design-vue": "3.1.0-rc.4",
     "cropperjs": "^1.5.12",
     "echarts": "^5.3.1",
     "mockjs": "^1.1.0",
+    "monaco-editor": "^0.33.0",
     "nprogress": "^0.2.0",
+    "oidc-client": "^1.11.5",
     "path-to-regexp": "^6.2.0",
     "pinia": "2.0.12",
     "sortablejs": "^1.15.0",
     "vue": "^3.2.31",
+    "vue-draggable-next": "^2.1.1",
     "vue-router": "^4.0.14"
   },
   "devDependencies": {
@@ -64,7 +69,7 @@
     "@vue/test-utils": "^2.0.0-rc.18",
     "dotenv": "^16.0.0",
     "picocolors": "^1.0.0",
-    "vite": "2.9.0-beta.4",
+    "vite": "2.9.5",
     "vite-plugin-theme": "^0.8.6",
     "vue-tsc": "^0.33.9"
   }

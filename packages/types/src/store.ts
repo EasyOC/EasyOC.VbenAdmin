@@ -1,4 +1,6 @@
 import { ErrorTypeEnum, MenuModeEnum, MenuTypeEnum } from '@pkg/tokens'
+import { GetUserInfoModel } from 'node_modules/@pkg/apis/sys'
+// import { GetUserInfoModel } from 'service/modules/model'
 
 // Lock screen information
 export interface LockInfo {
@@ -33,14 +35,16 @@ export interface RoleInfo {
   value: string
 }
 
-export interface UserInfo {
+export interface UserInfo  extends GetUserInfoModel 
+{
   userId: string | number
   username: string
   realName: string
   avatar: string
   desc?: string
   homePath?: string
-  roles: RoleInfo[]
+  // roles: RoleInfo[]
+  roles: string[]
 }
 
 export interface BeforeMiniState {

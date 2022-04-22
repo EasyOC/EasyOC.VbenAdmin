@@ -27,6 +27,11 @@ export default {
     cancelText: 'Close',
     okText: 'Confirm',
   },
+  excel: {
+    exportModalTitle: 'Export data',
+    fileType: 'File type',
+    fileName: 'File name',
+  },
   form: {
     putAway: 'Put away',
     unfold: 'Unfold',

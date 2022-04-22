@@ -16,7 +16,7 @@ import {
   deepMerge,
   setObjToUrlParams,
 } from '@pkg/utils'
-import { RequestEnum, ResultEnum, ContentTypeEnum } from '@pkg/tokens'
+import { RequestEnum, ResultEnum, ContentTypeEnum, OCNotifyType } from '@pkg/tokens'
 import { joinTimestamp, formatRequestDate } from './helper'
 
 /**
@@ -50,11 +50,10 @@ const transform: AxiosTransform = {
       throw new Error(t('sys.api.apiRequestFailed'))
     }
     //  这里 code，result，message为 后台统一的字段，需要在 types.ts内修改为项目自己的接口返回格式
-    const { code, result, message } = data
+    const { statusCode, data: result, message, succeeded } = data as any
 
     // 这里逻辑可以根据项目进行修改
-    const hasSuccess =
-      data && Reflect.has(data, 'code') && code === ResultEnum.SUCCESS
+    const hasSuccess = succeeded && statusCode === ResultEnum.SUCCESS
     if (hasSuccess) {
       return result
     }
@@ -62,7 +61,7 @@ const transform: AxiosTransform = {
     // 在此处根据自己项目的实际情况对不同的code执行不同的操作
     // 如果不希望中断当前请求，请return数据，否则直接抛出异常即可
     let timeoutMsg = ''
-    switch (code) {
+    switch (statusCode) {
       case ResultEnum.TIMEOUT:
         timeoutMsg = t('sys.api.timeoutMessage')
         context.timeoutFunction?.()
@@ -95,8 +94,8 @@ const transform: AxiosTransform = {
       const _apuUrl = isString(apiUrl)
         ? apiUrl
         : isFunction(apiUrl)
-        ? apiUrl?.()
-        : ''
+          ? apiUrl?.()
+          : ''
       config.url = `${_apuUrl}${config.url}`
     }
     const params = config.params || {}
@@ -152,7 +151,7 @@ const transform: AxiosTransform = {
     const token = context.getTokenFunction?.()
     if (token && (config as Recordable)?.requestOptions?.withToken !== false) {
       // jwt token
-      ;(config as Recordable).headers.Authorization =
+      ; (config as Recordable).headers.Authorization =
         options.authenticationScheme
           ? `${options.authenticationScheme} ${token}`
           : token
@@ -164,6 +163,53 @@ const transform: AxiosTransform = {
    * @description: 响应拦截器处理
    */
   responseInterceptors: (res: AxiosResponse<any>) => {
+    console.log('响应拦截器处理 responseInterceptors: ', res)
+    const { t } = useI18n()
+    // extras: null
+    // message: null
+    // messages: []
+    // result: (9) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
+    // statusCode: 200
+    // succeeded: true
+    // timestamp: 1645716999773
+    const { msg } = res.data as any
+    // const { extras, msg, succeeded, statusCode } = res.data as any
+    if (msg) {
+      const notifyFn = (notify) => {
+        switch (notify.type) {
+          case OCNotifyType.Success:
+            context.orchardNotify.successFunction({
+              title: t('sys.api.successTip'),
+              content: notify.message.value,
+            })
+            break
+          case OCNotifyType.Information:
+            context.orchardNotify.informationFunction({
+              title: t('sys.api.infoTip'),
+              content: notify.message.value,
+            })
+            break
+          case OCNotifyType.Warning:
+            context.orchardNotify.warningFunction({
+              title: t('sys.api.wanTip'),
+              content: notify.message.value,
+            })
+            break
+          case OCNotifyType.Error:
+            context.orchardNotify.errorFunction({
+              title: t('sys.api.errorTip'),
+              content: notify.value,
+            })
+            break
+        }
+      }
+      if (msg instanceof Array) {
+        msg.forEach(notifyFn)
+      } else if (msg['message']) {
+        notifyFn(msg)
+      }
+    }
+
     return res
   },
 
@@ -213,8 +259,8 @@ const createAxios = (opt?: Partial<CreateAxiosOptions>) => {
       {
         // See https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication#authentication_schemes
         // authentication schemes，e.g: Bearer
-        // authenticationScheme: 'Bearer',
-        authenticationScheme: '',
+        authenticationScheme: 'Bearer',
+        // authenticationScheme: '',
         timeout: 10 * 1000,
         // 基础接口地址
         // baseURL: globSetting.apiUrl,
@@ -259,3 +305,11 @@ export const request = createAxios()
 //     apiUrl: 'xxx',
 //   },
 // });
+
+export const ocApi = createAxios({
+  requestOptions: {
+    isReturnNativeResponse: true,
+    isTransformResponse: false,
+  },
+  transform: undefined,
+})

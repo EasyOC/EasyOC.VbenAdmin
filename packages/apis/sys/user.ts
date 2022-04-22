@@ -1,5 +1,7 @@
-import type { ErrorMessageMode } from '@pkg/types'
-import { request } from '@pkg/request'
+import type { ErrorMessageMode } from '../../types'
+import { ocApi, request } from '../../request'
+import { ContentTypeEnum } from '../../tokens'
+import { context } from '../../request/bridge'
 
 /**
  * @description: Login interface parameters
@@ -7,6 +9,7 @@ import { request } from '@pkg/request'
 export interface LoginParams {
   username: string
   password: string
+  rememberMe: boolean
 }
 
 export interface RoleInfo {
@@ -27,7 +30,7 @@ export interface LoginResultModel {
  * @description: Get user information return value
  */
 export interface GetUserInfoModel {
-  roles: RoleInfo[]
+  roles: string[]
   // 用户id
   userId: string | number
   // 用户名
@@ -38,31 +41,47 @@ export interface GetUserInfoModel {
   avatar: string
   // 介绍
   desc?: string
+  email: string
 }
 
 enum Api {
-  Login = '/login',
-  Logout = '/logout',
-  GetUserInfo = '/getUserInfo',
+  Login = '/connect/token',
+  Logout = '/connect/logout',
+  GetUserInfo = '/connect/userinfo',
   GetPermCode = '/getPermCode',
 }
+/**
+ * @description: user login api
+ */
 
 /**
  * @description: user login api
  */
-export function loginApi(
+ export async function loginApi(
   params: LoginParams,
   mode: ErrorMessageMode = 'modal',
 ) {
-  return request.post<LoginResultModel>(
+  const { username, password, rememberMe } = params
+  const result = await ocApi.post(
     {
       url: Api.Login,
-      params,
+      headers: { 'Content-Type': ContentTypeEnum.FORM_URLENCODED },
+      data: {
+        grant_type: 'password',
+        client_id: context.clientId,
+        username: username,
+        password: password,
+        rememberMe: rememberMe,
+        scope: context.scope,
+      },
     },
     {
+      // withToken: false,
+      // isTransformResponse: false,
       errorMessageMode: mode,
     },
   )
+  return result.data
 }
 
 /**

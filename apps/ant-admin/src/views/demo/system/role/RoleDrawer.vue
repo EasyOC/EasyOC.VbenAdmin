@@ -21,19 +21,20 @@
     </BasicForm>
   </BasicDrawer>
 </template>
-<script lang="ts">
-import { defineComponent, ref, computed, unref } from 'vue'
+<script lang="ts" setup>
+import {  ref, computed, unref } from 'vue'
 import { BasicForm, useForm } from '@/components/form/index'
 import { formSchema } from './role.data'
 import { BasicDrawer, useDrawerInner } from '@/components/drawer'
-import { BasicTree, TreeItem } from '@/components/tree'
 import { getMenuList } from '@pkg/apis/sys'
+import { BasicTree, TreeItem } from '@/components/Tree'
 
-export default defineComponent({
-  name: 'RoleDrawer',
-  components: { BasicDrawer, BasicForm, BasicTree },
-  emits: ['success', 'register'],
-  setup(_, { emit }) {
+const emit= defineEmits(['success', 'register'])
+// export default defineComponent({
+//   name: 'RoleDrawer',
+//   components: { BasicDrawer, BasicForm, BasicTree },
+//   emits: ['success', 'register'],
+//   setup(_, { emit }) {
     const isUpdate = ref(true)
     const treeData = ref<TreeItem[]>([])
 
@@ -78,13 +79,13 @@ export default defineComponent({
       }
     }
 
-    return {
-      registerDrawer,
-      registerForm,
-      getTitle,
-      handleSubmit,
-      treeData,
-    }
-  },
-})
+//     return {
+//       registerDrawer,
+//       registerForm,
+//       getTitle,
+//       handleSubmit,
+//       treeData,
+//     }
+//   },
+// })
 </script>

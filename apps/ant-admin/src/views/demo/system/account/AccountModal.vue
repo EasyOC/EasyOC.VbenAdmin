@@ -13,7 +13,7 @@ import { defineComponent, ref, computed, unref } from 'vue'
 import { BasicModal, useModalInner } from '@/components/modal'
 import { BasicForm, useForm } from '@/components/form/index'
 import { accountFormSchema } from './account.data'
-import { getDeptList } from '@pkg/apis/demo'
+import { getDeptList } from '@pkg/apis/system'
 
 export default defineComponent({
   name: 'AccountModal',

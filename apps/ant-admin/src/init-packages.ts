@@ -34,14 +34,24 @@ const _initDirective = async () => {
 
 const _initRequest = async () => {
   const { createMessage, createErrorModal } = useMessage()
-  const { apiUrl, uploadUrl } = getGlobalConfig()
+  const { apiUrl, uploadUrl, clientId, scope, stsAuthority } = getGlobalConfig()
+  window.localStorage.setItem('apiUrl', apiUrl || '')
   const { t } = useI18n()
   await initRequest({
     apiUrl,
-    uploadUrl,
+    uploadUrl,    
+    clientId,
+    scope,
+    stsAuthority,
     getTokenFunction: () => {
       const userStore = useUserStoreWithOut()
       return userStore.getToken
+    },
+    orchardNotify: {
+      successFunction: createMessage.success,
+      informationFunction: createMessage.info,
+      warningFunction: createMessage.warn,
+      errorFunction: createMessage.error,
     },
     errorFunction: createMessage.error,
     errorModalFunction: createErrorModal,

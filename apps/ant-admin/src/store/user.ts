@@ -2,10 +2,14 @@ import type { UserInfo, ErrorMessageMode } from '@pkg/types'
 import type { GetUserInfoModel, LoginParams } from '@pkg/apis/sys'
 import { defineStore } from 'pinia'
 import { RoleEnum, PageEnum } from '@pkg/tokens'
-import { isArray } from '@pkg/utils'
+import {
+  decodeJwt,
+  // , isArray
+} from '@pkg/utils'
 import { useI18n } from '@pkg/locale'
 import { pinia } from '@/internal'
-import { doLogout, getUserInfo, loginApi } from '@pkg/apis/sys'
+
+import { doLogout,  loginApi } from '@pkg/apis/sys'
 import { useMessage } from '@/hooks/web/useMessage'
 import { router } from '@/router'
 import { usePermissionStore } from '@/store/permission'
@@ -15,6 +19,7 @@ import { h } from 'vue'
 interface UserState {
   userInfo: Nullable<UserInfo>
   token?: string
+  timeout?: Date
   roleList: RoleEnum[]
   sessionTimeout?: boolean
   lastUpdateTime: number
@@ -25,7 +30,7 @@ export const useUserStore = defineStore({
   persist: {
     strategies: [
       {
-        paths: ['userInfo', 'token', 'roleList'],
+        paths: ['userInfo', 'token', 'roleList', 'timeout'],
       },
     ],
   },
@@ -34,6 +39,8 @@ export const useUserStore = defineStore({
     userInfo: null,
     // token
     token: undefined,
+    //timeout
+    timeout: undefined,
     // roleList
     roleList: [],
     // Whether the login expired
@@ -46,7 +53,13 @@ export const useUserStore = defineStore({
       return this.userInfo || ({} as UserInfo)
     },
     getToken(): string {
+      if (this.token) {
+        window.localStorage.setItem('token', this.token)
+      }
       return this.token as string
+    },
+    getTimeout(): Date | null {
+      return this.timeout ? new Date(this.timeout) : null
     },
     getRoleList(): RoleEnum[] {
       return this.roleList.length > 0 ? this.roleList : []
@@ -61,6 +74,11 @@ export const useUserStore = defineStore({
   actions: {
     setToken(info: string | undefined) {
       this.token = info ? info : '' // for null or undefined value
+      if (info) window.localStorage.setItem('token', info)
+    },
+    setTimeout(timeout: Date | undefined) {
+      this.timeout = timeout
+      if (timeout) window.localStorage.setItem('timeout', timeout.toString())
     },
     setRoleList(roleList: RoleEnum[]) {
       this.roleList = roleList
@@ -86,24 +104,32 @@ export const useUserStore = defineStore({
         goHome?: boolean
         mode?: ErrorMessageMode
       },
-    ): Promise<GetUserInfoModel | null> {
+    ): Promise<UserInfo | null> {
       try {
         const { goHome = true, mode, ...loginParams } = params
 
         const data = await loginApi(loginParams, mode)
-        const { token } = data
+        const { access_token, expires_in } = data
 
         // save token
-        this.setToken(token)
+        this.setToken(access_token)
+        this.setTimeout(new Date(new Date().getTime() + expires_in * 1000))
         return this.afterLoginAction(goHome)
       } catch (error) {
         return Promise.reject(error)
       }
     },
-    async afterLoginAction(goHome?: boolean): Promise<GetUserInfoModel | null> {
-      if (!this.getToken) {
+    async afterLoginAction(goHome?: boolean): Promise<UserInfo | null> {
+      if (!(this.getToken && this.getTimeout)) {
+        this.logout(true)
         return null
       }
+
+      if (new Date(this.getTimeout) < new Date()) {
+        this.logout(true)
+        return null
+      }
+
       // get user info
       const userInfo = await this.getUserInfoAction()
 
@@ -127,19 +153,47 @@ export const useUserStore = defineStore({
     },
 
     async getUserInfoAction(): Promise<UserInfo | null> {
-      if (!this.getToken) {
+      if (!(this.getToken && this.getTimeout)) {
+        this.logout(true)
         return null
       }
 
-      const userInfo = await getUserInfo()
-      const { roles = [] } = userInfo
-      if (isArray(roles)) {
-        const roleList = roles.map((item) => item.value) as RoleEnum[]
-        this.setRoleList(roleList)
-      } else {
-        userInfo.roles = []
-        this.setRoleList([])
+      if (new Date(this.getTimeout) < new Date()) {
+        this.logout(true)
+        return null
       }
+
+      // const userInfo = await getUserInfo()
+      const userInfo = {} as GetUserInfoModel //await getUserInfo();
+
+      const data = decodeJwt(this.getToken)
+      console.log('data: ', data)
+      if (!data) {
+        throw Error('Verification failed, please Login again.')
+      }
+      const { name, email } = data
+      userInfo.username = name
+      userInfo.realName = name
+      userInfo.email = email
+      // const { roles = [] } = userInfo
+      const roles = data.Permission as Array<string>
+      const dataRole =
+        data['http://schemas.microsoft.com/ws/2008/06/identity/claims/role']
+      if (typeof dataRole == 'object') {
+        data.profile.roles.forEach((element) => {
+          roles.push(element)
+          userInfo.roles.push(element)
+        })
+      } else {
+        roles.push(dataRole) 
+      }
+      // if (isArray(roles)) {
+      //   const roleList = roles.map((item) => item.value) as RoleEnum[]
+      //   this.setRoleList(roleList)
+      // } else {
+      //   userInfo.roles = []
+      //   this.setRoleList([])
+      // }
       this.setUserInfo(userInfo)
       return userInfo
     },
@@ -148,11 +202,16 @@ export const useUserStore = defineStore({
      */
     async logout(goLogin = false) {
       if (this.getToken) {
-        await doLogout().catch(() => {
-          console.log('注销Token失败')
-        })
+        await doLogout()
+          .catch(() => {
+            console.log('注销Token失败')
+          })
+          .finally(() => {
+            this.setTimeout(undefined)
+          })
       }
       this.setToken(undefined)
+      this.setTimeout(undefined)
       this.setSessionTimeout(false)
       this.setUserInfo(null)
       goLogin && router.push(PageEnum.BASE_LOGIN)

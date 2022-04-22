@@ -1,5 +1,5 @@
 import type { App } from 'vue'
-import { createRouter, createWebHashHistory } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 import { basicRoutes } from './routes'
 
 // 白名单应该包含基本静态路由
@@ -17,7 +17,7 @@ const WHITE_NAME_LIST: string[] = []
 
 // app router
 export const router = createRouter({
-  history: createWebHashHistory(import.meta.env.VITE_PUBLIC_PATH),
+  history: createWebHistory(import.meta.env.VITE_PUBLIC_PATH),
   routes: basicRoutes,
   strict: true,
   scrollBehavior: () => ({ left: 0, top: 0 }),

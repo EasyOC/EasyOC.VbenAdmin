@@ -1,118 +1,197 @@
-import type { BasicPageParams, BasicFetchResult } from '../types'
-import { request } from '@pkg/request'
+// import { excuteGraphqlQuery } from './eoc/GraphqlService'
+// import type { BasicPageParams, BasicFetchResult } from '../types'
+// import { request } from '@pkg/request'
+// import { UsersServiceProxy } from '../eoc/app-service-proxies'
+// import { listToTree } from '@pkg/utils'
 
-export type AccountParams = BasicPageParams & {
-  account?: string
-  nickname?: string
-}
+// export type AccountParams = BasicPageParams & {
+//   selectedRole: string | undefined
+//   sortField: string | undefined
+//   sortOrder: string | undefined
+//   departmentId: string | undefined
+//   filter: string | undefined
+// }
 
-export type RoleParams = {
-  roleName?: string
-  status?: string
-}
+// export type RoleParams = {
+//   roleName?: string
+//   status?: string
+// }
 
-export type RolePageParams = BasicPageParams & RoleParams
+// export type RolePageParams = BasicPageParams & RoleParams
 
-export type DeptParams = {
-  deptName?: string
-  status?: string
-}
+// export type DeptParams = {
+//   deptName?: string
+//   status?: string
+// }
 
-export type MenuParams = {
-  menuName?: string
-  status?: string
-}
+// export type MenuParams = {
+//   menuName?: string
+//   status?: string
+// }
 
-export interface AccountListItem {
-  id: string
-  account: string
-  email: string
-  nickname: string
-  role: number
-  createTime: string
-  remark: string
-  status: number
-}
+// export interface AccountListItem {
+//   id: string
+//   account: string
+//   email: string
+//   nickname: string
+//   role: number
+//   createTime: string
+//   remark: string
+//   status: number
+// }
 
-export interface DeptListItem {
-  id: string
-  orderNo: string
-  createTime: string
-  remark: string
-  status: number
-}
+// export interface DeptListItem {
+//   id: string
+//   orderNo: string
+//   createTime: string
+//   remark: string
+//   status: number
+// }
 
-export interface MenuListItem {
-  id: string
-  orderNo: string
-  createTime: string
-  status: number
-  icon: string
-  component: string
-  permission: string
-}
+// export interface MenuListItem {
+//   id: string
+//   orderNo: string
+//   createTime: string
+//   status: number
+//   icon: string
+//   component: string
+//   permission: string
+// }
 
-export interface RoleListItem {
-  id: string
-  roleName: string
-  roleValue: string
-  status: number
-  orderNo: string
-  createTime: string
-}
+// export interface RoleListItem {
+//   id: string
+//   roleName: string
+//   roleValue: string
+//   status: number
+//   orderNo: string
+//   createTime: string
+// }
 
-/**
- * @description: Request list return value
- */
-export type AccountListGetResultModel = BasicFetchResult<AccountListItem>
+// /**
+//  * @description: Request list return value
+//  */
+// export type AccountListGetResultModel = BasicFetchResult<AccountListItem>
 
-export type DeptListGetResultModel = BasicFetchResult<DeptListItem>
+// export type DeptListGetResultModel = BasicFetchResult<DeptListItem>
 
-export type MenuListGetResultModel = BasicFetchResult<MenuListItem>
+// export type MenuListGetResultModel = BasicFetchResult<MenuListItem>
 
-export type RolePageListGetResultModel = BasicFetchResult<RoleListItem>
+// export type RolePageListGetResultModel = BasicFetchResult<RoleListItem>
 
-export type RoleListGetResultModel = RoleListItem[]
+// export type RoleListGetResultModel = RoleListItem[]
 
-enum Api {
-  AccountList = '/system/getAccountList',
-  IsAccountExist = '/system/accountExist',
-  DeptList = '/system/getDeptList',
-  setRoleStatus = '/system/setRoleStatus',
-  MenuList = '/system/getMenuList',
-  RolePageList = '/system/getRoleListByPage',
-  GetAllRoleList = '/system/getAllRoleList',
-}
+// enum Api {
+//   AccountList = '/system/getAccountList',
+//   IsAccountExist = '/system/accountExist',
+//   DeptList = '/system/getDeptList',
+//   setRoleStatus = '/system/setRoleStatus',
+//   MenuList = '/system/getMenuList',
+//   RolePageList = '/system/getRoleListByPage',
+//   GetAllRoleList = '/system/getAllRoleList',
+// }
+// export const userService = new UsersServiceProxy()
 
-export const getAccountList = (params: AccountParams) =>
-  request.get<AccountListGetResultModel>({
-    url: Api.AccountList,
-    params,
-  })
+// export async function getAccountList(params: AccountParams) {
+//   const data = await userService.getAll(params)
+//   return data
+// }
+// // request.get<AccountListGetResultModel>({
+// //   url: Api.AccountList,
+// //   params,
+// // })
+// export const getUserDetails = (id: string) => userService.getUser(id)
+// export const getAllRoleList = async () => {
+//   const roles = await new RolesServiceProxy().getRoles()
+//   return roles
+//   // defHttp.get<RoleListGetResultModel>({ url: Api.GetAllRoleList, params });
+// }
+// export const getDeptList = async (): Promise<DeptListItem[]> => {
+//   const result = await excuteGraphqlQuery({
+//     query: `query queryDepartment {
+//     queryDepartment {
+//       createdUtc
+//       description
+//       displayText
+//       modifiedUtc
+//       orderIndex
+//       publishedUtc
+//       status
+//       parentDepartmentId {
+//         contentItemIds
+//       }
+//       contentItemId
+//     }
+//   }`,
+//   })
+//   const depList = result.data.queryDepartment.map((x) => {
+//     const dept = {
+//       id: x.contentItemId,
+//       deptName: x.displayText,
+//       orderNo: x.orderIndex,
+//       createTime: x.createdUtc,
+//       remark: x.description,
+//       status: x.status ? 1 : 0,
+//     } as DeptListItem
+//     if (x.parentDepartmentId?.contentItemIds) {
+//       dept.parentId = x.parentDepartmentId.contentItemIds[0]
+//     }
+//     return dept
+//   })
 
-export const getDeptList = (params?: DeptListItem) =>
-  request.get<DeptListGetResultModel>({ url: Api.DeptList, params })
+//   return listToTree(depList, {
+//     pid: 'parentId',
+//   })
+// }
 
-export const getSysMenuList = (params?: MenuParams) =>
-  request.get<MenuListGetResultModel>({ url: Api.MenuList, params })
+// export const getMenuList = async () => {
+//   const result = await excuteGraphqlQuery({
+//     query: `query MyQurery {
+//           vbenMenu {
+//             contentItemId
+//             menuName
+//             icon
+//             permission
+//             component
+//             orderNo
+//             status
+//             modifiedUtc
+//             createdUtc
+//             routePath
+//             parentMenu {
+//               contentItems {
+//                 contentItemId
+//               }
+//             }
+//           }
+//         }`,
+//   })
+//   const menuList = result.data.vbenMenu as []
 
-export const getRoleListByPage = (params?: RolePageParams) =>
-  request.get<RolePageListGetResultModel>({
-    url: Api.RolePageList,
-    params,
-  })
+//   const treeMenu = listToTree(menuList, {
+//     id: 'contentItemId',
+//     rootFinder: (node) => !node.parentMenu?.contentItems[0]?.contentItemId,
+//     parentFinder: (parent, current) => {
+//       return (
+//         parent.contentItemId ==
+//         current.parentMenu?.contentItems[0]?.contentItemId
+//       )
+//     },
+//   })
+//   console.log('treeMenu: ', treeMenu)
+//   return treeMenu
+// }
 
-export const getAllRoleList = (params?: RoleParams) =>
-  request.get<RoleListGetResultModel>({
-    url: Api.GetAllRoleList,
-    params,
-  })
+// export const getRoleListByPage = (params?: RolePageParams) =>
+//   request.get<RolePageListGetResultModel>({
+//     url: Api.RolePageList,
+//     params,
+//   })
 
-export const setRoleStatus = (id: number, status: string) =>
-  request.post({ url: Api.setRoleStatus, params: { id, status } })
+// export const setRoleStatus = (id: number, status: string) =>
+//   request.post({ url: Api.setRoleStatus, params: { id, status } })
 
-export const isAccountExist = (account: string) =>
-  request.post(
-    { url: Api.IsAccountExist, params: { account } },
-    { errorMessageMode: 'none' },
-  )
+// export const isAccountExist = (account: string) =>
+//   request.post(
+//     { url: Api.IsAccountExist, params: { account } },
+//     { errorMessageMode: 'none' },
+//   )

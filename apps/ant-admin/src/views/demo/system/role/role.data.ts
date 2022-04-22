@@ -2,7 +2,7 @@ import { BasicColumn } from '@/components/table'
 import { FormSchema } from '@/components/table'
 import { h } from 'vue'
 import { Switch } from 'ant-design-vue'
-import { setRoleStatus } from '@pkg/apis/demo'
+import { setRoleStatus } from '@pkg/apis/system'
 import { useMessage } from '@/hooks/web/useMessage'
 
 export const columns: BasicColumn[] = [
@@ -25,7 +25,8 @@ export const columns: BasicColumn[] = [
     title: '状态',
     dataIndex: 'status',
     width: 120,
-    customRender: ({ record }) => {
+    customRender: (params) => {
+      const record = params.record as any
       if (!Reflect.has(record, 'pendingStatus')) {
         record.pendingStatus = false
       }

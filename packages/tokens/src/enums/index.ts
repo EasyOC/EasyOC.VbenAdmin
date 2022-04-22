@@ -2,6 +2,13 @@ export * from './breakpoint'
 export * from './http'
 export * from './menu'
 
+export enum OCNotifyType {
+  Success = 0,
+  Information = 1,
+  Warning = 2,
+  Error = 3,
+}
+
 export enum ContentLayoutEnum {
   // auto width
   FULL = 'full',

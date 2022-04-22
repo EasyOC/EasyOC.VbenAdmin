@@ -18,7 +18,7 @@ export const getAppConfig = () => {
   const ENV = (
     import.meta.env.DEV
       ? // Get the global configuration (the configuration will be extracted independently when packaging)
-        (import.meta.env as any)
+      (import.meta.env as any)
       : window[ENV_NAME]
   ) as GlobEnvConfig
 
@@ -39,6 +39,11 @@ export const getGlobalConfig = (): Readonly<GlobConfig> => {
     VITE_GLOB_API_URL,
     VITE_GLOB_APP_SHORT_NAME,
     VITE_GLOB_UPLOAD_URL,
+    VITE_GLOB_OIDC_clientRoot,
+    VITE_GLOB_OIDC_stsAuthority,
+    VITE_GLOB_OIDC_CLIENTID,
+    VITE_GLOB_OIDC_SCOPE,
+    VITE_GLOB_OIDC_responseType
   } = getAppConfig()
 
   // Take global configuration
@@ -47,6 +52,11 @@ export const getGlobalConfig = (): Readonly<GlobConfig> => {
     apiUrl: VITE_GLOB_API_URL,
     shortName: VITE_GLOB_APP_SHORT_NAME,
     uploadUrl: VITE_GLOB_UPLOAD_URL,
+    scope: VITE_GLOB_OIDC_SCOPE,
+    clientId: VITE_GLOB_OIDC_CLIENTID,
+    clientRoot: VITE_GLOB_OIDC_clientRoot,
+    stsAuthority: VITE_GLOB_OIDC_stsAuthority,
+    responseType: VITE_GLOB_OIDC_responseType
   }
   return glob as Readonly<GlobConfig>
 }

@@ -127,11 +127,17 @@ export interface GlobConfig {
   // Site title
   title: string
   // Service interface url
-  apiUrl: string
+  apiUrl?: string
   // Upload url
   uploadUrl?: string
   // Project abbreviation
   shortName: string
+
+  clientRoot?: string
+  stsAuthority?: string
+  clientId?: string
+  scope?: string
+  responseType?: string
 }
 
 export interface GlobEnvConfig {
@@ -143,4 +149,10 @@ export interface GlobEnvConfig {
   VITE_GLOB_APP_SHORT_NAME: string
   // Upload url
   VITE_GLOB_UPLOAD_URL?: string
+
+  VITE_GLOB_OIDC_clientRoot?: string
+  VITE_GLOB_OIDC_stsAuthority?: string
+  VITE_GLOB_OIDC_CLIENTID?: string
+  VITE_GLOB_OIDC_SCOPE?: string
+  VITE_GLOB_OIDC_responseType?: string
 }

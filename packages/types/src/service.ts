@@ -22,9 +22,14 @@ export interface RequestOptions {
 }
 
 export interface RequestResult<T = any> {
+  statusCode: number
+  /**
+   * @deprecated error | 更改为statusCode
+   */
   code: number
   type: 'success' | 'error' | 'warning'
-  message: string
+  succeeded: boolean
+  message: string[]
   result: T
 }
 

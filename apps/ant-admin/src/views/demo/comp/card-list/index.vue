@@ -17,7 +17,7 @@
 import { Button } from 'ant-design-vue'
 import { CardList } from '@/components/card-list'
 import { PageWrapper } from '@/components/page'
-import { demoListApi } from '@pkg/apis/demo'
+import { demoListApi } from '@pkg/apis/system'
 import { useMessage } from '@/hooks/web/useMessage'
 const { notification } = useMessage()
 // 请求api时附带参数

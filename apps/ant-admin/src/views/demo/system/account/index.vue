@@ -41,7 +41,7 @@
 <script lang="ts">
 import { defineComponent, reactive } from 'vue'
 import { BasicTable, useTable, TableAction } from '@/components/table'
-import { getAccountList } from '@pkg/apis/demo'
+import { getAccountList } from '@pkg/apis/system'
 import { PageWrapper } from '@/components/page'
 import DeptTree from './DeptTree.vue'
 import { useModal } from '@/components/modal'

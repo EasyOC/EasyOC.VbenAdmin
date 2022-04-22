@@ -18,7 +18,7 @@ import { BasicForm, FormSchema, useForm } from '@/components/form/index'
 import { CollapseContainer } from '@/components/container'
 import { useMessage } from '@/hooks/web/useMessage'
 import { PageWrapper } from '@/components/page'
-import { isAccountExist } from '@pkg/apis/demo'
+import { isAccountExist } from '@pkg/apis/system'
 
 const schemas: FormSchema[] = [
   {
