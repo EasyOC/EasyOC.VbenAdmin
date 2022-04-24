@@ -21,15 +21,15 @@ export const columns: BasicColumn[] = [
     width: 80,
     customRender: ({ record }) => {
       const status = record.status
-      const enable = ~~status === 0
-      const color = enable ? 'green' : 'red'
-      const text = enable ? '启用' : '停用'
+      const color = status ? 'green' : 'red'
+      const text = status ? '启用' : '停用'
       return h(Tag, { color: color }, () => text)
     },
   },
   {
     title: '创建时间',
-    dataIndex: 'createTime',
+    dataIndex: 'createTime', 
+    format:"date|utc|YYYY-MM-DD",
     width: 180,
   },
   {
