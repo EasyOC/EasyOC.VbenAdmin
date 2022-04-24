@@ -42,8 +42,6 @@ export const getGlobalConfig = (): Readonly<GlobConfig> => {
     VITE_GLOB_OIDC_clientRoot,
     VITE_GLOB_OIDC_stsAuthority,
     VITE_GLOB_OIDC_CLIENTID,
-    VITE_GLOB_OIDC_SCOPE,
-    VITE_GLOB_OIDC_responseType
   } = getAppConfig()
 
   // Take global configuration
@@ -52,11 +50,9 @@ export const getGlobalConfig = (): Readonly<GlobConfig> => {
     apiUrl: VITE_GLOB_API_URL,
     shortName: VITE_GLOB_APP_SHORT_NAME,
     uploadUrl: VITE_GLOB_UPLOAD_URL,
-    scope: VITE_GLOB_OIDC_SCOPE,
     clientId: VITE_GLOB_OIDC_CLIENTID,
     clientRoot: VITE_GLOB_OIDC_clientRoot,
-    stsAuthority: VITE_GLOB_OIDC_stsAuthority,
-    responseType: VITE_GLOB_OIDC_responseType
+    stsAuthority: VITE_GLOB_OIDC_stsAuthority
   }
   return glob as Readonly<GlobConfig>
 }

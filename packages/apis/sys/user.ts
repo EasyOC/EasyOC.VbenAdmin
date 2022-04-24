@@ -72,7 +72,7 @@ enum Api {
         username: username,
         password: password,
         rememberMe: rememberMe,
-        scope: context.scope,
+        scope: 'openid profile roles offline_access',
       },
     },
     {

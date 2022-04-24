@@ -16,6 +16,7 @@
     "build:test": "pnpm cross-env vite build --mode test &&pnpm esno ./scripts/post-build.ts",
     "clean": "pnpm rimraf node_modules && pnpm rimraf dist && pnpm rimraf .turbo",
     "dev": "vite",
+    "prod:run": "pnpm cross-env NODE_ENV=production vite",
     "gen:icon": "pnpm esno ./scripts/generate-icon.ts",
     "preview": "npm run build && vite preview",
     "preview:dist": "vite preview",

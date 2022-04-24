@@ -10,11 +10,11 @@ const oidcClient = new Oidc.UserManager({
   authority: globConfig.stsAuthority,
   client_id: globConfig.clientId,
   redirect_uri: globConfig.clientRoot + 'signin-callback',
-  scope: globConfig.scope,
+  scope: "openid profile roles offline_access",
   post_logout_redirect_uri: globConfig.clientRoot + 'signout-callback',
   filterProtocolClaims: true,
   loadUserInfo: true,
-  response_type: globConfig.responseType,
+  // response_type: globConfig.responseType,
   client_secret: "123123/q",
 })
 

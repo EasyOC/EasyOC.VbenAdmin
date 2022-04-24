@@ -1,20 +1,26 @@
-import type { GetAccountInfoModel } from './model'
+ 
+// import { request } from '../request'
 
-import { defaultRequest } from '../request'
+// enum Api {
+//   ACCOUNT_INFO = '/account/getAccountInfo',
+//   SESSION_TIMEOUT = '/user/sessionTimeout',
+//   TOKEN_EXPIRED = '/user/tokenExpired',
+// }
+// export interface GetAccountInfoModel {
+//   email: string
+//   name: string
+//   introduction: string
+//   phone: string
+//   address: string
+// }
 
-enum Api {
-  ACCOUNT_INFO = '/account/getAccountInfo',
-  SESSION_TIMEOUT = '/user/sessionTimeout',
-  TOKEN_EXPIRED = '/user/tokenExpired',
-}
+// // Get personal center-basic settings
 
-// Get personal center-basic settings
+// export const accountInfoApi = () =>
+// request.get<GetAccountInfoModel>({ url: Api.ACCOUNT_INFO })
 
-export const accountInfoApi = () =>
-  defaultRequest.get<GetAccountInfoModel>({ url: Api.ACCOUNT_INFO })
+// export const sessionTimeoutApi = () =>
+// request.post<void>({ url: Api.SESSION_TIMEOUT })
 
-export const sessionTimeoutApi = () =>
-  defaultRequest.post<void>({ url: Api.SESSION_TIMEOUT })
-
-export const tokenExpiredApi = () =>
-  defaultRequest.post<void>({ url: Api.TOKEN_EXPIRED })
+// export const tokenExpiredApi = () =>
+// request.post<void>({ url: Api.TOKEN_EXPIRED })
