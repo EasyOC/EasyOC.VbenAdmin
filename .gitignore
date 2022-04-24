@@ -25,3 +25,4 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw?
+apps/ant-admin/public/amis-editor-renderer
