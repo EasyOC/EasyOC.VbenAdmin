@@ -59,7 +59,7 @@ export async function createViteConfig(
       },
       server: {
         port: 3000,
-        https: true,
+        https: false,
         host: true,
         proxy: resolveProxy(VITE_PROXY),
       },
