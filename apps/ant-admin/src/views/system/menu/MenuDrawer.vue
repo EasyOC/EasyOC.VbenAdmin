@@ -12,18 +12,26 @@
 </template>
 <script lang="ts">
 import { defineComponent, ref, computed, unref } from 'vue'
-import { BasicForm, useForm } from '@/components/form/index'
+import { BasicForm, useForm } from '@/components/form'
 import { formSchema } from './menu.data'
 import { BasicDrawer, useDrawerInner } from '@/components/drawer'
-import { getMenuList } from '@pkg/apis/sys'
+
+import { getMenuList } from '@pkg/apis/system'
+import { ContentFieldsMappingDto } from '@pkg/apis/eoc/app-service-proxies'
+import { ContentItemUpperCase } from '@pkg/apis/eoc/contentApi'
+import { ContentTypeService } from '@/api/ContentTypeService'
 
 export default defineComponent({
   name: 'MenuDrawer',
   components: { BasicDrawer, BasicForm },
   emits: ['success', 'register'],
   setup(_, { emit }) {
+    const typeName = 'VbenMenu'
     const isUpdate = ref(true)
+    const contentTypeService = new ContentTypeService(typeName)
 
+    const contentItem = ref<ContentItemUpperCase>({ ContentType: typeName })
+    const contentFields = ref<ContentFieldsMappingDto[]>([])
     const [
       registerForm,
       { resetFields, setFieldsValue, updateSchema, validate },
@@ -39,7 +47,8 @@ export default defineComponent({
         resetFields()
         setDrawerProps({ confirmLoading: false })
         isUpdate.value = !!data?.isUpdate
-
+        contentItem.value = data.contentItem
+        contentFields.value = data.contentFields
         if (unref(isUpdate)) {
           setFieldsValue({
             ...data.record,
@@ -61,7 +70,8 @@ export default defineComponent({
       try {
         const values = await validate()
         setDrawerProps({ confirmLoading: true })
-        // TODO custom api
+        // Save to Db
+        await contentTypeService.saveContentItem(values, unref(contentItem))
         console.log(values)
         closeDrawer()
         emit('success')
