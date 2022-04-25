@@ -10,9 +10,9 @@ const routeModules: RouteRecordItem[] = []
 Object.keys(routeModuleRecord).forEach((key) => {
   // console.log(routeModuleRecord[key], 'routeModuleRecord[key]')
   // console.log(key, 'routeModuleRecordkeykeykeykeykey')
-  if (key.startsWith('./modules/demo')) {
-    return
-  }
+  // if (key.startsWith('./modules/demo')) {
+  //   return
+  // }
   const routeModule = routeModuleRecord[key].default || {}
   routeModules.push(
     ...(Array.isArray(routeModule) ? [...routeModule] : [routeModule]),
@@ -37,7 +37,7 @@ export const LoginRoute: RouteRecordItem = {
   meta: {
     title: t('routes.basic.login'),
   },
-}
+} 
 
 // Basic routing without permission
 export const basicRoutes = [
