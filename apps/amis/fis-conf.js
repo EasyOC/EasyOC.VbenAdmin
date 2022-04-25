@@ -316,7 +316,7 @@ ghPages.match('*', {
   deploy: [
     fis.plugin('skip-packed'),
     fis.plugin('local-deliver', {
-      to: './../admin/public/amis-editor-renderer',
+      to: './../ant-admin/public/amis-editor-renderer',
     }),
   ],
 });
