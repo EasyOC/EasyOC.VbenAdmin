@@ -9,6 +9,7 @@ import {apiRequest} from 'service/api';
 import {RouteComponentProps} from 'react-router';
 import {inject, observer} from 'mobx-react';
 import {IMainStore} from 'store';
+import authService from './auth/authService';
 
 const plugins: PluginClass[] | undefined = []; // 通过plugin注入
 let host = `${window.location.protocol}//${window.location.host}`;
@@ -45,6 +46,7 @@ class AmisEditor extends React.Component {
     }
     async componentWillMount() {
         console.log('getSchemagetSchemagetSchema');
+    //    await authService.login()
     
         const result = await apiRequest({
             method: 'get',

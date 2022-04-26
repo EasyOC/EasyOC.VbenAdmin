@@ -1,27 +1,26 @@
-import axios, {AxiosRequestConfig, AxiosInstance} from 'axios';
+import axios, { AxiosRequestConfig, AxiosInstance } from 'axios';
+import authService,{ globConfig } from 'route/auth/authService';
 
-export async function apiRequest(config: AxiosRequestConfig | boolean) {
+export async function apiRequest(config: AxiosRequestConfig | boolean | any) {
     if (!config) {
-        return {data: null};
+        return { data: null };
     }
     console.log('config: ', config);
-    const {url, method, data} = config;
+    const { url, method, data } = config;
     console.log('url: ', url);
-    const apiBaseUrl = window.localStorage.getItem('apiUrl');
+    const apiBaseUrl = globConfig.serverRoot;//window.localStorage.getItem('apiUrl');
     console.log('apiurl', apiBaseUrl);
 
     config = config || {};
     config.baseURL = apiBaseUrl || '';
     config.headers = config.headers || {};
-    config.timeout = 100 * 1000;
-    const token = window.localStorage.getItem('token');
+    const token = await authService.getAccessToken();
     // console.log('token: ', token);
-    const timeout = window.localStorage.getItem('timeout');
     // console.log('timeout: ', timeout);
-    console.log('timeout: ', new Date(timeout ? timeout : new Date()));
-    if (!(token && timeout) || new Date(timeout) < new Date()) {
-        window.alert('会话超时,请在新窗口中登陆后继续操作');
-        window.open('/login');
+    if (!token) {
+        await authService.signinPopup();
+        // window.alert('会话超时,请在新窗口中登陆后继续操作');
+        // window.open('/login');
         return;
     }
     config.headers.Authorization = 'Bearer ' + token;
