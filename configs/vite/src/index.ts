@@ -1,4 +1,4 @@
-import type { UserConfig, UserConfigFn } from 'vite'
+import { UserConfig, UserConfigFn } from 'vite'
 import type { FrameworkType } from './presets'
 import { mergeConfig, loadEnv, defineConfig } from 'vite'
 import { cyan } from 'picocolors'
@@ -37,6 +37,7 @@ export async function createViteConfig(
 
     const { VITE_PUBLIC_PATH, VITE_PROXY, VITE_USE_MOCK, VITE_DROP_CONSOLE } =
       viteEnv
+    const prefix = 'monaco-editor/esm/vs'
 
     const commonConfig: UserConfig = {
       root,
@@ -60,15 +61,26 @@ export async function createViteConfig(
       server: {
         port: 3000,
         https: false,
-        host: true,
+        host: true, 
         proxy: resolveProxy(VITE_PROXY),
+        // fs: { strict: false }
+        // fs: {
+        //   strict: false,
+        //   // allow: [
+        //   //   // 搜索工作区的根目录
+        //   //   searchForWorkspaceRoot(process.cwd()),
+        //   //   // // 自定义规则
+        //   //   './public/amis-editor-renderer'
+        //   // ]
+        // },
       },
       esbuild: {
         pure: VITE_DROP_CONSOLE ? ['console.log', 'debugger'] : [],
       },
       build: {
         target: 'chrome80',
-        cssTarget: 'chrome80',
+        cssTarget: 'chrome80', 
+        sourcemap: true,
         outDir: OUTPUT_DIR,
         /**
          * 当 minify=“minify:'terser'” 解开注释
@@ -80,10 +92,16 @@ export async function createViteConfig(
         //     drop_console: VITE_DROP_CONSOLE,
         //   },
         // },
+      
         brotliSize: false,
         chunkSizeWarningLimit: 2048,
         rollupOptions: {
+          // input: [
+          //   '/index.html',
+          //   '/public/amis-editor-renderer/index.html'
+          // ],
           output: {
+            file:'[name].js',
             manualChunks: {
               vue: ['vue', 'pinia', 'vue-router', '@vue/shared'],
               // antdv: ['ant-design-vue'],
@@ -95,12 +113,19 @@ export async function createViteConfig(
         },
       },
       optimizeDeps: {
+        // entries: ["/index.html",'/amis-editor-renderer/index.html'],
         include: [
           '@vue/shared',
           '@iconify/iconify',
           'dayjs/locale/en',
           'dayjs/locale/zh-cn',
           'lodash-es',
+          `${prefix}/language/json/json.worker`,
+          `${prefix}/language/css/css.worker`,
+          `${prefix}/language/html/html.worker`,
+          `${prefix}/language/typescript/ts.worker`,
+          `${prefix}/editor/editor.worker`,
+          'monaco-editor/min/vs/loader.js',
         ],
         exclude: ['vue-demi'],
       },
