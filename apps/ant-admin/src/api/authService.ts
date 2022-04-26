@@ -16,7 +16,7 @@ const oidcClient = new Oidc.UserManager({
   loadUserInfo: true,
   response_type: 'code',
   // response_type: globConfig.responseType,
-  client_secret: "123123/q",
+  // client_secret: "123123/q",
 })
 
 Oidc.Log.logger = console;
