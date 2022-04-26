@@ -1,19 +1,22 @@
 /* eslint-disable */
 import Oidc from 'oidc-client';
 // import 'babel-polyfill';  
-
+import { useUserStore } from '@/store/user'
 import { getGlobalConfig } from '@/internal/config'
 const globConfig = getGlobalConfig()
+const userStore = useUserStore()
 const oidcClient = new Oidc.UserManager({
 
   userStore: new Oidc.WebStorageStateStore({ prefix: 'oidc_', store: localStorage }),
   authority: globConfig.stsAuthority,
   client_id: globConfig.clientId,
-  redirect_uri: globConfig.clientRoot + 'signin-callback',
+  redirect_uri: globConfig.clientRoot + 'logincallback',
   scope: "openid profile roles offline_access",
   post_logout_redirect_uri: globConfig.clientRoot + 'signout-callback',
   filterProtocolClaims: true,
   loadUserInfo: true,
+  response_mode: 'query',
+  response_type: 'code',
   // response_type: globConfig.responseType,
   client_secret: "123123/q",
 })
@@ -26,18 +29,24 @@ oidcClient.events.addUserLoaded((user) => {
   console.log('Acess_token: ', user.access_token)
 });
 
-oidcClient.events.addAccessTokenExpiring(function () {
+oidcClient.events.addAccessTokenExpiring(async function () {
   console.log('AccessToken Expiring：', arguments);
 });
+oidcClient.events.addUserSignedIn(async function () {
+  console.log('UserSignedIn :', arguments);
+  await userStore.oidclogin()
+})
 
-oidcClient.events.addAccessTokenExpired(function () {
+oidcClient.events.addAccessTokenExpired(async function () {
   console.log('AccessToken Expired：', arguments);
   //alert('Session expired. Going out!');
-  oidcClient.signoutRedirect().then(function (resp) {
-    console.log('signed out', resp);
-  }).catch(function (err) {
-    console.log(err)
-  })
+  alert('Session expired. Going Renew!');
+  oidcClient.startSilentRenew()
+  // oidcClient.signoutRedirect().then(function (resp) {
+  //   console.log('signed out', resp);
+  // }).catch(function (err) {
+  //   console.log(err)
+  // })
 });
 
 oidcClient.events.addSilentRenewError(function () {
@@ -90,7 +99,12 @@ const authService = {
   async getAccessToken() {
     const user = await this.getUserInfo(); // Returns promise to load the User object for the currently authenticated user.
     return !!user && !user.expired ? user.access_token : null
-  }
+  },
+
+  async startSilentRenew() {
+    oidcClient.startSilentRenew();
+  },
+  getClient: (): Oidc.UserManager => { return oidcClient as Oidc.UserManager }
 }
 export default authService
 

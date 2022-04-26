@@ -9,12 +9,13 @@ import {
 import { useI18n } from '@pkg/locale'
 import { pinia } from '@/internal'
 
-import { doLogout,  loginApi } from '@pkg/apis/sys'
+import { doLogout, loginApi } from '@pkg/apis/sys'
 import { useMessage } from '@/hooks/web/useMessage'
 import { router } from '@/router'
 import { usePermissionStore } from '@/store/permission'
 import { PAGE_NOT_FOUND_ROUTE } from '@/router/routes/basic'
 import { h } from 'vue'
+import authService from '@/api/authService'
 
 interface UserState {
   userInfo: Nullable<UserInfo>
@@ -119,15 +120,32 @@ export const useUserStore = defineStore({
         return Promise.reject(error)
       }
     },
-    async afterLoginAction(goHome?: boolean): Promise<UserInfo | null> {
-      if (!(this.getToken && this.getTimeout)) {
-        this.logout(true)
-        return null
-      }
+    async oidclogin(): Promise<UserInfo | null> {
+      try {
+        const goHome = true
 
-      if (new Date(this.getTimeout) < new Date()) {
-        this.logout(true)
-        return null
+        const oidcuser = await authService.getUserInfo()
+        if (oidcuser) {
+
+          const { access_token, expires_in } = oidcuser
+
+          // save token
+          this.setToken(access_token)
+          this.setTimeout(new Date(new Date().getTime() + expires_in * 1000))
+          return this.afterLoginAction(goHome)
+        } else {
+          return Promise.resolve(null)
+        }
+      } catch (error) {
+        return Promise.reject(error)
+      }
+    },
+    async afterLoginAction(goHome?: boolean): Promise<UserInfo | null> {
+      if (!(this.getToken && this.getTimeout && new Date(this.getTimeout) < new Date())) {
+        await authService.startSilentRenew()
+        authService.getClient
+        // this.logout(true)
+        // return null
       }
 
       // get user info
@@ -185,7 +203,7 @@ export const useUserStore = defineStore({
           userInfo.roles.push(element)
         })
       } else {
-        roles.push(dataRole) 
+        roles.push(dataRole)
       }
       // if (isArray(roles)) {
       //   const roleList = roles.map((item) => item.value) as RoleEnum[]

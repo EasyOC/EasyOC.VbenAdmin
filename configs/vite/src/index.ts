@@ -63,7 +63,7 @@ export async function createViteConfig(
         https: false,
         host: true, 
         proxy: resolveProxy(VITE_PROXY),
-        // fs: { strict: false }
+        fs: { strict: false }
         // fs: {
         //   strict: false,
         //   // allow: [
