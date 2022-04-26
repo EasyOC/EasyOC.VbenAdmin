@@ -4,7 +4,6 @@ import Oidc from 'oidc-client';
 import { useUserStore } from '@/store/user'
 import { getGlobalConfig } from '@/internal/config'
 const globConfig = getGlobalConfig()
-const userStore = useUserStore()
 const oidcClient = new Oidc.UserManager({
 
   userStore: new Oidc.WebStorageStateStore({ prefix: 'oidc_', store: localStorage }),
@@ -15,7 +14,6 @@ const oidcClient = new Oidc.UserManager({
   post_logout_redirect_uri: globConfig.clientRoot + 'signout-callback',
   filterProtocolClaims: true,
   loadUserInfo: true,
-  response_mode: 'query',
   response_type: 'code',
   // response_type: globConfig.responseType,
   client_secret: "123123/q",
@@ -34,6 +32,7 @@ oidcClient.events.addAccessTokenExpiring(async function () {
 });
 oidcClient.events.addUserSignedIn(async function () {
   console.log('UserSignedIn :', arguments);
+  const userStore = useUserStore()
   await userStore.oidclogin()
 })
 

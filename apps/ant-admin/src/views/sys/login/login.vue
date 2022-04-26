@@ -6,7 +6,7 @@
 import authService from '@/api/authService'
 export default {
   name: 'login',
-  created () {
+  mounted () {
 
     authService.login()
       .then((redirectPath) => {

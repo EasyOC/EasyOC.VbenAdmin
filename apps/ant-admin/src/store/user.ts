@@ -123,7 +123,7 @@ export const useUserStore = defineStore({
     async oidclogin(): Promise<UserInfo | null> {
       try {
         const goHome = true
-
+        console.log(1111111111111111)
         const oidcuser = await authService.getUserInfo()
         if (oidcuser) {
 
@@ -141,12 +141,12 @@ export const useUserStore = defineStore({
       }
     },
     async afterLoginAction(goHome?: boolean): Promise<UserInfo | null> {
-      if (!(this.getToken && this.getTimeout && new Date(this.getTimeout) < new Date())) {
-        await authService.startSilentRenew()
-        authService.getClient
-        // this.logout(true)
-        // return null
-      }
+      // if ((this.getToken && this.getTimeout && new Date(this.getTimeout) < new Date())) {
+      //   await authService.startSilentRenew()
+      //   // authService.getClient
+      //   // this.logout(true)
+      //   // return null
+      // }
 
       // get user info
       const userInfo = await this.getUserInfoAction()

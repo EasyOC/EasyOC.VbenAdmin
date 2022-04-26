@@ -37,11 +37,23 @@ export const LoginRoute: RouteRecordItem = {
   meta: {
     title: t('routes.basic.login'),
   },
+  
 } 
+
+
+export const LoginCallbackRoute: RouteRecordItem ={
+  path: '/logincallback',
+  name: 'LoginCallback',
+  component: () => import('@/views/sys/login/loginCallback.vue'),
+  meta: {
+    title: t('routes.basic.login'),
+  },
+}
 
 // Basic routing without permission
 export const basicRoutes = [
   LoginRoute,
+  LoginCallbackRoute,
   RootRoute,
   ...mainOutRoutes,
   REDIRECT_ROUTE,

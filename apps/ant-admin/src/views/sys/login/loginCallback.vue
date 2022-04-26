@@ -4,12 +4,22 @@
 </template>
 <script>
 import authService from '@/api/authService'
-import { useRoute } from 'vue-router'
+import { useGo } from '@/hooks/web/usePage'
+import { useUserStore } from '@/store/user'
+
 export default {
   name: 'loginCallback',
-  created () {
-      const go=useRoute()
-      go()
+  mounted() {
+    console.log(333333)
+    // authService.completeLogin().then(()=>{
+
+      console.log(2222222222222222)
+      const userStore=useUserStore()
+      userStore.oidclogin()
+      const go = useGo()
+      go('/')
+    // })
+    
   }
 }
 </script>
