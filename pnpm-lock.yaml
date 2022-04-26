@@ -13710,7 +13710,7 @@ packages:
     dev: false
 
   registry.npmmirror.com/vite/2.9.0-beta.4:
-    resolution: {integrity: sha512-ToelFqN8lBaiK34VHzTbixOImHoHBw/PCveV5Xynd4ie1twcE0G6t9MFgunuN1hoajWMraGL5bV+pZ3hENR7GA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/vite/-/vite-2.9.0-beta.4.tgz}
+    resolution: {integrity: sha512-ToelFqN8lBaiK34VHzTbixOImHoHBw/PCveV5Xynd4ie1twcE0G6t9MFgunuN1hoajWMraGL5bV+pZ3hENR7GA==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/vite/-/vite-2.9.0-beta.4.tgz}
     name: vite
     version: 2.9.0-beta.4
     engines: {node: '>=12.2.0'}

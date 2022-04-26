@@ -56,6 +56,7 @@ export enum RoleEnum {
 export enum PageEnum {
   // basic login path
   BASE_LOGIN = '/login',
+  BASE_LOGINCALLBACK = '/logincallback',
   // basic home path
   BASE_HOME = '/dashboard',
   // error page path
