@@ -125,6 +125,7 @@ export const useUserStore = defineStore({
         const goHome = true
         console.log(1111111111111111)
         const oidcuser = await authService.getUserInfo()
+        console.log('oidcuser: ', oidcuser);
         if (oidcuser) {
 
           const { access_token, expires_in } = oidcuser

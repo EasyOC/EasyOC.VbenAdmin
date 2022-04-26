@@ -2,24 +2,17 @@
   <div>
   </div>
 </template>
-<script>
+<script lang='ts' setup>
 import authService from '@/api/authService'
 import { useGo } from '@/hooks/web/usePage'
 import { useUserStore } from '@/store/user'
-
-export default {
-  name: 'loginCallback',
-  mounted() {
-    console.log(333333)
-    // authService.completeLogin().then(()=>{
-
-      console.log(2222222222222222)
-      const userStore=useUserStore()
-      userStore.oidclogin()
-      const go = useGo()
-      go('/')
-    // })
+import { onBeforeMount } from 'vue'
     
-  }
-}
+onBeforeMount(async()=>{
+    await authService.completeLogin()
+    const userStore = useUserStore()
+    await userStore.oidclogin()
+    const go = useGo()
+    go('/') 
+})
 </script>
