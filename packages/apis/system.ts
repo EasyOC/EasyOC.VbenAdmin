@@ -165,9 +165,7 @@ export const getMenuList = async () => {
             createdUtc
             routePath
             parentMenu {
-              contentItems {
-                contentItemId
-              }
+              contentItemIds
             }
           }
         }`,
@@ -176,11 +174,11 @@ export const getMenuList = async () => {
 
   const treeMenu = listToTree(menuList, {
     id: 'contentItemId',
-    rootFinder: (node) => !node.parentMenu?.contentItems[0]?.contentItemId,
+    rootFinder: (node) => !node.parentMenu?.contentItemIds[0],
     parentFinder: (parent, current) => {
       return (
         parent.contentItemId ==
-        current.parentMenu?.contentItems[0]?.contentItemId
+        current.parentMenu?.contentItemIds[0]
       )
     },
   })

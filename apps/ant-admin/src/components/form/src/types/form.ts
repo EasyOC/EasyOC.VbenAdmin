@@ -128,7 +128,7 @@ export interface FormProps {
 }
 export interface FormSchema {
   // Field name
-  field: string
+  field: string | string[]
   // Event name triggered by internal value change, default change
   changeEvent?: string
   // Variable name bound to v-model Default value
@@ -139,9 +139,9 @@ export interface FormSchema {
   subLabel?: string
   // Help text on the right side of the text
   helpMessage?:
-    | string
-    | string[]
-    | ((renderCallbackParams: RenderCallbackParams) => string | string[])
+  | string
+  | string[]
+  | ((renderCallbackParams: RenderCallbackParams) => string | string[])
   // BaseHelp component props
   helpComponentProps?: Partial<HelpComponentProps>
   // Label width, if it is passed, the labelCol and WrapperCol configured by itemProps will be invalid
@@ -152,13 +152,13 @@ export interface FormSchema {
   component: ComponentType
   // Component parameters
   componentProps?:
-    | ((opt: {
-        schema: FormSchema
-        tableAction: TableActionType
-        formActionType: FormActionType
-        formModel: Recordable
-      }) => Recordable)
-    | object
+  | ((opt: {
+    schema: FormSchema
+    tableAction: TableActionType
+    formActionType: FormActionType
+    formModel: Recordable
+  }) => Recordable)
+  | object
   // Required
   required?: boolean | ((renderCallbackParams: RenderCallbackParams) => boolean)
 
@@ -197,10 +197,10 @@ export interface FormSchema {
   ) => VNode | VNode[] | string
 
   renderComponentContent?:
-    | ((renderCallbackParams: RenderCallbackParams) => any)
-    | VNode
-    | VNode[]
-    | string
+  | ((renderCallbackParams: RenderCallbackParams) => any)
+  | VNode
+  | VNode[]
+  | string
 
   // Custom slot, in from-item
   slot?: string
@@ -209,8 +209,8 @@ export interface FormSchema {
   colSlot?: string
 
   dynamicDisabled?:
-    | boolean
-    | ((renderCallbackParams: RenderCallbackParams) => boolean)
+  | boolean
+  | ((renderCallbackParams: RenderCallbackParams) => boolean)
 
   dynamicRules?: (renderCallbackParams: RenderCallbackParams) => Rule[]
 }

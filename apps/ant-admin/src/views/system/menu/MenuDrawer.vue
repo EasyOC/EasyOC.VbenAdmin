@@ -4,7 +4,7 @@
   </BasicDrawer>
 </template>
 <script lang="ts">
-import { defineComponent, ref, computed, unref } from 'vue'
+import { defineComponent, ref, computed, unref, onBeforeMount, onMounted } from 'vue'
 import { BasicForm, useForm } from '@/components/form'
 import { formSchema } from './menu.data'
 import { BasicDrawer, useDrawerInner } from '@/components/drawer'
@@ -13,6 +13,7 @@ import { getMenuList } from '@pkg/apis/system'
 import { ContentManagementServiceProxy } from '@pkg/apis/eoc/app-service-proxies'
 import { GpContentItem } from '@pkg/apis/eoc/contentApi'
 import { deepMerge } from '@pkg/utils'
+import { TreeSelectProps } from 'ant-design-vue'
 export default defineComponent({
   name: 'MenuDrawer',
   components: { BasicDrawer, BasicForm },
@@ -22,6 +23,7 @@ export default defineComponent({
     const isUpdate = ref(true)
     const contentSvr = new ContentManagementServiceProxy()
     const contentItem = ref<GpContentItem>(new GpContentItem(typeName))
+    const treeData = ref<any>([])
     const [
       registerForm,
       { resetFields, setFieldsValue, updateSchema, validate },
@@ -31,7 +33,9 @@ export default defineComponent({
       showActionButtonGroup: false,
       baseColProps: { lg: 12, md: 24 },
     })
-
+    onBeforeMount(async () => {
+      treeData.value = await getMenuList()
+    })
     const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(
       async (data) => {
         resetFields()
@@ -44,10 +48,20 @@ export default defineComponent({
             ...data.record,
           })
         }
-        const treeData = await getMenuList()
         updateSchema({
-          field: 'parentMenu',
-          componentProps: { treeData },
+          //  field: ['parentMenu', 'contentItemIds', '0'],
+          field: 'parentMenu.contentItemIds[0]',
+
+          componentProps: {
+            treeData: treeData.value,
+            // multiple: true,
+            // maxTagCount: 1,
+            fieldNames: {
+              label: 'menuName',
+              value: 'contentItemId',
+            },
+            getPopupContainer: () => document.body
+          } as TreeSelectProps
         })
       },
     )
@@ -60,9 +74,11 @@ export default defineComponent({
       try {
         const values = await validate()
         setDrawerProps({ confirmLoading: true })
+        console.log(values, "NewData:values")
+
         // Save to Db
-        deepMerge(contentItem.value, values)
-        console.log(contentItem.value)
+        contentItem.value = deepMerge(contentItem.value, values)
+        console.log(contentItem.value, "NewData")
         await contentSvr.postContent(false, contentItem.value)
         closeDrawer()
         emit('success')
