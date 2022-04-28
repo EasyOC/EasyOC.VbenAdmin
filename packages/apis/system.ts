@@ -3,7 +3,7 @@ import { request } from '../request'
 
 import type { BasicPageParams, BasicFetchResult } from './types'
 import { RolesServiceProxy, UsersServiceProxy } from './eoc/app-service-proxies'
-import { excuteGraphqlQuery } from './eoc/GraphqlService'
+import { excuteGraphqlQuery } from './eoc/graphqlApi'
 import { listToTree } from '../utils'
 
 

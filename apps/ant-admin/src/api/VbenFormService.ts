@@ -1,7 +1,7 @@
-import { FormSchema } from '@/components/Form'
+import { FormSchema } from '@/components/form'
 import { camelCase } from '@pkg/utils'
 import { ContentFieldsMapping, FieldType } from '@pkg/apis/eoc/contentApi'
-import { excuteGraphqlQuery } from '@pkg/apis/eoc/GraphqlService'
+import { excuteGraphqlQuery } from '@pkg/apis/eoc/graphqlApi'
 
 export class VbenFormService {
   // private typeName: string

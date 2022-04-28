@@ -5,22 +5,20 @@
         <a-button type="primary" @click="handleCreate"> 新增菜单 </a-button>
       </template>
       <template #action="{ record }">
-        <TableAction
-          :actions="[
-            {
-              icon: 'clarity:note-edit-line',
-              onClick: handleEdit.bind(null, record),
+        <TableAction :actions="[
+          {
+            icon: 'clarity:note-edit-line',
+            onClick: handleEdit.bind(null, record),
+          },
+          {
+            icon: 'ant-design:delete-outlined',
+            color: 'error',
+            popConfirm: {
+              title: '是否确认删除',
+              confirm: handleDelete.bind(null, record),
             },
-            {
-              icon: 'ant-design:delete-outlined',
-              color: 'error',
-              popConfirm: {
-                title: '是否确认删除',
-                confirm: handleDelete.bind(null, record),
-              },
-            },
-          ]"
-        />
+          },
+        ]" />
       </template>
     </BasicTable>
     <MenuDrawer @register="registerDrawer" @success="handleSuccess" />
@@ -34,8 +32,10 @@ import { useDrawer } from '@/components/drawer'
 import MenuDrawer from './MenuDrawer.vue'
 import { columns, searchFormSchema } from './menu.data'
 import {
-  ContentFieldsMapping,
+  // ContentFieldsMapping,
   ContentItemUpperCase,
+  getGPContentItem,
+GpContentItem
 } from '@pkg/apis/eoc/contentApi'
 import { ContentTypeService } from '@/api/ContentTypeService'
 
@@ -44,8 +44,8 @@ export default defineComponent({
   components: { BasicTable, MenuDrawer, TableAction },
   setup() {
     const typeName = 'VbenMenu'
-    const contentFields = ref<ContentFieldsMapping[]>([])
-    const contentItem = ref<ContentItemUpperCase>({ ContentType: typeName })
+    // const contentFields = ref<ContentFieldsMapping[]>([])
+    // const contentItem = ref<ContentItemUpperCase>({ ContentType: typeName })
     const contentTypeService = new ContentTypeService(typeName)
 
     const [registerDrawer, { openDrawer }] = useDrawer()
@@ -74,31 +74,56 @@ export default defineComponent({
       },
     })
     onBeforeMount(async () => {
-      contentFields.value = await contentTypeService.getAllFields()
+      // contentFields.value = await contentTypeService.getAllFields()
     })
+    async function getDetails(contentItemId: string) {
+      return await getGPContentItem(
+        contentItemId,
+        `... on VbenMenu {
+          component
+          createdUtc
+          show
+          orderNo
+          icon
+          routePath
+          component
+          permission
+          status
+          isExt
+          keepalive
+          show
+          menuName
+          menuType
+          parentMenu {
+            contentItems {
+              contentItemId
+              displayText
+            }
+          }
+        }`
+      )
+    }
     function handleCreate() {
       openDrawer(true, {
-        contentItem: contentItem.value,
+        contentItem: new GpContentItem(typeName),
         isUpdate: false,
-        contentFields: contentFields.value,
+        // contentFields: contentFields.value,
       })
     }
 
     async function handleEdit(record: Recordable) {
-      contentItem.value = await contentTypeService.getContent(
-        record.contentItemId,
-      )
-      const editModel = contentTypeService.expandContentType(contentItem.value)
+      const contentItem = await getDetails(record.contentItemId)
+      // const editModel = contentTypeService.expandContentType(contentItem.value)
       openDrawer(true, {
-        record: editModel,
-        contentItem: contentItem.value,
+        record: contentItem,
+        // contentItem: contentItem.value,
         isUpdate: true,
-        contentFields: contentFields.value,
+        // contentFields: contentFields.value,
       })
     }
 
     async function handleDelete(record: Recordable) {
-      await contentTypeService.deletContent(record.contentItemId)
+      await contentTypeService.deleteContent(record.contentItemId)
       reload()
     }
 

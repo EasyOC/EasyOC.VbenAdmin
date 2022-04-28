@@ -35,24 +35,24 @@
 </template>
 <script lang="ts">
 import { reactive, onBeforeMount, onMounted, defineComponent } from 'vue'
-import { BasicTable, useTable, TableAction } from '@/components/Table'
+import { BasicTable, useTable, TableAction } from '@/components/table'
 import { ContentHelper } from '@/api/contentHelper'
 import {
   ContentTypeManagementServiceProxy,
   ContentTypeDefinitionDto,
 } from '@pkg/apis/eoc/app-service-proxies'
 
-import { PageWrapper } from '@/components/Page'
+import { PageWrapper } from '@/components/page'
 // import DeptTree from './DeptTree.vue'
-import { useModal } from '@/components/Modal'
+import { useModal } from '@/components/modal'
 import EditModal from './EditModal.vue'
-import { BasicColumn } from '@/components/Table'
+import { BasicColumn } from '@/components/table'
 import { useGo } from '@/hooks/web/usePage'
 import { ContentTypeService } from '@/api/ContentTypeService'
 import {
   excuteGraphqlQuery,
   LuceneCommonQueryParams,
-} from '@pkg/apis/eoc/GraphqlService'
+} from '@pkg/apis/eoc/graphqlApi'
 
 export default defineComponent({
   name: 'listPreview',

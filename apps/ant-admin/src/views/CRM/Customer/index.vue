@@ -119,7 +119,7 @@ async function handleEdit(record: Recordable) {
 }
 
 async function handleDelete(record: Recordable) {
-  await contentTypeService.deletContent(record.contentItemId)
+  await contentTypeService.deleteContent(record.contentItemId)
 }
 
 // function handleView(record: Recordable) {

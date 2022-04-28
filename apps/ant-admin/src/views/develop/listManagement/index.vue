@@ -32,21 +32,21 @@
 <script setup lang="ts">
 import { reactive, onBeforeMount, ref } from 'vue'
 
-import { BasicTable, useTable, TableAction } from '@/components/Table'
+import { BasicTable, useTable, TableAction } from '@/components/table'
 // import { ContentHelper } from '@/api/contentHelper'
 import {
   ContentTypeManagementServiceProxy,
   ContentTypeDefinitionDto,
 } from '@pkg/apis/eoc/app-service-proxies'
 
-import { PageWrapper } from '@/components/Page'
+import { PageWrapper } from '@/components/page'
 // import { useModal } from '@/components/Modal'
-import { BasicColumn } from '@/components/Table'
+import { BasicColumn } from '@/components/table'
 
 import { columns, searchFormSchema } from './data'
 import { useGo } from '@/hooks/web/usePage'
 // import { ContentTypeService } from '@/api/ContentTypeService'
-import { excuteGraphqlQuery } from '@pkg/apis/eoc/GraphqlService'
+import { excuteGraphqlQuery } from '@pkg/apis/eoc/graphqlApi'
 const contentTypeName = 'VbenList'
 let dynamicSettings: ContentTypeDefinitionDto
 const dynamicColumns = ref<BasicColumn[]>(columns)
@@ -117,7 +117,7 @@ async function getList(params) {
   //   total: result.data.data.vbenList.length,
   // }
   // console.log(result1, 'excuteGraphqlQueryexcuteGraphqlQueryexcuteGraphqlQuery')
-  return result.data.vbenList
+  return result.vbenList
 }
 
 function handleCreate() {

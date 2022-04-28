@@ -17,6 +17,7 @@
     "url": "https://github.com/anncwb"
   },
   "scripts": {
+    "gen:api": "cd nswag & refresh.bat",
     "bootstrap": "pnpm install",
     "build": "pnpm run build --filter scripts",
     "changeset": "changeset",
@@ -47,6 +48,7 @@
     "fs-extra": "^10.0.1",
     "inquirer": "^8.2.2",
     "jsdom": "^19.0.0",
+    "nswag": "13.6.2",
     "pathe": "^0.2.0",
     "rimraf": "^3.0.2",
     "rollup": "^2.70.1",

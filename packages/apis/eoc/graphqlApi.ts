@@ -12,7 +12,7 @@ export const excuteGraphqlQuery = async (query: GraphQLQueryParams) => {
   const result = await ocApi.post({ url: GraphqlServiceAPI, data: query })
   return result.data
 }
-
+  
 export const excuteGraphqlGetQuery = async (params: { query: string }) => {
   const result = await ocApi.get({
     url: GraphqlServiceAPI,

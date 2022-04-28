@@ -1,4 +1,4 @@
-// import { excuteGraphqlQuery } from './eoc/GraphqlService'
+// import { excuteGraphqlQuery } from './eoc/graphqlApi'
 // import type { BasicPageParams, BasicFetchResult } from '../types'
 // import { request } from '@pkg/request'
 // import { UsersServiceProxy } from '../eoc/app-service-proxies'

@@ -1,6 +1,8 @@
 import { AxiosRequestConfig } from 'axios'
 import { ocApi } from '@pkg/request'
 import { ApiServiceProxy } from './app-service-proxies'
+import { excuteGraphqlQuery } from './graphqlApi'
+import { deepMerge } from '../../utils'
 const api = new ApiServiceProxy(ocApi)
 /**
  * 创建或更新内容项
@@ -28,6 +30,34 @@ export const createOrUpdateContent = async (
   const result = await ocApi.request(options_)
   return result
 }
+
+export const getGPContentItem = async (contentItemId: string | undefined | null,
+  // contentType: string | undefined | null = '',
+  additionalFields: string | undefined | null = '',
+) => {
+  const result = await excuteGraphqlQuery({
+    query: `
+        {
+          contentItem(contentItemId: "${contentItemId}") {
+            owner
+            author
+            contentType
+            contentItemId
+            contentItemVersionId
+            displayText
+            modifiedUtc
+            published
+            publishedUtc
+            createdUtc
+            latest
+            ${additionalFields}
+          }
+        }
+      `})
+  console.log("getGPContentItem-contentItem:", result)
+  return result.data.contentItem as GpContentItem;
+}
+
 /**
  * 根据指定的内容项id 获取内容
  * @param contentItemId 内容项ID
@@ -52,10 +82,31 @@ export const getContent = async (contentItemId: string | undefined | null) => {
  * @param contentItemId 内容项ID
  * @returns 内容项实例
  */
-export const deletContent = async (contentItemId: string) => {
+export const deleteContent = async (contentItemId: string) => {
   return await api.contentDelete(contentItemId)
 }
 
+
+export class GpContentItem {
+  constructor(contentType: string) {
+    this.contentType = contentType
+  }
+  updateProps(props: any) {
+    return deepMerge(this, props)
+  }
+  owner!: string | null;
+  author!: string | null;
+  contentType!: string;
+  contentItemId!: string | null;
+  contentItemVersionId!: string | null;
+  displayText!: string | null;
+  modifiedUtc!: Date;
+  publishedUtc!: Date;
+  createdUtc!: Date;
+  published!: boolean;
+  latest!: boolean;
+  [key: string]: any;
+}
 export class ContentItemUpperCase {
   ContentItemId?: string
   ContentItemVersionId?: string

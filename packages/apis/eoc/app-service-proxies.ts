@@ -702,9 +702,84 @@ export class DynamicIndexServiceProxy extends AppServiceBase {
     * @param typeName (optional) 
     * @return Success
     */
+    getDynamicIndexConfigOrDefault(typeName: string | undefined): Promise<DynamicIndexConfigModel> {
+    
+        let url_ = this.baseUrl + "/api/DynamicIndex/GetDynamicIndexConfigOrDefault?";
+        
+        
+        
+        
+         if (typeName !== undefined && typeName !== null)
+            url_ += "typeName=" + encodeURIComponent("" + typeName) + "&";
+                    url_ = url_.replace(/[?&]$/, "");
+        let options_ = <AxiosRequestConfig>{
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+        return this.instance.request(options_).then((_response: AxiosResponse) => {
+            return this.transformResult(_response);
+        });
+    }
+
+    /**
+    * @param typeName (optional) 
+    * @return Success
+    */
     getDynamicIndexConfig(typeName: string | undefined): Promise<DynamicIndexConfigModel> {
     
         let url_ = this.baseUrl + "/api/DynamicIndex/GetDynamicIndexConfig?";
+        
+        
+        
+        
+         if (typeName !== undefined && typeName !== null)
+            url_ += "typeName=" + encodeURIComponent("" + typeName) + "&";
+                    url_ = url_.replace(/[?&]$/, "");
+        let options_ = <AxiosRequestConfig>{
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+        return this.instance.request(options_).then((_response: AxiosResponse) => {
+            return this.transformResult(_response);
+        });
+    }
+
+    /**
+    * @param body (optional) 
+    * @return Success
+    */
+    updateDynamicIndex(body: DynamicIndexConfigModel | undefined): Promise<DynamicIndexConfigModel> {
+    
+        let url_ = this.baseUrl + "/api/DynamicIndex/UpdateDynamicIndex";
+            url_ = url_.replace(/[?&]$/, "");
+        const content_ = JSON.stringify(body);
+        let options_ = <AxiosRequestConfig>{
+            data: content_,
+            method: "POST",
+            url: url_,
+            headers: {
+                "Content-Type": "application/json-patch+json", 
+                "Accept": "text/plain"
+            }
+        };
+        return this.instance.request(options_).then((_response: AxiosResponse) => {
+            return this.transformResult(_response);
+        });
+    }
+
+    /**
+    * @param typeName (optional) 
+    * @return Success
+    */
+    rebuildIndexData(typeName: string | undefined): Promise<number> {
+    
+        let url_ = this.baseUrl + "/api/DynamicIndex/RebuildIndexData?";
         
         
         
@@ -1646,15 +1721,18 @@ export class ContentFieldDefinitionDto {
 }
 
 export class ContentFieldOption {
+    isSelfField!: boolean;
     fieldName!: string | null;
     valuePath!: string | null;
     valueFullPath!: string | null;
     partName!: string | null;
     fieldType!: string | null;
     dependsOn!: string[] | null;
+    displayName!: string | null;
 
     init(_data?: any, _mappings?: any) {
         if (_data) {
+            this.isSelfField = _data["isSelfField"] !== undefined ? _data["isSelfField"] : <any>null;
             this.fieldName = _data["fieldName"] !== undefined ? _data["fieldName"] : <any>null;
             this.valuePath = _data["valuePath"] !== undefined ? _data["valuePath"] : <any>null;
             this.valueFullPath = _data["valueFullPath"] !== undefined ? _data["valueFullPath"] : <any>null;
@@ -1665,6 +1743,7 @@ export class ContentFieldOption {
                 for (let item of _data["dependsOn"])
                     this.dependsOn!.push(item);
             }
+            this.displayName = _data["displayName"] !== undefined ? _data["displayName"] : <any>null;
         }
     }
 
@@ -1675,6 +1754,7 @@ export class ContentFieldOption {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["isSelfField"] = this.isSelfField !== undefined ? this.isSelfField : <any>null;
         data["fieldName"] = this.fieldName !== undefined ? this.fieldName : <any>null;
         data["valuePath"] = this.valuePath !== undefined ? this.valuePath : <any>null;
         data["valueFullPath"] = this.valueFullPath !== undefined ? this.valueFullPath : <any>null;
@@ -1685,6 +1765,7 @@ export class ContentFieldOption {
             for (let item of this.dependsOn)
                 data["dependsOn"].push(item);
         }
+        data["displayName"] = this.displayName !== undefined ? this.displayName : <any>null;
         return data; 
     }
 }
@@ -2068,44 +2149,6 @@ export class DbColumnInfoDto {
     }
 }
 
-export class DbFiledOption {
-    name!: string | null;
-    csTypeName!: string | null;
-    /** Length less 0 means Unlimited
-如果小于0 代表不限制长度 */
-    length!: number;
-    isNullable!: boolean;
-    readonly isIdentity!: boolean;
-    readonly isPrimaryKey!: boolean;
-
-    init(_data?: any, _mappings?: any) {
-        if (_data) {
-            this.name = _data["name"] !== undefined ? _data["name"] : <any>null;
-            this.csTypeName = _data["csTypeName"] !== undefined ? _data["csTypeName"] : <any>null;
-            this.length = _data["length"] !== undefined ? _data["length"] : <any>null;
-            this.isNullable = _data["isNullable"] !== undefined ? _data["isNullable"] : <any>null;
-            (<any>this).isIdentity = _data["isIdentity"] !== undefined ? _data["isIdentity"] : <any>null;
-            (<any>this).isPrimaryKey = _data["isPrimaryKey"] !== undefined ? _data["isPrimaryKey"] : <any>null;
-        }
-    }
-
-    static fromJS(data: any, _mappings?: any): DbFiledOption {
-        data = typeof data === 'object' ? data : {};
-        return createInstance<DbFiledOption>(data, _mappings, DbFiledOption);
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["name"] = this.name !== undefined ? this.name : <any>null;
-        data["csTypeName"] = this.csTypeName !== undefined ? this.csTypeName : <any>null;
-        data["length"] = this.length !== undefined ? this.length : <any>null;
-        data["isNullable"] = this.isNullable !== undefined ? this.isNullable : <any>null;
-        data["isIdentity"] = this.isIdentity !== undefined ? this.isIdentity : <any>null;
-        data["isPrimaryKey"] = this.isPrimaryKey !== undefined ? this.isPrimaryKey : <any>null;
-        return data; 
-    }
-}
-
 export class DbTableInfoDto {
     id!: string | null;
     columnsCount!: number;
@@ -2153,49 +2196,26 @@ export class DbTableInfoDto {
     }
 }
 
-export class DynamicIndexConfigContent {
-    fields!: DynamicIndexFieldItem[] | null;
-
-    init(_data?: any, _mappings?: any) {
-        if (_data) {
-            if (Array.isArray(_data["fields"])) {
-                this.fields = [] as any;
-                for (let item of _data["fields"])
-                    this.fields!.push(DynamicIndexFieldItem.fromJS(item, _mappings));
-            }
-        }
-    }
-
-    static fromJS(data: any, _mappings?: any): DynamicIndexConfigContent {
-        data = typeof data === 'object' ? data : {};
-        return createInstance<DynamicIndexConfigContent>(data, _mappings, DynamicIndexConfigContent);
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.fields)) {
-            data["fields"] = [];
-            for (let item of this.fields)
-                data["fields"].push(item.toJSON());
-        }
-        return data; 
-    }
-}
-
 export class DynamicIndexConfigModel {
     contentItemId!: string | null;
     typeName!: string | null;
     tableName!: string | null;
-    enabled!: boolean;
-    configDataOptions!: DynamicIndexConfigContent;
+    indexAllVersion!: boolean;
+    entityInfo!: DynamicIndexEntityInfo;
+    fields!: DynamicIndexFieldItem[] | null;
 
     init(_data?: any, _mappings?: any) {
         if (_data) {
             this.contentItemId = _data["contentItemId"] !== undefined ? _data["contentItemId"] : <any>null;
             this.typeName = _data["typeName"] !== undefined ? _data["typeName"] : <any>null;
             this.tableName = _data["tableName"] !== undefined ? _data["tableName"] : <any>null;
-            this.enabled = _data["enabled"] !== undefined ? _data["enabled"] : <any>null;
-            this.configDataOptions = _data["configDataOptions"] ? DynamicIndexConfigContent.fromJS(_data["configDataOptions"], _mappings) : <any>null;
+            this.indexAllVersion = _data["indexAllVersion"] !== undefined ? _data["indexAllVersion"] : <any>null;
+            this.entityInfo = _data["entityInfo"] ? DynamicIndexEntityInfo.fromJS(_data["entityInfo"], _mappings) : <any>null;
+            if (Array.isArray(_data["fields"])) {
+                this.fields = [] as any;
+                for (let item of _data["fields"])
+                    this.fields!.push(DynamicIndexFieldItem.fromJS(item, _mappings));
+            }
         }
     }
 
@@ -2209,28 +2229,77 @@ export class DynamicIndexConfigModel {
         data["contentItemId"] = this.contentItemId !== undefined ? this.contentItemId : <any>null;
         data["typeName"] = this.typeName !== undefined ? this.typeName : <any>null;
         data["tableName"] = this.tableName !== undefined ? this.tableName : <any>null;
-        data["enabled"] = this.enabled !== undefined ? this.enabled : <any>null;
-        data["configDataOptions"] = this.configDataOptions ? this.configDataOptions.toJSON() : <any>null;
+        data["indexAllVersion"] = this.indexAllVersion !== undefined ? this.indexAllVersion : <any>null;
+        data["entityInfo"] = this.entityInfo ? this.entityInfo.toJSON() : <any>null;
+        if (Array.isArray(this.fields)) {
+            data["fields"] = [];
+            for (let item of this.fields)
+                data["fields"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export class DynamicIndexEntityInfo {
+    entityName!: string | null;
+    readonly fullName!: string | null;
+    nameSpace!: string | null;
+    entityContent!: string | null;
+
+    init(_data?: any, _mappings?: any) {
+        if (_data) {
+            this.entityName = _data["entityName"] !== undefined ? _data["entityName"] : <any>null;
+            (<any>this).fullName = _data["fullName"] !== undefined ? _data["fullName"] : <any>null;
+            this.nameSpace = _data["nameSpace"] !== undefined ? _data["nameSpace"] : <any>null;
+            this.entityContent = _data["entityContent"] !== undefined ? _data["entityContent"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any, _mappings?: any): DynamicIndexEntityInfo {
+        data = typeof data === 'object' ? data : {};
+        return createInstance<DynamicIndexEntityInfo>(data, _mappings, DynamicIndexEntityInfo);
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["entityName"] = this.entityName !== undefined ? this.entityName : <any>null;
+        data["fullName"] = this.fullName !== undefined ? this.fullName : <any>null;
+        data["nameSpace"] = this.nameSpace !== undefined ? this.nameSpace : <any>null;
+        data["entityContent"] = this.entityContent !== undefined ? this.entityContent : <any>null;
         return data; 
     }
 }
 
 export class DynamicIndexFieldItem {
-    readonly name!: string | null;
-    isSystem!: boolean;
     enableCalculation!: boolean;
     jsExpression!: string | null;
-    dbFieldOption!: DbFiledOption;
     contentFieldOption!: ContentFieldOption;
+    name!: string | null;
+    isSystem!: boolean;
+    disabled!: boolean;
+    csTypeName!: string | null;
+    /** Length less 0 means Unlimited
+如果小于0 代表不限制长度 */
+    length!: number;
+    isNullable!: boolean;
+    isIdentity!: boolean;
+    isPrimaryKey!: boolean;
+    isDefaultIndex!: boolean;
 
     init(_data?: any, _mappings?: any) {
         if (_data) {
-            (<any>this).name = _data["name"] !== undefined ? _data["name"] : <any>null;
-            this.isSystem = _data["isSystem"] !== undefined ? _data["isSystem"] : <any>null;
             this.enableCalculation = _data["enableCalculation"] !== undefined ? _data["enableCalculation"] : <any>null;
             this.jsExpression = _data["jsExpression"] !== undefined ? _data["jsExpression"] : <any>null;
-            this.dbFieldOption = _data["dbFieldOption"] ? DbFiledOption.fromJS(_data["dbFieldOption"], _mappings) : <any>null;
             this.contentFieldOption = _data["contentFieldOption"] ? ContentFieldOption.fromJS(_data["contentFieldOption"], _mappings) : <any>null;
+            this.name = _data["name"] !== undefined ? _data["name"] : <any>null;
+            this.isSystem = _data["isSystem"] !== undefined ? _data["isSystem"] : <any>null;
+            this.disabled = _data["disabled"] !== undefined ? _data["disabled"] : <any>null;
+            this.csTypeName = _data["csTypeName"] !== undefined ? _data["csTypeName"] : <any>null;
+            this.length = _data["length"] !== undefined ? _data["length"] : <any>null;
+            this.isNullable = _data["isNullable"] !== undefined ? _data["isNullable"] : <any>null;
+            this.isIdentity = _data["isIdentity"] !== undefined ? _data["isIdentity"] : <any>null;
+            this.isPrimaryKey = _data["isPrimaryKey"] !== undefined ? _data["isPrimaryKey"] : <any>null;
+            this.isDefaultIndex = _data["isDefaultIndex"] !== undefined ? _data["isDefaultIndex"] : <any>null;
         }
     }
 
@@ -2241,12 +2310,18 @@ export class DynamicIndexFieldItem {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["name"] = this.name !== undefined ? this.name : <any>null;
-        data["isSystem"] = this.isSystem !== undefined ? this.isSystem : <any>null;
         data["enableCalculation"] = this.enableCalculation !== undefined ? this.enableCalculation : <any>null;
         data["jsExpression"] = this.jsExpression !== undefined ? this.jsExpression : <any>null;
-        data["dbFieldOption"] = this.dbFieldOption ? this.dbFieldOption.toJSON() : <any>null;
         data["contentFieldOption"] = this.contentFieldOption ? this.contentFieldOption.toJSON() : <any>null;
+        data["name"] = this.name !== undefined ? this.name : <any>null;
+        data["isSystem"] = this.isSystem !== undefined ? this.isSystem : <any>null;
+        data["disabled"] = this.disabled !== undefined ? this.disabled : <any>null;
+        data["csTypeName"] = this.csTypeName !== undefined ? this.csTypeName : <any>null;
+        data["length"] = this.length !== undefined ? this.length : <any>null;
+        data["isNullable"] = this.isNullable !== undefined ? this.isNullable : <any>null;
+        data["isIdentity"] = this.isIdentity !== undefined ? this.isIdentity : <any>null;
+        data["isPrimaryKey"] = this.isPrimaryKey !== undefined ? this.isPrimaryKey : <any>null;
+        data["isDefaultIndex"] = this.isDefaultIndex !== undefined ? this.isDefaultIndex : <any>null;
         return data; 
     }
 }

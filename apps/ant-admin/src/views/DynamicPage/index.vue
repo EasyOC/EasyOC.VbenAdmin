@@ -37,22 +37,22 @@
 <script setup lang="ts">
 import { reactive, onBeforeMount, onMounted } from 'vue'
 
-import { BasicTable, useTable, TableAction } from '@/components/Table'
+import { BasicTable, useTable, TableAction } from '@/components/table'
 import { ContentHelper } from '@/api/contentHelper'
 import {
   ContentTypeManagementServiceProxy,
   ContentTypeDefinitionDto,
 } from '@pkg/apis/eoc/app-service-proxies'
 
-import { PageWrapper } from '@/components/Page'
+import { PageWrapper } from '@/components/page'
 // import DeptTree from './DeptTree.vue'
-import { useModal } from '@/components/Modal'
+import { useModal } from '@/components/modal'
 import EditModal from './EditModal.vue'
-import { BasicColumn } from '@/components/Table'
+import { BasicColumn } from '@/components/table'
 
 // import { columns, searchFormSchema } from './data'
 import { useGo } from '@/hooks/web/usePage'
-import { excuteGraphqlQuery } from '@pkg/apis/eoc/GraphqlService'
+import { excuteGraphqlQuery } from '@pkg/apis/eoc/graphqlApi'
 import { ContentTypeService } from '@/api/ContentTypeService'
 // const contentTypeService = new ContentTypeService(typeName)
 // import { useQuery } from '@urql/vue'

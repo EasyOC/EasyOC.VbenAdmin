@@ -19,7 +19,7 @@
 import { computed, ref, onMounted } from 'vue'
 import { Amis } from '@/components/Amis'
 import { TrackerEventArgs } from '@/components/Amis/src/types'
-import { excuteGraphqlQuery } from '@pkg/apis/eoc/GraphqlService'
+import { excuteGraphqlQuery } from '@pkg/apis/eoc/graphqlApi'
 import { useRouter } from 'vue-router'
 import MonacoEditor from '@/components/MonacoEditor/index.vue'
 let monacoEditor = ref<any>({})

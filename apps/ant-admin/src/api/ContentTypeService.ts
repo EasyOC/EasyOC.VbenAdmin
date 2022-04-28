@@ -10,7 +10,7 @@ import {
   ContentFieldsMapping,
   ContentItemUpperCase,
   createOrUpdateContent,
-  deletContent,
+  deleteContent,
   getContent,
 } from '@pkg/apis/eoc/contentApi'
 import { deepMerge } from '@pkg/utils'
@@ -64,11 +64,11 @@ export class ContentTypeService {
     return this.fields
   }
 
-  public async getContent(contentItemId: string) {
-    return await getContent(contentItemId)
-  }
-  public async deletContent(contentItemId: string) {
-    return await deletContent(contentItemId)
+  // public async getContent(contentItemId: string) {
+  //   return await getContent(contentItemId)
+  // }
+  public async deleteContent(contentItemId: string) {
+    return await deleteContent(contentItemId)
   }
 
   public expandContentType(

@@ -1,5 +1,5 @@
 import { camelCase } from '@pkg/utils'
-import { excuteGraphqlQuery } from '@pkg/apis/eoc/GraphqlService'
+import { excuteGraphqlQuery } from '@pkg/apis/eoc/graphqlApi'
 export interface VbenListConfigModel {
   enablePage: boolean
   fieldList: []

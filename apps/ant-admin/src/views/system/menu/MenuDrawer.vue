@@ -1,12 +1,5 @@
 <template>
-  <BasicDrawer
-    v-bind="$attrs"
-    @register="registerDrawer"
-    showFooter
-    :title="getTitle"
-    width="50%"
-    @ok="handleSubmit"
-  >
+  <BasicDrawer v-bind="$attrs" @register="registerDrawer" showFooter :title="getTitle" width="50%" @ok="handleSubmit">
     <BasicForm @register="registerForm" />
   </BasicDrawer>
 </template>
@@ -17,10 +10,9 @@ import { formSchema } from './menu.data'
 import { BasicDrawer, useDrawerInner } from '@/components/drawer'
 
 import { getMenuList } from '@pkg/apis/system'
-import { ContentFieldsMappingDto } from '@pkg/apis/eoc/app-service-proxies'
-import { ContentItemUpperCase } from '@pkg/apis/eoc/contentApi'
-import { ContentTypeService } from '@/api/ContentTypeService'
-
+import { ContentManagementServiceProxy } from '@pkg/apis/eoc/app-service-proxies'
+import { GpContentItem } from '@pkg/apis/eoc/contentApi'
+import { deepMerge } from '@pkg/utils'
 export default defineComponent({
   name: 'MenuDrawer',
   components: { BasicDrawer, BasicForm },
@@ -28,10 +20,8 @@ export default defineComponent({
   setup(_, { emit }) {
     const typeName = 'VbenMenu'
     const isUpdate = ref(true)
-    const contentTypeService = new ContentTypeService(typeName)
-
-    const contentItem = ref<ContentItemUpperCase>({ ContentType: typeName })
-    const contentFields = ref<ContentFieldsMappingDto[]>([])
+    const contentSvr = new ContentManagementServiceProxy()
+    const contentItem = ref<GpContentItem>(new GpContentItem(typeName))
     const [
       registerForm,
       { resetFields, setFieldsValue, updateSchema, validate },
@@ -47,8 +37,8 @@ export default defineComponent({
         resetFields()
         setDrawerProps({ confirmLoading: false })
         isUpdate.value = !!data?.isUpdate
-        contentItem.value = data.contentItem
-        contentFields.value = data.contentFields
+        contentItem.value = data.record
+        // contentFields.value = data.contentFields
         if (unref(isUpdate)) {
           setFieldsValue({
             ...data.record,
@@ -71,8 +61,9 @@ export default defineComponent({
         const values = await validate()
         setDrawerProps({ confirmLoading: true })
         // Save to Db
-        await contentTypeService.saveContentItem(values, unref(contentItem))
-        console.log(values)
+        deepMerge(contentItem.value, values)
+        console.log(contentItem.value)
+        await contentSvr.postContent(false, contentItem.value)
         closeDrawer()
         emit('success')
       } finally {

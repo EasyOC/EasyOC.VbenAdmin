@@ -1,7 +1,7 @@
 import { BasicColumn } from '@/components/table'
 import { FormSchema } from '@/components/table'
 import { h } from 'vue'
-import { Tag } from 'ant-design-vue'
+import { Tag, TreeSelectProps } from 'ant-design-vue'
 import { Icon } from '@components/common'
 
 export const columns: BasicColumn[] = [
@@ -47,7 +47,8 @@ export const columns: BasicColumn[] = [
   },
   {
     title: '创建时间',
-    dataIndex: 'createTime',
+    dataIndex: 'createdUtc',
+    format: "date|utc|YYYY-MM-DD HH:mm",
     width: 180,
   },
 ]
@@ -79,7 +80,7 @@ export const searchFormSchema: FormSchema[] = [
 
 export const formSchema: FormSchema[] = [
   {
-    field: 'type',
+    field: 'menuType',
     label: '菜单类型',
     component: 'RadioButtonGroup',
     defaultValue: '0',
@@ -104,13 +105,14 @@ export const formSchema: FormSchema[] = [
     label: '上级菜单',
     component: 'TreeSelect',
     componentProps: {
+      showSearch: true,      
       fieldNames: {
         label: 'menuName',
         key: 'id',
         value: 'id',
       },
       getPopupContainer: () => document.body,
-    },
+    } as TreeSelectProps,
   },
 
   {
