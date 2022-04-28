@@ -40,6 +40,16 @@ export const LoginRoute: RouteRecordItem = {
   
 } 
 
+export const LogoutCallbackRoute: RouteRecordItem = {
+  path: '/logoutcallback',
+  name: 'Logoutcallback',
+  component: () => import('@/views/sys/login/logoutcallback.vue'),
+  meta: {
+    title: t('routes.basic.logoutcallback'),
+  },
+  
+} 
+
 
 export const LoginCallbackRoute: RouteRecordItem ={
   path: '/logincallback',
@@ -53,6 +63,7 @@ export const LoginCallbackRoute: RouteRecordItem ={
 // Basic routing without permission
 export const basicRoutes = [
   LoginRoute,
+  LogoutCallbackRoute,
   LoginCallbackRoute,
   RootRoute,
   ...mainOutRoutes,

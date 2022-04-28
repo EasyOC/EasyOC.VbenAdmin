@@ -219,20 +219,23 @@ export const useUserStore = defineStore({
     /**
      * @description: logout
      */
-    async logout(goLogin = false) {
-      if (this.getToken) {
-        await doLogout()
-          .catch(() => {
-            console.log('注销Token失败')
-          })
-          .finally(() => {
+    async logout(goLogin = false, completeLogout = false) {
+      if(!completeLogout){
+        await authService.logout()
+      }else{
+            this.setToken(undefined)
             this.setTimeout(undefined)
-          })
-      }
-      this.setToken(undefined)
-      this.setTimeout(undefined)
-      this.setSessionTimeout(false)
-      this.setUserInfo(null)
+            this.setSessionTimeout(false)
+            this.setUserInfo(null)
+            console.log(1212);
+
+            console.log(2222);
+            window.localStorage.removeItem('oidc_user:http://localhost:2919/:vue_client_app')
+            // await doLogout()
+            //   .catch(() => {
+            console.log('注销Token失败')
+      }      
+
       goLogin && router.push(PageEnum.BASE_LOGIN)
     },
 
@@ -247,7 +250,7 @@ export const useUserStore = defineStore({
         title: () => h('span', t('sys.app.logoutTip')),
         content: () => h('span', t('sys.app.logoutMessage')),
         onOk: async () => {
-          await this.logout(true)
+          await this.logout(false)
         },
       })
     },

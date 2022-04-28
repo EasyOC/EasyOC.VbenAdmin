@@ -8,10 +8,11 @@ import { RootRoute } from '@/router/routes'
 
 const LOGIN_PATH = PageEnum.BASE_LOGIN
 const LOGINCALLBACK_PATH = PageEnum.BASE_LOGINCALLBACK
+const LOGOUTALLBACK_PATH = PageEnum.BASE_LOGOUTCALLBACK
 
 const ROOT_PATH = RootRoute.path
 
-const whitePathList: PageEnum[] = [LOGIN_PATH, LOGINCALLBACK_PATH]
+const whitePathList: PageEnum[] = [LOGIN_PATH, LOGINCALLBACK_PATH,LOGOUTALLBACK_PATH]
 
 export function createPermissionGuard(router: Router) {
   const userStore = useUserStoreWithOut()
