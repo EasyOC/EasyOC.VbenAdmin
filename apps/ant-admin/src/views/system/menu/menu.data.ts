@@ -101,18 +101,9 @@ export const formSchema: FormSchema[] = [
   },
 
   {
-    field: 'parentMenu',
+    field: 'parentMenu.contentItemIds[0]',
     label: '上级菜单',
-    component: 'TreeSelect',
-    componentProps: {
-      showSearch: true,      
-      fieldNames: {
-        label: 'menuName',
-        key: 'id',
-        value: 'id',
-      },
-      getPopupContainer: () => document.body,
-    } as TreeSelectProps,
+    component: 'TreeSelect'
   },
 
   {
