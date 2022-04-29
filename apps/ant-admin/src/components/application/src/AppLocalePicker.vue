@@ -51,7 +51,7 @@ function handleMenuEvent(menu: DropMenu) {
 
 <template>
   <Dropdown
-    placement="bottomCenter"
+    placement="bottom"
     :trigger="['click']"
     :dropMenuList="localeList"
     :selectedKeys="selectedKeys"

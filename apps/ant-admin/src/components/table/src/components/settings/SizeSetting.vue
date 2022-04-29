@@ -5,7 +5,7 @@
     </template>
 
     <Dropdown
-      placement="bottomCenter"
+      placement="bottom"
       :trigger="['click']"
       :getPopupContainer="getPopupContainer"
     >

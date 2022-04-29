@@ -25,7 +25,7 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, nextTick, ref, onBeforeMount } from 'vue'
+import { defineComponent, nextTick, onBeforeMount } from 'vue'
 import { BasicTable, useTable, TableAction } from '@/components/table'
 import { getMenuList } from '@pkg/apis/system'
 import { useDrawer } from '@/components/drawer'
@@ -33,7 +33,6 @@ import MenuDrawer from './MenuDrawer.vue'
 import { columns, searchFormSchema } from './menu.data'
 import {
   // ContentFieldsMapping,
-  ContentItemUpperCase,
   getGPContentItem,
 GpContentItem
 } from '@pkg/apis/eoc/contentApi'
@@ -95,17 +94,14 @@ export default defineComponent({
           menuName
           menuType
           parentMenu {
-            contentItems {
-              contentItemId
-              displayText
-            }
+            contentItemIds 
           }
         }`
       )
     }
     function handleCreate() {
       openDrawer(true, {
-        contentItem: new GpContentItem(typeName),
+        record: new GpContentItem(typeName),
         isUpdate: false,
         // contentFields: contentFields.value,
       })
