@@ -28,6 +28,7 @@ export default defineComponent({
       registerForm,
       { resetFields, setFieldsValue, updateSchema, validate },
     ] = useForm({
+      model: contentItem,
       labelWidth: 100,
       schemas: formSchema,
       showActionButtonGroup: false,
@@ -42,25 +43,18 @@ export default defineComponent({
         setDrawerProps({ confirmLoading: false })
         isUpdate.value = !!data?.isUpdate
         contentItem.value = data.record
-        // contentFields.value = data.contentFields
         if (unref(isUpdate)) {
           setFieldsValue({
             ...data.record,
           })
         }
         updateSchema({
-          //  field: ['parentMenu', 'contentItemIds', '0'],
-          field: 'parentMenu.contentItemIds[0]',
-
+          field: 'parentMenu',
+          itemProps: {
+            name: ["parentMenu", "contentItemIds", 0]
+          },
           componentProps: {
-            treeData: treeData.value,
-            // multiple: true,
-            // maxTagCount: 1,
-            fieldNames: {
-              label: 'menuName',
-              value: 'contentItemId',
-            },
-            getPopupContainer: () => document.body
+            treeData: treeData.value
           } as TreeSelectProps
         })
       },

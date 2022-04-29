@@ -128,7 +128,7 @@ export interface FormProps {
 }
 export interface FormSchema {
   // Field name
-  field: string | string[]
+  field: string
   // Event name triggered by internal value change, default change
   changeEvent?: string
   // Variable name bound to v-model Default value
