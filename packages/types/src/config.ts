@@ -136,6 +136,7 @@ export interface GlobConfig {
   clientRoot?: string
   stsAuthority?: string
   clientId?: string
+  amisEditorUrl?: string
 }
 
 export interface GlobEnvConfig {

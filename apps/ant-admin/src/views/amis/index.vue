@@ -16,7 +16,7 @@ import {
   // AMISRendererSetup,
   // AMISRenderer1,
 } from '@/components/Amis'
-import schema from './schema.json'
+import schema from './schema'
 import { TrackerEventArgs } from '@/components/Amis/src/types'
 
 // <AmisRenderer
@@ -26,7 +26,9 @@ import { TrackerEventArgs } from '@/components/Amis/src/types'
 //   @eventTrackerEvent="eventTrackerEvent"
 // />
 
+
 const amisjson = ref<any>(schema)
+
 function eventTrackerEvent(tracker: TrackerEventArgs) {
   console.log('该信息来自于Vue事件监听：', tracker)
 }
