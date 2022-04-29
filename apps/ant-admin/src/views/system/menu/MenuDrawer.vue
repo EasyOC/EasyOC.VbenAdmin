@@ -26,7 +26,7 @@ export default defineComponent({
     const treeData = ref<any>([])
     const [
       registerForm,
-      { resetFields, setFieldsValue, updateSchema, validate },
+      { resetFields, setFieldsValue, updateSchema, validate, getFieldsValue },
     ] = useForm({
       model: contentItem,
       labelWidth: 100,
@@ -49,13 +49,11 @@ export default defineComponent({
           })
         }
         updateSchema({
-          field: 'parentMenu',
-          itemProps: {
-            name: ["parentMenu", "contentItemIds", 0]
-          },
+          // field: 'parentMenu',   
+          field: 'parentMenu.contentItemIds[0]',
           componentProps: {
-            treeData: treeData.value
-          } as TreeSelectProps
+            treeData: treeData.value,
+          }
         })
       },
     )
@@ -66,9 +64,12 @@ export default defineComponent({
 
     async function handleSubmit() {
       try {
-        const values = await validate()
+        await validate()
+        // console.log("NewData:validateFields", await validateFields())
+        const values = await getFieldsValue()
+        console.log("NewData:values", values)
+
         setDrawerProps({ confirmLoading: true })
-        console.log(values, "NewData:values")
 
         // Save to Db
         contentItem.value = deepMerge(contentItem.value, values)
