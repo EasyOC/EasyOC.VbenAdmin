@@ -12,7 +12,7 @@ import { BasicDrawer, useDrawerInner } from '@/components/drawer'
 import { getMenuList } from '@pkg/apis/system'
 import { ContentManagementServiceProxy } from '@pkg/apis/eoc/app-service-proxies'
 import { GpContentItem } from '@pkg/apis/eoc/contentApi'
-import { deepMerge } from '@pkg/utils'
+import { deepMerge, isArray } from '@pkg/utils'
 import { TreeSelectProps } from 'ant-design-vue'
 export default defineComponent({
   name: 'MenuDrawer',
@@ -47,10 +47,16 @@ export default defineComponent({
           setFieldsValue({
             ...data.record,
           })
+        } 
+        let parentId = ''
+        console.log("pageModel:ontentItem.value",contentItem.value)
+        if (contentItem.value.parentMenu?.contentItemIds && isArray(contentItem.value.parentMenu?.contentItemIds)) {
+          parentId = contentItem.value.parentMenu?.contentItemIds[0]
         }
         updateSchema({
           // field: 'parentMenu',   
-          field: 'parentMenu.contentItemIds[0]',
+          field: 'parentMenu',
+          defaultValue: parentId,
           componentProps: {
             treeData: treeData.value,
           }
@@ -66,6 +72,7 @@ export default defineComponent({
       try {
         await validate()
         // console.log("NewData:validateFields", await validateFields())
+        //兼容复杂对象获取值
         const values = await getFieldsValue()
         console.log("NewData:values", values)
 

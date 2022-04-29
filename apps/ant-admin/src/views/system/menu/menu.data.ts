@@ -101,13 +101,14 @@ export const formSchema: FormSchema[] = [
   },
 
   {
-    field: 'parentMenu.contentItemIds[0]',
+    field: 'parentMenu',
+    // valueField: ["parentMenu", "contentItemIds",0]  ,
     // field: 'parentMenu',
     label: '上级菜单',
     component: 'TreeSelect',
     itemProps: {
-      name: 'parentMenu.contentItemIds[0]'
-      // name: ["parentMenu", "contentItemIds",0]
+      // name: 'parentMenu.contentItemIds[0]'
+      // name: ["parentMenu", "contentItemIds",0]    
     },
     componentProps: {
       // multiple: true,
@@ -117,8 +118,8 @@ export const formSchema: FormSchema[] = [
         label: 'menuName',
         value: 'contentItemId',
       },
-      onChange:(a,b,c)=>{
-        console.log('a,b,c: ', a,b,c);
+      onChange: (a, b, c) => {
+        console.log('a,b,c: ', a, b, c);
       },
       getPopupContainer: () => document.body
     } as TreeSelectProps

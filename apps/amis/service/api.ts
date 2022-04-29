@@ -19,8 +19,8 @@ export async function apiRequest(config: AxiosRequestConfig | boolean | any) {
     // console.log('timeout: ', timeout);
     if (!token) {
         await authService.signinPopup();
-        // window.alert('会话超时,请在新窗口中登陆后继续操作');
-        // window.open('/login');
+        window.alert('会话超时,请在新窗口中登陆后继续操作');
+        window.open('/auth/login');
         return;
     }
     config.headers.Authorization = 'Bearer ' + token;

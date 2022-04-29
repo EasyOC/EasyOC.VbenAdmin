@@ -10,12 +10,12 @@
         <div id="root">
             
         </div>
-        <script src="./mod.js"></script>
+        <script src="./../mod.js"></script>
         <script type="text/javascript">
             var _hmt = _hmt || [];
 
             /* @require ./index.tsx 标记为同步依赖，提前加载 */
-            amis.require(['./auth.tsx'], function (app) {
+            amis.require(['./logincallback.tsx'], function (app) {
                 var initialState = {};
                 app.bootstrap(document.getElementById('root'), initialState);
             });
