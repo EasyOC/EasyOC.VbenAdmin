@@ -80,7 +80,7 @@ export async function createViteConfig(
       build: {
         target: 'chrome80',
         cssTarget: 'chrome80', 
-        sourcemap: true,
+        // sourcemap: true,
         outDir: OUTPUT_DIR,
         /**
          * 当 minify=“minify:'terser'” 解开注释
