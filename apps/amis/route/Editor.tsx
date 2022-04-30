@@ -46,9 +46,10 @@ class AmisEditor extends React.Component {
     }
     async componentWillMount() {
         console.log('getSchemagetSchemagetSchema');
-    //    await authService.login()
-    
+        //    await authService.login()
+
         const result = await apiRequest({
+            needReload: true,
             method: 'get',
             url: `/api/graphql?query={  
                 contentItem(${this.getGpParams()}) 

@@ -15,7 +15,7 @@ const oidcClient = new Oidc.UserManager({
   userStore: new Oidc.WebStorageStateStore({ prefix: 'oidc_', store: localStorage }),
   authority: globConfig.serverRoot,
   client_id: globConfig.clientId,
-  redirect_uri: 'http://localhost:8082/auth/logincallback.html',
+  redirect_uri: globConfig.clientRoot+'auth/logincallback.html',
   scope: "openid profile roles offline_access",
   // post_logout_redirect_uri: globConfig.clientRoot + 'signout-callback',
   filterProtocolClaims: true,
