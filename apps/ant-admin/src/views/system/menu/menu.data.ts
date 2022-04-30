@@ -1,8 +1,8 @@
 import { BasicColumn } from '@/components/table'
 import { FormSchema } from '@/components/table'
 import { h } from 'vue'
-import { Tag, TreeSelectProps } from 'ant-design-vue'
 import { Icon } from '@components/common'
+import { Tag } from 'ant-design-vue'
 
 export const columns: BasicColumn[] = [
   {
@@ -101,28 +101,31 @@ export const formSchema: FormSchema[] = [
   },
 
   {
-    field: 'parentMenu',
+    field: 'parentMenu.contentItemIds[0]',
     // valueField: ["parentMenu", "contentItemIds",0]  ,
     // field: 'parentMenu',
+    // valueField: 'parentMenu.contentItemIds[0]',
     label: '上级菜单',
-    component: 'TreeSelect',
+    component: 'ApiTreeSelect',
     itemProps: {
       // name: 'parentMenu.contentItemIds[0]'
       // name: ["parentMenu", "contentItemIds",0]    
     },
     componentProps: {
       // multiple: true,
-      // maxTagCount:1,
-      fieldNames: {
-        key: "contentItemId",
-        label: 'menuName',
-        value: 'contentItemId',
-      },
+      // maxTagCount:1, 
+      labelField: 'displayText',
+      valueField: 'contentItemId',
+      // fieldNames: {
+      //   key: "contentItemId",
+      //   label: 'menuName',
+      //   value: 'contentItemId',
+      // },
       onChange: (a, b, c) => {
         console.log('a,b,c: ', a, b, c);
       },
       getPopupContainer: () => document.body
-    } as TreeSelectProps
+    } //as ApiTreeSelectProps
   },
 
   {

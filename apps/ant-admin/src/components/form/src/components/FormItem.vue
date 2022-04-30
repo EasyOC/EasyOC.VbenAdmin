@@ -15,6 +15,8 @@ import {
   isNull,
   cloneDeep,
   getSlot,
+  get,
+  set,
 } from '@pkg/utils'
 import { createPlaceholderMessage, setComponentRuleType } from '../helper'
 import { useItemLabelWidth } from '../hooks/useLabelWidth'
@@ -279,9 +281,14 @@ export default defineComponent({
       }
       propsData.codeField = field
       propsData.formValues = unref(getValues)
-
+      // const fieldC = computed({
+      //   get: () => get(props.formModel, field),
+      //   set: value => { set(props.formModel, field, value) }
+      // })
       const bindValue: Recordable = {
-        [valueField || (isCheck ? 'checked' : 'value')]: props.formModel[field],
+        // [valueField || (isCheck ? 'checked' : 'value')]: fieldC,
+        [valueField || (isCheck ? 'checked' : 'value')]: get(props.formModel, field),
+        // [valueField || (isCheck ? 'checked' : 'value')]: props.formModel[field],
       }
 
       const compAttr: Recordable = {
@@ -296,8 +303,8 @@ export default defineComponent({
       const compSlot = isFunction(renderComponentContent)
         ? { ...renderComponentContent(unref(getValues)) }
         : {
-            default: () => renderComponentContent,
-          }
+          default: () => renderComponentContent,
+        }
       return <Comp {...compAttr}>{compSlot}</Comp>
     }
 
@@ -350,8 +357,8 @@ export default defineComponent({
           return slot
             ? getSlot(slots, slot, unref(getValues))
             : render
-            ? render(unref(getValues))
-            : renderComponent()
+              ? render(unref(getValues))
+              : renderComponent()
         }
 
         const showSuffix = !!suffix
@@ -397,8 +404,8 @@ export default defineComponent({
         return colSlot
           ? getSlot(slots, colSlot, values)
           : renderColContent
-          ? renderColContent(values)
-          : renderItem()
+            ? renderColContent(values)
+            : renderItem()
       }
 
       return (

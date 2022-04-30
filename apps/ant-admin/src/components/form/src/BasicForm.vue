@@ -73,6 +73,7 @@ import { useAutoFocus } from './hooks/useAutoFocus'
 import { useModalContext } from '@/components/modal'
 import { basicProps } from './props'
 import { useDesign } from '@/hooks/web/useDesign'
+import 'vue-types'
 
 export default defineComponent({
   name: 'BasicForm',

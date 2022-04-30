@@ -35,7 +35,7 @@ export default defineComponent({
       baseColProps: { lg: 12, md: 24 },
     })
     onBeforeMount(async () => {
-      treeData.value = await getMenuList()
+      // treeData.value = await getMenuList()
     })
     const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(
       async (data) => {
@@ -47,18 +47,18 @@ export default defineComponent({
           setFieldsValue({
             ...data.record,
           })
-        } 
+        }
         let parentId = ''
-        console.log("pageModel:ontentItem.value",contentItem.value)
+        console.log("pageModel:ontentItem.value", contentItem.value)
         if (contentItem.value.parentMenu?.contentItemIds && isArray(contentItem.value.parentMenu?.contentItemIds)) {
           parentId = contentItem.value.parentMenu?.contentItemIds[0]
         }
         updateSchema({
-          // field: 'parentMenu',   
-          field: 'parentMenu',
-          defaultValue: parentId,
+          field: 'parentMenu.contentItemIds[0]',   
+          // field: 'parentMenu',
+          // defaultValue: parentId,
           componentProps: {
-            treeData: treeData.value,
+            api: getMenuList
           }
         })
       },

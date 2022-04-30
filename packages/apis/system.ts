@@ -154,6 +154,7 @@ export const getMenuList = async () => {
   const result = await excuteGraphqlQuery({
     query: `query MyQurery {
           vbenMenu {
+            displayText
             contentItemId
             menuName
             icon
