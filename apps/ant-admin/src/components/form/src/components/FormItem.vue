@@ -287,8 +287,8 @@ export default defineComponent({
       // })
       const bindValue: Recordable = {
         // [valueField || (isCheck ? 'checked' : 'value')]: fieldC,
-        [valueField || (isCheck ? 'checked' : 'value')]: get(props.formModel, field),
-        // [valueField || (isCheck ? 'checked' : 'value')]: props.formModel[field],
+        // [valueField || (isCheck ? 'checked' : 'value')]: get(props.formModel, field),
+        [valueField || (isCheck ? 'checked' : 'value')]: props.formModel[field],
       }
 
       const compAttr: Recordable = {

@@ -61,7 +61,8 @@ export async function createViteConfig(
       server: {
         port: 3000,
         https: false,
-        host: true, 
+        open: true,
+        host: true,
         proxy: resolveProxy(VITE_PROXY),
         fs: { strict: false }
         // fs: {
@@ -79,8 +80,8 @@ export async function createViteConfig(
       },
       build: {
         target: 'chrome80',
-        cssTarget: 'chrome80', 
-        // sourcemap: true,
+        cssTarget: 'chrome80',
+        sourcemap: true,
         outDir: OUTPUT_DIR,
         /**
          * 当 minify=“minify:'terser'” 解开注释
@@ -92,7 +93,7 @@ export async function createViteConfig(
         //     drop_console: VITE_DROP_CONSOLE,
         //   },
         // },
-      
+
         brotliSize: false,
         chunkSizeWarningLimit: 2048,
         rollupOptions: {
@@ -101,7 +102,7 @@ export async function createViteConfig(
           //   '/public/amis-editor-renderer/index.html'
           // ],
           output: {
-            file:'[name].js',
+            file: '[name].js',
             manualChunks: {
               vue: ['vue', 'pinia', 'vue-router', '@vue/shared'],
               // antdv: ['ant-design-vue'],

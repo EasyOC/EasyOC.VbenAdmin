@@ -11,6 +11,7 @@ export {
   merge,
   clone,
   set,
+  has,
   get,
   fromPairs,
   difference,

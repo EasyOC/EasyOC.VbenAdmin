@@ -1,8 +1,10 @@
 // import { AxiosRequestConfig } from 'axios'
 import { ocApi } from '@pkg/request'
 // import { useGo } from '@/hooks/web/usePage'
-import { router } from '@/router'
+import { useGo } from '@/hooks/web/usePage'
 export default function getEnv() {
+  const go = useGo()
+
   return {
     // enableAMISDebug: process.env.NODE_ENV !== 'production',
     //
@@ -80,8 +82,9 @@ export default function getEnv() {
     // 用来接管页面跳转，比如用 location.href 或 window.open，或者自己实现 amis 配置更新
     jumpTo: (to) => {
       console.log('go', to)
+
       // useGo(to)
-      router.push(to)
+      go(to)
     },
     //
     // 用来实现地址栏更新

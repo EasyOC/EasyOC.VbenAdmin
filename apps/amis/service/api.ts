@@ -20,11 +20,13 @@ export async function apiRequest(config: AxiosRequestConfig | boolean | any) {
     if (!token) {
         if (config.needReload) {
             window.localStorage.setItem("needReload", "1")
+            window.localStorage.setItem("returnUrl", window.location.href)
+            await authService.login()
+        } else {
+            window.open('/auth/login');
+            // await authService.signinPopup();
+            window.alert('会话超时,请在新窗口中登陆后继续操作');
         }
-
-        window.open('/auth/login');
-        // await authService.signinPopup();
-        window.alert('会话超时,请在新窗口中登陆后继续操作');
         return;
     }
     config.headers.Authorization = 'Bearer ' + token;

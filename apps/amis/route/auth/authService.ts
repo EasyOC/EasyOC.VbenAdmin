@@ -15,13 +15,13 @@ const oidcClient = new Oidc.UserManager({
   userStore: new Oidc.WebStorageStateStore({ prefix: 'oidc_', store: localStorage }),
   authority: globConfig.serverRoot,
   client_id: globConfig.clientId,
-  redirect_uri: globConfig.clientRoot+'auth/logincallback.html',
+  redirect_uri: globConfig.clientRoot+'auth/logincallback',
   scope: "openid profile roles offline_access",
   // post_logout_redirect_uri: globConfig.clientRoot + 'signout-callback',
   filterProtocolClaims: true,
   loadUserInfo: true,
   response_type: globConfig.responseType,
-  client_secret: "123123/q", 
+  // client_secret: "123123/q", 
 })
 
 Oidc.Log.logger = console;
