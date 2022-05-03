@@ -94,7 +94,7 @@ export default defineComponent({
           menuName
           menuType
           parentMenu {
-            contentItemIds 
+            firstValue 
           }
         }`
       )

@@ -8,8 +8,8 @@ import {Layout, Switch, toast, classnames as cx} from 'amis';
 import {apiRequest} from 'service/api';
 import {RouteComponentProps} from 'react-router';
 import {inject, observer} from 'mobx-react';
-import {IMainStore} from 'store';
-import authService from './auth/authService';
+// import {IMainStore} from 'store';
+// import authService from './auth/authService';
 
 const plugins: PluginClass[] | undefined = []; // 通过plugin注入
 let host = `${window.location.protocol}//${window.location.host}`;

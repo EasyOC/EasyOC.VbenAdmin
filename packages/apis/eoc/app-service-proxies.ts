@@ -1423,22 +1423,12 @@ export class UsersServiceProxy extends AppServiceBase {
     getAll(params:{ selectedRole: string | undefined, sortField: string | undefined, sortOrder: string | undefined, departmentId: string | undefined, filter: string | undefined, page: number | undefined, pageSize: number | undefined }): Promise<PagedResultOfUserListItemDto> {
         const { selectedRole, sortField, sortOrder, departmentId, filter, page, pageSize } = {...params}; 
 
-        let url_ = this.baseUrl + "/api/Users/GetAll?";
-        
-        
-        
-        
+        let url_ = this.baseUrl + "/api/Users/GetAll?"; 
          if (selectedRole !== undefined && selectedRole !== null)
-            url_ += "SelectedRole=" + encodeURIComponent("" + selectedRole) + "&";
-                
-        
-        
+            url_ += "SelectedRole=" + encodeURIComponent("" + selectedRole) + "&"; 
         
          if (sortField !== undefined && sortField !== null)
-            url_ += "SortField=" + encodeURIComponent("" + sortField) + "&";
-                
-        
-        
+            url_ += "SortField=" + encodeURIComponent("" + sortField) + "&"; 
         
          if (sortOrder !== undefined && sortOrder !== null)
             url_ += "SortOrder=" + encodeURIComponent("" + sortOrder) + "&";

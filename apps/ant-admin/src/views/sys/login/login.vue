@@ -4,13 +4,14 @@
 </template>
 <script>
 import authService from '@/api/authService'
+import { useGo } from '@/hooks/web/usePage'
 export default {
-  name: 'login',
-  mounted () {
-
+  name: 'Login',
+  mounted() {
+    const go = useGo()
     authService.login()
       .then((redirectPath) => {
-        this.$router.push('/')
+        go(redirectPath||'/')
       })
       .catch((err) => {
         this.toastNotification.error(err.message)

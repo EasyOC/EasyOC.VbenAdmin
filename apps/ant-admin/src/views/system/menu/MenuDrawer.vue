@@ -12,7 +12,7 @@ import { BasicDrawer, useDrawerInner } from '@/components/drawer'
 import { getMenuList } from '@pkg/apis/system'
 import { ContentManagementServiceProxy } from '@pkg/apis/eoc/app-service-proxies'
 import { GpContentItem } from '@pkg/apis/eoc/contentApi'
-import { deepMerge, isArray, set, has, get } from '@pkg/utils'
+import { merge, isArray, set, has, get } from '@pkg/utils'
 import { TreeSelectProps } from 'ant-design-vue'
 // import { TreeSelectProps } from 'ant-design-vue'
 export default defineComponent({
@@ -26,7 +26,7 @@ export default defineComponent({
     const contentItem = ref<GpContentItem>(new GpContentItem(typeName))
     //复杂对象配置
     const complexKeys = [
-      { keyName: 'parentMenu', keyPath: "parentMenu.contentItemIds", isArray: false }
+      { keyName: 'parentMenu', keyPath: "parentMenu.firstValue", isArray: false }
     ];
     // const treeData = ref([])
     const [
@@ -55,23 +55,26 @@ export default defineComponent({
             ...contentItem.value,
           })
         }
+        console.log("complexKeys，get", contentItem.value)
         const treeData = await getMenuList()
         updateSchema({
-          // field: 'parentMenu',
-          // field: 'parentMenu.contentItemIds',
-          // valueField: 'parentMenu.contentItemIds',
+          field: 'parentMenu',
+          // defaultValue: unref(contentItem).parentMenu.firstValue,
+          // field: 'parentMenu.contentItemIds[0]',
+          // field: 'parentMenu.firstValue',
+          // valueField: 'parentMenu.firstValue',
           // itemProps: {
           //   name: ['parentMenu', 'contentItemIds',0],
           // },
           componentProps: {
+            // transitionName
             // defaultValue: contentItem.value.parentMenu?.contentItemIds,
             // fieldNames: ['contentItemIds[0]'],
             treeData,//: unref(treeData),
+            
             // api: getMenuList
-
             onChange: async (a, b, c) => {
               console.log('a,b,c: ', a, b, c);
-              console.log("complexKeys，get", await getFieldsValue())
             },
           } as TreeSelectProps,
         })
@@ -86,7 +89,7 @@ export default defineComponent({
           if (item.isArray) {
             contentItem.value[item.keyName] = get(contentItem.value, item.keyPath)
           } else {
-            contentItem.value[item.keyName] = get(contentItem.value, item.keyPath + '[0]')
+            contentItem.value[item.keyName] = get(contentItem.value, item.keyPath )
           }
         }
       })
@@ -110,17 +113,16 @@ export default defineComponent({
             // const arrVal = [...values[item.keyName]]
             set(values, item.keyPath, values[item.keyName])
           } else {
-            set(values, item.keyPath, [values[item.keyName]])
+            set(values, item.keyPath, values[item.keyName])
           }
           debugger
           console.log(values, "NewData")
-
         })
         console.log("NewData:values", values)
 
         setDrawerProps({ confirmLoading: true })
 
-        contentItem.value = deepMerge(contentItem.value, values)
+        contentItem.value = merge(contentItem.value, values)
         //复杂对象赋值保存
 
         // Save to Db
