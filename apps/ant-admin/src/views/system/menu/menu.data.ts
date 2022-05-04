@@ -103,19 +103,14 @@ export const formSchema: FormSchema[] = [
     component: 'Input',
     required: true,
   },
-  // {
-  //   field: 'parentMenu.contentItemIds[0]',
-  //   // valueField:"parentMenu.contentItemIds[0]",
-  //   label: '上级菜单',
-  //   component: 'Input',
-  //   required: true,
-  // },
-  {
-    // field: 'parentMenu.firstValue',
-    // valueField: 'parentMenu.firstValue',
+  { 
     field: 'parentMenu',
     label: '上级菜单',
     component: 'TreeSelect',
+    fieldMap: {
+      mapTo: "parentMenu.firstValue",
+      isArray: false
+    },
     componentProps: {
       // multiple: true,
       // maxTagCount: 1,

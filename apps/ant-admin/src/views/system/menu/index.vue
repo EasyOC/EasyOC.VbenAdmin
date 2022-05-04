@@ -112,9 +112,7 @@ export default defineComponent({
       // const editModel = contentTypeService.expandContentType(contentItem.value)
       openDrawer(true, {
         record: contentItem,
-        // contentItem: contentItem.value,
         isUpdate: true,
-        // contentFields: contentFields.value,
       })
     }
 

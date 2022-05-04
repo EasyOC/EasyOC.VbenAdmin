@@ -126,7 +126,14 @@ export interface FormProps {
   transformDateFunc?: (date: any) => string
   colon?: boolean
 }
+
+export interface OCKeyMap {
+  mapTo: string,
+  isArray: boolean
+}
+
 export interface FormSchema {
+  fieldMap?: OCKeyMap
   // Field name
   field: string
   // Event name triggered by internal value change, default change
