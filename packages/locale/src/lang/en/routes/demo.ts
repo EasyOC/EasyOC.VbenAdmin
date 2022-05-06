@@ -10,14 +10,11 @@ export default {
   },
   comp: {
     comp: 'Component',
-    basic: 'Basic',
-    transition: 'Animation',
     countTo: 'Count To',
 
     scroll: 'Scroll',
     scrollBasic: 'Basic',
     scrollAction: 'Scroll Function',
-    virtualScroll: 'Virtual Scroll',
 
     tree: 'Tree',
 
@@ -29,16 +26,7 @@ export default {
     drawer: 'Drawer',
     desc: 'Desc',
 
-    lazy: 'Lazy',
-    lazyBasic: 'Basic',
-    lazyTransition: 'Animation',
-
-    verify: 'Verify',
-    verifyDrag: 'Drag ',
-    verifyRotate: 'Picture Restore',
-
     qrcode: 'QR code',
-    strength: 'Password strength',
     upload: 'Upload',
 
     loading: 'Loading',
@@ -47,39 +35,19 @@ export default {
     cropperImage: 'Cropper Image',
     cardList: 'Card List',
   },
-  editor: {
-    editor: 'Editor',
-    jsonEditor: 'Json editor',
-    markdown: 'Markdown editor',
 
-    tinymce: 'Rich text',
-    tinymceBasic: 'Basic',
-    tinymceForm: 'embedded form',
-  },
-  excel: {
-    excel: 'Excel',
-    customExport: 'Select export format',
-    jsonExport: 'JSON data export',
-    arrayExport: 'Array data export',
-    importExcel: 'Import',
-  },
   feat: {
     feat: 'Page Function',
     icon: 'Icon',
     tabs: 'Tabs',
     tabDetail: 'Tab Detail',
     sessionTimeout: 'Session Timeout',
-    print: 'Print',
     contextMenu: 'Context Menu',
     download: 'Download',
-    clickOutSide: 'ClickOutSide',
-    imgPreview: 'Picture Preview',
     copy: 'Clipboard',
     msg: 'Message prompt',
     watermark: 'Watermark',
-    ripple: 'Ripple',
     fullScreen: 'Full Screen',
-    errorLog: 'Error Log',
     tab: 'Tab with parameters',
     tab1: 'Tab with parameter 1',
     tab2: 'Tab with parameter 2',
@@ -95,10 +63,6 @@ export default {
 
     breadcrumbChildren: 'Level mode',
     breadcrumbChildrenDetail: 'Level mode detail',
-  },
-  flow: {
-    name: 'Graphics editor',
-    flowChart: 'FlowChart',
   },
   form: {
     form: 'Form',
@@ -160,9 +124,6 @@ export default {
     back: 'background',
     backPage: 'Page',
     backBtn: 'Button',
-  },
-  setup: {
-    page: 'Intro page',
   },
   system: {
     moduleName: 'System management',

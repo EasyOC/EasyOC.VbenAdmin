@@ -1,4 +1,4 @@
-import type { LocaleSetting, LocaleType } from '@admin/types'
+import type { LocaleSetting, LocaleType } from '@pkg/types'
 
 export const LOCALE: { [key: string]: LocaleType } = {
   zh: 'zh_CN',

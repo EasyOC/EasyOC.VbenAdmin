@@ -1,9 +1,9 @@
 export * from './src'
 export * from './bem'
+
 export {
   cloneDeep,
   omit,
-  camelCase,
   upperFirst,
   uniq,
   uniqBy,
@@ -11,6 +11,7 @@ export {
   merge,
   clone,
   set,
+  has,
   get,
   fromPairs,
   difference,

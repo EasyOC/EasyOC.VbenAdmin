@@ -1,6 +1,6 @@
 import type { Directive } from 'vue'
 
-import { context } from '../_bridge'
+import { context } from '../bridge'
 
 const loading: Directive = {
   mounted(el, binding) {

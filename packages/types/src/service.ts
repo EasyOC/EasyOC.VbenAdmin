@@ -10,12 +10,8 @@ export interface RequestOptions {
   // Whether to return native response headers
   // For example: use this attribute when you need to get the response headers
   isReturnNativeResponse?: boolean
-  // Whether to join url
-  joinPrefix?: boolean
   // Interface address, use the default apiUrl if you leave it blank
   apiUrl?: string | (() => string)
-  // Request splicing path
-  urlPrefix?: string | (() => string)
   // Error message prompt type
   errorMessageMode?: ErrorMessageMode
   // Whether to add a timestamp
@@ -27,6 +23,10 @@ export interface RequestOptions {
 
 export interface RequestResult<T = any> {
   statusCode: number
+  /**
+   * @deprecated error | 更改为statusCode
+   */
+  code: number
   type: 'success' | 'error' | 'warning'
   succeeded: boolean
   message: string[]

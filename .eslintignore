@@ -11,5 +11,5 @@ public
 docs
 .husky
 .local
-/bin
+bin
 Dockerfile

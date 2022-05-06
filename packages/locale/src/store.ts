@@ -1,9 +1,9 @@
-import type { LocaleType } from '@admin/types'
+import type { LocaleType } from '@pkg/types'
 
 import { computed } from 'vue'
-import { LOCALE_KEY } from '@admin/tokens'
+import { LOCALE_KEY } from '@pkg/tokens'
 import { useLocalStorage } from '@vueuse/core'
-import { localeSetting } from '@admin/setting'
+import { localeSetting } from '@pkg/setting'
 
 const store = useLocalStorage(LOCALE_KEY, localeSetting)
 

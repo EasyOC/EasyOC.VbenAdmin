@@ -63,7 +63,7 @@
       "enumNameGeneratorType": null,
       "serviceHost": null,
       "serviceSchemes": null,
-      "output": "../packages/service/modules/api/app-service-proxies.ts"
+      "output": "../packages/apis/eoc/app-service-proxies.ts"
     }
   }
 }

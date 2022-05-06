@@ -1,0 +1,34 @@
+.transition-default() {
+  &-enter-active,
+  &-leave-active {
+    transition: 0.3s cubic-bezier(0.25, 0.8, 0.5, 1) !important;
+  }
+
+  &-move {
+    transition: transform 0.4s;
+  }
+}
+
+/* fade-slide */
+.fade-slide-leave-active,
+.fade-slide-enter-active {
+  transition: all 0.3s;
+}
+
+.fade-slide-enter-from {
+  opacity: 0;
+  transform: translateX(-30px);
+}
+
+.fade-slide-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
+}
+
+.expand-transition {
+  .transition-default();
+}
+
+.expand-x-transition {
+  .transition-default();
+}

@@ -1,5 +1,6 @@
-import { ErrorTypeEnum, MenuModeEnum, MenuTypeEnum } from '@admin/tokens'
-import { GetUserInfoModel } from 'service/modules/model'
+import { ErrorTypeEnum, MenuModeEnum, MenuTypeEnum } from '@pkg/tokens'
+import { GetUserInfoModel } from 'node_modules/@pkg/apis/sys'
+// import { GetUserInfoModel } from 'service/modules/model'
 
 // Lock screen information
 export interface LockInfo {
@@ -34,7 +35,8 @@ export interface RoleInfo {
   value: string
 }
 
-export interface UserInfo extends GetUserInfoModel {
+export interface UserInfo  extends GetUserInfoModel 
+{
   userId: string | number
   username: string
   realName: string

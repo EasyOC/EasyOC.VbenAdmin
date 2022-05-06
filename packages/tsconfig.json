@@ -1,8 +1,0 @@
-{
-  "extends": "../tsconfig.json",
-  "compilerOptions": {
-    "baseUrl": "."
-  },
-  "include": ["../packages", "../admin/typings"],
-  "exclude": ["node_modules", "**/*.js"]
-}
