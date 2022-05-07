@@ -102,7 +102,6 @@ export async function createViteConfig(
           //   '/public/amis-editor-renderer/index.html'
           // ],
           output: {
-            file: '[name].js',
             manualChunks: {
               vue: ['vue', 'pinia', 'vue-router', '@vue/shared'],
               // antdv: ['ant-design-vue'],
