@@ -94,28 +94,29 @@ export async function getUserInfo() {
   //   { url: Api.GetUserInfo },
   //   { errorMessageMode: 'none' },
   // )
-  const user = await new SessionServiceProxy().getCurrentUserInfo();
 
 
   const result = await excuteGraphqlQuery({
     query: `query MyQuery {
-      userProfile(first: 10, where: {userName:"`+ user.userName+`" }) {
-        userProfile {
-          avatar {
-            urls
-          }
-        } 
-        author
-        contentItemId
-        contentItemVersionId
-        contentType
-        createdUtc
-        displayText
-        userName
-        email
-        latest
-        modifiedUtc
-        owner
+      me {
+        ... on UserProfile {
+          userProfile {
+            avatar {
+              urls
+            }
+          } 
+          author
+          contentItemId
+          contentItemVersionId
+          contentType
+          createdUtc
+          displayText
+          userName
+          email
+          latest
+          modifiedUtc
+          owner
+        }
       }
     }`,
   })
