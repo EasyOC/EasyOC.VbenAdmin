@@ -16,6 +16,7 @@ import { usePermissionStore } from '@/store/permission'
 import { PAGE_NOT_FOUND_ROUTE } from '@/router/routes/basic'
 import { h } from 'vue'
 import authService from '@/api/authService'
+import { getUserInfo, getPermCode } from '@pkg/apis/sys/user'
 
 interface UserState {
   userInfo: Nullable<UserInfo>
@@ -54,9 +55,6 @@ export const useUserStore = defineStore({
       return this.userInfo || ({} as UserInfo)
     },
     getToken(): string {
-      if (this.token) {
-        window.localStorage.setItem('token', this.token)
-      }
       return this.token as string
     },
     getTimeout(): Date | null {
@@ -75,11 +73,9 @@ export const useUserStore = defineStore({
   actions: {
     setToken(info: string | undefined) {
       this.token = info ? info : '' // for null or undefined value
-      if (info) window.localStorage.setItem('token', info)
     },
     setTimeout(timeout: Date | undefined) {
       this.timeout = timeout
-      if (timeout) window.localStorage.setItem('timeout', timeout.toString())
     },
     setRoleList(roleList: RoleEnum[]) {
       this.roleList = roleList
@@ -182,30 +178,37 @@ export const useUserStore = defineStore({
         return null
       }
 
-      // const userInfo = await getUserInfo()
-      const userInfo = {} as GetUserInfoModel //await getUserInfo();
+      const userInfo = await getUserInfo()
 
-      const data = decodeJwt(this.getToken)
-      console.log('data: ', data)
-      if (!data) {
-        throw Error('Verification failed, please Login again.')
-      }
-      const { name, email } = data
-      userInfo.username = name
-      userInfo.realName = name
-      userInfo.email = email
-      // const { roles = [] } = userInfo
-      const roles = data.Permission as Array<string>
-      const dataRole =
-        data['http://schemas.microsoft.com/ws/2008/06/identity/claims/role']
-      if (typeof dataRole == 'object') {
-        data.profile.roles.forEach((element) => {
-          roles.push(element)
-          userInfo.roles.push(element)
-        })
-      } else {
-        roles.push(dataRole)
-      }
+      userInfo.roles = [];
+      // const userInfo = {} as GetUserInfoModel //await getUserInfo();
+
+      // const data = decodeJwt(this.getToken)
+      // console.log('data: ', data)
+      // if (!data) {
+      //   throw Error('Verification failed, please Login again.')
+      // }
+      // const { name, email } = data
+      // userInfo.username = name
+      // userInfo.realName = name
+      // userInfo.email = email
+      // const { roles = [] } = userInfodh
+      console.log("shhhshdhdhhd");
+      const roles = await getPermCode() //data.Permission as Array<string>hhah
+      // console.log('roles: ', roles);
+      roles.forEach((role) => {
+        userInfo.roles.push(role)
+      })
+      // const dataRole =
+      //   data['http://schemas.microsoft.com/ws/2008/06/identity/claims/role']
+      // if (typeof dataRole == 'object') {
+      //   data.profile.roles.forEach((element) => {
+      //     roles.push(element)
+      //     userInfo.roles.push(element)
+      //   })
+      // } else {
+      //   roles.push(dataRole)
+      // }
       // if (isArray(roles)) {
       //   const roleList = roles.map((item) => item.value) as RoleEnum[]
       //   this.setRoleList(roleList)
@@ -227,10 +230,6 @@ export const useUserStore = defineStore({
             this.setTimeout(undefined)
             this.setSessionTimeout(false)
             this.setUserInfo(null)
-            console.log(1212);
-
-            console.log(2222);
-            window.localStorage.removeItem('oidc_user:http://localhost:2919/:vue_client_app')
             // await doLogout()
             //   .catch(() => {
             console.log('注销Token失败')
