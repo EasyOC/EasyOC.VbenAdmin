@@ -99,18 +99,19 @@ export async function getUserInfo() {
 
   const result = await excuteGraphqlQuery({
     query: `query MyQuery {
-      userProfile(first: 10, where: {author:"`+ user.userName+`" }) {
+      userProfile(first: 10, where: {userName:"`+ user.userName+`" }) {
         userProfile {
           avatar {
             urls
           }
-        }
+        } 
         author
         contentItemId
         contentItemVersionId
         contentType
         createdUtc
         displayText
+        userName
         email
         latest
         modifiedUtc
