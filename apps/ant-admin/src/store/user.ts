@@ -178,7 +178,19 @@ export const useUserStore = defineStore({
         return null
       }
 
-      const userInfo = await getUserInfo()
+      // const userInfo = await getUserInfo()
+      const userIfResult = await getUserInfo()
+
+      let userInfo:any = {} as UserInfo;
+      if(userIfResult.userProfile && userIfResult.userProfile.length > 0) {
+        userInfo = userIfResult.userProfile[0];
+
+        if(userInfo.userProfile?.avatar?.urls && userInfo.userProfile?.avatar?.urls.length > 0) {
+          userInfo.avatar =  userInfo.userProfile.avatar.urls[0];
+        }
+      } else {
+        return null;
+      }
 
       userInfo.roles = [];
       // const userInfo = {} as GetUserInfoModel //await getUserInfo();

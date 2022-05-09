@@ -3,6 +3,7 @@ import { ocApi, request } from '../../request'
 import { ContentTypeEnum } from '../../tokens'
 import { context } from '../../request/bridge'
 import { SessionServiceProxy } from '../eoc/app-service-proxies'
+import { excuteGraphqlQuery } from '../eoc/graphqlApi'
 
 /**
  * @description: Login interface parameters
@@ -88,11 +89,38 @@ enum Api {
 /**
  * @description: getUserInfo
  */
-export function getUserInfo() {
-  return request.get<GetUserInfoModel>(
-    { url: Api.GetUserInfo },
-    { errorMessageMode: 'none' },
-  )
+export async function getUserInfo() {
+  // return request.get<GetUserInfoModel>(
+  //   { url: Api.GetUserInfo },
+  //   { errorMessageMode: 'none' },
+  // )
+  const user = await new SessionServiceProxy().getCurrentUserInfo();
+
+
+  const result = await excuteGraphqlQuery({
+    query: `query MyQuery {
+      userProfile(first: 10, where: {author:"`+ user.userName+`" }) {
+        userProfile {
+          avatar {
+            urls
+          }
+        }
+        author
+        contentItemId
+        contentItemVersionId
+        contentType
+        createdUtc
+        displayText
+        email
+        latest
+        modifiedUtc
+        owner
+      }
+    }`,
+  })
+
+    return result.data
+
 }
 
 export function getPermCode() {
