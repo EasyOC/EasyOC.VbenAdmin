@@ -1,10 +1,6 @@
 <template>
-  <PageWrapper
-    title="前端权限按钮示例"
-    contentBackground
-    contentClass="p-4"
-    content="由于刷新的时候会请求用户信息接口，会根据接口重置角色信息，所以刷新后界面会恢复原样，如果不需要，可以注释 src/layout/default/index内的获取用户信息接口"
-  >
+  <PageWrapper title="前端权限按钮示例" contentBackground contentClass="p-4"
+    content="由于刷新的时候会请求用户信息接口，会根据接口重置角色信息，所以刷新后界面会恢复原样，如果不需要，可以注释 src/layout/default/index内的获取用户信息接口">
     <CurrentPermissionMode />
 
     <p>
@@ -12,19 +8,13 @@
     </p>
     <Alert class="mt-4" type="info" message="点击后请查看按钮变化" show-icon />
 
-    <div class="mt-4">
+    <div className="mt-4">
       权限切换(请先切换权限模式为前端角色权限模式):
       <Space>
-        <a-button
-          @click="changeRole(RoleEnum.SUPER)"
-          :type="isSuper ? 'primary' : 'default'"
-        >
+        <a-button @click="changeRole(RoleEnum.SUPER)" :type="isSuper ? 'primary' : 'default'">
           {{ RoleEnum.SUPER }}
         </a-button>
-        <a-button
-          @click="changeRole(RoleEnum.TEST)"
-          :type="isTest ? 'primary' : 'default'"
-        >
+        <a-button @click="changeRole(RoleEnum.TEST)" :type="isTest ? 'primary' : 'default'">
           {{ RoleEnum.TEST }}
         </a-button>
       </Space>
@@ -53,11 +43,7 @@
       拥有test角色权限可见
     </a-button>
 
-    <a-button
-      v-if="hasPermission([RoleEnum.TEST, RoleEnum.SUPER])"
-      color="error"
-      class="mx-4"
-    >
+    <a-button v-if="hasPermission([RoleEnum.TEST, RoleEnum.SUPER])" color="error" class="mx-4">
       拥有[test,super]角色权限可见
     </a-button>
 
@@ -70,16 +56,12 @@
       拥有test角色权限可见
     </a-button>
 
-    <a-button
-      v-auth="[RoleEnum.TEST, RoleEnum.SUPER]"
-      color="error"
-      class="mx-4"
-    >
+    <a-button v-auth="[RoleEnum.TEST, RoleEnum.SUPER]" color="error" class="mx-4">
       拥有[test,super]角色权限可见
     </a-button>
   </PageWrapper>
 </template>
-<script lang="ts">
+<script lang="ts" setup>
 import { computed, defineComponent } from 'vue'
 import { Alert, Divider, Space } from 'ant-design-vue'
 import CurrentPermissionMode from '../CurrentPermissionMode.vue'
@@ -89,16 +71,16 @@ import { usePermission } from '@/hooks/web/usePermission'
 import { Authority } from '@/components/authority'
 import { PageWrapper } from '@/components/page'
 
-export default defineComponent({
-  components: {
-    Alert,
-    PageWrapper,
-    Space,
-    CurrentPermissionMode,
-    Divider,
-    Authority,
-  },
-  setup() {
+// export default defineComponent({
+//   components: {
+//     Alert,
+//     PageWrapper,
+//     Space,
+//     CurrentPermissionMode,
+//     Divider,
+//     Authority,
+//   },
+//   setup() {
     const { changeRole, hasPermission } = usePermission()
     const userStore = useUserStore()
 
@@ -110,8 +92,8 @@ export default defineComponent({
       changeRole,
       hasPermission,
     }
-  },
-})
+//   },
+// })
 </script>
 <style lang="less" scoped>
 .demo {

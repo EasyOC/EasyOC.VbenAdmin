@@ -180,18 +180,19 @@ export const useUserStore = defineStore({
 
       // const userInfo = await getUserInfo()
       const userIfResult = await getUserInfo()
-
+      
+      console.log('userIfResult: ', userIfResult);
       let userInfo:any = {} as UserInfo;
       if(userIfResult.me) {
         userInfo = userIfResult.me;
-
+        
         if(userInfo.userProfile?.avatar?.urls && userInfo.userProfile?.avatar?.urls.length > 0) {
           userInfo.avatar =  userInfo.userProfile.avatar.urls[0];
         }
       } else {
         return null;
       }
-
+      
       userInfo.roles = [];
       // const userInfo = {} as GetUserInfoModel //await getUserInfo();
 
