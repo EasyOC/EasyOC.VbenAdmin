@@ -61,7 +61,7 @@
     </a-button>
   </PageWrapper>
 </template>
-<script lang="ts" setup>
+<script lang="ts" >
 import { computed, defineComponent } from 'vue'
 import { Alert, Divider, Space } from 'ant-design-vue'
 import CurrentPermissionMode from '../CurrentPermissionMode.vue'
@@ -71,16 +71,16 @@ import { usePermission } from '@/hooks/web/usePermission'
 import { Authority } from '@/components/authority'
 import { PageWrapper } from '@/components/page'
 
-// export default defineComponent({
-//   components: {
-//     Alert,
-//     PageWrapper,
-//     Space,
-//     CurrentPermissionMode,
-//     Divider,
-//     Authority,
-//   },
-//   setup() {
+export default defineComponent({
+  components: {
+    Alert,
+    PageWrapper,
+    Space,
+    CurrentPermissionMode,
+    Divider,
+    Authority,
+  },
+  setup() {
     const { changeRole, hasPermission } = usePermission()
     const userStore = useUserStore()
 
@@ -92,8 +92,8 @@ import { PageWrapper } from '@/components/page'
       changeRole,
       hasPermission,
     }
-//   },
-// })
+  },
+})
 </script>
 <style lang="less" scoped>
 .demo {

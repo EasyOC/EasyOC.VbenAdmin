@@ -1,48 +1,51 @@
 <template>
   <div>
-    <Amis
-      :amisjson="amisjson"
-      @amisMounted="amisMounted"
-      @eventTrackerEvent="eventTrackerEvent"
-    />
+    <Amis :amisjson="amisjson" @amisMounted="amisMounted" @eventTrackerEvent="eventTrackerEvent" />
 
-    <MonacoEditor
+    <!-- <MonacoEditor
       height="500"
       language="json"
       :value="amisjsonStr"
       @editorDidMount="editorDidMounted"
       @change="editorUpdated"
-    />
+    /> -->
   </div>
 </template>
 <script setup lang="ts">
-import { computed, ref, onMounted } from 'vue'
+import { computed, ref, onMounted,onBeforeMount } from 'vue'
 import { Amis } from '@/components/Amis'
 import { TrackerEventArgs } from '@/components/Amis/src/types'
 import { excuteGraphqlQuery } from '@pkg/apis/eoc/graphqlApi'
 import { useRouter } from 'vue-router'
-import MonacoEditor from '@/components/MonacoEditor/index.vue'
+
+// import MonacoEditor from '@/components/MonacoEditor/index.vue'
 let monacoEditor = ref<any>({})
 const amisjson = ref<any>({})
-const amisjsonStr = computed({
-  get: () => {
-    return JSON.stringify(amisjson.value, null, '\t')
-  },
-  set: (value) => {
-    amisjson.value = JSON.parse(value)
-  },
+// const amisjsonStr = computed({
+//   get: () => {
+//     return JSON.stringify(amisjson.value, null, '\t')
+//   },
+//   set: (value) => {
+//     amisjson.value = JSON.parse(value)
+//   },
+// })
+const { currentRoute } = useRouter()
+onMounted(async () => { })
+
+// const schemaId = ref<string>('')
+onBeforeMount(async () => {
+console.log('currentRoute', currentRoute.value)
+
+  console.log("currentRoute", currentRoute)
 })
 
-function editorDidMounted(editor) {
-  monacoEditor.value = editor
-}
-function editorUpdated(value) {
-  amisjsonStr.value = value
-  amisScoped.value.updateProps(amisjson.value)
-}
-const { currentRoute } = useRouter()
-console.log('currentRoute', currentRoute.value)
-onMounted(async () => {})
+// function editorDidMounted(editor) {
+//   monacoEditor.value = editor
+// }
+// function editorUpdated(value) {
+//   amisjsonStr.value = value
+//   amisScoped.value.updateProps(amisjson.value)
+// }
 
 function eventTrackerEvent(tracker: TrackerEventArgs) {
   console.log('该信息来自于Vue事件监听：', tracker)

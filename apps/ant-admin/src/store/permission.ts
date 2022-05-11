@@ -18,6 +18,18 @@ import { PAGE_NOT_FOUND_ROUTE } from '@/router/routes/basic'
 import { filterTree } from '@pkg/utils'
 import { getMenuList, getPermCode } from '@pkg/apis/sys'
 import { useMessage } from '@/hooks/web/useMessage'
+import { getMenuList as getOcMenu } from '@pkg/apis/system'
+
+export interface RouteItem {
+  path: string
+  component: any
+  meta: any
+  name?: string
+  alias?: string | string[]
+  redirect?: string
+  caseSensitive?: boolean
+  children?: RouteItem[]
+}
 
 interface PermissionState {
   // Permission code list
@@ -179,7 +191,18 @@ export const usePermissionStore = defineStore({
           let routeList: RouteRecordItem[] = []
           try {
             this.changePermissionCode()
-            routeList = (await getMenuList()) as RouteRecordItem[]
+            //首先修改权限模式 为后台模式
+            //src/settings/projectSetting.ts
+            //获取vben菜单 ， 数据源：apps\ant-admin\mock\sys\menu.ts
+            const menus = await getMenuList() as RouteRecordItem[]
+
+            //获取 OC菜单
+            const ocMenus = await getOcMenu()
+            //将后ocMenus的数据结构转换为 RouteRecordItem 的数据结构
+            
+            //TODO: 合并菜单
+
+            routeList = menus as RouteRecordItem[]
           } catch (error) {
             console.error(error)
           }

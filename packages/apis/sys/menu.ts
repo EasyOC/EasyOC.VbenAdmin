@@ -1,4 +1,4 @@
-import { request } from '@pkg/request'
+import { request } from '@pkg/request' 
 
 export interface RouteItem {
   path: string
@@ -10,6 +10,7 @@ export interface RouteItem {
   caseSensitive?: boolean
   children?: RouteItem[]
 }
+
 
 /**
  * @description: Get menu return value

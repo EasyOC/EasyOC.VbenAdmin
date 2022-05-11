@@ -43,9 +43,9 @@ declare module 'vue-router' {
     //amis props
     isAmisPage?: boolean
     amisProps?: {
-      schema: any
+      schemaId: string
     }
   }
 }
 
-export {}
+export { }
