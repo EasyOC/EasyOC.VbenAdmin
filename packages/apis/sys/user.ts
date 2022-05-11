@@ -2,6 +2,8 @@ import type { ErrorMessageMode } from '../../types'
 import { ocApi, request } from '../../request'
 import { ContentTypeEnum } from '../../tokens'
 import { context } from '../../request/bridge'
+import { SessionServiceProxy } from '../eoc/app-service-proxies'
+import { excuteGraphqlQuery } from '../eoc/graphqlApi'
 
 /**
  * @description: Login interface parameters
@@ -47,8 +49,8 @@ export interface GetUserInfoModel {
 enum Api {
   Login = '/connect/token',
   Logout = '/connect/logout',
-  GetUserInfo = '/connect/userinfo',
-  GetPermCode = '/getPermCode',
+  GetUserInfo = '/api/Session/GetCurrentUserInfo',
+  GetPermCode = '/api/Session/Menus',
 }
 /**
  * @description: user login api
@@ -87,15 +89,44 @@ enum Api {
 /**
  * @description: getUserInfo
  */
-export function getUserInfo() {
-  return request.get<GetUserInfoModel>(
-    { url: Api.GetUserInfo },
-    { errorMessageMode: 'none' },
-  )
+export async function getUserInfo() {
+  // return request.get<GetUserInfoModel>(
+  //   { url: Api.GetUserInfo },
+  //   { errorMessageMode: 'none' },
+  // )
+
+
+  const result = await excuteGraphqlQuery({
+    query: `query MyQuery {
+      me {
+        ... on UserProfile {
+          userProfile {
+            avatar {
+              urls
+            }
+          } 
+          author
+          contentItemId
+          contentItemVersionId
+          contentType
+          createdUtc
+          displayText
+          userName
+          email
+          latest
+          modifiedUtc
+          owner
+        }
+      }
+    }`,
+  })
+
+    return result.data
+
 }
 
 export function getPermCode() {
-  return request.get<string[]>({ url: Api.GetPermCode })
+  return new SessionServiceProxy().menus() //request.get<string[]>({ url: Api.GetPermCode })
 }
 
 export function doLogout() {
