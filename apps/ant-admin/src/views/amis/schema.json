@@ -16,18 +16,23 @@
           "&": "$$"
         },
         "dataType": "json",
-        "requestAdaptor": "\r\nconsole.log(\"api.发送适配器\",api)\r\nconst filterParams=[`status: ${api.data.status}`]\r\nif(api.data.displayText){\r\n     filterParams.push(`where: {displayText_contains: \"${api.data.displayText}\"}`)\r\n}\r\nif(api.data.orderBy){\r\n    filterParams.push(`orderBy:{${api.body.orderBy}:${api.body.orderDir.toUpperCase()}}`)\r\n}\r\nconsole.log(\"filterParams.join(',')\",filterParams.join(','))\r\nconst  query=`\r\n    {   items: amisSchema(\r\n        ${filterParams.join(',')}\r\n        )\r\n         {contentItemVersionId displayText   \r\n           createdUtc\r\n           contentItemId\r\n    latest\r\n           published\r\n           publishedUtc\r\n           modifiedUtc\r\n           author\r\n        } \r\n    }\r\n    ` \r\napi.data={query}\r\nconsole.log(\"api.发送适配器2\",api)\r\nreturn api"
+        "requestAdaptor": "\r\nconsole.log(\"api.发送适配器\",api)\r\nconst filterParams=[`status: ${api.data.status}`]\r\nif(api.data.displayText){\r\n     filterParams.push(`where: {displayText_contains: \"${api.data.displayText}\"}`)\r\n}\r\nif(api.data.orderBy){\r\n    filterParams.push(`orderBy:{${api.body.orderBy}:${api.body.orderDir.toUpperCase()}}`)\r\n}\r\nconsole.log(\"filterParams.join(',')\",filterParams.join(','))\r\nconst  query=`\r\n    {   items: amisSchema(\r\n        ${filterParams.join(',')}\r\n        )\r\n         {contentItemVersionId displayText   \r\n           createdUtc\r\n           contentItemId\r\n           latest\r\n           name\r\n           published\r\n           publishedUtc\r\n           modifiedUtc\r\n           author\r\n        } \r\n    }\r\n    ` \r\napi.data={query}\r\nconsole.log(\"api.发送适配器2\",api)\r\nreturn api"
       },
       "columns": [
         {
           "name": "displayText",
-          "label": "名称",
+          "label": "显示名称",
           "placeholder": "-",
           "sortable": true,
           "popOver": false,
           "quickEdit": false,
           "inline": true,
           "type": "text"
+        },
+        {
+          "type": "text",
+          "label": "页面名称",
+          "name": "name"
         },
         {
           "type": "status",
@@ -127,7 +132,7 @@
                     "type": "form",
                     "api": {
                       "method": "post",
-                      "url": "/api/ContentManagement/PostContent",
+                      "url": "/api/ContentManagement/PostContent?draft=${isDraft}",
                       "dataType": "json"
                     },
                     "body": [
@@ -139,13 +144,25 @@
                       },
                       {
                         "type": "hidden",
+                        "label": "isDraft",
+                        "name": "isDraft"
+                      },
+                      {
+                        "type": "hidden",
                         "label": "contentItemId",
                         "name": "contentItemId"
                       },
                       {
                         "type": "input-text",
-                        "label": "名称",
+                        "label": "显示名称",
                         "name": "displayText",
+                        "required": true
+                      },
+                      {
+                        "type": "input-text",
+                        "label": "页面名称",
+                        "name": "name",
+                        "id": "u:344a4699b814",
                         "required": true
                       },
                       {
@@ -158,7 +175,9 @@
                         "trueValue": true,
                         "falseValue": false,
                         "onText": "已发布",
-                        "offText": "未发布"
+                        "offText": "未发布",
+                        "readOnly": true,
+                        "disabled": true
                       },
                       {
                         "type": "textarea",
@@ -177,11 +196,47 @@
                         "showCounter": true,
                         "mode": "",
                         "inline": false
+                      },
+                      {
+                        "type": "container",
+                        "id": "u:4db12b8df64c",
+                        "style": {
+                          "textAlign": "right"
+                        },
+                        "body": [
+                          {
+                            "type": "button-toolbar",
+                            "buttons": [
+                              {
+                                "type": "submit",
+                                "label": "发布",
+                                "actionType": "submit",
+                                "dialog": {
+                                  "title": "系统提示",
+                                  "body": "对你点击了"
+                                },
+                                "onClick": "props.formStore.setValues({ isDraft: false});\r\n",
+                                "level": "primary"
+                              },
+                              {
+                                "type": "submit",
+                                "label": "草稿",
+                                "actionType": "submit",
+                                "dialog": {
+                                  "title": "系统提示",
+                                  "body": "对你点击了"
+                                },
+                                "onClick": "props.formStore.setValues({ isDraft: true});\r\n"
+                              }
+                            ],
+                            "id": "u:f4244cf1ad06"
+                          }
+                        ]
                       }
                     ],
                     "initApi": {
                       "method": "get",
-                      "url": "/api/graphql?query={  contentItem(contentItemId: \"${contentItemId}\") {     ... on AmisSchema {      createdUtc       description       displayText     schema       contentItemId       contentType       latest owner published       contentItemVersionId     }   } }",
+                      "url": "/api/graphql?query={  contentItem(contentItemId: \"${contentItemId}\") {     ... on AmisSchema {      createdUtc       description       displayText     schema       contentItemId    name   contentType       latest owner published       contentItemVersionId     }   } }",
                       "data": null,
                       "dataType": "json",
                       "replaceData": true,
@@ -191,50 +246,57 @@
                       "sendOn": "!!this.contentItemId"
                     },
                     "name": "EditForm",
-                    "actions": [
-                    ]
+                    "debug": false
                   }
                 ],
                 "closeOnEsc": true,
                 "closeOnOutside": false,
                 "showCloseButton": true,
                 "size": "xl",
+                "actions": [
+                ],
                 "data": null
               },
-              "onClick": "console.log(props,'Editing')"
+              "onClick": "\r\n\r\nconsole.log(props,'Editing')"
             },
             {
-              "label": "预览",
+              "label": "设计器",
               "type": "button",
               "actionType": "url",
               "level": "link",
-              "url": "/amis/adv/${displayText}",
-              "disabledOn": "!this.latest",
-              "blank": false,
-              "id": "u:bfd10d15009c",
-              "placeholder": "-"
-            },
-            {
-              "type": "button",
-              "label": "设计器",
-              "actionType": "",
-              "level": "link",
-              "onClick": "window.open(`/amis-editor-renderer/index.html#/edit/${props.data.contentItemId}`)",
+              "dialog": {
+                "title": "查看详情",
+                "body": {
+                  "type": "form",
+                  "api": "xxx/update",
+                  "body": [
+                    {
+                      "name": "id",
+                      "label": "ID",
+                      "type": "static"
+                    },
+                    {
+                      "name": "engine",
+                      "label": "渲染引擎",
+                      "type": "static"
+                    }
+                  ]
+                }
+              },
+              "url": "/index.html#/edit/${contentItemId}",
+              "onClick": "//window.open(`/amis-editor-renderer/index.html#/edit/${props.data.contentItemId}`)",
               "disabledOn": "!this.latest",
               "perPageAvailable": [
                 10
-              ]
+              ],
+              "blank": true,
+              "id": "btnOpenDesign"
             },
             {
               "type": "button",
-              "label": "复制",
-              "actionType": "dialog",
+              "label": "从类型创建", 
               "level": "link",
-              "dialog": {
-                "title": "系统提示",
-                "body": "对你点击了"
-              },
-              "id": "u:86d05e9edaa7",
+              "id": "btnCreateFromType",
               "placeholder": "-"
             },
             {
@@ -272,6 +334,7 @@
           "actionType": "dialog",
           "level": "primary",
           "dialog": {
+            "type": "dialog",
             "title": "编辑",
             "body": [
               {
@@ -283,16 +346,28 @@
                 },
                 "body": [
                   {
+                    "type": "hidden",
                     "name": "contentType",
                     "label": "ContentType",
-                    "type": "hidden",
                     "value": "AmisSchema"
                   },
                   {
+                    "type": "hidden",
+                    "name": "isDraft",
+                    "label": "isDraft"
+                  },
+                  {
                     "type": "input-text",
-                    "label": "名称",
                     "name": "displayText",
+                    "label": "显示名称",
                     "required": true
+                  },
+                  {
+                    "type": "input-text",
+                    "name": "name",
+                    "label": "页面名称",
+                    "required": true,
+                    "id": "u:344a4699b814"
                   },
                   {
                     "type": "textarea",
@@ -301,8 +376,8 @@
                   },
                   {
                     "type": "textarea",
-                    "label": "JSON Schema",
                     "name": "schema",
+                    "label": "JSON Schema",
                     "language": "json",
                     "minRows": 3,
                     "maxRows": 20,
@@ -319,7 +394,6 @@
                 ]
               }
             ],
-            "type": "dialog",
             "closeOnEsc": true,
             "closeOnOutside": false,
             "showCloseButton": true,
@@ -396,7 +470,8 @@
           "align": "right"
         }
       ],
-      "filterColumnCount": 3
+      "filterColumnCount": 3,
+      "name": "contentmange"
     },
     {
       "type": "button",

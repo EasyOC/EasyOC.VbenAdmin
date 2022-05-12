@@ -30,7 +30,7 @@ export async function apiRequest(config: AxiosRequestConfig | boolean | any) {
         return;
     }
     config.headers.Authorization = 'Bearer ' + token;
-
+    // config.headers['Content-Type'] = 'application/json'; 
     if (method !== 'post' && method !== 'put' && method !== 'patch') {
         if (data) {
             config.params = data;
@@ -59,8 +59,8 @@ export async function apiRequest(config: AxiosRequestConfig | boolean | any) {
     } else {
         console.log('defaultRequest result ', result);
         const finalResult = {
-            ...result,
-            data: result.data.data
+            ...result.data,
+            // data: result.data.data
         };
         console.log('defaultRequest finalResult', finalResult);
         return finalResult;

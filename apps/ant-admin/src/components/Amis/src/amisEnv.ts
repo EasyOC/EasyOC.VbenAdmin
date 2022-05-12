@@ -2,6 +2,7 @@
 import { ocApi } from '@pkg/request'
 // import { useGo } from '@/hooks/web/usePage'
 import { useGo } from '@/hooks/web/usePage'
+import { getGlobalConfig } from '@/internal'
 export default function getEnv() {
   const go = useGo()
 
@@ -52,6 +53,7 @@ export default function getEnv() {
           data: result.data.data,
           status: result.status == 200 ? 0 : result.status,
           msg: result.statusText,
+
         }
         console.log('global graphql Result', finalResult)
         return finalResult
@@ -59,6 +61,7 @@ export default function getEnv() {
         console.log('global result ', result)
         const finalResult = {
           ...result,
+          status: result.data.statusCode,
           data: result.data.data,
         }
         console.log('global Result', finalResult)
@@ -80,11 +83,24 @@ export default function getEnv() {
     },
     //
     // 用来接管页面跳转，比如用 location.href 或 window.open，或者自己实现 amis 配置更新
-    jumpTo: (to) => {
-      console.log('go', to)
-
-      // useGo(to)
-      go(to)
+    jumpTo: (url, schema, data) => {
+      console.log('to, schema, data: ', url, schema, data);
+      url = url.toLocaleLowerCase()
+      if (schema.blank || url.startsWith("http")) {
+        const globConfig = getGlobalConfig();
+        if (!url.startsWith("http"))
+          if (!url.startsWith('/')) {
+            url = '/' + url;
+          }
+        if (globConfig.amisEditorUrl?.endsWith('/')) {
+          url = globConfig.amisEditorUrl.substring(0, globConfig.amisEditorUrl.length - 1) + url;
+        } else {
+          url = globConfig.amisEditorUrl + url;
+        }
+        window.open(url);
+      } else {
+        go(url)
+      }
     },
     //
     // 用来实现地址栏更新
