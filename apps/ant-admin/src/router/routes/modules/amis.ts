@@ -29,10 +29,7 @@ const amis: RouteRecordItem = {
       component: () => import('@/views/amis/AmisDynamic.vue'),
       meta: {
         hideMenu: true,
-        title: t('routes.amis.AmisPreview'),
-        amisProps: {
-          schemaId: '1231241231241'
-        }
+        title: t('routes.amis.AmisPreview')
       },
     },
     // 暂不启用 ，hash 路由无法跳转 ，可能需要重写 Amis 编辑器项目的 路由功能

@@ -31,12 +31,15 @@ import { getMenuList } from '@pkg/apis/system'
 import { useDrawer } from '@/components/drawer'
 import MenuDrawer from './MenuDrawer.vue'
 import { columns, searchFormSchema } from './menu.data'
+import { usePermission } from '@/hooks/web/usePermission'
+
 import {
   // ContentFieldsMapping,
   getGPContentItem,
-GpContentItem
+  GpContentItem
 } from '@pkg/apis/eoc/contentApi'
 import { ContentTypeService } from '@/api/ContentTypeService'
+import { useUserStore } from '@/store/user'
 
 export default defineComponent({
   name: 'MenuManagement',
@@ -82,6 +85,8 @@ export default defineComponent({
           component
           createdUtc
           show
+          componentType
+          schemaId
           orderNo
           icon
           routePath
@@ -121,9 +126,14 @@ export default defineComponent({
       reload()
     }
 
-    function handleSuccess() {
+    async function handleSuccess() {
       reload()
+      const { afterLoginAction } = useUserStore()
+      await afterLoginAction(false)
+      const { refreshMenu } = usePermission()
+      refreshMenu()
     }
+
 
     function onFetchSuccess() {
       // 演示默认展开所有表项

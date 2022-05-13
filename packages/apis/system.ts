@@ -92,7 +92,6 @@ enum Api {
   IsAccountExist = '/system/accountExist',
   DeptList = '/system/getDeptList',
   setRoleStatus = '/system/setRoleStatus',
-  MenuList = '/system/getMenuList',
   RolePageList = '/system/getRoleListByPage',
   GetAllrRoleList = '/system/getrAllRoleList',
 }
@@ -159,8 +158,11 @@ export const getMenuList = async () => {
             menuName
             icon
             permission
+            meta
             component
+            menuType
             orderNo
+            schemaId
             status
             modifiedUtc
             createdUtc

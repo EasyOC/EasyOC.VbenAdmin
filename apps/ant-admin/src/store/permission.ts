@@ -16,9 +16,49 @@ import { PermissionModeEnum, PageEnum } from '@pkg/tokens'
 import { asyncRoutes } from '@/router/routes'
 import { PAGE_NOT_FOUND_ROUTE } from '@/router/routes/basic'
 import { filterTree } from '@pkg/utils'
-import { getMenuList, getPermCode } from '@pkg/apis/sys'
+import { getPermCode } from '@pkg/apis/sys'
 import { useMessage } from '@/hooks/web/useMessage'
 import { getMenuList as getOcMenu } from '@pkg/apis/system'
+import { menus } from './testMenus'
+
+async function getMenuListTest() {
+  return Promise.resolve(menus)
+}
+
+function transformOcMenuToMenu(menu: any[]): RouteRecordItem[] {
+
+  let menuList: RouteRecordItem[] = []
+  if (menu && menu.length > 0) {
+    menuList = menu.filter(x =>  x.menuType != "2").map((item: any) => {
+      const { routePath, schemaId, displayText, component, meta, icon, children } = item
+      let child: RouteRecordItem[] = [];
+      if (children && children.length > 0) {
+        child = transformOcMenuToMenu(children);
+      }
+
+      let metaProp: any = {}
+      if (meta) {
+        metaProp = JSON.parse(meta)
+      }
+      const route: RouteRecordItem = {
+        path: routePath,
+        name: displayText,
+        component,
+        meta: {
+          title: displayText,
+          schemaId,
+          icon,
+          ...metaProp
+        },
+        children: child,
+
+      } as RouteRecordItem
+      return route
+    })
+  }
+
+  return menuList;
+}
 
 export interface RouteItem {
   path: string
@@ -101,9 +141,11 @@ export const usePermissionStore = defineStore({
     },
     async changePermissionCode() {
       const codeList = await getPermCode()
+      console.log('codeList: ', codeList);
       this.setPermCodeList(codeList)
     },
     async buildRoutesAction(): Promise<RouteRecordItem[]> {
+      console.log(2222222222);
       const { t } = useI18n()
       const userStore = useUserStore()
       const appStore = useAppStoreWithOut()
@@ -157,6 +199,7 @@ export const usePermissionStore = defineStore({
         return
       }
 
+      console.log('permissionMode: ', permissionMode);
       switch (permissionMode) {
         case PermissionModeEnum.ROLE:
           routes = filterTree(asyncRoutes, routeFilter)
@@ -182,6 +225,8 @@ export const usePermissionStore = defineStore({
 
         //  If you are sure that you do not need to do background dynamic permissions, please comment the entire judgment below
         case PermissionModeEnum.BACK:
+
+          console.log(1111111111111)
           const { createMessage } = useMessage()
 
           createMessage.loading(t('sys.app.menuLoading'))
@@ -194,15 +239,35 @@ export const usePermissionStore = defineStore({
             //首先修改权限模式 为后台模式
             //src/settings/projectSetting.ts
             //获取vben菜单 ， 数据源：apps\ant-admin\mock\sys\menu.ts
-            const menus = await getMenuList() as RouteRecordItem[]
+            const menus = await getMenuListTest() as RouteRecordItem[]
+            // routes = filterTree(asyncRoutes, routeFilter)
+            // routes = routes.filter(routeFilter)
+            // const menus = transformRouteToMenu(routes, true)
+            console.log('menus:111 ', JSON.stringify(menus));
 
             //获取 OC菜单
             const ocMenus = await getOcMenu()
+            console.log('ocMenus:111', ocMenus);
             //将后ocMenus的数据结构转换为 RouteRecordItem 的数据结构
-            
+            const ocMenuList = transformOcMenuToMenu(ocMenus)
+            console.log('ocMenuList: ', JSON.stringify(ocMenuList));
+
+
+            // const ocRoutes = ocMenus.map((menu:any) => {
+            //   const { path, name, meta, children } = menu
+            //   const route: RouteRecordItem = {
+            //     path,
+            //     name,
+            //     meta,
+            //     children,
+            //   }
+            //   return route
+            // })
+
+
             //TODO: 合并菜单
 
-            routeList = menus as RouteRecordItem[]
+            routeList = [...menus, ...ocMenuList] as RouteRecordItem[]
           } catch (error) {
             console.error(error)
           }
@@ -226,6 +291,7 @@ export const usePermissionStore = defineStore({
       patchHomeAffix(routes)
       return routes
     },
+
   },
 })
 

@@ -42,9 +42,7 @@ declare module 'vue-router' {
     hidePathForChildren?: boolean
     //amis props
     isAmisPage?: boolean
-    amisProps?: {
-      schemaId: string
-    }
+    amisSchemaId?: string
   }
 }
 
