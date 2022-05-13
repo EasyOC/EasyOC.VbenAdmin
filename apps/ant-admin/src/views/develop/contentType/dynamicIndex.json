@@ -1,0 +1,308 @@
+{
+  "type": "page",
+  "regions": [
+    "body",
+    "toolbar",
+    "header"
+  ],
+  "body": [
+    {
+      "type": "form",
+      "title": "表单",
+      "body": [
+        {
+          "type": "grid",
+          "columns": [
+            {
+              "body": [
+                {
+                  "type": "select",
+                  "label": "类型",
+                  "name": "typeName",
+                  "id": "u:01e84799b97b",
+                  "source": {
+                    "method": "get",
+                    "url": "/api/ContentTypeManagement/GetAllTypes",
+                    "data": {
+                      "typeName": "${typeName}",
+                      "stereotype": "1",
+                      "pageSize": "-1"
+                    },
+                    "adaptor": "console.log('dropdown options11',response)\r\nvar items = response.data.items.map(x=>{\r\n    return {label:x.displayName,value:x.name}\r\n})\r\nconsole.log('dropdown options',items)\r\nreturn {options:items}",
+                    "replaceData": false,
+                    "responseData": null,
+                    "dataType": "json"
+                  },
+                  "searchable": true,
+                  "submitOnChange": false,
+                  "validations": {},
+                  "mode": "horizontal",
+                  "size": "",
+                  "horizontal": {
+                    "leftFixed": "normal",
+                    "left": 2,
+                    "right": 10
+                  },
+                  "checkAll": false
+                }
+              ]
+            },
+            {
+              "body": [
+                {
+                  "type": "submit",
+                  "label": "刷新",
+                  "actionType": "dialog",
+                  "dialog": {
+                    "title": "系统提示",
+                    "body": "对你点击了"
+                  },
+                  "id": "u:c25bbea0513a",
+                  "checkAll": false,
+                  "level": "primary"
+                }
+              ]
+            }
+          ],
+          "id": "u:eec0b89bd4a5"
+        }
+      ],
+      "api": "",
+      "id": "u:e9b1e459dc49",
+      "actions": [],
+      "submitOnChange": true,
+      "submitOnInit": true,
+      "reload": "indexConfigForm",
+      "target": "indexConfigForm,manageIndexpage,btnSubmit",
+      "checkAll": false,
+      "name": "firstForm",
+      "wrapWithPanel": false,
+      "className": "m-b",
+      "mode": "horizontal",
+      "horizontal": {
+        "leftFixed": "",
+        "left": 4,
+        "right": 8
+      }
+    },
+    {
+      "type": "form",
+      "title": "",
+      "body": [
+        {
+          "type": "grid",
+          "columns": [
+            {
+              "body": [
+                {
+                  "type": "static",
+                  "label": "数据库表名",
+                  "id": "u:daf8d9d48471",
+                  "name": "tableName"
+                }
+              ]
+            },
+            {
+              "valign": "",
+              "columnClassName": "",
+              "md": "auto"
+            }
+          ],
+          "id": "u:84b91d3bdecf"
+        },
+        {
+          "type": "tabs",
+          "tabs": [
+            {
+              "title": "字段映射",
+              "body": [
+                {
+                  "type": "input-table",
+                  "name": "fields",
+                  "label": "字段列表",
+                  "columns": [
+                    {
+                      "label": "字段名称",
+                      "name": "contentFieldOption.displayName",
+                      "type": "text",
+                      "placeholder": "-",
+                      "className": "",
+                      "groupName": "OrchardCore"
+                    },
+                    {
+                      "label": "字段",
+                      "name": "contentFieldOption.fieldName",
+                      "type": "text",
+                      "placeholder": "-",
+                      "className": "",
+                      "groupName": "OrchardCore"
+                    },
+                    {
+                      "label": "Part",
+                      "name": "contentFieldOption.partName",
+                      "type": "text",
+                      "placeholder": "-",
+                      "className": "",
+                      "groupName": "OrchardCore"
+                    },
+                    {
+                      "type": "text",
+                      "label": "字段类型",
+                      "name": "contentFieldOption.fieldType",
+                      "placeholder": "-",
+                      "groupName": "OrchardCore",
+                      "className": ""
+                    },
+                    {
+                      "label": "数据库字段",
+                      "name": "name",
+                      "type": "text",
+                      "placeholder": "-",
+                      "groupName": "数据库"
+                    },
+                    {
+                      "label": "字段长度",
+                      "name": "length",
+                      "placeholder": "-",
+                      "groupName": "数据库",
+                      "type": "text"
+                    },
+                    {
+                      "name": "csTypeName",
+                      "label": "类型",
+                      "placeholder": "-",
+                      "groupName": "数据库",
+                      "type": "text"
+                    },
+                    {
+                      "name": "disabled",
+                      "groupName": "数据库",
+                      "placeholder": "-",
+                      "type": "checkbox",
+                      "id": "u:181ccb459697",
+                      "option": "",
+                      "label": "Disabled"
+                    },
+                    {
+                      "name": "isDefaultIndex",
+                      "groupName": "数据库",
+                      "id": "u:181ccb459697",
+                      "placeholder": "-",
+                      "type": "checkbox",
+                      "option": "",
+                      "label": "TableIndex"
+                    }
+                  ],
+                  "strictMode": false,
+                  "id": "u:2003cb60cb7a",
+                  "mode": "horizontal",
+                  "size": "",
+                  "horizontal": {
+                    "leftFixed": "normal",
+                    "left": 2,
+                    "right": 10
+                  },
+                  "placeholder": "-",
+                  "copyable": false
+                }
+              ]
+            },
+            {
+              "title": "实体类",
+              "body": [
+                {
+                  "type": "editor",
+                  "label": "代码编辑器",
+                  "name": "entityInfo.entityContent",
+                  "id": "u:73702e911714"
+                }
+              ]
+            }
+          ],
+          "id": "u:dc655cbe8e52"
+        },
+        {
+          "type": "hidden",
+          "name": "contentItemId",
+          "id": "u:bd12b2a13634"
+        },
+        {
+          "type": "hidden",
+          "name": "contentType",
+          "id": "u:a1ae08b567b3",
+          "value": "DynamicIndexConfigSetting"
+        },
+        {
+          "type": "hidden",
+          "name": "typeName",
+          "id": "u:bd12b2a13634"
+        }
+      ],
+      "id": "u:5bd9921a8c0a",
+      "checkAll": false,
+      "mode": "horizontal",
+      "initApi": {
+        "method": "get",
+        "url": "/api/DynamicIndex/GetDynamicIndexConfigOrDefault",
+        "data": {
+          "typeName": "${typeName}"
+        },
+        "dataType": "json",
+        "sendOn": "typeName",
+        "requestAdaptor": "if(!api.body.typeName){\r\n    return false\r\n}",
+        "adaptor": ""
+      },
+      "affixFooter": false,
+      "wrapWithPanel": false,
+      "horizontal": {
+        "leftFixed": "normal",
+        "left": 3,
+        "right": 9
+      },
+      "strictMode": true,
+      "submitOnChange": false,
+      "name": "indexConfigForm",
+      "debug": false,
+      "canAccessSuperData": false,
+      "api": "post:/api/DynamicIndex/UpdateDynamicIndex",
+      "placeholder": "-"
+    }
+  ],
+  "style": {
+    "fontWeight": "normal",
+    "backgroundColor": "",
+    "fontSize": "16px"
+  },
+  "title": "动态索引设置",
+  "subTitle": "将根据此页面的配置创建或更新索引表",
+  "toolbar": [
+    {
+      "type": "submit",
+      "label": "提交",
+      "actionType": "submit",
+      "dialog": {
+        "title": "系统提示",
+        "body": "对你点击了"
+      },
+      "id": "u:41627a0c4d0b",
+      "level": "primary",
+      "confirmText": "提交执行将更新数据库表，请确保已备份相关数据",
+      "target": "indexConfigForm",
+      "disabledOn": "!this.typeName",
+      "name": "btnSubmit"
+    },
+    {
+      "type": "button",
+      "label": "重建索引",
+      "actionType": "ajax",
+      "dialog": {
+        "title": "系统提示",
+        "body": "对你点击了"
+      },
+      "id": "u:78e8dfd57661",
+      "disabledOn": "!this.typeName",
+      "api": "get:/api/DynamicIndex/RebuildIndexData?typeName=${typeName}"
+    }
+  ],
+  "name": "manageIndexpage"
+}
