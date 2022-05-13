@@ -26,7 +26,6 @@ export function restoreComplexModel(model: any, schemas: FormSchema[]) {
         set(res, schema.fieldMap.mapTo, res[schema.field])
       }
     })
-  debugger
   console.log(res, "NewData")
   return res
 }

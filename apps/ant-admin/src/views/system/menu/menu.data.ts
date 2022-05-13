@@ -3,6 +3,23 @@ import { FormSchema } from '@/components/table'
 import { h } from 'vue'
 import { Icon } from '@components/common'
 import { Tag, TreeSelectProps } from 'ant-design-vue'
+import { excuteGraphqlQuery } from '@pkg/apis/eoc/graphqlApi'
+
+async function querySchema(params) {
+  //items: amisSchema(status: PUBLISHED, where: {displayText_contains: ""}) {
+  const result = await excuteGraphqlQuery({
+    query: `{
+      items: amisSchema(status: LATEST) {
+        displayText
+        contentItemId
+        published
+      }
+    }
+    `
+  })
+
+  return result.data.items.filter(x=>x.published);
+}
 
 export const columns: BasicColumn[] = [
   {
@@ -103,7 +120,7 @@ export const formSchema: FormSchema[] = [
     component: 'Input',
     required: true,
   },
-  { 
+  {
     field: 'parentMenu',
     label: '上级菜单',
     component: 'TreeSelect',
@@ -163,7 +180,43 @@ export const formSchema: FormSchema[] = [
     required: true,
     ifShow: ({ values }) => !isButton(values.menuType),
   },
+  {
+    field: 'componentType',
+    label: '组件类型',
+    component: 'RadioButtonGroup',
+    defaultValue: '0',
+    componentProps: { 
+      options: [
+        { label: 'LAYOUT', value: '0' },
+        { label: '组件', value: '1' },
+        { label: '动态页', value: '2' },
 
+      ],
+    },
+    colProps: { lg: 24, md: 24 },
+    ifShow: ({ values }) => isMenu(values.menuType),
+  },
+  {
+    field: 'component',
+    label: '组件路径',
+    component: 'Input',
+    ifShow: ({ values }) => isMenu(values.menuType),
+    dynamicDisabled: ({ values }) => values.menuType != '1',
+  },
+  {
+    field: 'schemaId',
+    label: '动态页',
+    component: 'ApiSelect',
+    componentProps: {
+      api: querySchema,
+      labelField: 'displayText',
+      valueField: 'contentItemId',
+      showSearch: true,
+      optionFilterProp: "label"
+    },
+    required: true,
+    ifShow: ({ values }) => values.componentType === '2',
+  },
   {
     field: 'routePath',
     label: '路由地址',
@@ -171,12 +224,7 @@ export const formSchema: FormSchema[] = [
     required: true,
     ifShow: ({ values }) => !isButton(values.menuType),
   },
-  {
-    field: 'component',
-    label: '组件路径',
-    component: 'Input',
-    ifShow: ({ values }) => isMenu(values.menuType),
-  },
+
   {
     field: 'permission',
     label: '权限标识',

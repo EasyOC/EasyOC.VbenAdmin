@@ -12,14 +12,14 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computed, ref, onMounted,onBeforeMount } from 'vue'
+import { computed, ref, onMounted, onBeforeMount } from 'vue'
 import { Amis } from '@/components/Amis'
 import { TrackerEventArgs } from '@/components/Amis/src/types'
 import { excuteGraphqlQuery } from '@pkg/apis/eoc/graphqlApi'
 import { useRouter } from 'vue-router'
 
 // import MonacoEditor from '@/components/MonacoEditor/index.vue'
-let monacoEditor = ref<any>({})
+// let monacoEditor = ref<any>({})
 const amisjson = ref<any>({})
 // const amisjsonStr = computed({
 //   get: () => {
@@ -34,41 +34,39 @@ onMounted(async () => { })
 
 // const schemaId = ref<string>('')
 onBeforeMount(async () => {
-console.log('currentRoute', currentRoute.value)
+  console.log('currentRoute', currentRoute.value)
 
-  console.log("currentRoute", currentRoute)
 })
-
-// function editorDidMounted(editor) {
-//   monacoEditor.value = editor
-// }
-// function editorUpdated(value) {
-//   amisjsonStr.value = value
-//   amisScoped.value.updateProps(amisjson.value)
-// }
+ 
 
 function eventTrackerEvent(tracker: TrackerEventArgs) {
   console.log('该信息来自于Vue事件监听：', tracker)
 }
 
+
+
+
 const amisScoped = ref<any>(null)
 async function amisMounted(amisScope) {
   amisScoped.value = amisScope
-  const pageName = currentRoute.value.params.pageName as string
-  const result = await excuteGraphqlQuery({
-    query: `{
-    amisPageSchema: getAmisPageSchema(
-      parameters: "{'name':'${pageName.toLowerCase()}'}") {
-      schemaText:schema
-    }
+  if (currentRoute.value.meta.schemaId) {
+    const result = await excuteGraphqlQuery({
+      query: `{
+          contentItem(contentItemId: "${currentRoute.value.meta.schemaId}") {
+            ... on AmisSchema {
+              displayText
+              createdUtc
+              description
+              schema
+              name
+            }
+          }
+        }`
+    })
+    amisjson.value = JSON.parse(result.data.contentItem.schema)
+    amisScoped.value.updateProps(amisjson.value)
   }
-      `,
-  })
-  if (!result?.data?.amisPageSchema) {
-    console.log('page Not found')
-  }
-  amisjson.value = JSON.parse(result?.data?.amisPageSchema[0].schemaText)
-  amisScoped.value.updateProps(amisjson.value)
-  monacoEditor.value.getAction(['editor.action.formatDocument'])._run()
+
+  // monacoEditor.value.getAction(['editor.action.formatDocument'])._run()
 }
 </script>

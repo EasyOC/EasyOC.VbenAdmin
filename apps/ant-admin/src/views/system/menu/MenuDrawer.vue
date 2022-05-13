@@ -24,7 +24,7 @@ export default defineComponent({
     const isUpdate = ref(true)
     const typeName = 'VbenMenu'
     const contentSvr = new ContentManagementServiceProxy()
-    let contentItem=ref<any>(new GpContentItem(typeName)) 
+    let contentItem = ref<any>(new GpContentItem(typeName))
     //复杂对象配置
 
     // const treeData = ref([])
@@ -47,19 +47,40 @@ export default defineComponent({
         resetFields()
         setDrawerProps({ confirmLoading: false })
         isUpdate.value = !!data?.isUpdate
-        contentItem = data.record; 
+        contentItem = data.record;
         if (unref(isUpdate)) {
           setFieldsValue({
             ...expandComplexModel(data.record, formSchema),
           })
         }
         const treeData = await getMenuList()
-        updateSchema({
+
+
+
+        updateSchema([{
           field: 'parentMenu',
           componentProps: {
             treeData
           } as TreeSelectProps,
-        })
+        }, {
+          field: 'componentType',
+          componentProps: {
+            onChange: (a) => { 
+              const values = a;
+              console.log('values: ', values);
+              switch (values) {
+                case '0':
+                  // values.component = 'LAYOUT'
+                  setFieldsValue({component: 'LAYOUT'})
+                  break
+                case '2':
+                  setFieldsValue({component: '/amis/AmisDynamic'})
+                  break
+              }
+            },
+          }
+        }]
+        )
 
       },
     )
@@ -83,7 +104,7 @@ export default defineComponent({
         await contentSvr.postContent(false, res)
         closeDrawer()
         emit('success')
-      }     
+      }
       finally {
         setDrawerProps({ confirmLoading: false })
       }
