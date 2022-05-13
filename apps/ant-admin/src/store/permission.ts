@@ -15,14 +15,16 @@ import { projectSetting } from '@pkg/setting'
 import { PermissionModeEnum, PageEnum } from '@pkg/tokens'
 import { asyncRoutes } from '@/router/routes'
 import { PAGE_NOT_FOUND_ROUTE } from '@/router/routes/basic'
-import { filterTree } from '@pkg/utils'
+import { clone,deepMerge, filterTree } from '@pkg/utils'
 import { getPermCode } from '@pkg/apis/sys'
 import { useMessage } from '@/hooks/web/useMessage'
 import { getMenuList as getOcMenu } from '@pkg/apis/system'
 import { menus } from './testMenus'
 
 async function getMenuListTest() {
-  return Promise.resolve(menus)
+  // const newMenus= clone(menus)
+  const newMenus=JSON.parse(JSON.stringify(menus))
+  return Promise.resolve(newMenus)
 }
 
 function transformOcMenuToMenu(menu: any[]): RouteRecordItem[] {
