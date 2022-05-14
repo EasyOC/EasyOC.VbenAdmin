@@ -37,102 +37,8 @@ const dashboardRoute = {
     },
   ],
 }
-
-const backRoute = {
-  path: 'back',
-  name: 'PermissionBackDemo',
-  meta: {
-    title: 'routes.demo.permission.back',
-  },
-
-  children: [
-    {
-      path: 'page',
-      name: 'BackAuthPage',
-      component: '/demo/permission/back/index',
-      meta: {
-        title: 'routes.demo.permission.backPage',
-      },
-    },
-    {
-      path: 'btn',
-      name: 'BackAuthBtn',
-      component: '/demo/permission/back/Btn',
-      meta: {
-        title: 'routes.demo.permission.backBtn',
-      },
-    },
-  ],
-}
-
-const authRoute = {
-  path: '/permission',
-  name: 'Permission',
-  component: 'LAYOUT',
-  redirect: '/permission/front/page',
-  meta: {
-    icon: 'carbon:user-role',
-    title: 'routes.demo.permission.permission',
-  },
-  children: [backRoute],
-}
-
-const levelRoute = {
-  path: '/level',
-  name: 'Level',
-  component: 'LAYOUT',
-  redirect: '/level/menu1/menu1-1',
-  meta: {
-    icon: 'carbon:user-role',
-    title: 'routes.demo.level.level',
-  },
-
-  children: [
-    {
-      path: 'menu1',
-      name: 'Menu1Demo',
-      meta: {
-        title: 'Menu1',
-      },
-      children: [
-        {
-          path: 'menu1-1',
-          name: 'Menu11Demo',
-          meta: {
-            title: 'Menu1-1',
-          },
-          children: [
-            {
-              path: 'menu1-1-1',
-              name: 'Menu111Demo',
-              component: '/demo/level/Menu111',
-              meta: {
-                title: 'Menu111',
-              },
-            },
-          ],
-        },
-        {
-          path: 'menu1-2',
-          name: 'Menu12Demo',
-          component: '/demo/level/Menu12',
-          meta: {
-            title: 'Menu1-2',
-          },
-        },
-      ],
-    },
-    {
-      path: 'menu2',
-      name: 'Menu2Demo',
-      component: '/demo/level/Menu2',
-      meta: {
-        title: 'Menu2',
-      },
-    },
-  ],
-}
-
+ 
+  
 const sysRoute = {
   path: '/system',
   name: 'System',
@@ -203,36 +109,9 @@ const sysRoute = {
     },
   ],
 }
-
-const linkRoute = {
-  path: '/link',
-  name: 'Link',
-  component: 'LAYOUT',
-  meta: {
-    icon: 'ion:tv-outline',
-    title: 'routes.demo.iframe.frame',
-  },
-  children: [
-    {
-      path: 'doc',
-      name: 'Doc',
-      meta: {
-        title: 'routes.demo.iframe.doc',
-        frameSrc: 'https://vvbin.cn/doc-next/',
-      },
-    },
-    {
-      path: 'https://vvbin.cn/doc-next/',
-      name: 'DocExternal',
-      component: 'LAYOUT',
-      meta: {
-        title: 'routes.demo.iframe.docExternal',
-      },
-    },
-  ],
-}
+ 
 dashboardRoute.redirect =
   dashboardRoute.path + '/' + dashboardRoute.children[0].path
-export const menus = [dashboardRoute, authRoute, levelRoute, sysRoute
+export const menus = [dashboardRoute, sysRoute
   // , linkRoute
 ]
