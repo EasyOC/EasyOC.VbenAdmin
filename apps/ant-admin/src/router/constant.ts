@@ -10,3 +10,4 @@ export const getParentLayout = () => () =>
   new Promise((resolve) => {
     resolve({ name: 'ParentLayout' })
   })
+

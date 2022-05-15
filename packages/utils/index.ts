@@ -3,6 +3,7 @@ export * from './bem'
 
 export {
   cloneDeep,
+  sortBy,
   omit,
   upperFirst,
   uniq,

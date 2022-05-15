@@ -49,6 +49,9 @@ export function transformRouteToMenu(
   const routeList: RouteRecordItem[] = []
 
   cloneRouteModList.forEach((item) => {
+    if(item.meta?.hideInMenu) {
+      return;
+    }
     if (
       routerMapping &&
       item.meta?.hideChildrenInMenu &&

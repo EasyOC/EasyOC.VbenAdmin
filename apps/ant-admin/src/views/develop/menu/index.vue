@@ -5,7 +5,8 @@
         <a-button type="primary" @click="handleCreate"> 新增菜单 </a-button>
       </template>
       <template #action="{ record }">
-        <TableAction :actions="[
+        <TableAction
+          :actions="[
           {
             icon: 'clarity:note-edit-line',
             onClick: handleEdit.bind(null, record),
@@ -94,7 +95,7 @@ export default defineComponent({
           permission
           status
           isExt
-          keepalive
+          keepAlive
           show
           menuName
           menuType

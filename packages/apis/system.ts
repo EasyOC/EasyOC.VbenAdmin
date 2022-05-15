@@ -164,6 +164,8 @@ export const getMenuList = async () => {
             orderNo
             schemaId
             status
+            keepAlive
+            show
             modifiedUtc
             createdUtc
             routePath
@@ -174,7 +176,9 @@ export const getMenuList = async () => {
         }`,
   })
   const menuList = result.data.vbenMenu as []
-
+  menuList.sort((a:any, b:any) => {
+    return (a.orderNo || 0) - (b.orderNo || 0)
+  })
   const treeMenu = listToTree(menuList, {
     id: 'contentItemId',
     rootFinder: (node) => !node.parentMenu?.contentItemIds[0],

@@ -109,7 +109,7 @@ export function transformObjToRoute<T = RouteRecordItem>(
         route.path = ''
         const meta = route.meta || ({} as RouteMeta)
         meta.single = true
-        meta.affix = false
+        meta.affix = false 
         route.meta = meta
       }
     } else {

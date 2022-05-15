@@ -1,15 +1,7 @@
 <template>
-  <div>
     <Amis :amisjson="amisjson" @amisMounted="amisMounted" @eventTrackerEvent="eventTrackerEvent" />
 
-    <!-- <MonacoEditor
-      height="500"
-      language="json"
-      :value="amisjsonStr"
-      @editorDidMount="editorDidMounted"
-      @change="editorUpdated"
-    /> -->
-  </div>
+
 </template>
 <script setup lang="ts">
 import { computed, ref, onMounted, onBeforeMount } from 'vue'
@@ -17,6 +9,7 @@ import { Amis } from '@/components/Amis'
 import { TrackerEventArgs } from '@/components/Amis/src/types'
 import { excuteGraphqlQuery } from '@pkg/apis/eoc/graphqlApi'
 import { useRouter } from 'vue-router'
+import { PageWrapper } from '@/components/Page'
 
 // import MonacoEditor from '@/components/MonacoEditor/index.vue'
 // let monacoEditor = ref<any>({})

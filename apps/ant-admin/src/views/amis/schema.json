@@ -334,64 +334,65 @@
           "level": "primary",
           "dialog": {
             "title": "新增",
-            "body": {
-              "type": "form",
-              "api": {
-                "method": "post",
-                "url": "/api/graphql",
-                "data": {
-                  "&": "$$"
+            "body": [
+              {
+                "type": "form",
+                "api": {
+                  "method": "post",
+                  "url": "/api/ContentManagement/PostContent?draft=true",
+                  "dataType": "json"
                 },
-                "dataType": "json",
-                "requestAdaptor": "\r\nconsole.log(\"api.发送适配器\",api)\r\nconst filterParams=[`status: ${api.data.status}`]\r\nif(api.data.displayText){\r\n     filterParams.push(`where: {displayText_contains: \"${api.data.displayText}\"}`)\r\n}\r\nif(api.data.orderBy){\r\n    filterParams.push(`orderBy:{${api.body.orderBy}:${api.body.orderDir.toUpperCase()}}`)\r\n}\r\nconsole.log(\"filterParams.join(',')\",filterParams.join(','))\r\nconst  query=`\r\n    {   items: amisSchema(\r\n        ${filterParams.join(',')}\r\n        )\r\n         {contentItemVersionId displayText   \r\n           createdUtc\r\n           contentItemId\r\n           latest\r\n           name\r\n           published\r\n           publishedUtc\r\n           modifiedUtc\r\n           author\r\n        } \r\n    }\r\n    ` \r\napi.data={query}\r\nconsole.log(\"api.发送适配器2\",api)\r\nreturn api"
-              },
-              "body": [
-                {
-                  "type": "input-text",
-                  "name": "displayText",
-                  "label": "显示名称"
-                },
-                {
-                  "type": "input-text",
-                  "name": "name",
-                  "label": "页面名称"
-                },
-                {
-                  "type": "select",
-                  "name": "published",
-                  "label": "已发布"
-                },
-                {
-                  "type": "input-date",
-                  "name": "publishedUtc",
-                  "label": "发布时间"
-                },
-                {
-                  "type": "input-date",
-                  "name": "modifiedUtc",
-                  "label": "修改时间"
-                },
-                {
-                  "type": "input-date",
-                  "name": "createdUtc",
-                  "label": "创建时间"
-                },
-                {
-                  "type": "input-text",
-                  "name": "author",
-                  "label": "创建人"
-                },
-                {
-                  "type": "input-operation",
-                  "label": "操作"
-                },
-                {
-                  "type": "select",
-                  "name": "latest",
-                  "label": "latest"
-                }
-              ]
-            }
+                "body": [
+                  {
+                    "type": "hidden",
+                    "name": "contentType",
+                    "label": "ContentType",
+                    "value": "AmisSchema"
+                  },
+                  {
+                    "type": "hidden",
+                    "name": "isDraft",
+                    "label": "isDraft"
+                  },
+                  {
+                    "type": "input-text",
+                    "name": "displayText",
+                    "label": "显示名称",
+                    "required": true
+                  },
+                  {
+                    "type": "input-text",
+                    "name": "name",
+                    "label": "页面名称",
+                    "required": true,
+                    "id": "u:344a4699b814"
+                  },
+                  {
+                    "type": "textarea",
+                    "name": "description",
+                    "label": "描述"
+                  },
+                  {
+                    "type": "textarea",
+                    "name": "schema",
+                    "label": "JSON Schema",
+                    "language": "json",
+                    "minRows": 3,
+                    "maxRows": 20,
+                    "minLength": 5,
+                    "maxLength": "",
+                    "showCounter": true,
+                    "mode": "",
+                    "inline": false
+                  }
+                ],
+                "initApi": "",
+                "name": "EditForm",
+                "actions": [
+                ]
+              }
+            ],
+            "type": "dialog"
           }
         },
         "bulkActions"
@@ -469,7 +470,8 @@
       ],
       "filterColumnCount": 3,
       "name": "contentmange",
-      "placeholder": "-"
+      "placeholder": "-",
+      "syncLocation": false
     },
     {
       "type": "button",

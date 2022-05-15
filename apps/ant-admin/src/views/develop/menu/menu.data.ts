@@ -18,7 +18,7 @@ async function querySchema(params) {
     `
   })
 
-  return result.data.items.filter(x=>x.published);
+  return result.data.items.filter(x => x.published);
 }
 
 export const columns: BasicColumn[] = [
@@ -43,10 +43,12 @@ export const columns: BasicColumn[] = [
   },
   {
     title: '组件',
+    align: 'left',
     dataIndex: 'component',
   },
   {
     title: '路径',
+    align: 'left',
     dataIndex: 'routePath'
   },
   {
@@ -60,7 +62,7 @@ export const columns: BasicColumn[] = [
     width: 80,
     customRender: ({ record }) => {
       const status = record.status
-      const enable = ~~status === 0
+      const enable = ~~status === 1
       const color = enable ? 'green' : 'red'
       const text = enable ? '启用' : '停用'
       return h(Tag, { color: color }, () => text)
@@ -91,8 +93,8 @@ export const searchFormSchema: FormSchema[] = [
     component: 'Select',
     componentProps: {
       options: [
-        { label: '启用', value: '0' },
-        { label: '停用', value: '1' },
+        { label: '启用', value: '1' },
+        { label: '停用', value: '0' },
       ],
     },
     colProps: { span: 8 },
@@ -139,34 +141,6 @@ export const formSchema: FormSchema[] = [
 
     } as TreeSelectProps
   },
-  // {
-  //   field: 'parentMenu.contentItemIds[0]',
-  //   // valueField: ["parentMenu", "contentItemIds",0]  ,
-  //   // field: 'parentMenu',
-  //   // valueField: 'parentMenu.contentItemIds[0]',
-  //   // valueField: 'parentMenu',
-  //   label: '上级菜单',
-  //   component: 'TreeSelect',
-  //   itemProps: {
-  //     // name: 'parentMenu.contentItemIds[0]'
-  //     // name: ["parentMenu", "contentItemIds",0]    
-  //   }, 
-  //   componentProps: {
-  //     // multiple: true,
-  //     // maxTagCount:1, 
-  //     // labelField: 'displayText',
-  //     // valueField: 'contentItemId',
-  //     fieldNames: {
-  //       label: 'menuName',
-  //       key: "contentItemId",
-  //       value: 'contentItemId',
-  //     },
-  //     // onChange: (a, b, c) => {
-  //     //   console.log('a,b,c: ', a, b, c);
-  //     // },
-  //     getPopupContainer: () => document.body
-  //   } //as ApiTreeSelectProps
-  // }, 
   {
     field: 'orderNo',
     label: '排序',
@@ -185,7 +159,7 @@ export const formSchema: FormSchema[] = [
     label: '组件类型',
     component: 'RadioButtonGroup',
     defaultValue: '0',
-    componentProps: { 
+    componentProps: {
       options: [
         { label: 'LAYOUT', value: '0' },
         { label: '组件', value: '1' },
@@ -200,6 +174,7 @@ export const formSchema: FormSchema[] = [
     field: 'component',
     label: '组件路径',
     component: 'Input',
+
     ifShow: ({ values }) => isMenu(values.menuType),
     dynamicDisabled: ({ values }) => values.menuType != '1',
   },
@@ -238,8 +213,8 @@ export const formSchema: FormSchema[] = [
     defaultValue: '0',
     componentProps: {
       options: [
-        { label: '启用', value: '0' },
-        { label: '禁用', value: '1' },
+        { label: '启用', value: '1' },
+        { label: '禁用', value: '0' },
       ],
     },
   },
@@ -258,7 +233,7 @@ export const formSchema: FormSchema[] = [
   },
 
   {
-    field: 'keepalive',
+    field: 'keepAlive',
     label: '是否缓存',
     component: 'RadioButtonGroup',
     defaultValue: '0',
@@ -275,11 +250,11 @@ export const formSchema: FormSchema[] = [
     field: 'show',
     label: '是否显示',
     component: 'RadioButtonGroup',
-    defaultValue: '0',
+    defaultValue: '1',
     componentProps: {
       options: [
-        { label: '是', value: '0' },
-        { label: '否', value: '1' },
+        { label: '是', value: '1' },
+        { label: '否', value: '0' },
       ],
     },
     ifShow: ({ values }) => !isButton(values.menuType),

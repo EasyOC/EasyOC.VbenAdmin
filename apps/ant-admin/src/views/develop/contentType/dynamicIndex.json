@@ -211,8 +211,8 @@
               "title": "实体类",
               "body": [
                 {
-                  "type": "editor",
-                  "label": "代码编辑器",
+                  "type": "textarea",
+                  "label": "索引类代码",
                   "name": "entityInfo.entityContent",
                   "id": "u:73702e911714"
                 }

@@ -51,15 +51,15 @@ const system: RouteRecordItem = {
       },
       component: () => import('@/views/system/dept/index.vue'),
     },
-    {
-      path: 'menu',
-      name: 'MenuManagement',
-      meta: {
-        title: t('routes.default.system.menu'),
-        ignoreKeepAlive: true,
-      },
-      component: () => import('@/views/system/menu/index.vue'),
-    },
+    // {
+    //   path: 'menu',
+    //   name: 'MenuManagement',
+    //   meta: {
+    //     title: t('routes.default.system.menu'),
+    //     ignoreKeepAlive: true,
+    //   },
+    //   component: () => import('@/views/system/menu/index.vue'),
+    // },
     {
       path: 'changePassword',
       name: 'ChangePassword',

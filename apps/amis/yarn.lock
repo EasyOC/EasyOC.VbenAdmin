@@ -200,10 +200,10 @@ amdefine@>=0.0.4:
   resolved "https://registry.npmmirror.com/amdefine/-/amdefine-1.0.1.tgz"
   integrity sha512-S2Hw0TtNkMJhIabBwIojKL9YHO5T0n5eNqWJ7Lrlel/zDbftQpxpapi8tZs3X1HWa+u+QeydGmzzNU0m09+Rcg==
 
-amis-editor@^4.1.0-beta.4:
-  version "4.1.0-beta.4"
-  resolved "https://registry.npmmirror.com/amis-editor/-/amis-editor-4.1.0-beta.4.tgz#61ef9ef6c4964fb9f423fec8cf20be9b08be5ba6"
-  integrity sha512-GxdUkE/5HlI/pQD0FONIiig27ePLcRviR/lRRCsIoqz9tdCZNPK/EUuAZ4Bt94r08Pit4/oQPjOyv2TscMHLJA==
+amis-editor@^4.1.0-beta.23:
+  version "4.1.0-beta.23"
+  resolved "https://registry.npmmirror.com/amis-editor/-/amis-editor-4.1.0-beta.23.tgz#d5ad90b448de7d53b541d4ca0ad778d63046a3af"
+  integrity sha512-wnp1oCw4TPO8GDZYHx/UY7ZYYzPgZnJ6sFtmyAP7fyU2gtrsr34cFgGUp1WBg9wSX0N+M34xbfRak3LQI2SZCg==
   dependencies:
     "@webcomponents/webcomponentsjs" "^2.6.0"
     deep-diff "1.0.2"
@@ -211,26 +211,26 @@ amis-editor@^4.1.0-beta.4:
     mobx "^4.5.0"
     mobx-react "^6.1.4"
     mobx-state-tree "^3.17.3"
+    react-hook-form "^7.31.1"
     react-json-view "^1.21.3"
     sortablejs "^1.14.0"
 
-amis-formula@^1.3.12:
-  version "1.3.12"
-  resolved "https://registry.npmmirror.com/amis-formula/-/amis-formula-1.3.12.tgz#c990e0f258a470e71fd27901dadf782a2e82a675"
-  integrity sha512-VJuUl/xUYBIB+4t0W3gPq5D7nKZinLISw7IzTHkjKV4hDRyaioWgJ2WjsxNwKhThr4RsCnriPnmabNniRoyiHQ==
+amis-formula@^1.3.13:
+  version "1.3.13"
+  resolved "https://registry.npmmirror.com/amis-formula/-/amis-formula-1.3.13.tgz#1e790e5a4b9ff78c8a51786da38192d2b2576bd8"
+  integrity sha512-/aGHaVgdgMb9j2MjL18/QA3ErTppLLkl6vWmCGks1zUR8IOssjzL36UpgiKPF5K3xHjZVgfNmqrLplqxjYWi3g==
   dependencies:
     lodash "^4.17.15"
     moment "^2.29.1"
     tslib "^2.3.1"
 
-amis@^1.8.0:
-  version "1.8.0"
-  resolved "https://registry.npmmirror.com/amis/-/amis-1.8.0.tgz#f664cf6befe3c876b5f00e37dd6b1c9b2303ee48"
-  integrity sha512-vMJKZNV5PMnvaUcJCF0F8744BAzpr2f0cdNbZi/+q1Mim/5R4E8CMWC9ZCV0dMALJRu2adzhO6bwZngLbF2OLg==
+amis@^1.9.1-beta.1:
+  version "1.9.1-beta.1"
+  resolved "https://registry.npmmirror.com/amis/-/amis-1.9.1-beta.1.tgz#9513a78e0a2af934c5fd30d7d08842866894b40c"
+  integrity sha512-Uabz/JShBwrV24vOxdmL3PuJkbPeODmUmHfbd9t/tDLkiV5Qwbt/fKynz62XPFp3RRj6n91GIMwx+ILy35fR4Q==
   dependencies:
-    amis-formula "^1.3.12"
+    amis-formula "^1.3.13"
     ansi-to-react "^6.1.6"
-    async "2.6.0"
     attr-accept "2.2.2"
     blueimp-canvastoblob "2.1.0"
     classnames "2.3.1"
@@ -255,7 +255,7 @@ amis@^1.8.0:
     mobx-react "^6.3.1"
     mobx-state-tree "^3.17.3"
     moment "^2.19.3"
-    monaco-editor "0.33.0"
+    monaco-editor "0.30.1"
     mpegts.js "^1.6.10"
     papaparse "^5.3.0"
     prop-types "^15.6.1"
@@ -444,13 +444,6 @@ async@0.9.0:
   version "0.9.0"
   resolved "https://registry.npmmirror.com/async/-/async-0.9.0.tgz"
   integrity sha512-XQJ3MipmCHAIBBMFfu2jaSetneOrXbSyyqeU3Nod867oNOpS+i9FEms5PWgjMxSgBybRf2IVVLtr1YfrDO+okg==
-
-async@2.6.0:
-  version "2.6.0"
-  resolved "https://registry.npmmirror.com/async/-/async-2.6.0.tgz"
-  integrity sha512-xAfGg1/NTLBBKlHFmnd7PlmUW9KhVQIUuSrYem9xzFUZy13ScvtyGGejaae9iAVRiRq9+Cx7DPFaAAhCpyxyPw==
-  dependencies:
-    lodash "^4.14.0"
 
 async@^1.5.2:
   version "1.5.2"
@@ -3078,7 +3071,7 @@ lodash@4.12.0:
   resolved "https://registry.npmmirror.com/lodash/-/lodash-4.12.0.tgz"
   integrity sha512-H7Y9y0h/WibZBZyt9IOEEDaNJCzmpEoUQNB6d/+sHuS6fKFWCRuYSAf5s2mfK3hYrPqHbosJI4/bv0HUf2OvVw==
 
-lodash@4.17.21, lodash@^4.0.1, lodash@^4.14.0, lodash@^4.17.15:
+lodash@4.17.21, lodash@^4.0.1, lodash@^4.17.15:
   version "4.17.21"
   resolved "https://registry.npmmirror.com/lodash/-/lodash-4.17.21.tgz"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
@@ -3328,10 +3321,10 @@ moment@^2.19.3, moment@^2.29.1:
   resolved "https://registry.npmmirror.com/moment/-/moment-2.29.1.tgz"
   integrity sha512-kHmoybcPV8Sqy59DwNDY3Jefr64lK/by/da0ViFcuA4DH0vQg5Q6Ze5VimxkfQNSC+Mls/Kx53s7TjP1RhFEDQ==
 
-monaco-editor@0.33.0:
-  version "0.33.0"
-  resolved "https://registry.npmmirror.com/monaco-editor/-/monaco-editor-0.33.0.tgz#842e244f3750a2482f8a29c676b5684e75ff34af"
-  integrity sha512-VcRWPSLIUEgQJQIE0pVT8FcGBIgFoxz7jtqctE+IiCxWugD0DwgyQBcZBhdSrdMC84eumoqMZsGl2GTreOzwqw==
+monaco-editor@0.30.1:
+  version "0.30.1"
+  resolved "https://registry.npmmirror.com/monaco-editor/-/monaco-editor-0.30.1.tgz#47f8d18a0aa2264fc5654581741ab8d7bec01689"
+  integrity sha512-B/y4+b2O5G2gjuxIFtCE2EkM17R2NM7/3F8x0qcPsqy4V83bitJTIO4TIeZpYlzu/xy6INiY/+84BEm6+7Cmzg==
 
 morgan@1.6.1:
   version "1.6.1"
@@ -3933,6 +3926,11 @@ react-dropzone@^11.4.2:
     attr-accept "^2.2.2"
     file-selector "^0.4.0"
     prop-types "^15.8.1"
+
+react-hook-form@^7.31.1:
+  version "7.31.1"
+  resolved "https://registry.npmmirror.com/react-hook-form/-/react-hook-form-7.31.1.tgz#16c357dd366bc226172e6acbb5a1672873bbfb28"
+  integrity sha512-QjtjZ8r8KtEBWWpcXLyQordCraTFxILtyQpaz5KLLxN2YzcC+FZ9LLtOnNGuOnzZo9gCoB+viK3ZHV9Mb2htmQ==
 
 react-input-range@1.3.0:
   version "1.3.0"

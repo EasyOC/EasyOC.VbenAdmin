@@ -5,6 +5,7 @@ const dashboardRoute = {
   name: 'Dashboard',
   component: 'LAYOUT',
   redirect: '/dashboard/analysis',
+  orderNo: 0,
   meta: {
     title: 'routes.dashboard.dashboard',
     hideChildrenInMenu: true,
@@ -27,6 +28,7 @@ const dashboardRoute = {
       path: 'workbench',
       name: 'Workbench',
       component: '/dashboard/workbench/index',
+      orderNo: 1,
       meta: {
         hideMenu: true,
         hideBreadcrumb: true,
@@ -37,12 +39,13 @@ const dashboardRoute = {
     },
   ],
 }
- 
-  
+
+
 const sysRoute = {
   path: '/system',
   name: 'System',
   component: 'LAYOUT',
+  orderNo: 9000,
   redirect: '/system/account',
   meta: {
     icon: 'ion:settings-outline',
@@ -52,10 +55,12 @@ const sysRoute = {
     {
       path: 'account',
       name: 'AccountManagement',
+      orderNo: 9001,
       meta: {
         title: 'routes.demo.system.account',
         ignoreKeepAlive: true,
       },
+
       component: '/system/account/index',
     },
     {
@@ -72,6 +77,8 @@ const sysRoute = {
     },
     {
       path: 'role',
+      orderNo: 9002,
+
       name: 'RoleManagement',
       meta: {
         title: 'routes.demo.system.role',
@@ -87,9 +94,10 @@ const sysRoute = {
         title: 'routes.demo.system.menu',
         ignoreKeepAlive: true,
       },
-      component: '/system/menu/index',
+      component: '/develop/menu/index',
     },
     {
+      orderNo: 9003,
       path: 'dept',
       name: 'DeptManagement',
       meta: {
@@ -99,6 +107,8 @@ const sysRoute = {
       component: '/system/dept/index',
     },
     {
+      orderNo: 9004,
+
       path: 'changePassword',
       name: 'ChangePassword',
       meta: {
@@ -109,7 +119,7 @@ const sysRoute = {
     },
   ],
 }
- 
+
 dashboardRoute.redirect =
   dashboardRoute.path + '/' + dashboardRoute.children[0].path
 export const menus = [dashboardRoute, sysRoute

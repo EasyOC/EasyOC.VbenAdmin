@@ -15,15 +15,28 @@ import { projectSetting } from '@pkg/setting'
 import { PermissionModeEnum, PageEnum } from '@pkg/tokens'
 import { asyncRoutes } from '@/router/routes'
 import { PAGE_NOT_FOUND_ROUTE } from '@/router/routes/basic'
-import { clone,deepMerge, filterTree } from '@pkg/utils'
+import { filterTree } from '@pkg/utils'
 import { getPermCode } from '@pkg/apis/sys'
 import { useMessage } from '@/hooks/web/useMessage'
 import { getMenuList as getOcMenu } from '@pkg/apis/system'
-import { menus } from './testMenus'
 
-async function getMenuListTest() {
+import { menus } from '@/router/routes/backend/static-menus'
+export function routeOrder(routeItems: RouteRecordItem[]) {
+  if (!routeItems) {
+    return []
+  }
+  routeItems.sort((a, b) => {
+    return (a.orderNo || 0) - (b.orderNo || 0)
+  })
+  if (routeItems && routeItems.length > 0) {
+    routeItems.forEach(x => {
+      routeOrder(x.children as RouteRecordItem[])
+    })
+  }
+}
+async function getBackendStaticMenuList() {
   // const newMenus= clone(menus)
-  const newMenus=JSON.parse(JSON.stringify(menus))
+  const newMenus = JSON.parse(JSON.stringify(menus))
   return Promise.resolve(newMenus)
 }
 
@@ -31,41 +44,42 @@ function transformOcMenuToMenu(menu: any[]): RouteRecordItem[] {
 
   let menuList: RouteRecordItem[] = []
   if (menu && menu.length > 0) {
-    menuList = menu.filter(x =>  x.menuType != "2").map((item: any) => {
-      const { routePath, schemaId, displayText, component, meta, icon, children } = item
-      let child: RouteRecordItem[] = [];
-      if (children && children.length > 0) {
-        child = transformOcMenuToMenu(children);
-      }
-
-      let metaProp: any = {}
-      if (meta) {
-        metaProp = JSON.parse(meta)
-      }
-      const route: RouteRecordItem = {
-        path: routePath,
-        name: displayText,
-        component,
-        meta: {
-          title: displayText,
-          schemaId,
-          icon,
-          ...metaProp
-        },
-        children: child,
-
-      } as RouteRecordItem
-      return route
-    })
+    menuList = menu.filter(x => x.menuType != "2" && x.status == '1')
+      .map((item: any) => {
+        const { routePath, schemaId, displayText, orderNo, component,keepAlive, show, meta, icon, children } = item
+        let metaProp: any = {}
+        if (meta) {
+          metaProp = JSON.parse(meta)
+        }
+        const route: RouteRecordItem = {
+          path: routePath,
+          orderNo: orderNo,
+          name: displayText,
+          component,
+          keepAlive: keepAlive,
+          meta: {
+            title: displayText,
+            schemaId,
+            hideMenu: show == '0',
+            icon,
+            ...metaProp
+          }
+        } as RouteRecordItem
+        if (children && children.length > 0) {
+          route.children = transformOcMenuToMenu(children);
+        }
+        return route
+      })
   }
-
   return menuList;
 }
+
 
 export interface RouteItem {
   path: string
   component: any
   meta: any
+  orderNo?: number
   name?: string
   alias?: string | string[]
   redirect?: string
@@ -229,9 +243,11 @@ export const usePermissionStore = defineStore({
         case PermissionModeEnum.BACK:
 
           console.log(1111111111111)
-          const { createMessage } = useMessage()
-
-          createMessage.loading(t('sys.app.menuLoading'))
+          const { createMessage, } = useMessage()
+          createMessage.loading({
+            content: t('sys.app.menuLoading'),
+            key: 'menuLoading'
+          })
 
           // !Simulate to obtain permission codes from the background,
           // this function may only need to be executed once, and the actual project can be put at the right time by itself
@@ -241,7 +257,7 @@ export const usePermissionStore = defineStore({
             //首先修改权限模式 为后台模式
             //src/settings/projectSetting.ts
             //获取vben菜单 ， 数据源：apps\ant-admin\mock\sys\menu.ts
-            const menus = await getMenuListTest() as RouteRecordItem[]
+            const menus = await getBackendStaticMenuList() as RouteRecordItem[]
             // routes = filterTree(asyncRoutes, routeFilter)
             // routes = routes.filter(routeFilter)
             // const menus = transformRouteToMenu(routes, true)
@@ -253,25 +269,13 @@ export const usePermissionStore = defineStore({
             //将后ocMenus的数据结构转换为 RouteRecordItem 的数据结构
             const ocMenuList = transformOcMenuToMenu(ocMenus)
             console.log('ocMenuList: ', JSON.stringify(ocMenuList));
-
-
-            // const ocRoutes = ocMenus.map((menu:any) => {
-            //   const { path, name, meta, children } = menu
-            //   const route: RouteRecordItem = {
-            //     path,
-            //     name,
-            //     meta,
-            //     children,
-            //   }
-            //   return route
-            // })
-
-
-            //TODO: 合并菜单
-
+            // 合并菜单 
             routeList = [...menus, ...ocMenuList] as RouteRecordItem[]
+            routeOrder(routeList)
           } catch (error) {
             console.error(error)
+          } finally {
+            createMessage.destroy("menuLoading")
           }
 
           // Dynamically introduce components
