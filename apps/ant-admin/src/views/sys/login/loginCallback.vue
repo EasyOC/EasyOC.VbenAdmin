@@ -8,14 +8,14 @@ import authService from '@/api/authService'
 import { useRouter } from 'vue-router';
 import { useUserStore } from '@/store/user'
 import { onBeforeMount } from 'vue'
-    
-onBeforeMount(async()=>{
-    await authService.completeLogin()
-    const userStore = useUserStore()
-    await userStore.oidclogin()
-    // // const go = useGo()
-    // go('/') 
-    const router = useRouter()
-    router.push('/')
+
+onBeforeMount(async () => {
+  const userStore = useUserStore()
+  await authService.completeLogin()
+  await userStore.oidclogin()
+  // // const go = useGo()
+  // go('/') 
+  const router = useRouter()
+  router.push('/')
 })
 </script>

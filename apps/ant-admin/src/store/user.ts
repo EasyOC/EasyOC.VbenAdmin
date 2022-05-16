@@ -180,19 +180,19 @@ export const useUserStore = defineStore({
 
       // const userInfo = await getUserInfo()
       const userIfResult = await getUserInfo()
-      
+
       console.log('userIfResult: ', userIfResult);
-      let userInfo:any = {} as UserInfo;
-      if(userIfResult.me) {
+      let userInfo: any = {} as UserInfo;
+      if (userIfResult.me) {
         userInfo = userIfResult.me;
-        
-        if(userInfo.userProfile?.avatar?.urls && userInfo.userProfile?.avatar?.urls.length > 0) {
-          userInfo.avatar =  userInfo.userProfile.avatar.urls[0];
+
+        if (userInfo.userProfile?.avatar?.urls && userInfo.userProfile?.avatar?.urls.length > 0) {
+          userInfo.avatar = userInfo.userProfile.avatar.urls[0];
         }
       } else {
         return null;
       }
-      
+
       userInfo.roles = [];
       // const userInfo = {} as GetUserInfoModel //await getUserInfo();
 
@@ -236,18 +236,15 @@ export const useUserStore = defineStore({
      * @description: logout
      */
     async logout(goLogin = false, completeLogout = false) {
-      if(!completeLogout){
-        await authService.logout()
-      }else{
-            this.setToken(undefined)
-            this.setTimeout(undefined)
-            this.setSessionTimeout(false)
-            this.setUserInfo(null)
-            // await doLogout()
-            //   .catch(() => {
-            console.log('注销Token失败')
-      }      
-
+      
+      this.setUserInfo(null)
+      this.setToken(undefined)
+      this.setTimeout(undefined)
+      this.setSessionTimeout(false)
+      // await doLogout()
+      //   .catch(() => {
+      console.log('注销Token失败')
+      await authService.logout()
       goLogin && router.push(PageEnum.BASE_LOGIN)
     },
 
