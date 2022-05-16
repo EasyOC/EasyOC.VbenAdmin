@@ -73,7 +73,8 @@ export default defineComponent({
 
     const [registerModal, { setModalProps, closeModal }] = useModalInner(
       async (data) => {
-
+        const form = amisScoped.value.getComponentByName('page1.form1');
+        form.reset();
         setModalProps({ confirmLoading: false })
         model.isUpdate = !!data?.isUpdate
 
@@ -84,7 +85,7 @@ export default defineComponent({
           model.userInfo = null
         }
         // 可以通过 amisScoped.getComponentByName('form1').setValues({'name1': 'othername'}) 来修改表单中的值。 
-        amisScoped.value.getComponentByName('page1.form1').setValues(model.userInfo) // 设置表单值
+        form.setValues(model.userInfo) // 设置表单值
 
       },
     )
@@ -117,26 +118,28 @@ export default defineComponent({
 
       const form = amisScoped.value.getComponentByName('page1.form1');
       console.log('amisScoped.value.getComponentByName(\'form1\'): ', form);
-      try {
-        form.submit()
-        if (form.isValidated()) {
-          model.userInfo = form.getValues()
-          console.log('model.isUpdate: ', model);
-          if (model.isUpdate) {
-            await userService.update(model.userInfo as UserDetailsDto)
-          } else {
-            await userService.newUser(model.userInfo as UserDetailsDto);
+      form.validate(true).then(async () => {
+        try {
+          if (!form.isValidated()) {
+            return
           }
-          emit("success", {
-            isUpdate: model.isUpdate,
-            record: model.userInfo,
-          })
-          closeModal()
+        } catch (error) {
+          return
         }
-      } catch (error) {
 
-      }
-
+        model.userInfo = form.getValues()
+        console.log('model.isUpdate: ', model);
+        if (model.isUpdate) {
+          await userService.update(model.userInfo as UserDetailsDto)
+        } else {
+          await userService.newUser(model.userInfo as UserDetailsDto);
+        }
+        emit("success", {
+          isUpdate: model.isUpdate,
+          record: model.userInfo,
+        })
+        closeModal()
+      })
 
 
     }

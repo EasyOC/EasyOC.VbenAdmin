@@ -5,6 +5,7 @@
     {
       "type": "form",
       "name": "form1",
+      "validateOnChange": true,
       "title": "用户信息",
       "body": [
         {
