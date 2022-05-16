@@ -161,7 +161,6 @@ export const usePermissionStore = defineStore({
       this.setPermCodeList(codeList)
     },
     async buildRoutesAction(): Promise<RouteRecordItem[]> {
-      console.log(2222222222);
       const { t } = useI18n()
       const userStore = useUserStore()
       const appStore = useAppStoreWithOut()

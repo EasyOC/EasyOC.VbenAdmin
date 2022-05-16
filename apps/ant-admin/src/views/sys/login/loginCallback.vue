@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div>正在登陆...
   </div>
 </template>
 <script lang='ts' setup>
