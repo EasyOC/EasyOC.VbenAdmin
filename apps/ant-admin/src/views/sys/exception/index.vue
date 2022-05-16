@@ -1,9 +1,9 @@
 <script lang="tsx">
 import type { PropType } from 'vue'
 import { Result, Button } from 'ant-design-vue'
-import { defineComponent, ref, computed, unref } from 'vue'
+import { defineComponent, ref, computed, unref, onBeforeMount } from 'vue'
 import { ExceptionEnum, PageEnum } from '@pkg/tokens'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useDesign } from '@/hooks/web/useDesign'
 import { useI18n } from '@pkg/locale'
 import { useGo, useRedo } from '@/hooks/web/usePage'
@@ -45,6 +45,12 @@ export default defineComponent({
   },
   setup(props) {
     const statusMapRef = ref(new Map<string | number, MapValue>())
+
+    const { currentRoute } = useRouter()
+    onBeforeMount(async () => {
+      console.log('currentRoute', currentRoute.value)
+
+    })
 
     const { query } = useRoute()
     const go = useGo()

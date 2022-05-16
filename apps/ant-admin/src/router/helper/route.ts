@@ -28,7 +28,7 @@ function asyncImportRoute(routes: RouteRecordItem[] | undefined) {
     }
     const { name } = item
     let component: string = item.component as string
-    if(item.component && (item.component.name || item.component.name=="")) {
+    if (item.component && (item.component.name || item.component.name == "")) {
       component = item.component.name as string
     }
 
@@ -43,7 +43,11 @@ function asyncImportRoute(routes: RouteRecordItem[] | undefined) {
     } else if (name) {
       item.component = getParentLayout()
     }
-    children && asyncImportRoute(children)
+    if (children) {
+      children && asyncImportRoute(children)
+      item.children = children
+    }
+    console.log("asyncImportRoute routes.item", item)
   })
 }
 
@@ -78,10 +82,10 @@ function dynamicImport(
   } else {
     warn(
       '在src/views/下找不到`' +
-        component +
-        '.vue` 或 `' +
-        component +
-        '.tsx`, 请自行创建!',
+      component +
+      '.vue` 或 `' +
+      component +
+      '.tsx`, 请自行创建!',
     )
     return EXCEPTION_COMPONENT
   }
@@ -93,8 +97,8 @@ export function transformObjToRoute<T = RouteRecordItem>(
 ): T[] {
   routeList.forEach((route) => {
     const _route: any = route
-    let  component = ""
-    if(_route.component && _route.component.name){
+    let component = ""
+    if (_route.component && _route.component.name) {
       component = _route.component.name as string
     } else {
       component = _route.component as string
@@ -104,12 +108,14 @@ export function transformObjToRoute<T = RouteRecordItem>(
         route.component = LayoutMap.get(component.toUpperCase())
       } else {
         route.children = [cloneDeep(route)]
+        //@ts-ignore
+        // route.children = transformObjToRoute(route.children)
         route.component = LAYOUT
         route.name = `${_route.name}Parent`
         route.path = ''
         const meta = route.meta || ({} as RouteMeta)
         meta.single = true
-        meta.affix = false 
+        meta.affix = false
         route.meta = meta
       }
     } else {

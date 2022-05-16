@@ -1,5 +1,5 @@
 <template>
-    <Amis :amisjson="amisjson" @amisMounted="amisMounted" @eventTrackerEvent="eventTrackerEvent" />
+  <Amis :amisjson="amisjson" @amisMounted="amisMounted" @eventTrackerEvent="eventTrackerEvent" />
 
 
 </template>
@@ -30,7 +30,7 @@ onBeforeMount(async () => {
   console.log('currentRoute', currentRoute.value)
 
 })
- 
+
 
 function eventTrackerEvent(tracker: TrackerEventArgs) {
   console.log('该信息来自于Vue事件监听：', tracker)
@@ -42,10 +42,14 @@ function eventTrackerEvent(tracker: TrackerEventArgs) {
 const amisScoped = ref<any>(null)
 async function amisMounted(amisScope) {
   amisScoped.value = amisScope
-  if (currentRoute.value.meta.schemaId) {
+  let id = currentRoute.value.meta.schemaId
+  if (!id) {
+    id = currentRoute.value.params.id;
+  }
+  if (id) {
     const result = await excuteGraphqlQuery({
       query: `{
-          contentItem(contentItemId: "${currentRoute.value.meta.schemaId}") {
+          contentItem(contentItemId: "${id}") {
             ... on AmisSchema {
               displayText
               createdUtc

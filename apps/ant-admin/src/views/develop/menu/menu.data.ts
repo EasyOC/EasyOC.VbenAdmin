@@ -47,7 +47,7 @@ export const columns: BasicColumn[] = [
     dataIndex: 'component',
   },
   {
-    title: '路径',
+    title: '路由地址',
     align: 'left',
     dataIndex: 'routePath'
   },

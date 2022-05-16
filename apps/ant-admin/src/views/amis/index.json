@@ -20,60 +20,6 @@
       },
       "columns": [
         {
-          "name": "displayText",
-          "label": "显示名称",
-          "placeholder": "-",
-          "sortable": true,
-          "popOver": false,
-          "quickEdit": false,
-          "inline": true,
-          "type": "text"
-        },
-        {
-          "type": "text",
-          "label": "页面名称",
-          "name": "name"
-        },
-        {
-          "type": "status",
-          "label": "latest",
-          "name": "latest"
-        },
-        {
-          "type": "status",
-          "name": "published",
-          "label": "published",
-          "placeholder": "-"
-        },
-        {
-          "type": "date",
-          "label": "发布时间",
-          "name": "publishedUtc",
-          "placeholder": "-",
-          "sortable": true
-        },
-        {
-          "type": "date",
-          "label": "修改时间",
-          "name": "modifiedUtc",
-          "placeholder": "-",
-          "sortable": true
-        },
-        {
-          "name": "createdUtc",
-          "label": "创建时间",
-          "type": "date",
-          "placeholder": "-",
-          "sortable": true
-        },
-        {
-          "type": "text",
-          "name": "author",
-          "label": "创建人",
-          "placeholder": "-",
-          "sortable": true
-        },
-        {
           "type": "operation",
           "label": "操作",
           "buttons": [
@@ -258,7 +204,7 @@
                 "closeOnEsc": true,
                 "closeOnOutside": false,
                 "showCloseButton": true,
-                "size": "xl",
+                "size": "md",
                 "actions": [
                 ],
                 "data": null
@@ -313,6 +259,73 @@
               "disabledOn": "!this.latest"
             }
           ]
+        },
+        {
+          "name": "displayText",
+          "label": "显示名称",
+          "placeholder": "-",
+          "sortable": true,
+          "popOver": false,
+          "quickEdit": false,
+          "inline": true,
+          "type": "operation",
+          "copyable": false,
+          "buttons": [
+            {
+              "type": "button",
+              "label": "${displayText}",
+              "actionType": "url",
+              "id": "u:ae7c76370ed4",
+              "placeholder": "-",
+              "level": "link",
+              "url": "/pages/preview/${contentItemId}",
+              "blank": false
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "label": "页面名称",
+          "name": "name"
+        },
+        {
+          "type": "status",
+          "label": "latest",
+          "name": "latest"
+        },
+        {
+          "type": "status",
+          "name": "published",
+          "label": "published",
+          "placeholder": "-"
+        },
+        {
+          "type": "date",
+          "label": "发布时间",
+          "name": "publishedUtc",
+          "placeholder": "-",
+          "sortable": true
+        },
+        {
+          "type": "date",
+          "label": "修改时间",
+          "name": "modifiedUtc",
+          "placeholder": "-",
+          "sortable": true
+        },
+        {
+          "name": "createdUtc",
+          "label": "创建时间",
+          "type": "date",
+          "placeholder": "-",
+          "sortable": true
+        },
+        {
+          "type": "text",
+          "name": "author",
+          "label": "创建人",
+          "placeholder": "-",
+          "sortable": true
         }
       ],
       "bulkActions": [
@@ -328,8 +341,20 @@
       ],
       "headerToolbar": [
         {
-          "label": "新增",
+          "label": "从类型创建",
           "type": "button",
+          "actionType": "url",
+          "level": "success",
+          "tpl": "内容",
+          "perPageAvailable": [
+            10
+          ],
+          "url": "/amis/genFromType",
+          "blank": false
+        },
+        {
+          "type": "button",
+          "label": "新增",
           "actionType": "dialog",
           "level": "primary",
           "dialog": {
@@ -392,10 +417,16 @@
                 ]
               }
             ],
-            "type": "dialog"
+            "type": "dialog",
+            "closeOnEsc": false,
+            "closeOnOutside": false,
+            "showCloseButton": true,
+            "size": "md"
           }
         },
-        "bulkActions"
+        {
+          "type": "bulk-actions"
+        }
       ],
       "perPageAvailable": [
         10
@@ -471,7 +502,9 @@
       "filterColumnCount": 3,
       "name": "contentmange",
       "placeholder": "-",
-      "syncLocation": false
+      "syncLocation": false,
+      "defaultParams": {
+      }
     },
     {
       "type": "button",
