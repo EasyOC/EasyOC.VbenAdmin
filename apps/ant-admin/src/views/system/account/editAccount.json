@@ -6,6 +6,10 @@
       "title": "用户信息",
       "body": [
         {
+          "type": "hidden",
+          "name": "userId"
+        },
+        {
           "label": "用户名",
           "type": "input-text",
           "name": "userName"

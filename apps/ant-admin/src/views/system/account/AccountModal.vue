@@ -120,8 +120,8 @@ export default defineComponent({
     async function handleSubmit() {
       console.log('model.isUpdate: ', model);
       if (model.isUpdate) {
-
-      } else {
+        await userService.update(model.userInfo as UserDetailsDto)
+      }else {
 
         await userService.newUser(model.userInfo as UserDetailsDto);
       }
