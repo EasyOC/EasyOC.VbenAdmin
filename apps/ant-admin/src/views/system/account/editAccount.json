@@ -1,8 +1,10 @@
 {
   "type": "page",
+  "name": "page1",
   "body": [
     {
       "type": "form",
+      "name": "form1",
       "title": "用户信息",
       "body": [
         {
@@ -15,6 +17,11 @@
           "name": "userName"
         },
         {
+          "type": "input-email",
+          "name": "email",
+          "label": "邮箱"
+        },
+        {
           "label": "角色",
           "name": "roleNames",
           "type": "checkboxes",
@@ -25,8 +32,7 @@
             "url": "/api/Roles/GetRoles",
             "adaptor": "console.log('dropdown options11',response)\r\nvar items = response.data.map(x=>{\r\n    return {label:x.roleDescription,value:x.roleName}\r\n})\r\nconsole.log('dropdown options',items)\r\nreturn {options:items}"
           },
-          "options": [
-          ]
+          "options": []
         },
         {
           "type": "tree-select",
@@ -39,11 +45,6 @@
           "type": "input-text",
           "name": "properties.UserProfileInternal.UserProfilePart.NickName.Text",
           "label": "昵称"
-        },
-        {
-          "type": "input-text",
-          "name": "email",
-          "label": "邮箱"
         }
       ],
       "mode": "horizontal",
@@ -53,27 +54,12 @@
         "left": 2,
         "right": 10
       },
-      "wrapWithPanel": true,
-      "actions": [
-        {
-          "type": "button",
-          "label": "取消",
-          "id": "cancel",
-          "level": "default"
-        },
-        {
-          "type": "button",
-          "label": "提交",
-          "id": "submit",
-          "level": "primary"
-        }
-      ]
+      "wrapWithPanel": false,
+      "actions": []
     }
   ],
-  "messages": {
-  },
-  "style": {
-  },
+  "messages": {},
+  "style": {},
   "regions": [
     "body",
     "toolbar",

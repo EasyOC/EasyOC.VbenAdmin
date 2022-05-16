@@ -76,20 +76,15 @@ export default defineComponent({
 
         setModalProps({ confirmLoading: false })
         model.isUpdate = !!data?.isUpdate
-        if (model.isUpdate && data.record.userId) {
 
+        if (model.isUpdate && data.record.userId) {
           model.userInfo = await userService.getUser(data.record.userId)
         }
         else {
           model.userInfo = null
         }
-        amisScoped.value.updateProps(
-          {
-            data: { ...model.userInfo }
-          }, () => {
-            console.log('amisScoped.value: ', amisScoped.value)
-          }
-        )
+        // 可以通过 amisScoped.getComponentByName('form1').setValues({'name1': 'othername'}) 来修改表单中的值。 
+        amisScoped.value.getComponentByName('page1.form1').setValues(model.userInfo) // 设置表单值
 
       },
     )
@@ -118,18 +113,32 @@ export default defineComponent({
     const getTitle = computed(() => (!model.isUpdate ? '新增账号' : '编辑账号'))
 
     async function handleSubmit() {
-      console.log('model.isUpdate: ', model);
-      if (model.isUpdate) {
-        await userService.update(model.userInfo as UserDetailsDto)
-      }else {
+      // 可以通过 amisScoped.getComponentByName('page1.form1').getValues() 来获取到所有表单的值，需要注意 page 和 form 都需要有 name 属性。
 
-        await userService.newUser(model.userInfo as UserDetailsDto);
+      const form = amisScoped.value.getComponentByName('page1.form1');
+      console.log('amisScoped.value.getComponentByName(\'form1\'): ', form);
+      try {
+        form.submit()
+        if (form.isValidated()) {
+          model.userInfo = form.getValues()
+          console.log('model.isUpdate: ', model);
+          if (model.isUpdate) {
+            await userService.update(model.userInfo as UserDetailsDto)
+          } else {
+            await userService.newUser(model.userInfo as UserDetailsDto);
+          }
+          emit("success", {
+            isUpdate: model.isUpdate,
+            record: model.userInfo,
+          })
+          closeModal()
+        }
+      } catch (error) {
+
       }
-      emit("success", {
-        isUpdate: model.isUpdate,
-        record: model.userInfo,
-      })
-      closeModal()
+
+
+
     }
 
     return { registerModal, getTitle, handleSubmit, amisjson, eventTrackerEvent, amisMounted }
