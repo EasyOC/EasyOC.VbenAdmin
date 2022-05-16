@@ -1,28 +1,28 @@
 <template>
-  <BasicModal
-    v-bind="$attrs"
-    @register="registerModal"
-    :title="getTitle"
-    @ok="handleSubmit"
-  >
-    <BasicForm @register="registerForm" />
+  <BasicModal v-bind="$attrs" @register="registerModal" :title="getTitle" @cancel="cancel" @ok="handleSubmit">
+    <Amis ref="amisRender" :amisjson="amisjson" @amisMounted="amisMounted" @eventTrackerEvent="eventTrackerEvent" />
   </BasicModal>
 </template>
 <script lang="ts">
-import { defineComponent, computed, unref, reactive, onMounted } from 'vue'
+import { defineComponent, computed, unref, reactive, onBeforeMount, ref } from 'vue'
 import { BasicModal, useModalInner } from '@/components/modal'
-import { BasicForm, FormSchema, useForm } from '@/components/form'
+import { FormSchema, useForm } from '@/components/form'
 import { accountFormSchema } from './account.data'
 import { getDeptList } from '@pkg/apis/system'
 import {
   ContentTypeDefinitionDto,
   UserDetailsDto,
+  UsersServiceProxy,
 } from '@pkg/apis/eoc/app-service-proxies'
 import { ContentHelper } from '@/api/contentHelper'
 
+import { Amis } from '@/components/Amis'
+import { TrackerEventArgs } from '@/components/Amis/src/types'
+import schema from './editAccount.json'
+
 export default defineComponent({
   name: 'AccountModal',
-  components: { BasicModal, BasicForm },
+  components: { BasicModal, Amis },
   emits: ['success', 'register'],
   setup(_, { emit }) {
     const model = reactive<{
@@ -36,75 +36,103 @@ export default defineComponent({
       userInfo: null,
       userCustomSettings: [],
     })
+    const amisjson = ref<any>(schema)
 
-    let finalFormSchema: FormSchema[] = []
-    onMounted(async () => {
-      const helper = new ContentHelper()
-      const customPropCols = helper.getFormSchemaFromUserProperties(
-        model.userCustomSettings,
-      )
-      finalFormSchema = [...accountFormSchema, ...customPropCols]
-      console.log(finalFormSchema, 'getFormSchemaFromUserProperties')
+    onBeforeMount(async () => {
+      const treeData = await getDeptList()
+      console.log('treeData: ', treeData);
+      const deptlist = getRecurDeptList(treeData)
+      const options = { "options": deptlist };
+      console.log('options: ', options);
+      amisjson.value.definitions = {
+        deptSource: options
+      }
     })
-    const [
-      registerForm,
-      { setFieldsValue, updateSchema, resetFields, validate },
-    ] = useForm({
-      labelWidth: 100,
-      schemas: accountFormSchema,
-      showActionButtonGroup: false,
-      actionColOptions: {
-        span: 23,
-      },
-    })
+
+    async function eventTrackerEvent(params: TrackerEventArgs) {
+      console.log('该信息来自于Vue事件监听：', params)
+      if (params.tracker?.eventData && params.tracker?.eventData?.id)
+        switch (params.tracker.eventData.id) {
+          case 'submit':
+            model.userInfo = params.eventProps.data;
+            await handleSubmit()
+            break;
+          case 'cancel':
+            closeModal();
+            break;
+        }
+    }
+    const amisScoped = ref<any>(null)
+    function amisMounted(amisScope) {
+      amisScoped.value = amisScope
+      console.log('amisScoped.value: ', amisScoped.value)
+
+    }
+
+    const userService = new UsersServiceProxy()
 
     const [registerModal, { setModalProps, closeModal }] = useModalInner(
       async (data) => {
-        resetFields()
+
         setModalProps({ confirmLoading: false })
         model.isUpdate = !!data?.isUpdate
-        model.userInfo = data.record
+        if (model.isUpdate && data.record.userId) {
 
-        if (unref(model.isUpdate)) {
-          model.rowId = data.record.userId
-          setFieldsValue({
-            ...data.record,
-          })
+          model.userInfo = await userService.getUser(data.record.userId)
         }
+        else {
+          model.userInfo = null
+        }
+        amisScoped.value.updateProps(
+          {
+            data: { ...model.userInfo }
+          }, () => {
+            console.log('amisScoped.value: ', amisScoped.value)
+          }
+        )
 
-        const treeData = await getDeptList()
-        updateSchema([
-          {
-            field: 'pwd',
-            show: !unref(model.isUpdate),
-          },
-          {
-            field: 'dept',
-            componentProps: { treeData },
-          },
-        ])
       },
     )
+
+
+    function getRecurDeptList(deptlist: any[]) {
+      let list: any[] = [];
+      if (deptlist.length > 0) {
+        list = deptlist.map(o => {
+          const { deptName, id, children } = o;
+          const dept = {
+            label: deptName,
+            value: id,
+            children: children
+          }
+          if (children && children.length > 0) {
+            dept.children = getRecurDeptList(children)
+          };
+
+          return dept;
+        })
+      }
+      return list;
+    }
 
     const getTitle = computed(() => (!model.isUpdate ? '新增账号' : '编辑账号'))
 
     async function handleSubmit() {
-      try {
-        const values = await validate()
-        setModalProps({ confirmLoading: true })
-        // TODO custom api
-        console.log(values)
-        closeModal()
-        emit('success', {
-          isUpdate: unref(model.isUpdate),
-          values: { ...values, id: model.rowId },
-        })
-      } finally {
-        setModalProps({ confirmLoading: false })
+      console.log('model.isUpdate: ', model);
+      if (model.isUpdate) {
+        await userService.update(model.userInfo as UserDetailsDto)
+      }else {
+
+        await userService.newUser(model.userInfo as UserDetailsDto);
       }
+      emit("success", {
+        isUpdate: model.isUpdate,
+        record: model.userInfo,
+      })
+      closeModal()
     }
 
-    return { registerModal, registerForm, getTitle, handleSubmit }
+    return { registerModal, getTitle, handleSubmit, amisjson, eventTrackerEvent, amisMounted }
   },
 })
 </script>

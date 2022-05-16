@@ -7,7 +7,7 @@ export default function getEnv() {
   const go = useGo()
 
   return {
-    // enableAMISDebug: process.env.NODE_ENV !== 'production',
+    enableAMISDebug: true,
     //
     // 主题，默认是 default，还可以设置成 cxd, antd 或 dark，但记得引用它们的 css，比如 sdk 目录下的 cxd.css
     // theme: 'antd',

@@ -65,7 +65,7 @@ class AmisEditor extends React.Component {
         });
         console.log('result?.data', result?.data);
         this.state.schemaObject = result?.data.contentItem;
-        document.title=this.state.schemaObject.displayText+' - ' +document.title
+        document.title=this.state.schemaObject?.displayText+' - ' +document.title
         if (this.state.schemaObject?.schema) {
             this.state.schema = JSON.parse(this.state.schemaObject.schema);
         }
