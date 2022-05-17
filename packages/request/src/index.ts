@@ -198,7 +198,7 @@ const transform: AxiosTransform = {
           case OCNotifyType.Error:
             context.orchardNotify.errorFunction({
               title: t('sys.api.errorTip'),
-              content: notify.value,
+              content: notify.message.value,
             })
             break
         }

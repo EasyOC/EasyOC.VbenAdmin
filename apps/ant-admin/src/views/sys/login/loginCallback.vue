@@ -5,7 +5,6 @@
 <script lang='ts' setup>
 import authService from '@/api/authService'
 // import { useGo } from '@/hooks/web/usePage'
-import { useRouter } from 'vue-router';
 import { useUserStore } from '@/store/user'
 import { onBeforeMount } from 'vue'
 
@@ -15,7 +14,6 @@ onBeforeMount(async () => {
   await userStore.oidclogin()
   // // const go = useGo()
   // go('/') 
-  const router = useRouter()
-  router.push('/')
+
 })
 </script>
