@@ -1,25 +1,48 @@
 <template>
-  <Basic :foo="foo">
-    <div>
-      children内容
-    </div>
-  </Basic>
-</template>
-<script>
-import {applyReactInVue} from 'veaury'
-// 这是一个React组件
-import BasicReactComponent from './react_app/Basic.jsx'
-import {ref} from 'vue'
+  <div className="amis-renderer-box">
+    <AMIS ref="amisRender" :schema="amisjson" :trackerFn="eventTrackerEvent" :amisMounted="amisMounted" />
+  </div>
 
-export default {
+</template>
+<script lang="ts" >
+import './style/themes/cxd.less'
+// import 'amis/lib/themes/cxd.css';
+
+import '@fortawesome/fontawesome-free/css/all.min.css'
+import '@fortawesome/fontawesome-free/css/v4-shims.css'
+// import { applyReactInVue } from 'veaury'
+import { lazyReactInVue } from 'veaury'
+// 这是一个React组件
+// import AMISRendererComponent from './react/Renderer.tsx'
+import { defineComponent } from 'vue'
+export default defineComponent({
+  name: 'VeauryAMISRenderer',
   components: {
     // 使用高阶组件 'applyReactInVue'
-    Basic: applyReactInVue(BasicReactComponent)
+    // AMIS: applyReactInVue(AMISRendererComponent)
+    AMIS: lazyReactInVue(() => import('./react/Renderer.tsx'))
+    
   },
-  setup() {
+  props: {
+    amisjson: {
+      type: Object,
+      required: true,
+    },
+  },
+  emits: ['amisMounted', 'eventTrackerEvent'],
+  setup(props, { emit }) {
+
+    function amisMounted(amisScoped) {
+      emit("amisMounted", amisScoped)
+    }
+    function eventTrackerEvent(params: TrackerEventArgs) {
+      emit("eventTrackerEvent", params)
+    }
     return {
-      foo: ref('Hello!')
+      amisMounted,
+      eventTrackerEvent,
+      // amisjson: unref(props).amisjson,
     }
   }
-}
+})
 </script>

@@ -19,7 +19,7 @@ import { TrackerEventArgs } from '@/components/Amis/src/types'
 import schema from './editAccount.json'
 // import { createAsyncComponent } from '@/internal'
 // export default defineComponent({
-  // export const Amis = createAsyncComponent(() => import('@/components/Amis'))
+// export const Amis = createAsyncComponent(() => import('@/components/Amis'))
 //   name: 'AccountModal',
 //   components: { BasicModal, Amis },
 const emit = defineEmits(['success', 'register'])
@@ -118,7 +118,14 @@ async function handleSubmit() {
   const form = amisScoped.value.getComponentByName('page1.form1');
   console.log('amisScoped.value.getComponentByName(\'form1\'): ', form);
   try {
+    // form.onEvent = {
+    //   ValidateSucc = (aaa) => {
+    //     console.log("validateSucc", aaa)
+    //   }
+    // }
     await form.validate(true)
+
+
     if (!form.isValidated()) {
       return
     }

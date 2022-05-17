@@ -10,10 +10,13 @@ import {
   // AMISRendererSetup,
   // AMISRenderer1,
 } from '@/components/Amis'
+
+  
+// import VeauryAMISRenderer from '@/components/Amis/src/veauryAMISRenderer.vue'
 import schema from './index.json'
 import { TrackerEventArgs } from '@/components/Amis/src/types'
 import { useGo } from '@/hooks/web/usePage'
-import { PageWrapper } from '@/components/Page'
+// import { PageWrapper } from '@/components/Page'
 
 const go = useGo()
 
