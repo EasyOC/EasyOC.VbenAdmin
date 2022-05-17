@@ -8,6 +8,7 @@ import { resolve } from 'path'
 import { configVitePlugins } from './plugins'
 import { createPreset } from './presets'
 import { OUTPUT_DIR } from './constants'
+import react from '@vitejs/plugin-react';
 import dayjs from 'dayjs'
 
 export * from './constants'
@@ -129,7 +130,9 @@ export async function createViteConfig(
         ],
         exclude: ['vue-demi'],
       },
-      plugins: await configVitePlugins(root, viteEnv, command === 'build'),
+      plugins: [...await configVitePlugins(root, viteEnv, command === 'build'),
+      // react()
+      ],
     }
 
     return mergeConfig(commonConfig, await createPreset(framework)(command))

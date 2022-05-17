@@ -4,6 +4,8 @@
   </div>
 </template>
 <script lang="ts" setup>
+import 'amis/sdk/sdk.js'
+
 // import './style/themes/antd.less'
 import './style/themes/cxd.less'
 import { onMounted, ref, unref, onUnmounted } from 'vue'

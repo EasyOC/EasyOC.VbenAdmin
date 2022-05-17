@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { render as renderAmis} from 'amis'
+import { render as renderAmis } from 'amis'
 import getEnv from '../amisEnv'
 import { EventTrack } from '../types'
 

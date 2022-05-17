@@ -1,4 +1,3 @@
-import 'amis/sdk/sdk.js'
 import '@/styles'
 // Register icon sprite
 import 'virtual:svg-icons-register'
