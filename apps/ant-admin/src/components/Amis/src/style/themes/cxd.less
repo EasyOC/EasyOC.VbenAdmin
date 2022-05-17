@@ -32568,3 +32568,153 @@ a.label:hover, a.label:focus {
 
 }
 
+
+/**
+ * Debug 模块的 UI，由于没法使用任何主题，所以这里使用独立配色风格
+ */
+.AMISDebug {
+  position: fixed;
+  z-index: 4000;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  width: 24px;
+  pointer-events: none;
+}
+.AMISDebug h3 {
+  color: inherit;
+}
+.AMISDebug .primary {
+  color: #009fff;
+}
+.AMISDebug-header {
+  padding: var(--Drawer-header-padding);
+  background: var(--Drawer-header-bg);
+  border-bottom: var(--Drawer-content-borderWidth) solid var(--Drawer-header-borderColor);
+}
+.AMISDebug-hoverBox {
+  pointer-events: none;
+  position: absolute;
+  outline: 1px dashed #1c76c4;
+}
+.AMISDebug-activeBox {
+  pointer-events: none;
+  position: absolute;
+  outline: 1px #1c76c4;
+}
+.AMISDebug-tab {
+  overflow: hidden;
+}
+.AMISDebug-tab > button {
+  color: inherit;
+  background: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: var(--gap-sm) var(--gap-md);
+  transition: 0.3s;
+  border-bottom: 1px solid transparent;
+}
+.AMISDebug-tab > button:hover {
+  color: #e7e7e7;
+}
+.AMISDebug-tab > button.active {
+  color: #e7e7e7;
+  border-bottom-color: #e7e7e7;
+}
+.AMISDebug-toggle {
+  pointer-events: all;
+  background: var(--body-bg);
+  position: fixed;
+  top: 50%;
+  right: 0;
+  width: 24px;
+  height: 48px;
+  box-shadow: 0 4px 6px 0 rgba(8, 14, 26, 0.04), 0 1px 10px 0 rgba(8, 14, 26, 0.05), 0 2px 4px -1px rgba(8, 14, 26, 0.06);
+  border-radius: var(--borderRadius) 0 0 var(--borderRadius);
+  padding-top: 14px;
+  padding-left: 6px;
+  cursor: pointer;
+}
+.AMISDebug-toggle i {
+  color: var(--text-color);
+}
+.AMISDebug-toggle:hover i {
+  color: var(--primary);
+}
+.AMISDebug-content {
+  pointer-events: all;
+  display: none;
+}
+.AMISDebug-resize {
+  position: absolute;
+  width: 4px;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  cursor: col-resize;
+}
+.AMISDebug-resize:hover {
+  background: #75715e;
+}
+.AMISDebug-changePosition {
+  position: absolute;
+  font-size: 18px;
+  right: 40px;
+  top: var(--gap-sm);
+  cursor: pointer;
+}
+.AMISDebug-close {
+  position: absolute;
+  font-size: 18px;
+  right: var(--gap-sm);
+  top: var(--gap-sm);
+  cursor: pointer;
+}
+.AMISDebug.is-expanded {
+  width: 420px;
+  overflow: auto;
+  background: #272821;
+  color: #cccccc;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+.AMISDebug.is-expanded .AMISDebug-toggle {
+  display: none;
+}
+.AMISDebug.is-expanded .AMISDebug-content {
+  display: block;
+}
+.AMISDebug.is-left {
+  left: 0;
+}
+.AMISDebug.is-left .AMISDebug-resize {
+  left: unset;
+  right: 0;
+}
+.AMISDebug-log {
+  padding: var(--gap-sm);
+}
+.AMISDebug-log button {
+  cursor: pointer;
+  background: #0e639c;
+  flex-grow: 1;
+  box-sizing: border-box;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: 6px 11px;
+  outline: none;
+  text-decoration: none;
+  color: inherit;
+  max-width: 300px;
+  border: none;
+}
+.AMISDebug-log button:hover {
+  background: #1177bb;
+}
+.AMISDebug-inspect {
+  padding: var(--gap-sm);
+}
+
+
