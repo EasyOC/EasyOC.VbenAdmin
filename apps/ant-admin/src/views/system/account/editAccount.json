@@ -1,11 +1,15 @@
 {
   "type": "page",
+  "regions": [
+    "body",
+    "toolbar",
+    "header"
+  ],
   "name": "page1",
   "body": [
     {
       "type": "form",
       "name": "form1",
-      "validateOnChange": true,
       "title": "用户信息",
       "body": [
         {
@@ -15,12 +19,8 @@
         {
           "label": "用户名",
           "type": "input-text",
-          "name": "userName"
-        },
-        {
-          "type": "input-email",
-          "name": "email",
-          "label": "邮箱"
+          "name": "userName",
+          "required": true
         },
         {
           "label": "角色",
@@ -33,7 +33,9 @@
             "url": "/api/Roles/GetRoles",
             "adaptor": "console.log('dropdown options11',response)\r\nvar items = response.data.map(x=>{\r\n    return {label:x.roleDescription,value:x.roleName}\r\n})\r\nconsole.log('dropdown options',items)\r\nreturn {options:items}"
           },
-          "options": []
+          "options": [
+          ],
+          "required": true
         },
         {
           "type": "tree-select",
@@ -46,6 +48,17 @@
           "type": "input-text",
           "name": "properties.UserProfileInternal.UserProfilePart.NickName.Text",
           "label": "昵称"
+        },
+        {
+          "type": "input-text",
+          "name": "email",
+          "label": "邮箱",
+          "autoComplete": "",
+          "validateOnChange": true,
+          "validations": {
+            "isEmail": true
+          },
+          "required": true
         }
       ],
       "mode": "horizontal",
@@ -55,15 +68,48 @@
         "left": 2,
         "right": 10
       },
-      "wrapWithPanel": false,
-      "actions": []
+      "wrapWithPanel": true,
+      "onEvent": {
+        "submitSucc": {
+          "actions": [
+            {
+              "type": "action",
+              "actionType": "next",
+              "id": "submitSucc"
+            }
+          ]
+        },
+        "validateSucc": {
+          "actions": [
+            {
+              "actionType": "next",
+              "id": "validateSucc"
+            }
+          ]
+        }
+      },
+      "actions": [
+        {
+          "type": "submit",
+          "label": "提交",
+          "actionType": "submit",
+          "dialog": {
+            "title": "系统提示",
+            "body": "对你点击了"
+          },
+          "id": "btnSubmit",
+          "level": "primary",
+          "name": "btnSubmit",
+          "disabled": false,
+          "visibleOn": "",
+          "clearValueOnHidden": false,
+          "visible": false
+        }
+      ]
     }
   ],
-  "messages": {},
-  "style": {},
-  "regions": [
-    "body",
-    "toolbar",
-    "header"
-  ]
+  "messages": {
+  },
+  "style": {
+  }
 }
