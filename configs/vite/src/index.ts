@@ -8,9 +8,9 @@ import { resolve } from 'path'
 import { configVitePlugins } from './plugins'
 import { createPreset } from './presets'
 import { OUTPUT_DIR } from './constants'
-import react from '@vitejs/plugin-react';
 import dayjs from 'dayjs'
-
+import react from '@vitejs/plugin-react'
+import vue from '@vitejs/plugin-vue'
 export * from './constants'
 
 export type ViteConfig = Promise<UserConfig | UserConfigFn>
@@ -130,8 +130,15 @@ export async function createViteConfig(
         ],
         exclude: ['vue-demi'],
       },
-      plugins: [...await configVitePlugins(root, viteEnv, command === 'build'),
-      // react()
+      plugins: [
+        vue({
+          exclude: [/[/\\]react_app[\\/$]+/]
+        }),
+        react({
+            include: [/[/\\]react_app[\\/$]+/]
+          }),
+        ...await configVitePlugins(root, viteEnv, command === 'build')
+        // react()
       ],
     }
 

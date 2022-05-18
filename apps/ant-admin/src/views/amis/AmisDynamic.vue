@@ -13,7 +13,7 @@ import { PageWrapper } from '@/components/Page'
 
 // import MonacoEditor from '@/components/MonacoEditor/index.vue'
 // let monacoEditor = ref<any>({})
-const amisjson = ref<any>({})
+let amisjson
 // const amisjsonStr = computed({
 //   get: () => {
 //     return JSON.stringify(amisjson.value, null, '\t')
@@ -39,9 +39,9 @@ function eventTrackerEvent(tracker: TrackerEventArgs) {
 
 
 
-const amisScoped = ref<any>(null)
+let amisScoped 
 async function amisMounted(amisScope) {
-  amisScoped.value = amisScope
+  amisScoped = amisScope
   let id = currentRoute.value.meta.schemaId
   if (!id) {
     id = currentRoute.value.params.id;
@@ -60,8 +60,8 @@ async function amisMounted(amisScope) {
           }
         }`
     })
-    amisjson.value = JSON.parse(result.data.contentItem.schema)
-    amisScoped.value.updateProps(amisjson.value)
+    amisjson = JSON.parse(result.data.contentItem.schema)
+    amisScoped.updateProps(amisjson)
   }
 
   // monacoEditor.value.getAction(['editor.action.formatDocument'])._run()
