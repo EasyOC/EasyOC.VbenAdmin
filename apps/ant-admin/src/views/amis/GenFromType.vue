@@ -3,9 +3,7 @@
 </template>
 <script setup lang="ts">
 import { onBeforeMount, ref } from 'vue'
-import {
-  Amis,
-} from '@/components/Amis'
+import { Amis } from '@/components/Amis'
 import schema from './GenFromType.json'
 import { TrackerEventArgs } from '@/components/Amis/src/types'
 import { useGo } from '@/hooks/web/usePage'
@@ -32,6 +30,14 @@ const amisScoped = ref<any>(null)
 function amisMounted(amisScope) {
   amisScoped.value = amisScope
   console.log('amisScoped.value: ', amisScoped.value)
+  const svrPreview = amisScope.getComponentByName('page1.svrPreview');
+  console.log('svrPreview: ', svrPreview);
+  svrPreview.setValue(`{
+    
+          "type": "tpl",
+          "tpl": "内容aaaaaaaaaa",
+          "inline": false
+        }`)
   // console.log(JSON.stringify(amisjson.value.raw))
 }
 </script>

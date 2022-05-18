@@ -216,31 +216,9 @@
               "type": "button",
               "actionType": "url",
               "level": "link",
-              "dialog": {
-                "title": "查看详情",
-                "body": {
-                  "type": "form",
-                  "api": "xxx/update",
-                  "body": [
-                    {
-                      "name": "id",
-                      "label": "ID",
-                      "type": "static"
-                    },
-                    {
-                      "name": "engine",
-                      "label": "渲染引擎",
-                      "type": "static"
-                    }
-                  ]
-                }
-              },
-              "url": "/index.html#/edit/${contentItemId}",
-              "onClick": "//window.open(`/amis-editor-renderer/index.html#/edit/${props.data.contentItemId}`)",
-              "disabledOn": "!this.latest",
-              "perPageAvailable": [
-                10
-              ],
+              "url": "/index.html#/edit/${contentItemVersionId}",
+              "onClick": "//window.open(`/amis-editor-renderer/index.html#/edit/${props.data.contentItemVersionId}`)",
+              "disabledOn": "!this.latest", 
               "blank": true,
               "id": "btnOpenDesign"
             },

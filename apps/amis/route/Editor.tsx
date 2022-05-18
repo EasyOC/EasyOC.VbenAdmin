@@ -37,11 +37,8 @@ class AmisEditor extends React.Component {
         const {match} = this.props as RouteComponentProps<{id: string; version?: string}>;
         console.log('this.props: ', this.props);
         this.state.id = match.params.id;
-        this.state.version = match.params.version;
-        let queryparamsStr = `contentItemId:\"${this.state.id}\"`;
-        // if (this.state.version) {
-        //     queryparamsStr += `,contentItemVersionId:"${this.state.version}"`;
-        // }
+        let queryparamsStr = `contentItemVersionId:\"${this.state.id}\"`;
+
         return queryparamsStr;
     }
     async componentWillMount() {
@@ -52,7 +49,7 @@ class AmisEditor extends React.Component {
             needReload: true,
             method: 'get',
             url: `/api/graphql?query={  
-                contentItem(${this.getGpParams()}) 
+               contentItem:contentItemByVersion(${this.getGpParams()}) 
                     {     ... on AmisSchema {
                         createdUtc
                         description
@@ -65,7 +62,7 @@ class AmisEditor extends React.Component {
         });
         console.log('result?.data', result?.data);
         this.state.schemaObject = result?.data.contentItem;
-        document.title=this.state.schemaObject?.displayText+' - ' +document.title
+        document.title = this.state.schemaObject?.displayText + ' - ' + document.title;
         if (this.state.schemaObject?.schema) {
             this.state.schema = JSON.parse(this.state.schemaObject.schema);
         }
