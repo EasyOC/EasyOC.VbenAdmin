@@ -61,10 +61,10 @@ async function eventTrackerEvent(params: TrackerEventArgs) {
         break;
     }
 }
-const amisScoped = ref<any>(null)
+let amisScoped  
 function amisMounted(amisScope) {
-  amisScoped.value = amisScope
-  console.log('amisScoped.value: ', amisScoped.value)
+  amisScoped = amisScope
+  console.log('amisScoped: ', amisScoped)
 
 }
 
@@ -72,7 +72,7 @@ const userService = new UsersServiceProxy()
 
 const [registerModal, { setModalProps, closeModal }] = useModalInner(
   async (data) => {
-    const form = amisScoped.value.getComponentByName('page1.form1');
+    const form = amisScoped.getComponentByName('page1.form1');
     form.reset();
     setModalProps({ confirmLoading: false })
     model.isUpdate = !!data?.isUpdate
@@ -115,8 +115,8 @@ const getTitle = computed(() => (!model.isUpdate ? '新增账号' : '编辑账�
 async function handleSubmit() {
   // 可以通过 amisScoped.getComponentByName('page1.form1').getValues() 来获取到所有表单的值，需要注意 page 和 form 都需要有 name 属性。
 
-  const form = amisScoped.value.getComponentByName('page1.form1');
-  console.log('amisScoped.value.getComponentByName(\'form1\'): ', form);
+  const form = amisScoped.getComponentByName('page1.form1');
+  console.log('amisScoped.getComponentByName(\'form1\'): ', form);
  
   try { 
     form.validate().then(async isValidated => {

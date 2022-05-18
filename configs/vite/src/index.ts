@@ -8,8 +8,8 @@ import { resolve } from 'path'
 import { configVitePlugins } from './plugins'
 import { createPreset } from './presets'
 import { OUTPUT_DIR } from './constants'
-import react from '@vitejs/plugin-react';
 import dayjs from 'dayjs'
+import react from '@vitejs/plugin-react'
 
 export * from './constants'
 
@@ -130,8 +130,14 @@ export async function createViteConfig(
         ],
         exclude: ['vue-demi'],
       },
-      plugins: [...await configVitePlugins(root, viteEnv, command === 'build'),
-      // react()
+      plugins: [
+        react(
+          {
+            include: [/[/\\]react_app[\\/$]+/]
+          }
+        ),
+        ...await configVitePlugins(root, viteEnv, command === 'build')
+        // react()
       ],
     }
 

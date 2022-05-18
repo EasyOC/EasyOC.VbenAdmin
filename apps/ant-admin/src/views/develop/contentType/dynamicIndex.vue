@@ -23,9 +23,9 @@ onBeforeMount(() => {
 function eventTrackerEvent(params: TrackerEventArgs) {
   console.log('该信息来自于Vue事件监听：', params)
 }
-const amisScoped = ref<any>(null)
+let amisScoped 
 function amisMounted(amisScope) {
-  amisScoped.value = amisScope
-  console.log('amisScoped.value: ', amisScoped.value)
+  amisScoped = amisScope
+  console.log('amis 渲染完成', amisScoped)
 }
 </script>

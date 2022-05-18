@@ -11,7 +11,7 @@ import {
   // AMISRenderer1,
 } from '@/components/Amis'
 
-  
+
 // import VeauryAMISRenderer from '@/components/Amis/src/veauryAMISRenderer.vue'
 import schema from './index.json'
 import { TrackerEventArgs } from '@/components/Amis/src/types'
@@ -56,10 +56,10 @@ function eventTrackerEvent(params: TrackerEventArgs) {
   //     return false;
   // }
 }
-const amisScoped = ref<any>(null)
+let amisScoped
 function amisMounted(amisScope) {
-  amisScoped.value = amisScope
-  console.log('amisScoped.value: ', amisScoped.value)
+  amisScoped = amisScope
+  console.log('amis 加载完成 ', amisScoped)
   // console.log(JSON.stringify(amisjson.value.raw))
 }
 </script>

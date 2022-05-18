@@ -5,7 +5,6 @@
 import { onBeforeMount, ref } from 'vue'
 import { Amis } from '@/components/Amis'
 import schema from './GenFromType.json'
-import { TrackerEventArgs } from '@/components/Amis/src/types'
 import { useGo } from '@/hooks/web/usePage'
 
 const go = useGo()
@@ -16,7 +15,7 @@ function goBack() {
   go(route.meta.currentActiveMenu)
 }
 
-const amisjson = ref<any>(schema)
+const amisjson = schema
 onBeforeMount(() => {
   //使用 JSON Handler 之类的工具 获取Json路径
   // set(amisjson.value, "body[0].columns[7].buttons[1].url", globConfig.amisEditorUrl + url);
@@ -26,18 +25,21 @@ function eventTrackerEvent(params: TrackerEventArgs) {
   console.log('该信息来自于Vue事件监听：', params)
 
 }
-const amisScoped = ref<any>(null)
+let amisScoped
 function amisMounted(amisScope) {
-  amisScoped.value = amisScope
-  console.log('amisScoped.value: ', amisScoped.value)
+  amisScoped = amisScope
+  console.log('amisScoped.value: ', amisScoped)
   const svrPreview = amisScope.getComponentByName('page1.svrPreview');
   console.log('svrPreview: ', svrPreview);
-  svrPreview.setValue(`{
+  if (svrPreview) {
+    svrPreview.setValue(`{
     
           "type": "tpl",
           "tpl": "内容aaaaaaaaaa",
           "inline": false
         }`)
+  }
+
   // console.log(JSON.stringify(amisjson.value.raw))
 }
 </script>
