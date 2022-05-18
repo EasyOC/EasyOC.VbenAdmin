@@ -5,11 +5,11 @@
 
 </template>
 <script lang="ts" >
-// import './style/themes/cxd.less'
 
 import '@fortawesome/fontawesome-free/css/all.min.css'
 import '@fortawesome/fontawesome-free/css/v4-shims.css'
 import 'amis/lib/themes/cxd.css';
+import './style/themes/cxd/fix.less'
 
 import { applyReactInVue } from 'veaury'
 // import { lazyReactInVue } from 'veaury'
