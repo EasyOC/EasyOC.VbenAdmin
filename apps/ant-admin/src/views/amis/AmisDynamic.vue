@@ -28,20 +28,6 @@ onMounted(async () => { })
 // const schemaId = ref<string>('')
 onBeforeMount(async () => {
   console.log('currentRoute', currentRoute.value)
-
-})
-
-
-function eventTrackerEvent(tracker: TrackerEventArgs) {
-  console.log('该信息来自于Vue事件监听：', tracker)
-}
-
-
-
-
-let amisScoped 
-async function amisMounted(amisScope) {
-  amisScoped = amisScope
   let id = currentRoute.value.meta.schemaId
   if (!id) {
     id = currentRoute.value.params.id;
@@ -61,8 +47,21 @@ async function amisMounted(amisScope) {
         }`
     })
     amisjson = JSON.parse(result.data.contentItem.schema)
-    amisScoped.updateProps(amisjson)
   }
+})
+
+
+function eventTrackerEvent(tracker: TrackerEventArgs) {
+  console.log('该信息来自于Vue事件监听：', tracker)
+}
+
+
+
+
+function amisMounted(amisScope) {
+  console.log('amisScope: ', amisScope);
+ 
+  amisScope.updateProps(amisjson)
 
   // monacoEditor.value.getAction(['editor.action.formatDocument'])._run()
 }

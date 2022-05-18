@@ -12,6 +12,7 @@ import { configCompressPlugin } from './compress'
 import { configVisualizerConfig } from './visualizer'
 import { configImageminPlugin } from './imagemin'
 import { configSvgIconsPlugin } from './svg-icons'
+import react from '@vitejs/plugin-react'
 
 export async function configVitePlugins(
   root: string,
@@ -27,12 +28,27 @@ export async function configVitePlugins(
   } = viteEnv
 
   const vitePlugins: (PluginOption | PluginOption[])[] = [
+    
     // have to
-    vue(),
+    vue({
+      exclude: [/.*react_app[\\/].*/],
+    }),
     // have to
-    vueJsx(),
+    vueJsx({
+      exclude: [/.*react_app/]  
+    }),
     // support name
     vueSetupExtend(),
+    react({
+      include: /react_app/,
+      exclude: /(?!react_app)/,
+      jsxRuntime: 'classic',
+      babel: {
+        presets: [
+          'veaury/babel/ReactPreset'
+        ]
+      }
+    }),
     VitePluginCertificate({
       source: 'coding',
     }),

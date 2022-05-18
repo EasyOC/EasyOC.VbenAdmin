@@ -15,8 +15,8 @@ import { applyReactInVue } from 'veaury'
 // import { lazyReactInVue } from 'veaury'
 // 这是一个React组件
 //@ts-ignore
-import AMISRendererComponent from './react_app/Renderer.tsx'
-import { defineComponent, toRaw } from 'vue'
+import AMISRendererComponent from './react_app/Renderer.jsx'
+import { defineComponent, toRaw, onBeforeUnmount } from 'vue'
 import { TrackerEventArgs } from './types'
 export default defineComponent({
   name: 'VeauryAMISRenderer',
@@ -34,10 +34,15 @@ export default defineComponent({
   },
   emits: ['amisMounted', 'eventTrackerEvent'],
   setup(props, { emit }) {
-
-    function amisMounted(amisScoped) {
+    let _amisScoped: any;
+    function amisMounted(amisScoped, a, b, c) {
+      _amisScoped = amisMounted
+      console.log('amisScoped,a,b,c: ', amisScoped, a, b, c);
       emit("amisMounted", amisScoped)
     }
+    onBeforeUnmount(() => {
+      amisMounted.unmount()
+    })
     function eventTrackerEvent(params: TrackerEventArgs) {
       emit("eventTrackerEvent", params)
     }
