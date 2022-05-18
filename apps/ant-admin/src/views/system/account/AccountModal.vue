@@ -117,30 +117,29 @@ async function handleSubmit() {
 
   const form = amisScoped.value.getComponentByName('page1.form1');
   console.log('amisScoped.value.getComponentByName(\'form1\'): ', form);
-  try {
-    // form.onEvent = {
-    //   ValidateSucc = (aaa) => {
-    //     console.log("validateSucc", aaa)
-    //   }
-    // }
-    await form.validate(true)
+ 
+  try { 
+    form.validate().then(async isValidated => {
+      console.log('isValidated: ', isValidated);
+      if (!isValidated) {
+        console.log('表单验证失败！');
 
-
-    if (!form.isValidated()) {
-      return
-    }
-    model.userInfo = form.getValues()
-    console.log('model.isUpdate: ', model);
-    if (model.isUpdate) {
-      await userService.update(model.userInfo as UserDetailsDto)
-    } else {
-      await userService.newUser(model.userInfo as UserDetailsDto);
-    }
-    emit("success", {
-      isUpdate: model.isUpdate,
-      record: model.userInfo,
-    })
-    closeModal()
+      } else {
+    
+        model.userInfo = form.getValues()
+        console.log('model.isUpdate: ', model);
+        if (model.isUpdate) {
+          await userService.update(model.userInfo as UserDetailsDto)
+        } else {
+          await userService.newUser(model.userInfo as UserDetailsDto);
+        }
+        emit("success", {
+          isUpdate: model.isUpdate,
+          record: model.userInfo,
+        })
+        closeModal()
+      }
+    }) 
   } catch (error) {
     console.log('error: ', error);
   }
