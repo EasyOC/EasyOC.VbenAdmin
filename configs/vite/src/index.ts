@@ -10,7 +10,7 @@ import { createPreset } from './presets'
 import { OUTPUT_DIR } from './constants'
 import dayjs from 'dayjs'
 import react from '@vitejs/plugin-react'
-
+import vue from '@vitejs/plugin-vue'
 export * from './constants'
 
 export type ViteConfig = Promise<UserConfig | UserConfigFn>
@@ -131,11 +131,12 @@ export async function createViteConfig(
         exclude: ['vue-demi'],
       },
       plugins: [
-        react(
-          {
+        vue({
+          exclude: [/[/\\]react_app[\\/$]+/]
+        }),
+        react({
             include: [/[/\\]react_app[\\/$]+/]
-          }
-        ),
+          }),
         ...await configVitePlugins(root, viteEnv, command === 'build')
         // react()
       ],

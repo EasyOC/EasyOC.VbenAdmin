@@ -15,7 +15,7 @@ import { applyReactInVue } from 'veaury'
 // import { lazyReactInVue } from 'veaury'
 // 这是一个React组件
 //@ts-ignore
-import AMISRendererComponent from './react/Renderer.tsx'
+import AMISRendererComponent from './react_app/Renderer.tsx'
 import { defineComponent, toRaw } from 'vue'
 import { TrackerEventArgs } from './types'
 export default defineComponent({
