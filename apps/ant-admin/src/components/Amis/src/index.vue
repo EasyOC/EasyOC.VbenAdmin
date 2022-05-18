@@ -4,13 +4,10 @@
   </div>
 </template>
 <script lang="ts" setup>
-// import './style/themes/antd.less'
 import './style/themes/cxd.less'
 import { onMounted, ref, unref, onUnmounted } from 'vue'
 import '@fortawesome/fontawesome-free/css/all.min.css'
 import '@fortawesome/fontawesome-free/css/v4-shims.css'
-// import 'amis/lib/themes/default.css'
-// import 'amis/lib/themes/antd.css'
 import { EventTrack } from 'amis/lib/types'
 import { TrackerEventArgs } from './types'
 import getEnv from './amisEnv'

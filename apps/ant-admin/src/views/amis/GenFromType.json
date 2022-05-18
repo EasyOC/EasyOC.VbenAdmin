@@ -1,0 +1,228 @@
+{
+  "type": "page",
+  "regions": [
+    "body",
+    "toolbar",
+    "header"
+  ],
+  "body": [
+    {
+      "type": "form",
+      "title": "表单",
+      "body": [
+        {
+          "type": "grid",
+          "columns": [
+            {
+              "body": [
+                {
+                  "type": "select",
+                  "label": "类型",
+                  "name": "typeName",
+                  "id": "u:01e84799b97b",
+                  "source": {
+                    "method": "get",
+                    "url": "/api/ContentTypeManagement/GetAllTypes",
+                    "data": {
+                      "typeName": "${typeName}",
+                      "stereotype": "1",
+                      "pageSize": "-1"
+                    },
+                    "adaptor": "console.log('dropdown options11',response)\r\nvar items = response.data.items.map(x=>{\r\n    return {label:x.displayName,value:x.name}\r\n})\r\nconsole.log('dropdown options',items)\r\nreturn {options:items}",
+                    "replaceData": false,
+                    "responseData": null,
+                    "dataType": "json"
+                  },
+                  "searchable": true,
+                  "submitOnChange": false,
+                  "validations": {
+                  },
+                  "mode": "horizontal",
+                  "size": "",
+                  "horizontal": {
+                    "leftFixed": "normal",
+                    "left": 2,
+                    "right": 10
+                  },
+                  "checkAll": false,
+                  "required": true
+                }
+              ]
+            },
+            {
+              "body": [
+                {
+                  "type": "submit",
+                  "label": "刷新",
+                  "actionType": "dialog",
+                  "dialog": {
+                    "title": "系统提示",
+                    "body": "对你点击了"
+                  },
+                  "id": "u:c25bbea0513a",
+                  "checkAll": false,
+                  "level": "primary"
+                }
+              ]
+            }
+          ],
+          "id": "u:eec0b89bd4a5"
+        }
+      ],
+      "api": "",
+      "id": "u:e9b1e459dc49",
+      "actions": [
+      ],
+      "submitOnChange": true,
+      "submitOnInit": true,
+      "reload": "indexConfigForm",
+      "target": "indexConfigForm,manageIndexpage,btnSubmit",
+      "checkAll": false,
+      "name": "firstForm",
+      "wrapWithPanel": false,
+      "className": "m-b",
+      "mode": "horizontal",
+      "horizontal": {
+        "leftFixed": "",
+        "left": 4,
+        "right": 8
+      }
+    },
+    {
+      "type": "form",
+      "title": "",
+      "body": [
+        {
+          "type": "grid",
+          "columns": [
+            {
+              "body": [
+                {
+                  "type": "textarea",
+                  "label": "Schema JSON",
+                  "name": "schema",
+                  "id": "u:8d9ea63a69f6",
+                  "mode": "normal",
+                  "horizontal": {
+                    "leftFixed": "normal"
+                  },
+                  "required": true,
+                  "minRows": 3,
+                  "maxRows": 20,
+                  "minLength": 5,
+                  "maxLength": 120,
+                  "value": "{\n          \"type\": \"tpl\",\n          \"tpl\": \"内容aaaaaaaaaa\",\n          \"inline\": false\n        }"
+                }
+              ]
+            },
+            {
+              "valign": "",
+              "columnClassName": "",
+              "md": "auto"
+            }
+          ],
+          "id": "u:84b91d3bdecf"
+        },
+        {
+          "type": "hidden",
+          "name": "contentItemId",
+          "id": "u:bd12b2a13634"
+        },
+        {
+          "type": "hidden",
+          "name": "contentType",
+          "id": "u:a1ae08b567b3",
+          "value": "AmisSchema"
+        },
+        {
+          "type": "hidden",
+          "name": "typeName",
+          "id": "u:bd12b2a13634",
+          "required": false
+        }
+      ],
+      "id": "u:5bd9921a8c0a",
+      "checkAll": false,
+      "mode": "horizontal",
+      "initApi": {
+        "method": "get",
+        "url": "/api/DynamicIndex/GetDynamicIndexConfigOrDefault",
+        "data": {
+          "typeName": "${typeName}"
+        },
+        "dataType": "json",
+        "sendOn": "typeName",
+        "requestAdaptor": "if(!api.body.typeName){\r\n    return false\r\n}",
+        "adaptor": ""
+      },
+      "affixFooter": false,
+      "wrapWithPanel": false,
+      "horizontal": {
+        "leftFixed": "normal",
+        "left": 3,
+        "right": 9
+      },
+      "strictMode": true,
+      "submitOnChange": false,
+      "name": "schemaForm",
+      "debug": false,
+      "canAccessSuperData": false,
+      "api": "post:/api/DynamicIndex/UpdateDynamicIndex",
+      "placeholder": "-"
+    }
+  ],
+  "style": {
+    "fontWeight": "normal",
+    "backgroundColor": "",
+    "fontSize": "16px"
+  },
+  "title": "页面生成器",
+  "subTitle": "根据类型生成页面",
+  "toolbar": [
+    {
+      "type": "button",
+      "label": "预览",
+      "actionType": "dialog",
+      "dialog": {
+        "title": "系统提示",
+        "body": [
+          {
+            "type": "service",
+            "body": [
+            ],
+            "id": "u:2f42de2f5de0",
+            "name": "svrPreview",
+            "closeOnEsc": false,
+            "closeOnOutside": false,
+            "showCloseButton": true,
+            "messages": {
+            },
+            "dataProvider": ""
+          }
+        ],
+        "type": "dialog",
+        "actions": [
+        ]
+      },
+      "id": "u:4324e9e667ba"
+    },
+    {
+      "type": "submit",
+      "label": "提交",
+      "actionType": "submit",
+      "dialog": {
+        "title": "系统提示",
+        "body": "对你点击了"
+      },
+      "id": "u:41627a0c4d0b",
+      "level": "primary",
+      "confirmText": "提交执行将更新数据库表，请确保已备份相关数据",
+      "target": "indexConfigForm",
+      "disabledOn": "!this.typeName",
+      "name": "btnSubmit"
+    }
+  ],
+  "name": "manageIndexpage",
+  "messages": {
+  }
+}
