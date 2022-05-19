@@ -131,12 +131,12 @@ export async function createViteConfig(
         exclude: ['vue-demi'],
       },
       plugins: [
-        vue({
-          exclude: [/[/\\]react_app[\\/$]+/]
-        }),
-        react({
-            include: [/[/\\]react_app[\\/$]+/]
-          }),
+        // vue({
+        //   exclude: [/[/\\]react_app[\\/$]+/]
+        // }),
+        // react({
+        //     include: [/[/\\]react_app[\\/$]+/]
+        //   }),
         ...await configVitePlugins(root, viteEnv, command === 'build')
         // react()
       ],

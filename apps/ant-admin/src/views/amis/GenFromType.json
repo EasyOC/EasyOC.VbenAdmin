@@ -19,7 +19,7 @@
                   "type": "select",
                   "label": "类型",
                   "name": "typeName",
-                  "id": "u:01e84799b97b",
+                  "id": "typeName",
                   "source": {
                     "method": "get",
                     "url": "/api/ContentTypeManagement/GetAllTypes",
@@ -54,11 +54,7 @@
                 {
                   "type": "submit",
                   "label": "刷新",
-                  "actionType": "dialog",
-                  "dialog": {
-                    "title": "系统提示",
-                    "body": "对你点击了"
-                  },
+                  "actionType": "submit",
                   "id": "u:c25bbea0513a",
                   "checkAll": false,
                   "level": "primary"
@@ -75,8 +71,8 @@
       ],
       "submitOnChange": true,
       "submitOnInit": true,
-      "reload": "indexConfigForm",
-      "target": "indexConfigForm,manageIndexpage,btnSubmit",
+      "reload": "",
+      "target": "",
       "checkAll": false,
       "name": "firstForm",
       "wrapWithPanel": false,
@@ -169,6 +165,17 @@
       "canAccessSuperData": false,
       "api": "post:/api/DynamicIndex/UpdateDynamicIndex",
       "placeholder": "-"
+    },
+    {
+      "type": "service",
+      "body": [
+        {
+          "type": "tpl",
+          "tpl": "内容",
+          "inline": false
+        }
+      ],
+      "id": "u:7ee1588f76fe"
     }
   ],
   "style": {

@@ -37,7 +37,7 @@ function goBack() {
 // />
 
 
-const amisjson = ref<any>(schema)
+const amisjson = schema
 onBeforeMount(() => {
   //使用 JSON Handler 之类的工具 获取Json路径
   // set(amisjson.value, "body[0].columns[7].buttons[1].url", globConfig.amisEditorUrl + url);
@@ -56,10 +56,10 @@ function eventTrackerEvent(params: TrackerEventArgs) {
   //     return false;
   // }
 }
-const amisScoped = ref<any>(null)
+let amisScoped 
 function amisMounted(amisScope) {
-  amisScoped.value = amisScope
-  console.log('amisScoped.value: ', amisScoped.value)
+  amisScoped = amisScope
+  console.log('amisScoped.value: ', amisScoped)
   // console.log(JSON.stringify(amisjson.value.raw))
 }
 </script>
