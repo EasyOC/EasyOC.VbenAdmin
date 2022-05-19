@@ -8,7 +8,10 @@ import schema from './GenFromType.json'
 import { TrackerEventArgs } from '@/components/Amis/src/types'
 import { useGo } from '@/hooks/web/usePage'
 
+import { ContentTypeManagementServiceProxy } from '@pkg/apis/eoc/app-service-proxies'
+
 const go = useGo()
+const apiService = new ContentTypeManagementServiceProxy()
 
 // 页面左侧点击返回链接时的操作
 function goBack() {
@@ -22,15 +25,26 @@ onBeforeMount(() => {
   // set(amisjson.value, "body[0].columns[7].buttons[1].url", globConfig.amisEditorUrl + url);
 
 })
-function eventTrackerEvent(params: TrackerEventArgs) {
+async function eventTrackerEvent(params: TrackerEventArgs) {
   console.log('该信息来自于Vue事件监听：', params)
+    console.log('params?.tracker: ', params?.tracker.eventData?.id);
+    console.log('params?.eventProps?: ', params?.eventProps);
+  if(params?.tracker?.eventData?.id == "typeName" && params?.tracker?.eventType =="formItemChange" && params?.eventProps?.data?.typeName){
+    const typeName = params.eventProps.data.typeName;
+    console.log('typeName: ', typeName);
+    const Fields = await apiService.getFields(typeName);
+    const form = amisScoped.value.getComponentByName('page.svrPreview');
+    console.log('form: ', form);
+    console.log('Fields: ', Fields);
+    form.setValue(JSON.stringify(Fields));
+  }
 
 }
 const amisScoped = ref<any>(null)
 function amisMounted(amisScope) {
   amisScoped.value = amisScope
   console.log('amisScoped.value: ', amisScoped.value)
-  const svrPreview = amisScope.getComponentByName('page1.svrPreview');
+  const svrPreview = amisScope.getComponentByName('page.svrPreview');
   console.log('svrPreview: ', svrPreview);
   svrPreview.setValue(`{
     
