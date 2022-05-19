@@ -5,7 +5,7 @@ import '../renderer/MyRenderer';
 import '../editor/MyRenderer';
 import {PluginClass} from 'amis-editor/dist/manager';
 import {Layout, Switch, toast, classnames as cx} from 'amis';
-import {apiRequest} from 'service/api';
+import {apiRequest} from './../service/api';
 import {RouteComponentProps} from 'react-router';
 import {inject, observer} from 'mobx-react';
 // import {IMainStore} from 'store';

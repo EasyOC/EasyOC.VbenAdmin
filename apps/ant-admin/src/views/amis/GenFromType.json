@@ -1,5 +1,6 @@
 {
   "type": "page",
+  "name":"page1",
   "regions": [
     "body",
     "toolbar",

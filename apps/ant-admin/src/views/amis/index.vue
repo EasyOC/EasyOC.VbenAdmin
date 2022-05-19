@@ -11,19 +11,20 @@ import {
   // AMISRenderer1,
 } from '@/components/Amis'
 
-  
+
 // import VeauryAMISRenderer from '@/components/Amis/src/veauryAMISRenderer.vue'
 import schema from './index.json'
 import { TrackerEventArgs } from '@/components/Amis/src/types'
 import { useGo } from '@/hooks/web/usePage'
 // import { PageWrapper } from '@/components/Page'
-
+import { useRouter } from 'vue-router'
+const { currentRoute } = useRouter()
 const go = useGo()
 
 // 页面左侧点击返回链接时的操作
 function goBack() {
   // 本例的效果时点击返回始终跳转到账号列表页，实际应用时可返回上一页
-  go(route.meta.currentActiveMenu)
+  go(currentRoute.value.meta.currentActiveMenu)
 }
 // import { getGlobalConfig } from '@/internal/config'
 // import { set } from '@pkg/utils'
@@ -37,7 +38,7 @@ function goBack() {
 // />
 
 
-const amisjson = schema
+const amisjson = ref(schema)
 onBeforeMount(() => {
   //使用 JSON Handler 之类的工具 获取Json路径
   // set(amisjson.value, "body[0].columns[7].buttons[1].url", globConfig.amisEditorUrl + url);
@@ -56,10 +57,10 @@ function eventTrackerEvent(params: TrackerEventArgs) {
   //     return false;
   // }
 }
-let amisScoped 
+let amisScoped
 function amisMounted(amisScope) {
   amisScoped = amisScope
-  console.log('amisScoped.value: ', amisScoped)
+  console.log('amis 加载完成 ', amisScoped)
   // console.log(JSON.stringify(amisjson.value.raw))
 }
 </script>

@@ -1,7 +1,7 @@
 <template>
-  <Amis :amisjson="amisjson" @amisMounted="amisMounted" @eventTrackerEvent="eventTrackerEvent" />
-
-
+  <PageWrapper>
+    <Amis :amisjson="amisjson" @amisMounted="amisMounted" @eventTrackerEvent="eventTrackerEvent" />
+  </PageWrapper>
 </template>
 <script setup lang="ts">
 import { computed, ref, onMounted, onBeforeMount } from 'vue'
@@ -9,39 +9,14 @@ import { Amis } from '@/components/Amis'
 import { TrackerEventArgs } from '@/components/Amis/src/types'
 import { excuteGraphqlQuery } from '@pkg/apis/eoc/graphqlApi'
 import { useRouter } from 'vue-router'
-import { PageWrapper } from '@/components/Page'
+import { PageWrapper } from '@/components/page'
 
-// import MonacoEditor from '@/components/MonacoEditor/index.vue'
-// let monacoEditor = ref<any>({})
-let amisjson
-// const amisjsonStr = computed({
-//   get: () => {
-//     return JSON.stringify(amisjson.value, null, '\t')
-//   },
-//   set: (value) => {
-//     amisjson.value = JSON.parse(value)
-//   },
-// })
+const amisjson = ref<any>({})
 const { currentRoute } = useRouter()
 onMounted(async () => { })
 
-// const schemaId = ref<string>('')
 onBeforeMount(async () => {
   console.log('currentRoute', currentRoute.value)
-
-})
-
-
-function eventTrackerEvent(tracker: TrackerEventArgs) {
-  console.log('该信息来自于Vue事件监听：', tracker)
-}
-
-
-
-
-let amisScoped 
-async function amisMounted(amisScope) {
-  amisScoped = amisScope
   let id = currentRoute.value.meta.schemaId
   if (!id) {
     id = currentRoute.value.params.id;
@@ -60,9 +35,22 @@ async function amisMounted(amisScope) {
           }
         }`
     })
-    amisjson = JSON.parse(result.data.contentItem.schema)
-    amisScoped.updateProps(amisjson)
+    amisjson.value = JSON.parse(result.data.contentItem.schema)
   }
+})
+
+
+function eventTrackerEvent(tracker: TrackerEventArgs) {
+  console.log('该信息来自于Vue事件监听：', tracker)
+}
+
+
+
+
+function amisMounted(amisScope) {
+  console.log('amisScope: ', amisScope);
+
+  // amisScope.updateProps(amisjson)
 
   // monacoEditor.value.getAction(['editor.action.formatDocument'])._run()
 }

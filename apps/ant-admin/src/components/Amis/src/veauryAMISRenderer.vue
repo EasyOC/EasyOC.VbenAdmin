@@ -15,9 +15,10 @@ import { applyReactInVue } from 'veaury'
 // import { lazyReactInVue } from 'veaury'
 // 这是一个React组件
 //@ts-ignore
-import AMISRendererComponent from './react_app/Renderer.tsx'
-import { defineComponent, toRaw } from 'vue'
+import AMISRendererComponent from './react_app/Renderer.jsx'
+import { defineComponent, toRaw, onBeforeUnmount, unref } from 'vue'
 import { TrackerEventArgs } from './types'
+import { deepMerge } from '@pkg/utils';
 export default defineComponent({
   name: 'VeauryAMISRenderer',
   components: {
@@ -34,10 +35,21 @@ export default defineComponent({
   },
   emits: ['amisMounted', 'eventTrackerEvent'],
   setup(props, { emit }) {
-
+    let _amisScoped: any;
     function amisMounted(amisScoped) {
+      _amisScoped = amisScoped
+      // if (_amisScoped && (!_amisScoped.updateProps)) {
+      //   _amisScoped.updateProps = (attrs) => {
+      //     // props.amisjson = deepMerge(unref(props).amisjson, { ...attrs })
+      //     throw 'react 方式集成无法支持此方法， 请直接修改 amisjson 对象'
+      //   }
+      // }
       emit("amisMounted", amisScoped)
     }
+    onBeforeUnmount(() => {
+      if (_amisScoped?.unmount)
+        _amisScoped.unmount()
+    })
     function eventTrackerEvent(params: TrackerEventArgs) {
       emit("eventTrackerEvent", params)
     }

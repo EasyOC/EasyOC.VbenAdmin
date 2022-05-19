@@ -1,34 +1,36 @@
 import * as React from 'react'
 import { render as renderAmis } from 'amis'
 import getEnv from '../amisEnv'
-import { EventTrack } from '../types'
 
-export default class AMISRendererComponent extends React.Component<
-  {
-    schema: any
-    amisMounted: (amisScoped) => void
-    trackerFn: (tracker: any) => void | undefined
-  },
-  any
-> {
+export default class AMISRendererComponent extends React.Component
+// <
+// {
+//     schema: any
+//     amisMounted: (amisScoped) => void
+//     trackerFn: (tracker: any) => void | undefined
+//   },
+//   any
+// >
+{
   render() {
     let locale = 'zh-CN'
     const amisEnv = getEnv()
 
     // 请勿使用 React.StrictMode，目前还不支持
-    return renderAmis(
-      this.props.schema,
+    const result = renderAmis(
+      this.props.schema || { type: 'page' },
       {
         // props...
         // locale: 'en-US' // 请参考「多语言」的文档
         locale,
-        scopeRef: (ref: any) => this.props.amisMounted(ref), // 功能和前面 SDK 的 amisScoped 一样
+        scopeRef: (ref, a, b, c) => {
+          console.log('scopeRef: ', ref)
+          this.props.amisMounted(ref) // 功能和前面 SDK 的 amisScoped 一样
+        },
       },
       {
         ...amisEnv,
-        tracker: (tracker: EventTrack, eventProps: any) => {
-          console.log('eventTracker: ', tracker)
-          console.log('eventProps: ', eventProps)
+        tracker: (tracker, eventProps) => {
           if (this.props?.trackerFn) {
             this.props?.trackerFn({ tracker, eventProps })
           }
@@ -36,5 +38,7 @@ export default class AMISRendererComponent extends React.Component<
         },
       },
     )
+    // this.props.amisMounted(result)
+    return result
   }
 }
