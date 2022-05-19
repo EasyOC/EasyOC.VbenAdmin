@@ -1,5 +1,5 @@
 import axios, { AxiosRequestConfig, AxiosInstance } from 'axios';
-import authService, { globConfig } from 'route/auth/authService';
+import authService, { globConfig } from './../route/auth/authService';
 
 export async function apiRequest(config: AxiosRequestConfig | boolean | any) {
     if (!config) {

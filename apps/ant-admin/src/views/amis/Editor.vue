@@ -1143,6 +1143,10 @@ function copyCode() {
 //   //   editor.value.setValue(editorJson.value)
 //   // } catch (error) {}
 // }
+const amisScoped = ref<any>(null)
+function amisMounted(amisScope) {
+  amisScoped.value = amisScope
+}
 
 const amitShow = ref(true)
 function editorChange(value) {
@@ -1158,8 +1162,5 @@ function formatSchema() {
   // amisScoped?.value.getAction(['editor.action.formatDocument'])._run()
 }
 
-const amisScoped = ref<any>(null)
-function amisMounted(amisScope) {
-  amisScoped.value = amisScope
-}
+
 </script>

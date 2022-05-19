@@ -7,7 +7,7 @@ import {Layout, Switch, classnames as cx, toast} from 'amis';
 import '../renderer/MyRenderer';
 import '../editor/MyRenderer';
 import {getEnv} from 'mobx-state-tree';
-import {apiRequest} from 'service/api';
+import {apiRequest} from './../service/api';
 import {IPageStore} from 'store/Page';
 let currentIndex = -1;
 

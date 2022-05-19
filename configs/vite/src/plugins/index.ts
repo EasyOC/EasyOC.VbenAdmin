@@ -13,7 +13,7 @@ import { configVisualizerConfig } from './visualizer'
 import { configImageminPlugin } from './imagemin'
 import { configSvgIconsPlugin } from './svg-icons'
 import react from '@vitejs/plugin-react'
-
+import { babel } from '@rollup/plugin-babel'
 export async function configVitePlugins(
   root: string,
   viteEnv: ViteEnv,
@@ -31,23 +31,27 @@ export async function configVitePlugins(
     
     // have to
     vue({
-      exclude: [/.*react_app[\\/].*/],
+      // exclude: [/.*react_app[\\/].*/],
     }),
     // have to
     vueJsx({
-      exclude: [/.*react_app/]  
+      // 排除所有react_app目录
+      exclude: [/[/\\]react_app[\\/$]+/]
     }),
     // support name
     vueSetupExtend(),
-    react({
-      include: /react_app/,
-      exclude: /(?!react_app)/,
-      jsxRuntime: 'classic',
-      babel: {
-        presets: [
-          'veaury/babel/ReactPreset'
-        ]
-      }
+    // react({
+    //   include: /react_app/,
+    //   exclude: /(?!react_app)/
+    // }),
+    babel({
+      exclude: [/node_modules/],
+      presets: [
+        // 需要提前安装 @vue/cli-plugin-babel
+        '@vue/cli-plugin-babel/preset',
+        'veaury/babel/ReactPreset'
+      ],
+      babelHelpers: 'runtime',
     }),
     VitePluginCertificate({
       source: 'coding',
