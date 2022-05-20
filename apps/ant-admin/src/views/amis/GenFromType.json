@@ -1,6 +1,5 @@
 {
   "type": "page",
-  "name":"page1",
   "regions": [
     "body",
     "toolbar",
@@ -15,40 +14,6 @@
           "type": "grid",
           "columns": [
             {
-              "body": [
-                {
-                  "type": "select",
-                  "label": "类型",
-                  "name": "typeName",
-                  "id": "typeName",
-                  "source": {
-                    "method": "get",
-                    "url": "/api/ContentTypeManagement/GetAllTypes",
-                    "data": {
-                      "typeName": "${typeName}",
-                      "stereotype": "1",
-                      "pageSize": "-1"
-                    },
-                    "adaptor": "console.log('dropdown options11',response)\r\nvar items = response.data.items.map(x=>{\r\n    return {label:x.displayName,value:x.name}\r\n})\r\nconsole.log('dropdown options',items)\r\nreturn {options:items}",
-                    "replaceData": false,
-                    "responseData": null,
-                    "dataType": "json"
-                  },
-                  "searchable": true,
-                  "submitOnChange": false,
-                  "validations": {
-                  },
-                  "mode": "horizontal",
-                  "size": "",
-                  "horizontal": {
-                    "leftFixed": "normal",
-                    "left": 2,
-                    "right": 10
-                  },
-                  "checkAll": false,
-                  "required": true
-                }
-              ]
             },
             {
               "body": [
@@ -83,7 +48,8 @@
         "leftFixed": "",
         "left": 4,
         "right": 8
-      }
+      },
+      "debug": false
     },
     {
       "type": "form",
@@ -92,33 +58,57 @@
         {
           "type": "grid",
           "columns": [
-            {
-              "body": [
-                {
-                  "type": "textarea",
-                  "label": "Schema JSON",
-                  "name": "schema",
-                  "id": "u:8d9ea63a69f6",
-                  "mode": "normal",
-                  "horizontal": {
-                    "leftFixed": "normal"
-                  },
-                  "required": true,
-                  "minRows": 3,
-                  "maxRows": 20,
-                  "minLength": 5,
-                  "maxLength": 120,
-                  "value": "{\n          \"type\": \"tpl\",\n          \"tpl\": \"内容aaaaaaaaaa\",\n          \"inline\": false\n        }"
-                }
-              ]
-            },
-            {
-              "valign": "",
-              "columnClassName": "",
-              "md": "auto"
-            }
           ],
           "id": "u:84b91d3bdecf"
+        },
+        {
+          "type": "select",
+          "label": "类型",
+          "name": "typeName",
+          "id": "ftypeName",
+          "source": {
+            "method": "get",
+            "url": "/api/ContentTypeManagement/GetAllTypes",
+            "data": {
+              "typeName": "${typeName}",
+              "stereotype": "1",
+              "pageSize": "-1"
+            },
+            "adaptor": "console.log('dropdown options11',response)\r\nvar items = response.data.items.map(x=>{\r\n    return {label:x.displayName,value:x.name}\r\n})\r\nconsole.log('dropdown options',items)\r\nreturn {options:items}",
+            "replaceData": false,
+            "responseData": null,
+            "dataType": "json"
+          },
+          "searchable": true,
+          "submitOnChange": false,
+          "validations": {
+          },
+          "mode": "horizontal",
+          "size": "",
+          "horizontal": {
+            "leftFixed": "normal",
+            "left": 2,
+            "right": 10
+          },
+          "checkAll": false,
+          "required": true,
+          "editable": false
+        },
+        {
+          "type": "textarea",
+          "label": "Schema JSON",
+          "name": "schema",
+          "id": "u:8d9ea63a69f6",
+          "mode": "normal",
+          "horizontal": {
+            "leftFixed": "normal"
+          },
+          "required": true,
+          "minRows": 3,
+          "maxRows": 20,
+          "minLength": 5,
+          "maxLength": 120,
+          "value": "{\n          \"type\": \"tpl\",\n          \"tpl\": \"内容aaaaaaaaaa\",\n          \"inline\": false\n        }"
         },
         {
           "type": "hidden",
@@ -172,8 +162,10 @@
       "body": [
         {
           "type": "tpl",
-          "tpl": "内容",
-          "inline": false
+          "tpl": "<p>内容</p>",
+          "inline": false,
+          "style": {
+          }
         }
       ],
       "id": "u:7ee1588f76fe"
@@ -230,7 +222,7 @@
       "name": "btnSubmit"
     }
   ],
-  "name": "manageIndexpage",
+  "name": "page1",
   "messages": {
   }
 }

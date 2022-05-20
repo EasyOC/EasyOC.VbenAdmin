@@ -12,6 +12,7 @@ import { ContentTypeManagementServiceProxy } from '@pkg/apis/eoc/app-service-pro
 
 import { TrackerEventArgs } from '../../components/Amis/src/types';
 import { useRouter } from 'vue-router'
+import fieldstoGraph from './FieldstoGraph'
 const { currentRoute } = useRouter()
 const go = useGo()
 const apiService = new ContentTypeManagementServiceProxy()
@@ -28,22 +29,30 @@ onBeforeMount(() => {
   // set(amisjson.value, "body[0].columns[7].buttons[1].url", globConfig.amisEditorUrl + url);
 
 })
+let amisScoped
 async function eventTrackerEvent(params: TrackerEventArgs) {
-  console.log('该信息来自于Vue事件监听：', params)
-    console.log('params?.tracker: ', params?.tracker.eventData?.id);
-    console.log('params?.eventProps?: ', params?.eventProps);
-  if(params?.tracker?.eventData?.id == "typeName" && params?.tracker?.eventType =="formItemChange" && params?.eventProps?.data?.typeName){
-    const typeName = params.eventProps.data.typeName;
+  // console.log('data: ', data);
+  // console.log('', params)
+  // console.log('params?.tracker: ', params?.tracker);
+  // console.log('params?.eventProps: ', params?.eventProps);
+  if (params?.tracker?.eventData?.id == "ftypeName" && params?.tracker?.eventType == "formItemChange" && params?.tracker?.eventData?.value) {
+    console.log('该信息来自于Vue事件监听： params: ', params);
+
+    const typeName = params?.tracker?.eventData?.value;
     console.log('typeName: ', typeName);
-    const Fields = await apiService.getFields(typeName);
-    const form = amisScoped.value.getComponentByName('page.svrPreview');
-    console.log('form: ', form);
-    console.log('Fields: ', Fields);
-    form.setValue(JSON.stringify(Fields));
+    const fields = await apiService.getFields(typeName);
+    // const form = amisScoped.getComponentByName('page1.schemaForm');
+    //   console.log('typeName: ', formModel);
+    const tempGraphqlStr = fieldstoGraph(fields as any)
+    console.log('tempGraphqlStr: ', tempGraphqlStr);
+    // form.setValues({schema:JSON.stringify(Fields)});
+    // }
   }
+
 
 }
 function amisMounted(amisScope) {
+  amisScoped = amisScope;
   console.log('gft-amisScoped.value: ', amisScope)
   if (!amisScope) {
     return;
@@ -54,7 +63,8 @@ function amisMounted(amisScope) {
   // 替代 amisScope.updateProps
   amisjson.value.data = { typeName: "Customer" }
 
-  const svrPreview = amisScope.getComponentByName('page1.svrPreview');
+  // amisScope.getComponentByName("page1.firstForm").handleFormSubmit = (a, b, c) => console.log("1111111111111111111111111",a, b, c);
+  const svrPreview = amisScope.getComponentByName('page1.service1');
   console.log('svrPreview: ', svrPreview);
   // amisjson.data = { typeName: "Customer" }
   if (svrPreview) {

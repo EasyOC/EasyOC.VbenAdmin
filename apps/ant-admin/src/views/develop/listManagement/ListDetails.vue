@@ -1,42 +1,20 @@
 <template>
   <PageWrapper :title="getTitle" @back="goBack">
     <template #rightFooter>
-      <a-button
-        type="primary"
-        @click="save"
-        :disabled="loading"
-        :loading="loading"
-        >保存</a-button
-      >
+      <a-button type="primary" @click="save" :disabled="loading" :loading="loading">保存</a-button>
 
-      <a-button type="primary" :loading="loading" :disabled="loading" danger
-        >删除列表</a-button
-      >
+      <a-button type="primary" :loading="loading" :disabled="loading" danger>删除列表</a-button>
     </template>
     <template #footer>
       <BasicForm @register="register">
         <template #contentTypeSearch="{ model, field }">
-          <ApiSelect
-            :api="getTypeList"
-            showSearch
-            v-model:value="model[field]"
-            optionFilterProp="label"
-            labelField="displayName"
-            valueField="name"
-            @change="typeSelectionChanged"
-          />
+          <ApiSelect :api="getTypeList" showSearch v-model:value="model[field]" optionFilterProp="label"
+            labelField="displayName" valueField="name" @change="typeSelectionChanged" />
         </template>
 
         <template #queryName="{ model, field }">
-          <ApiSelect
-            :api="listQueryNames"
-            showSearch
-            v-model:value="model[field]"
-            optionFilterProp="label"
-            labelField="displayName"
-            @change="queryNameChanged"
-            valueField="name"
-          />
+          <ApiSelect :api="listQueryNames" showSearch v-model:value="model[field]" optionFilterProp="label"
+            labelField="displayName" @change="queryNameChanged" valueField="name" />
         </template>
       </BasicForm>
       <a-tabs default-active-key="detail" v-model:activeKey="currentKey">
@@ -50,30 +28,20 @@
           <a-col :span="4" class="bg-white" style="min-width: 300px">
             <a-card title="字段列表" :bordered="false" size="small">
               <template #extra>
-                <a-button size="small" @click="typeSelectionChanged()"
-                  >刷新列表</a-button
-                >
+                <a-button size="small" @click="typeSelectionChanged()">刷新列表</a-button>
                 <!-- <a-button size="small" @click="() => 1 + 1">添加字段</a-button> -->
               </template>
               <!--   <a-button @click="delCol(index)" type="link">
                         <DeleteOutlined style="color: #ed6f6f" />
               </a-button>-->
-              <draggable
-                class="w-full dragArea list-group"
-                style="height: 500px; overflow-y: scroll"
-              >
-                <div
-                  class="p-2 m-1 rounded-md list-group-item borderGray"
-                  v-for="(element, index) in listAllFields"
-                  :key="element.keyPath || ''"
-                >
+              <draggable class="w-full dragArea list-group" style="height: 500px; overflow-y: scroll">
+                <div class="p-2 m-1 rounded-md list-group-item borderGray" v-for="(element, index) in listAllFields"
+                  :key="element.keyPath || ''">
                   <div>
                     <b>
                       {{ element.displayName }}
                       <a-button @click="addField(element)" type="link">
-                        <swap-right-outlined
-                          style="color: rgb(50, 150, 231); font-size: large"
-                        />
+                        <swap-right-outlined style="color: rgb(50, 150, 231); font-size: large" />
                       </a-button>
                     </b>
                     <!-- <span
@@ -91,35 +59,19 @@
           <a-col :span="12">
             <a-card title="字段映射" :bordered="false" size="small">
               <template #extra>
-                <a-button
-                  size="small"
-                  @click="formatSchema"
-                  title="快捷键：shift+alt+f"
-                  >格式化</a-button
-                >
+                <a-button size="small" @click="formatSchema" title="快捷键：shift+alt+f">格式化</a-button>
               </template>
-              <MonacoEditor
-                language="json"
-                :value="model.ListMapping"
-                @editorDidMount="editorDidMounted"
-                @change="editorUpdated"
-                height="500"
-              />
+              <MonacoEditor language="json" :value="model.ListMapping" @editorDidMount="editorDidMounted"
+                @change="editorUpdated" height="500" />
             </a-card>
           </a-col>
           <a-col :span="8" style="min-width: 300px">
             <a-card title="GraphQL" :bordered="false" size="small">
               <template #extra>
-                <a :href="`${apiUrl}/Admin/GraphQL`" target="AdminGraphQL"
-                  >在设计器中打开</a
-                >
+                <a :href="`${apiUrl}/Admin/GraphQL`" target="AdminGraphQL">在设计器中打开</a>
               </template>
-              <MonacoEditor
-                :value="model.GraphQL"
-                language="graphql"
-                height="500"
-                @change="(value) => (model.GraphQL = value)"
-              />
+              <MonacoEditor :value="model.GraphQL" language="graphql" height="500"
+                @change="(value) => (model.GraphQL = value)" />
             </a-card>
           </a-col>
         </a-row>
@@ -467,9 +419,9 @@ function buildGraphql(fields: ContentFieldsMapping[]) {
       if (model.value.QueryMethod == 'Graphql') {
         switch (field.fieldType) {
           case FieldType.ContentPickerField:
-            tempPart[fieldName] = {
-              contentItems: {
-                contentItemId: false,
+            tempPart[fieldName] = { 
+              firstValue: false,
+              firstContentItem: {
                 displayText: false,
               },
             }
@@ -477,6 +429,7 @@ function buildGraphql(fields: ContentFieldsMapping[]) {
           case FieldType.UserPickerField:
             tempPart[fieldName] = {
               userIds: false,
+              firstValue: false,
               userProfiles: { displayText: false },
             }
             break
@@ -521,6 +474,7 @@ function addField(field: ContentFieldsMapping) {
   border: 1px solid darkgrey;
   min-height: 400px;
 }
+
 .borderGray {
   border: 1px solid rgba(209, 213, 219, var(--tw-bg-opacity));
 }

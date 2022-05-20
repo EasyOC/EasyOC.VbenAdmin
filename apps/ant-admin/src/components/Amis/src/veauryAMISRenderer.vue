@@ -47,8 +47,8 @@ export default defineComponent({
       emit("amisMounted", amisScoped)
     }
     onBeforeUnmount(() => {
-      if (_amisScoped?.unmount)
-        _amisScoped.unmount()
+      // if (_amisScoped?.unmount)
+        // _amisScoped.unmount()
     })
     function eventTrackerEvent(params: TrackerEventArgs) {
       emit("eventTrackerEvent", params)
