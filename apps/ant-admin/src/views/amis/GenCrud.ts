@@ -77,18 +77,18 @@ function genColumns(fields: ContentFieldsMappingDto[]) {
                                     },
                                     {
                                         "label": "创建时间",
-                                        "content": "${createdUtc}",
+                                        "content": "${createdUtc | toDate |date:YYYY-MM-DD HH\\:mm\\:ss }",
                                         "span": 1
                                     },
                                     {
                                         "span": 1,
                                         "label": "修改时间",
-                                        "content": "${modifiedUtc}"
+                                        "content": "${modifiedUtc | toDate |date:YYYY-MM-DD HH\\:mm\\:ss } "
                                     },
                                     {
                                         "span": 1,
                                         "label": "发布时间",
-                                        "content": "${publishedUtc}"
+                                        "content": "${publishedUtc | toDate |date:YYYY-MM-DD HH\\:mm\\:ss }"
                                     },
                                     {
                                         "span": 1,
@@ -317,10 +317,13 @@ function setColumnType(fieldDef: ContentFieldsMappingDto, field: any) {
         case FieldType.TimeField:
             field.type = "date";
             break;
+        case FieldType.NumericField:
+            field.type = "text";
+            break;
         case FieldType.ContentPickerField:
             field.name = fieldDef.graphqlValuePath?.replace('contentItemIds.firstValue', 'firstContentItem.displayText')
         default:
-            field.type = "date";
+            field.type = "text";
             break;
     }
 }
@@ -414,7 +417,7 @@ export function buildGraphqlFields(fields: ContentFieldsMapping[]) {
         // .filter((x) => !GraphQLNotSupportFields.includes(x.fieldType))
         .forEach((field) => {
             // console.log('field: ', field);
-            const fieldName = camelCase(field.fieldName)
+            const fieldName = camelCase(field.fieldName) ?? ''
             // console.log('fieldName: ', fieldName);
             // const formValue = getFieldsValue()
             const isPart = false

@@ -185,6 +185,8 @@
       "actionType": "dialog",
       "dialog": {
         "title": "系统提示",
+        "size": "lg",
+        "closeOnOutside": true,
         "body": [
           {
             "type": "service",
