@@ -437,7 +437,7 @@ export class ContentManagementServiceProxy extends AppServiceBase {
     * @param body (optional) 
     * @return Success
     */
-    postContent(draft: boolean | undefined, body: { [key: string]: any; } | undefined): Promise<string> {
+    postContent(draft: boolean | undefined, body: { [key: string]: any; } | undefined): Promise<void> {
     
         let url_ = this.baseUrl + "/api/ContentManagement/PostContent?";
         
@@ -454,7 +454,6 @@ export class ContentManagementServiceProxy extends AppServiceBase {
             url: url_,
             headers: {
                 "Content-Type": "application/json-patch+json", 
-                "Accept": "text/plain"
             }
         };
         return this.instance.request(options_).then((_response: AxiosResponse) => {
@@ -639,15 +638,63 @@ export class ContentTypeManagementServiceProxy extends AppServiceBase {
     /**
     * @return Success
     */
-    listLuceneQueries(): Promise<QueryDefDto[]> {
+    listAllQueries(): Promise<QueryDefDto[]> {
     
-        let url_ = this.baseUrl + "/api/ContentTypeManagement/ListLuceneQueries";
+        let url_ = this.baseUrl + "/api/ContentTypeManagement/ListAllQueries";
             url_ = url_.replace(/[?&]$/, "");
         let options_ = <AxiosRequestConfig>{
             method: "POST",
             url: url_,
             headers: {
                 "Accept": "text/plain"
+            }
+        };
+        return this.instance.request(options_).then((_response: AxiosResponse) => {
+            return this.transformResult(_response);
+        });
+    }
+
+    /**
+    * @param name (optional) 
+    * @return Success
+    */
+    getTypeDefinitionForEdit(name: string | undefined): Promise<EditViewContentDefinitionDto> {
+    
+        let url_ = this.baseUrl + "/api/ContentTypeManagement/GetTypeDefinitionForEdit?";
+        
+        
+        
+        
+         if (name !== undefined && name !== null)
+            url_ += "name=" + encodeURIComponent("" + name) + "&";
+                    url_ = url_.replace(/[?&]$/, "");
+        let options_ = <AxiosRequestConfig>{
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+        return this.instance.request(options_).then((_response: AxiosResponse) => {
+            return this.transformResult(_response);
+        });
+    }
+
+    /**
+    * @param body (optional) 
+    * @return Success
+    */
+    createTypeDefinition(body: CreateTypeDefinitionInput | undefined): Promise<void> {
+    
+        let url_ = this.baseUrl + "/api/ContentTypeManagement/CreateTypeDefinition";
+            url_ = url_.replace(/[?&]$/, "");
+        const content_ = JSON.stringify(body);
+        let options_ = <AxiosRequestConfig>{
+            data: content_,
+            method: "POST",
+            url: url_,
+            headers: {
+                "Content-Type": "application/json-patch+json", 
             }
         };
         return this.instance.request(options_).then((_response: AxiosResponse) => {
@@ -1376,6 +1423,7 @@ export class SessionServiceProxy extends AppServiceBase {
     }
 
     /**
+    * 返回菜单和权限
     * @return Success
     */
     menus(): Promise<string[]> {
@@ -1423,12 +1471,22 @@ export class UsersServiceProxy extends AppServiceBase {
     getAll(params:{ selectedRole: string | undefined, sortField: string | undefined, sortOrder: string | undefined, departmentId: string | undefined, filter: string | undefined, page: number | undefined, pageSize: number | undefined }): Promise<PagedResultOfUserListItemDto> {
         const { selectedRole, sortField, sortOrder, departmentId, filter, page, pageSize } = {...params}; 
 
-        let url_ = this.baseUrl + "/api/Users/GetAll?"; 
+        let url_ = this.baseUrl + "/api/Users/GetAll?";
+        
+        
+        
+        
          if (selectedRole !== undefined && selectedRole !== null)
-            url_ += "SelectedRole=" + encodeURIComponent("" + selectedRole) + "&"; 
+            url_ += "SelectedRole=" + encodeURIComponent("" + selectedRole) + "&";
+                
+        
+        
         
          if (sortField !== undefined && sortField !== null)
-            url_ += "SortField=" + encodeURIComponent("" + sortField) + "&"; 
+            url_ += "SortField=" + encodeURIComponent("" + sortField) + "&";
+                
+        
+        
         
          if (sortOrder !== undefined && sortOrder !== null)
             url_ += "SortOrder=" + encodeURIComponent("" + sortOrder) + "&";
@@ -1629,42 +1687,6 @@ export class UsersServiceProxy extends AppServiceBase {
 
 }
 
-export class WorkflowApiServiceProxy extends AppServiceBase {
-    private instance: VAxios;
-    private baseUrl: string;
-    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
-
-    constructor(instance?:VAxios) {
-        super();
-        if(instance) {
-            this.instance = instance;
-        } else {
-            this.instance = this.ajax;
-        }
-        this.baseUrl = ""
-    }
-    /**
-    * 尝试使用反射获取所有 工作流的JS扩展方法（IGlobalMethodProvider）
-    * @return Success
-    */
-    listAllGlobalMethods(): Promise<GlobalMethodDto[]> {
-    
-        let url_ = this.baseUrl + "/api/WorkflowApi/ListAllGlobalMethods";
-            url_ = url_.replace(/[?&]$/, "");
-        let options_ = <AxiosRequestConfig>{
-            method: "POST",
-            url: url_,
-            headers: {
-                "Accept": "text/plain"
-            }
-        };
-        return this.instance.request(options_).then((_response: AxiosResponse) => {
-            return this.transformResult(_response);
-        });
-    }
-
-}
-
 export class ConnectionConfigModel {
     configId!: string | null;
     configName!: string | null;
@@ -1763,30 +1785,34 @@ export class ContentFieldOption {
 export class ContentFieldsMappingDto {
     keyPath!: string | null;
     /** 内容项的直接属性，默认False,比如 Published，Latest，DisplayText, */
-    isContentItemProperty!: boolean;
+    isSelf!: boolean;
     fieldName!: string | null;
     readonly fieldNameCamelCase!: string | null;
     displayName!: string | null;
     partDisplayName!: string | null;
+    graphqlValuePath!: string | null;
     partName!: string | null;
     fieldSettings!: any | null;
     fieldType!: string | null;
     description!: string | null;
     lastValueKey!: string | null;
+    isBasic!: boolean;
 
     init(_data?: any, _mappings?: any) {
         if (_data) {
             this.keyPath = _data["keyPath"] !== undefined ? _data["keyPath"] : <any>null;
-            this.isContentItemProperty = _data["isContentItemProperty"] !== undefined ? _data["isContentItemProperty"] : <any>null;
+            this.isSelf = _data["isSelf"] !== undefined ? _data["isSelf"] : <any>null;
             this.fieldName = _data["fieldName"] !== undefined ? _data["fieldName"] : <any>null;
             (<any>this).fieldNameCamelCase = _data["fieldNameCamelCase"] !== undefined ? _data["fieldNameCamelCase"] : <any>null;
             this.displayName = _data["displayName"] !== undefined ? _data["displayName"] : <any>null;
             this.partDisplayName = _data["partDisplayName"] !== undefined ? _data["partDisplayName"] : <any>null;
+            this.graphqlValuePath = _data["graphqlValuePath"] !== undefined ? _data["graphqlValuePath"] : <any>null;
             this.partName = _data["partName"] !== undefined ? _data["partName"] : <any>null;
             this.fieldSettings = _data["fieldSettings"] !== undefined ? _data["fieldSettings"] : <any>null;
             this.fieldType = _data["fieldType"] !== undefined ? _data["fieldType"] : <any>null;
             this.description = _data["description"] !== undefined ? _data["description"] : <any>null;
             this.lastValueKey = _data["lastValueKey"] !== undefined ? _data["lastValueKey"] : <any>null;
+            this.isBasic = _data["isBasic"] !== undefined ? _data["isBasic"] : <any>null;
         }
     }
 
@@ -1798,16 +1824,18 @@ export class ContentFieldsMappingDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["keyPath"] = this.keyPath !== undefined ? this.keyPath : <any>null;
-        data["isContentItemProperty"] = this.isContentItemProperty !== undefined ? this.isContentItemProperty : <any>null;
+        data["isSelf"] = this.isSelf !== undefined ? this.isSelf : <any>null;
         data["fieldName"] = this.fieldName !== undefined ? this.fieldName : <any>null;
         data["fieldNameCamelCase"] = this.fieldNameCamelCase !== undefined ? this.fieldNameCamelCase : <any>null;
         data["displayName"] = this.displayName !== undefined ? this.displayName : <any>null;
         data["partDisplayName"] = this.partDisplayName !== undefined ? this.partDisplayName : <any>null;
+        data["graphqlValuePath"] = this.graphqlValuePath !== undefined ? this.graphqlValuePath : <any>null;
         data["partName"] = this.partName !== undefined ? this.partName : <any>null;
         data["fieldSettings"] = this.fieldSettings !== undefined ? this.fieldSettings : <any>null;
         data["fieldType"] = this.fieldType !== undefined ? this.fieldType : <any>null;
         data["description"] = this.description !== undefined ? this.description : <any>null;
         data["lastValueKey"] = this.lastValueKey !== undefined ? this.lastValueKey : <any>null;
+        data["isBasic"] = this.isBasic !== undefined ? this.isBasic : <any>null;
         return data; 
     }
 }
@@ -1870,7 +1898,7 @@ export class ContentItem {
 export class ContentPartDefinitionDto {
     fields!: ContentPartFieldDefinitionDto[] | null;
     displayName!: string | null;
-    readonly description!: string | null;
+    description!: string | null;
     name!: string | null;
     settings!: any | null;
 
@@ -1882,7 +1910,7 @@ export class ContentPartDefinitionDto {
                     this.fields!.push(ContentPartFieldDefinitionDto.fromJS(item, _mappings));
             }
             this.displayName = _data["displayName"] !== undefined ? _data["displayName"] : <any>null;
-            (<any>this).description = _data["description"] !== undefined ? _data["description"] : <any>null;
+            this.description = _data["description"] !== undefined ? _data["description"] : <any>null;
             this.name = _data["name"] !== undefined ? _data["name"] : <any>null;
             this.settings = _data["settings"] !== undefined ? _data["settings"] : <any>null;
         }
@@ -1911,7 +1939,7 @@ export class ContentPartDefinitionDto {
 export class ContentPartFieldDefinitionDto {
     fieldDefinition!: ContentFieldDefinitionDto;
     displayName!: string | null;
-    readonly description!: string | null;
+    description!: string | null;
     name!: string | null;
     settings!: any | null;
 
@@ -1919,7 +1947,7 @@ export class ContentPartFieldDefinitionDto {
         if (_data) {
             this.fieldDefinition = _data["fieldDefinition"] ? ContentFieldDefinitionDto.fromJS(_data["fieldDefinition"], _mappings) : <any>null;
             this.displayName = _data["displayName"] !== undefined ? _data["displayName"] : <any>null;
-            (<any>this).description = _data["description"] !== undefined ? _data["description"] : <any>null;
+            this.description = _data["description"] !== undefined ? _data["description"] : <any>null;
             this.name = _data["name"] !== undefined ? _data["name"] : <any>null;
             this.settings = _data["settings"] !== undefined ? _data["settings"] : <any>null;
         }
@@ -2010,7 +2038,7 @@ export class ContentTypeListItemDto {
 export class ContentTypePartDefinitionDto {
     partDefinition!: ContentPartDefinitionDto;
     displayName!: string | null;
-    readonly description!: string | null;
+    description!: string | null;
     name!: string | null;
     settings!: any | null;
 
@@ -2018,7 +2046,7 @@ export class ContentTypePartDefinitionDto {
         if (_data) {
             this.partDefinition = _data["partDefinition"] ? ContentPartDefinitionDto.fromJS(_data["partDefinition"], _mappings) : <any>null;
             this.displayName = _data["displayName"] !== undefined ? _data["displayName"] : <any>null;
-            (<any>this).description = _data["description"] !== undefined ? _data["description"] : <any>null;
+            this.description = _data["description"] !== undefined ? _data["description"] : <any>null;
             this.name = _data["name"] !== undefined ? _data["name"] : <any>null;
             this.settings = _data["settings"] !== undefined ? _data["settings"] : <any>null;
         }
@@ -2040,6 +2068,42 @@ export class ContentTypePartDefinitionDto {
     }
 }
 
+export class ContentTypeSettings {
+    creatable!: boolean;
+    listable!: boolean;
+    draftable!: boolean;
+    versionable!: boolean;
+    stereotype!: string | null;
+    securable!: boolean;
+
+    init(_data?: any, _mappings?: any) {
+        if (_data) {
+            this.creatable = _data["creatable"] !== undefined ? _data["creatable"] : <any>null;
+            this.listable = _data["listable"] !== undefined ? _data["listable"] : <any>null;
+            this.draftable = _data["draftable"] !== undefined ? _data["draftable"] : <any>null;
+            this.versionable = _data["versionable"] !== undefined ? _data["versionable"] : <any>null;
+            this.stereotype = _data["stereotype"] !== undefined ? _data["stereotype"] : <any>null;
+            this.securable = _data["securable"] !== undefined ? _data["securable"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any, _mappings?: any): ContentTypeSettings {
+        data = typeof data === 'object' ? data : {};
+        return createInstance<ContentTypeSettings>(data, _mappings, ContentTypeSettings);
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["creatable"] = this.creatable !== undefined ? this.creatable : <any>null;
+        data["listable"] = this.listable !== undefined ? this.listable : <any>null;
+        data["draftable"] = this.draftable !== undefined ? this.draftable : <any>null;
+        data["versionable"] = this.versionable !== undefined ? this.versionable : <any>null;
+        data["stereotype"] = this.stereotype !== undefined ? this.stereotype : <any>null;
+        data["securable"] = this.securable !== undefined ? this.securable : <any>null;
+        return data; 
+    }
+}
+
 export class CreateApiViewModel {
     description!: string | null;
     name!: string;
@@ -2050,6 +2114,7 @@ export class CreateApiViewModel {
     tablePrefix!: string | null;
     recipeName!: string | null;
     featureProfile!: string | null;
+    isNewTenant!: boolean;
 
     init(_data?: any, _mappings?: any) {
         if (_data) {
@@ -2062,6 +2127,7 @@ export class CreateApiViewModel {
             this.tablePrefix = _data["tablePrefix"] !== undefined ? _data["tablePrefix"] : <any>null;
             this.recipeName = _data["recipeName"] !== undefined ? _data["recipeName"] : <any>null;
             this.featureProfile = _data["featureProfile"] !== undefined ? _data["featureProfile"] : <any>null;
+            this.isNewTenant = _data["isNewTenant"] !== undefined ? _data["isNewTenant"] : <any>null;
         }
     }
 
@@ -2081,6 +2147,31 @@ export class CreateApiViewModel {
         data["tablePrefix"] = this.tablePrefix !== undefined ? this.tablePrefix : <any>null;
         data["recipeName"] = this.recipeName !== undefined ? this.recipeName : <any>null;
         data["featureProfile"] = this.featureProfile !== undefined ? this.featureProfile : <any>null;
+        data["isNewTenant"] = this.isNewTenant !== undefined ? this.isNewTenant : <any>null;
+        return data; 
+    }
+}
+
+export class CreateTypeDefinitionInput {
+    displayName!: string | null;
+    name!: string | null;
+
+    init(_data?: any, _mappings?: any) {
+        if (_data) {
+            this.displayName = _data["displayName"] !== undefined ? _data["displayName"] : <any>null;
+            this.name = _data["name"] !== undefined ? _data["name"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any, _mappings?: any): CreateTypeDefinitionInput {
+        data = typeof data === 'object' ? data : {};
+        return createInstance<CreateTypeDefinitionInput>(data, _mappings, CreateTypeDefinitionInput);
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["displayName"] = this.displayName !== undefined ? this.displayName : <any>null;
+        data["name"] = this.name !== undefined ? this.name : <any>null;
         return data; 
     }
 }
@@ -2316,37 +2407,73 @@ export class DynamicIndexFieldItem {
     }
 }
 
-export class GlobalMethodDto {
+export class EditViewContentDefinitionDto {
     name!: string | null;
-    description!: string | null;
-    parameters!: any[] | null;
+    displayName!: string | null;
+    settings!: ContentTypeSettings;
+    fullTextOption!: FullTextAspectSettings;
+    fields!: ContentFieldsMappingDto[] | null;
 
     init(_data?: any, _mappings?: any) {
         if (_data) {
             this.name = _data["name"] !== undefined ? _data["name"] : <any>null;
-            this.description = _data["description"] !== undefined ? _data["description"] : <any>null;
-            if (Array.isArray(_data["parameters"])) {
-                this.parameters = [] as any;
-                for (let item of _data["parameters"])
-                    this.parameters!.push(item);
+            this.displayName = _data["displayName"] !== undefined ? _data["displayName"] : <any>null;
+            this.settings = _data["settings"] ? ContentTypeSettings.fromJS(_data["settings"], _mappings) : <any>null;
+            this.fullTextOption = _data["fullTextOption"] ? FullTextAspectSettings.fromJS(_data["fullTextOption"], _mappings) : <any>null;
+            if (Array.isArray(_data["fields"])) {
+                this.fields = [] as any;
+                for (let item of _data["fields"])
+                    this.fields!.push(ContentFieldsMappingDto.fromJS(item, _mappings));
             }
         }
     }
 
-    static fromJS(data: any, _mappings?: any): GlobalMethodDto {
+    static fromJS(data: any, _mappings?: any): EditViewContentDefinitionDto {
         data = typeof data === 'object' ? data : {};
-        return createInstance<GlobalMethodDto>(data, _mappings, GlobalMethodDto);
+        return createInstance<EditViewContentDefinitionDto>(data, _mappings, EditViewContentDefinitionDto);
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["name"] = this.name !== undefined ? this.name : <any>null;
-        data["description"] = this.description !== undefined ? this.description : <any>null;
-        if (Array.isArray(this.parameters)) {
-            data["parameters"] = [];
-            for (let item of this.parameters)
-                data["parameters"].push(item);
+        data["displayName"] = this.displayName !== undefined ? this.displayName : <any>null;
+        data["settings"] = this.settings ? this.settings.toJSON() : <any>null;
+        data["fullTextOption"] = this.fullTextOption ? this.fullTextOption.toJSON() : <any>null;
+        if (Array.isArray(this.fields)) {
+            data["fields"] = [];
+            for (let item of this.fields)
+                data["fields"].push(item.toJSON());
         }
+        return data; 
+    }
+}
+
+export class FullTextAspectSettings {
+    includeFullTextTemplate!: boolean;
+    fullTextTemplate!: string | null;
+    includeBodyAspect!: boolean;
+    includeDisplayText!: boolean;
+
+    init(_data?: any, _mappings?: any) {
+        if (_data) {
+            this.includeFullTextTemplate = _data["includeFullTextTemplate"] !== undefined ? _data["includeFullTextTemplate"] : <any>null;
+            this.fullTextTemplate = _data["fullTextTemplate"] !== undefined ? _data["fullTextTemplate"] : <any>null;
+            this.includeBodyAspect = _data["includeBodyAspect"] !== undefined ? _data["includeBodyAspect"] : <any>null;
+            this.includeDisplayText = _data["includeDisplayText"] !== undefined ? _data["includeDisplayText"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any, _mappings?: any): FullTextAspectSettings {
+        data = typeof data === 'object' ? data : {};
+        return createInstance<FullTextAspectSettings>(data, _mappings, FullTextAspectSettings);
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["includeFullTextTemplate"] = this.includeFullTextTemplate !== undefined ? this.includeFullTextTemplate : <any>null;
+        data["fullTextTemplate"] = this.fullTextTemplate !== undefined ? this.fullTextTemplate : <any>null;
+        data["includeBodyAspect"] = this.includeBodyAspect !== undefined ? this.includeBodyAspect : <any>null;
+        data["includeDisplayText"] = this.includeDisplayText !== undefined ? this.includeDisplayText : <any>null;
         return data; 
     }
 }
@@ -2574,12 +2701,14 @@ export class PermissionDto {
 export class QueryDefDto {
     name!: string | null;
     schema!: string | null;
+    hasTotal!: boolean;
     returnContentItems!: boolean;
 
     init(_data?: any, _mappings?: any) {
         if (_data) {
             this.name = _data["name"] !== undefined ? _data["name"] : <any>null;
             this.schema = _data["schema"] !== undefined ? _data["schema"] : <any>null;
+            this.hasTotal = _data["hasTotal"] !== undefined ? _data["hasTotal"] : <any>null;
             this.returnContentItems = _data["returnContentItems"] !== undefined ? _data["returnContentItems"] : <any>null;
         }
     }
@@ -2593,6 +2722,7 @@ export class QueryDefDto {
         data = typeof data === 'object' ? data : {};
         data["name"] = this.name !== undefined ? this.name : <any>null;
         data["schema"] = this.schema !== undefined ? this.schema : <any>null;
+        data["hasTotal"] = this.hasTotal !== undefined ? this.hasTotal : <any>null;
         data["returnContentItems"] = this.returnContentItems !== undefined ? this.returnContentItems : <any>null;
         return data; 
     }
