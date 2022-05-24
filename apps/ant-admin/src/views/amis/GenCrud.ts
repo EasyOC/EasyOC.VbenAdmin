@@ -1,6 +1,6 @@
 import { ContentFieldsMapping } from '@pkg/apis/eoc/contentApi'
 import { camelCase } from '@pkg/utils'
-import { FieldType, getValuePath } from '@pkg/apis/eoc/contentApi'
+import { FieldType } from '@pkg/apis/eoc/contentApi'
 import { ContentFieldsMappingDto, ContentTypeManagementServiceProxy } from '@pkg/apis/eoc/app-service-proxies';
 import crud from "./schematpls/crud.json"
 
@@ -74,18 +74,18 @@ function genColumns(fields: ContentFieldsMappingDto[]) {
                                     },
                                     {
                                         "label": "创建时间",
-                                        "content": "${createdUtc}",
+                                        "content": "${createdUtc | toDate |date:YYYY-MM-DD HH\\:mm\\:ss }",
                                         "span": 1
                                     },
                                     {
                                         "span": 1,
                                         "label": "修改时间",
-                                        "content": "${modifiedUtc}"
+                                        "content": "${modifiedUtc | toDate |date:YYYY-MM-DD HH\\:mm\\:ss } "
                                     },
                                     {
                                         "span": 1,
                                         "label": "发布时间",
-                                        "content": "${publishedUtc}"
+                                        "content": "${publishedUtc | toDate |date:YYYY-MM-DD HH\\:mm\\:ss }"
                                     },
                                     {
                                         "span": 1,
@@ -231,17 +231,6 @@ function genColumns(fields: ContentFieldsMappingDto[]) {
                     "onClick": "\r\n\r\nconsole.log(props,'Editing')"
                 },
                 {
-                    "label": "设计器",
-                    "type": "button",
-                    "actionType": "url",
-                    "level": "link",
-                    "url": "/index.html#/edit/${contentItemVersionId}",
-                    "onClick": "//window.open(`/amis-editor-renderer/index.html#/edit/${props.data.contentItemVersionId}`)",
-                    "disabledOn": "!this.latest",
-                    "blank": true,
-                    "id": "btnOpenDesign"
-                },
-                {
                     "type": "button",
                     "label": "删除",
                     "actionType": "ajax",
@@ -260,30 +249,7 @@ function genColumns(fields: ContentFieldsMappingDto[]) {
         {
             "name": "displayText",
             "label": "显示名称",
-            "placeholder": "-",
-            "sortable": true,
-            "popOver": false,
-            "quickEdit": false,
-            "inline": true,
-            "type": "operation",
-            "copyable": false,
-            "buttons": [
-                {
-                    "type": "button",
-                    "label": "${displayText}",
-                    "actionType": "url",
-                    "id": "u:ae7c76370ed4",
-                    "placeholder": "-",
-                    "level": "link",
-                    "url": "/pages/preview/${contentItemId}",
-                    "blank": false
-                }
-            ]
-        },
-        {
-            "type": "text",
-            "label": "页面名称",
-            "name": "name"
+            "type": "text"
         },
         {
             "type": "status",
@@ -348,8 +314,11 @@ function setColumnType(fieldDef: ContentFieldsMappingDto, field: any) {
         case FieldType.TimeField:
             field.type = "date";
             break;
+        case FieldType.NumericField:
+            field.type = "text";
+            break;
         default:
-            field.type = "date";
+            field.type = "text";
             break;
     }
 }
