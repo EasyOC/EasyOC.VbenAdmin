@@ -17,7 +17,7 @@
           "&": "$$"
         },
         "dataType": "json",
-        "$ref": "requestAdaptor"
+        "requestAdaptor": ""
       },
       "columns": [],
       "bulkActions": [

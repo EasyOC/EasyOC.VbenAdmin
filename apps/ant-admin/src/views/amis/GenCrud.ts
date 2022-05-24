@@ -12,28 +12,33 @@ export default async function buildCrud(typeName: string) {
   const fields = await apiService.getFields(typeName);
   console.log('fields: ', fields);
   //根据字段构建查询字段
-  const tempGraphqlStr = ` {
-    items: ${typeName[0].toLowerCase()+ typeName.slice(1)} ${buildGraphqlFields(fields as any)}
-   }`
+  const tempGraphqlStr = "{items: "+ typeName[0].toLowerCase()+ typeName.slice(1)+ buildGraphqlFields(fields as any)+"}";
+
+    // const tempGraphqlStr = ` {
+    //     items: ${typeName[0].toLowerCase()+ typeName.slice(1)} ${buildGraphqlFields(fields as any)}
+    //   }`
+    console.log('tempGraphqlStr: ', tempGraphqlStr);
 
   
 
-   const requestAdaptor = {requestAdaptor: "\r\nconsole.log(\"api.发送适配器\",api)\r\nconst filterParams=[`status: ${api.data.status}`]\r\nif(api.data.displayText){\r\n     filterParams.push(`where: {displayText_contains: \"${api.data.displayText}\"}`)\r\n}\r\nif(api.data.orderBy){\r\n    filterParams.push(`orderBy:{${api.body.orderBy}:${api.body.orderDir.toUpperCase()}}`)\r\n}\r\nconsole.log(\"filterParams.join(',')\",filterParams.join(','))\r\nconst  query=`\r\n "+
-   +tempGraphqlStr + " \r\napi.data={query}\r\nconsole.log(\"api.发送适配器2\",api)\r\nreturn api"}
+   const requestAdaptor =  "\r\nconsole.log(\"api.发送适配器\",api)\r\nconst filterParams=[`status: ${api.data.status}`]\r\nif(api.data.displayText){\r\n     filterParams.push(`where: {displayText_contains: \"${api.data.displayText}\"}`)\r\n}\r\nif(api.data.orderBy){\r\n    filterParams.push(`orderBy:{${api.body.orderBy}:${api.body.orderDir.toUpperCase()}}`)\r\n}\r\nconsole.log(\"filterParams.join(',')\",filterParams.join(','))\r\nconst  query=`\r\n "
+   +tempGraphqlStr + "` \r\napi.data={query}\r\nconsole.log(\"api.发送适配器2\",api)\r\nreturn api"
    console.log('requestAdaptor: ', requestAdaptor);
 
 
 
-   const definitions = {requestAdaptor:requestAdaptor};
-   crud.definitions = definitions;
+//    const definitions = {requestAdaptor:requestAdaptor};
+//    crud.definitions = definitions;
    crud.body[0].columns = genColumns(fields);
+   crud.body[0].api.requestAdaptor = requestAdaptor
 
+   console.log('crud: ', crud);
    return JSON.stringify(crud);
 }
 
 function genColumns(fields: any[]) {
 
-  const defaultColumns = [
+  const defaultColumns:any = [
     {
         "type": "operation",
         "label": "操作",

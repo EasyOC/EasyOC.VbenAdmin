@@ -41,6 +41,7 @@ async function eventTrackerEvent(params: TrackerEventArgs) {
     const typeName = params?.tracker?.eventData?.value;
     const genCrudString = await buildCrud(typeName);
     // console.log('genCrudString: ', genCrudString);
+    // console.log('genCrudString: ', genCrudString);
 
     // console.log('typeName: ', typeName);
     // const fields = await apiService.getFields(typeName);
@@ -52,9 +53,11 @@ async function eventTrackerEvent(params: TrackerEventArgs) {
 
 
     // amisjson.value.dialog.body = JSON.parse(tempGraphqlStr)
-    const service = amisScoped.getComponentByName("page1")
+    console.log('amisScoped: ', amisScoped);
+    const service = amisScoped.getComponentByName("page1").props.toolbar.find(o=>o.id=="u:4324e9e667ba").dialog;
+
     console.log('service: ', service);
-    service.props.body =[JSON.parse(genCrudString)]
+    service.body =[JSON.parse(genCrudString)]
   }
 
 
