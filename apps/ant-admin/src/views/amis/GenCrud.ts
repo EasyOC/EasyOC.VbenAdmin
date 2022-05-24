@@ -229,18 +229,7 @@ function genColumns(fields: ContentFieldsMappingDto[]) {
                         "data": null
                     },
                     "onClick": "\r\n\r\nconsole.log(props,'Editing')"
-                },
-                {
-                    "label": "设计器",
-                    "type": "button",
-                    "actionType": "url",
-                    "level": "link",
-                    "url": "/index.html#/edit/${contentItemVersionId}",
-                    "onClick": "//window.open(`/amis-editor-renderer/index.html#/edit/${props.data.contentItemVersionId}`)",
-                    "disabledOn": "!this.latest",
-                    "blank": true,
-                    "id": "btnOpenDesign"
-                },
+                }, 
                 {
                     "type": "button",
                     "label": "删除",
@@ -258,32 +247,9 @@ function genColumns(fields: ContentFieldsMappingDto[]) {
             ]
         },
         {
+            "type": "text",
             "name": "displayText",
             "label": "显示名称",
-            "placeholder": "-",
-            "sortable": true,
-            "popOver": false,
-            "quickEdit": false,
-            "inline": true,
-            "type": "operation",
-            "copyable": false,
-            "buttons": [
-                {
-                    "type": "button",
-                    "label": "${displayText}",
-                    "actionType": "url",
-                    "id": "u:ae7c76370ed4",
-                    "placeholder": "-",
-                    "level": "link",
-                    "url": "/pages/preview/${contentItemId}",
-                    "blank": false
-                }
-            ]
-        },
-        {
-            "type": "text",
-            "label": "页面名称",
-            "name": "name"
         },
         {
             "type": "status",
@@ -339,15 +305,17 @@ function genColumns(fields: ContentFieldsMappingDto[]) {
 }
 
 function setColumnType(fieldDef: ContentFieldsMappingDto, field: any) {
+    field.type = "text";
     switch (fieldDef.fieldType) {
-        case FieldType.TextField:
-            field.type = "text";
+        case FieldType.TextField: 
             break;
         case FieldType.DateField:
         case FieldType.DateTimefield:
         case FieldType.TimeField:
             field.type = "date";
             break;
+        case FieldType.ContentPickerField:
+            field.name = fieldDef.graphqlValuePath?.replace('contentItemIds.firstValue', 'firstContentItem.displayText')
         default:
             field.type = "date";
             break;
