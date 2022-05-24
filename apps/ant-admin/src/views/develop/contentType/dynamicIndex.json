@@ -35,7 +35,8 @@
                   },
                   "searchable": true,
                   "submitOnChange": false,
-                  "validations": {},
+                  "validations": {
+                  },
                   "mode": "horizontal",
                   "size": "",
                   "horizontal": {
@@ -69,7 +70,8 @@
       ],
       "api": "",
       "id": "u:e9b1e459dc49",
-      "actions": [],
+      "actions": [
+      ],
       "submitOnChange": true,
       "submitOnInit": true,
       "reload": "indexConfigForm",
@@ -249,7 +251,7 @@
         },
         "dataType": "json",
         "sendOn": "typeName",
-        "requestAdaptor": "if(!api.body.typeName){\r\n    return false\r\n}",
+        "requestAdaptor": "if(!api.body.typeName){\r\n    return false\r\n}\r\napi.timeout=100*1000\r\nreturn api;",
         "adaptor": ""
       },
       "affixFooter": false,

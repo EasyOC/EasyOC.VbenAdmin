@@ -1,7 +1,7 @@
 
 import { ContentFieldsMapping } from '@pkg/apis/eoc/contentApi'
-import { camelCase, deepMerge, set } from '@pkg/utils'
-import { FieldType, getValuePath } from '@pkg/apis/eoc/contentApi'
+import { camelCase, deepMerge } from '@pkg/utils'
+import { FieldType } from '@pkg/apis/eoc/contentApi'
 import { ContentFieldsMappingDto, ContentTypeManagementServiceProxy } from '@pkg/apis/eoc/app-service-proxies';
 import crud from "./schematpls/crud.json"
 
@@ -375,16 +375,17 @@ function genFormItems(fields: ContentFieldsMappingDto[]) {
                     if (multiple) {
                         item.name = field.graphqlValuePath?.replace('.firstValue', '')
                     }
-
                     item.autoComplete = {
-                        "method": "post",
-                        "url": "/api/graphql",
-                        "data": null,
-                        "dataType": "json",
-                        "requestAdaptor": `
-                            const query=\`
+                        method: "post",
+                        url: "/api/graphql",
+                        dataType: "json",
+                        replaceData: false,
+                        requestAdaptor:
+                            `const query=\`
                             {
-                                options:${camelCase(pickerType)}(status: PUBLISHED, first: 10, where: {displayText_contains: \"\${api.body.term}\"}) 
+                                options:${camelCase(pickerType)}
+                                (status: PUBLISHED, first: 10, 
+                                    where: {displayText_contains: \"\${api.body.term}\"}) 
                                 {
                                     label:displayText
                                     value:contentItemId
@@ -392,12 +393,14 @@ function genFormItems(fields: ContentFieldsMappingDto[]) {
                             }\`
                             api.data={query}
                             return api`,
-                        "replaceData": false
                     }
                 }
                 break;
             case FieldType.DateField:
                 item.type = "input-date"
+                break;
+            case FieldType.DateTimefield:
+                item.type = "input-datetime";
                 break;
 
         }
