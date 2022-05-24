@@ -2,7 +2,6 @@
   "type": "page",
   "regions": [
     "body",
-    "toolbar",
     "header"
   ],
   "title": "动态页管理",
@@ -54,7 +53,7 @@
                       },
                       {
                         "label": "创建时间",
-                        "content": "${createdUtc}",
+                        "content": "${createdUtc | date:YYYY-MM-DD HH\\:mm}",
                         "span": 1
                       },
                       {
@@ -216,9 +215,31 @@
               "type": "button",
               "actionType": "url",
               "level": "link",
-              "url": "/index.html#/edit/${contentItemVersionId}",
-              "onClick": "//window.open(`/amis-editor-renderer/index.html#/edit/${props.data.contentItemVersionId}`)",
-              "disabledOn": "!this.latest", 
+              "dialog": {
+                "title": "查看详情",
+                "body": {
+                  "type": "form",
+                  "api": "xxx/update",
+                  "body": [
+                    {
+                      "name": "id",
+                      "label": "ID",
+                      "type": "static"
+                    },
+                    {
+                      "name": "engine",
+                      "label": "渲染引擎",
+                      "type": "static"
+                    }
+                  ]
+                }
+              },
+              "url": "/index.html#/edit/${contentItemId}",
+              "onClick": "//window.open(`/amis-editor-renderer/index.html#/edit/${props.data.contentItemId}`)",
+              "disabledOn": "!this.latest",
+              "perPageAvailable": [
+                10
+              ],
               "blank": true,
               "id": "btnOpenDesign"
             },
@@ -236,7 +257,12 @@
               "onClick": "console.log(props)",
               "disabledOn": "!this.latest"
             }
-          ]
+          ],
+          "placeholder": "-",
+          "fixed": "left",
+          "toggled": false,
+          "popOver": false,
+          "copyable": false
         },
         {
           "name": "displayText",
@@ -273,35 +299,39 @@
         },
         {
           "type": "status",
-          "name": "published",
           "label": "published",
+          "name": "published",
           "placeholder": "-"
         },
         {
           "type": "date",
-          "label": "发布时间",
           "name": "publishedUtc",
+          "label": "发布时间",
           "placeholder": "-",
-          "sortable": true
+          "sortable": true,
+          "format": "YYYY-MM-DD HH:mm",
+          "fixed": ""
         },
         {
           "type": "date",
           "label": "修改时间",
           "name": "modifiedUtc",
           "placeholder": "-",
-          "sortable": true
+          "sortable": true,
+          "valueFormat": "X",
+          "format": "YYYY-MM-DD HH:mm"
         },
         {
-          "name": "createdUtc",
-          "label": "创建时间",
           "type": "date",
+          "label": "创建时间",
+          "name": "createdUtc",
           "placeholder": "-",
           "sortable": true
         },
         {
-          "type": "text",
           "name": "author",
           "label": "创建人",
+          "type": "text",
           "placeholder": "-",
           "sortable": true
         }

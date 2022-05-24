@@ -1,0 +1,16 @@
+{
+  "label": "选项",
+  "name": "select",
+  "type": "select",
+  "checkAll": false,
+  "searchable": true,
+  "autoComplete": {
+    "method": "post",
+    "url": "/api/graphql",
+    "data": null,
+    "dataType": "json",
+    "requestAdaptor": "const query=`{\r\n  options:customer(status: PUBLISHED, first: 10,\r\n   where: {displayText_contains: \"${api.body.term}\"}) {\r\n    label:displayText\r\n    value:contentItemId\r\n  }\r\n}`\r\napi.data={query}\r\n\r\nreturn api\r\n",
+    "adaptor": "",
+    "replaceData": false
+  }
+}
