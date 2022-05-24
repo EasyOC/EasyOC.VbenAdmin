@@ -12,7 +12,7 @@ import { ContentTypeManagementServiceProxy } from '@pkg/apis/eoc/app-service-pro
 
 import { TrackerEventArgs } from '../../components/Amis/src/types';
 import { useRouter } from 'vue-router'
-import fieldstoGraph from './FieldstoGraph'
+import buildCrud from './GenCrud'
 const { currentRoute } = useRouter()
 const go = useGo()
 const apiService = new ContentTypeManagementServiceProxy()
@@ -36,17 +36,25 @@ async function eventTrackerEvent(params: TrackerEventArgs) {
   // console.log('params?.tracker: ', params?.tracker);
   // console.log('params?.eventProps: ', params?.eventProps);
   if (params?.tracker?.eventData?.id == "ftypeName" && params?.tracker?.eventType == "formItemChange" && params?.tracker?.eventData?.value) {
-    console.log('该信息来自于Vue事件监听： params: ', params);
+    // console.log('该信息来自于Vue事件监听： params: ', params);
 
     const typeName = params?.tracker?.eventData?.value;
-    console.log('typeName: ', typeName);
-    const fields = await apiService.getFields(typeName);
+    const genCrudString = await buildCrud(typeName);
+    // console.log('genCrudString: ', genCrudString);
+
+    // console.log('typeName: ', typeName);
+    // const fields = await apiService.getFields(typeName);
     // const form = amisScoped.getComponentByName('page1.schemaForm');
     //   console.log('typeName: ', formModel);
-    const tempGraphqlStr = fieldstoGraph(fields as any)
-    console.log('tempGraphqlStr: ', tempGraphqlStr);
-    // form.setValues({schema:JSON.stringify(Fields)});
-    // }
+    // const tempGraphqlStr = `query queryDepartment {
+    //     ${typeName[0].toLowerCase() + typeName.slice(1)} ${fieldstoGraph(fields as any)}
+    //    }`
+
+
+    // amisjson.value.dialog.body = JSON.parse(tempGraphqlStr)
+    const service = amisScoped.getComponentByName("page1")
+    console.log('service: ', service);
+    service.props.body =[JSON.parse(genCrudString)]
   }
 
 
@@ -66,7 +74,7 @@ function amisMounted(amisScope) {
   // amisScope.getComponentByName("page1.firstForm").handleFormSubmit = (a, b, c) => console.log("1111111111111111111111111",a, b, c);
   const svrPreview = amisScope.getComponentByName('page1.service1');
   console.log('svrPreview: ', svrPreview);
-  // amisjson.data = { typeName: "Customer" }
+
   if (svrPreview) {
     svrPreview.setValue(`{ 
           "type": "tpl",
