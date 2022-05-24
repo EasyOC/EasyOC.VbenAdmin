@@ -1,3 +1,4 @@
+
 import { ContentFieldsMapping } from '@pkg/apis/eoc/contentApi'
 import { camelCase } from '@pkg/utils'
 import { FieldType } from '@pkg/apis/eoc/contentApi'
@@ -31,6 +32,8 @@ export default async function buildCrud(typeName: string) {
     //    crud.definitions = definitions;
     crud.body[0].columns = genColumns(fields);
     crud.body[0].api.requestAdaptor = requestAdaptor
+    //@ts-ignore
+    crud.body[0].headerToolbar[1].dialog.body[0].body = genFormItems(fields);
 
     console.log('crud: ', crud);
     return JSON.stringify(crud);
@@ -247,9 +250,9 @@ function genColumns(fields: ContentFieldsMappingDto[]) {
             ]
         },
         {
+            "type": "text",
             "name": "displayText",
             "label": "显示名称",
-            "type": "text"
         },
         {
             "type": "status",
@@ -305,9 +308,9 @@ function genColumns(fields: ContentFieldsMappingDto[]) {
 }
 
 function setColumnType(fieldDef: ContentFieldsMappingDto, field: any) {
+    field.type = "text";
     switch (fieldDef.fieldType) {
         case FieldType.TextField:
-            field.type = "text";
             break;
         case FieldType.DateField:
         case FieldType.DateTimefield:
@@ -317,6 +320,8 @@ function setColumnType(fieldDef: ContentFieldsMappingDto, field: any) {
         case FieldType.NumericField:
             field.type = "text";
             break;
+        case FieldType.ContentPickerField:
+            field.name = fieldDef.graphqlValuePath?.replace('contentItemIds.firstValue', 'firstContentItem.displayText')
         default:
             field.type = "text";
             break;
@@ -328,14 +333,14 @@ function genFormItems(fields: ContentFieldsMappingDto[]) {
 
     const formItems: any[] = []
     fields.filter(x => !x.isBasic).forEach(field => {
-        const item = {
+        const item: any = {
             name: field.graphqlValuePath,
             label: field.displayName,
             description: field.description,
             type: "input-text",
             required: false,
-            disabled: false,
-            options: [{ label: String, value: String }],
+            disabled: false
+
         }
         const fieldSettings = (item as any).fieldSettings
         switch (field.fieldType) {
@@ -355,21 +360,47 @@ function genFormItems(fields: ContentFieldsMappingDto[]) {
                     }
                 }
                 break;
+            //下拉菜单数据源
             case FieldType.ContentPickerField:
-                item.type = "input-text";
-                if (fieldSettings?.ContentPartFieldSettings?.Editor == "PredefinedList") {
-                    item.type = "select"
-                    if (fieldSettings?.TextFieldPredefinedListEditorSettings?.Options) {
-                        item.options = [
-                            fieldSettings?.TextFieldPredefinedListEditorSettings?.Options.map(x => {
-                                return {
-                                    label: x.name,
-                                    value: x.value
+                deepMerge(item, {
+                    type: "select",
+                    checkAll: false,
+                    searchable: true,
+                    name: field.graphqlValuePath
+                })
+                const pickerTypeConfig = fieldSettings?.ContentPickerFieldSettings?.DisplayedContentTypes
+                if (pickerTypeConfig && pickerTypeConfig.length > 0) {
+                    const pickerType = pickerTypeConfig[0];
+                    const multiple = fieldSettings?.ContentPickerFieldSettings?.Multiple ?? false
+                    item.multiple = multiple
+                    item.extractValue = multiple
+
+                    if (multiple) {
+                        item.name = field.graphqlValuePath?.replace('.firstValue', '')
+                    }
+
+                    item.autoComplete = {
+                        "method": "post",
+                        "url": "/api/graphql",
+                        "data": null,
+                        "dataType": "json",
+                        "requestAdaptor": `
+                            const query=\`
+                            {
+                                options:${camelCase(pickerType)}(status: PUBLISHED, first: 10, where: {displayText_contains: \"\${api.body.term}\"}) 
+                                {
+                                    label:displayText
+                                    value:contentItemId
                                 }
-                            })
-                        ]
+                            }\`
+                            api.data={query}
+                            return api`,
+                        "replaceData": false
                     }
                 }
+                break;
+            case FieldType.DateField:
+                item.type = "input-date"
                 break;
 
         }

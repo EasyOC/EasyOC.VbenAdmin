@@ -30,6 +30,7 @@ oidcClient.events.addUserLoaded((user) => {
 oidcClient.events.addAccessTokenExpiring(async function () {
   console.log('AccessToken Expiring：', arguments);
 });
+
 oidcClient.events.addUserSignedIn(async function () {
   console.log('UserSignedIn :', arguments);
   const userStore = useUserStore()
@@ -39,7 +40,7 @@ oidcClient.events.addUserSignedIn(async function () {
 oidcClient.events.addAccessTokenExpired(async function () {
   console.log('AccessToken Expired：', arguments);
   //alert('Session expired. Going out!');
-  alert('Session expired. Going Renew!');
+  // alert('Session expired. Going Renew!');
   oidcClient.startSilentRenew()
   // oidcClient.signoutRedirect().then(function (resp) {
   //   console.log('signed out', resp);
