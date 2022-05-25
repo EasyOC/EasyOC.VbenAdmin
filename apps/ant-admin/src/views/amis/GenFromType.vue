@@ -40,7 +40,7 @@ async function eventTrackerEvent(params: TrackerEventArgs) {
 
     const typeName = params?.tracker?.eventData?.value;
     const genCrudString = await buildCrud(typeName);
-    console.log('genCrudString: ', genCrudString);
+    // console.log('genCrudString: ', genCrudString);
     // console.log('genCrudString: ', genCrudString);
 
     // console.log('typeName: ', typeName);

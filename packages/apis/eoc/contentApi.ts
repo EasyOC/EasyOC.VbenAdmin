@@ -133,6 +133,7 @@ export enum FieldType {
   ContentPickerField = 'ContentPickerField',
   UserPickerField = 'UserPickerField',
   HtmlField = 'HtmlField',
+  MediaField = 'MediaField',
   TitlePart = 'TitlePart',
   CustomField = 'CustomField',
   GeoPointField = 'GeoPointField',

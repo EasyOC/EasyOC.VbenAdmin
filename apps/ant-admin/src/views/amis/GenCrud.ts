@@ -40,12 +40,89 @@ export default async function buildCrud(typeName: string) {
 }
 
 function genColumns(fields: ContentFieldsMappingDto[]) {
+    const seebodyColumns:any = [];
 
     const defaultColumns: any = [
         {
             "type": "operation",
             "label": "操作",
             "buttons": [
+                {
+                    "type": "button",
+                    "label": "查看",
+                    "actionType": "dialog",
+                    "level": "link",
+                    "dialog": {
+                      "title": "查看详情",
+                      "body": [
+                        {
+                          "type": "property",
+                          "className": "b-b m-b",
+                          "labelStyle": {
+                                "textAlign": "right"
+                            },
+                            "contentStyle": {
+                                "textAlign": "left"
+                            },
+                          "items": [
+                            {
+                              "label": "编号",
+                              "content": "${contentItemId}",
+                              "span": 1
+                            },
+                            {
+                              "label": "版本号",
+                              "content": "${contentItemVersionId}",
+                              "span": 1
+                            },
+                            {
+                              "label": "创建人",
+                              "content": "${author}",
+                              "span": 1
+                            },
+                            {
+                              "label": "创建时间",
+                              "content": "${createdUtc | toDate |date:YYYY-MM-DD HH\\:mm\\:ss }",
+                              "span": 1
+                            },
+                            {
+                              "span": 1,
+                              "label": "修改时间",
+                              "content": "${modifiedUtc | toDate |date:YYYY-MM-DD HH\\:mm\\:ss } "
+                            },
+                            {
+                              "span": 1,
+                              "label": "发布时间",
+                              "content": "${publishedUtc | toDate |date:YYYY-MM-DD HH\\:mm\\:ss }"
+                            },
+                            {
+                              "span": 1,
+                              "label": "最新版本",
+                              "content": "${latest?\"是\":\"否\"}"
+                            }
+                          ]
+                        },
+                        {
+                            "type": "property",
+                            "labelStyle": {
+                                "textAlign": "right"
+                            },
+                            "contentStyle": {
+                                "textAlign": "left"
+                            },
+                            "items": seebodyColumns
+                        }
+                      ],
+                      "type": "dialog",
+                      "closeOnEsc": false,
+                      "closeOnOutside": true,
+                      "showCloseButton": true,
+                      "size": "md",
+                      "data": null,
+                      "actions": [
+                      ]
+                    }
+                },
                 {
                     "label": "编辑",
                     "type": "button",
@@ -59,6 +136,12 @@ function genColumns(fields: ContentFieldsMappingDto[]) {
                                 "type": "property",
                                 "id": "u:1577f3084cdd",
                                 "title": "",
+                                "labelStyle": {
+                                    "textAlign": "right"
+                                },
+                                "contentStyle": {
+                                    "textAlign": "left"
+                                },
                                 "items": [
                                     {
                                         "label": "编号",
@@ -301,10 +384,43 @@ function genColumns(fields: ContentFieldsMappingDto[]) {
             name: o.graphqlValuePath,
             label: o.displayName,
         }
+
+        
+        const seeField:any = {
+            content: "${ " + o.graphqlValuePath + " }",
+            label: o.displayName,
+            span: 1,
+            type: "text",
+        }
+
         setColumnType(o, field)
+        setSeeColumnType(o, seeField)
         defaultColumns.push(field)
+        seebodyColumns.push(seeField)
     })
     return defaultColumns;
+}
+
+
+function setSeeColumnType(fieldDef: ContentFieldsMappingDto, field: any) {
+    field.type = "text";
+    switch (fieldDef.fieldType) {
+        case FieldType.DateTimefield:
+        case FieldType.DateTimeOffield:
+            field.content= "${createdUtc | toDate |date:YYYY-MM-DD HH\\:mm\\:ss }"
+            break;
+        case FieldType.ContentPickerField:
+            field.content = "${ " + fieldDef.graphqlValuePath?.replace('contentItemIds.firstValue', 'firstContentItem.displayText') + " }"
+            break;
+        case FieldType.MediaField:
+            field.content = {
+                "type": "image",
+                "src": "${ " + fieldDef.graphqlValuePath+".urls[0] }" 
+            }
+            break;
+        default:
+            break;
+    }
 }
 
 function setColumnType(fieldDef: ContentFieldsMappingDto, field: any) {
@@ -326,6 +442,11 @@ function setColumnType(fieldDef: ContentFieldsMappingDto, field: any) {
             break;
         case FieldType.ContentPickerField:
             field.name = fieldDef.graphqlValuePath?.replace('contentItemIds.firstValue', 'firstContentItem.displayText')
+            break;
+        case FieldType.MediaField:
+            field.type = "image";
+            field.name = fieldDef.graphqlValuePath + ".urls[0]"
+            break;
         default:
             field.type = "text";
             break;
@@ -457,6 +578,11 @@ export function buildGraphqlFields(fields: ContentFieldsMappingDto[]) {
                         userProfiles: { displayText: false },
                     }
                     break
+                case FieldType.MediaField:
+                    tempPart[fieldName] = {
+                        urls:false,
+                        paths:false,
+                    }
                 case FieldType.HtmlField:
                 case FieldType.GeoPointField:
                     break
