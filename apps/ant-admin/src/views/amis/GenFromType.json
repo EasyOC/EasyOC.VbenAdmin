@@ -70,7 +70,6 @@
             "method": "get",
             "url": "/api/ContentTypeManagement/GetAllTypes",
             "data": {
-              "typeName": "${typeName}",
               "stereotype": "1",
               "pageSize": "-1"
             },
@@ -120,28 +119,11 @@
           "name": "contentType",
           "id": "u:a1ae08b567b3",
           "value": "AmisSchema"
-        },
-        {
-          "type": "hidden",
-          "name": "typeName",
-          "id": "u:bd12b2a13634",
-          "required": false
         }
       ],
       "id": "u:5bd9921a8c0a",
       "checkAll": false,
       "mode": "horizontal",
-      "initApi": {
-        "method": "get",
-        "url": "/api/DynamicIndex/GetDynamicIndexConfigOrDefault",
-        "data": {
-          "typeName": "${typeName}"
-        },
-        "dataType": "json",
-        "sendOn": "typeName",
-        "requestAdaptor": "if(!api.body.typeName){\r\n    return false\r\n}",
-        "adaptor": ""
-      },
       "affixFooter": false,
       "wrapWithPanel": false,
       "horizontal": {
@@ -154,7 +136,6 @@
       "name": "schemaForm",
       "debug": false,
       "canAccessSuperData": false,
-      "api": "post:/api/DynamicIndex/UpdateDynamicIndex",
       "placeholder": "-"
     },
     {
@@ -218,9 +199,7 @@
       },
       "id": "u:41627a0c4d0b",
       "level": "primary",
-      "confirmText": "提交执行将更新数据库表，请确保已备份相关数据",
       "target": "indexConfigForm",
-      "disabledOn": "!this.typeName",
       "name": "btnSubmit"
     }
   ],

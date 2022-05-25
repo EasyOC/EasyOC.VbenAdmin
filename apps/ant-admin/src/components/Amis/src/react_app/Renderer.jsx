@@ -23,7 +23,7 @@ export default class AMISRendererComponent extends React.Component
         // props...
         // locale: 'en-US' // 请参考「多语言」的文档
         locale,
-        scopeRef: (ref, a, b, c) => {
+        scopeRef: (ref) => {
           console.log('scopeRef: ', ref)
           this.props.amisMounted(ref) // 功能和前面 SDK 的 amisScoped 一样
         },

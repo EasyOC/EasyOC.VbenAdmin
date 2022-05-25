@@ -1,14 +1,12 @@
 
-import { ContentFieldsMapping } from '@pkg/apis/eoc/contentApi'
 import { camelCase, deepMerge } from '@pkg/utils'
 import { FieldType } from '@pkg/apis/eoc/contentApi'
 import { ContentFieldsMappingDto, ContentTypeManagementServiceProxy } from '@pkg/apis/eoc/app-service-proxies';
 import crud from "./schematpls/crud.json"
 
 export default async function buildCrud(typeName: string) {
-
+    
     const apiService = new ContentTypeManagementServiceProxy()
-
     //查询出所有字段
     const fields = await apiService.getFields(typeName);
     console.log('fields: ', fields);
@@ -28,8 +26,6 @@ export default async function buildCrud(typeName: string) {
 
 
 
-    //    const definitions = {requestAdaptor:requestAdaptor};
-    //    crud.definitions = definitions;
     crud.body[0].columns = genColumns(fields);
     crud.body[0].api.requestAdaptor = requestAdaptor
     //@ts-ignore

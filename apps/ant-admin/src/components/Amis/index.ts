@@ -1,10 +1,10 @@
 import { withInstall } from '@pkg/utils'
-// import FrameRenderer from './src/AMISFrameRenderer.vue'
-// import AmisSdk from './src/index.vue'
+//SDK方式集成
+import AmisSdk from './src/index.vue'
+
+// veaury React 集成
 import veauryAMISRenderer from './src/veauryAMISRenderer.vue'
-// import AMISReactRenderer from './src/AMISRendererSetup.vue'
-// import AMISRenderer from './src/AMISRenderer.vue'
-// export const AMISRendererSetup = withInstall(AMISReactRenderer)
-// export const AmisRenderer = withInstall(AMISRenderer)
+export const AmisRA = withInstall(veauryAMISRenderer)
 // export const Amis = withInstall(AmisSdk)
+
 export const Amis = withInstall(veauryAMISRenderer)
