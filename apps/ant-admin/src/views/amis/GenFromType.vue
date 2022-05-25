@@ -36,7 +36,8 @@ async function eventTrackerEvent(params: TrackerEventArgs) {
 
     const typeName = params?.tracker?.eventData?.value;
     const genCrudString = await buildCrud(typeName);
-    console.log('genCrudString: ', genCrudString);
+    // console.log('genCrudString: ', genCrudString);
+    // console.log('genCrudString: ', genCrudString);
 
     console.log('amisScoped.value: ', amisScoped.value);
     const service = amisScoped.value.getComponentByName("page1").props.toolbar.find(o => o.id == "u:4324e9e667ba").dialog;
