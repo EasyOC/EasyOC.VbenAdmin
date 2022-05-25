@@ -1,6 +1,6 @@
 
 import { ContentFieldsMapping } from '@pkg/apis/eoc/contentApi'
-import { camelCase } from '@pkg/utils'
+import { camelCase, deepMerge } from '@pkg/utils'
 import { FieldType } from '@pkg/apis/eoc/contentApi'
 import { ContentFieldsMappingDto, ContentTypeManagementServiceProxy } from '@pkg/apis/eoc/app-service-proxies';
 import crud from "./schematpls/crud.json"
@@ -342,21 +342,20 @@ function genFormItems(fields: ContentFieldsMappingDto[]) {
             disabled: false
 
         }
-        const fieldSettings = (item as any).fieldSettings
+        const fieldSettings = field.fieldSettings
         switch (field.fieldType) {
             case FieldType.TextField:
                 item.type = "input-text";
                 if (fieldSettings?.ContentPartFieldSettings?.Editor == "PredefinedList") {
                     item.type = "select"
                     if (fieldSettings?.TextFieldPredefinedListEditorSettings?.Options) {
-                        item.options = [
+                        item.options =
                             fieldSettings?.TextFieldPredefinedListEditorSettings?.Options.map(x => {
                                 return {
                                     label: x.name,
                                     value: x.value
                                 }
                             })
-                        ]
                     }
                 }
                 break;
@@ -376,7 +375,7 @@ function genFormItems(fields: ContentFieldsMappingDto[]) {
                     item.extractValue = multiple
 
                     if (multiple) {
-                        item.name = field.graphqlValuePath?.replace('.firstValue', '')
+                        item.name = field.graphqlValuePath?.replace('firstValue', 'contentItemIds')
                     }
 
                     item.autoComplete = {
@@ -401,14 +400,17 @@ function genFormItems(fields: ContentFieldsMappingDto[]) {
                 break;
             case FieldType.DateField:
                 item.type = "input-date"
+            case FieldType.BooleanField:
+                item.type = "switch"
                 break;
 
         }
         formItems.push(item)
     });
+    return formItems
 }
 
-export function buildGraphqlFields(fields: ContentFieldsMapping[]) {
+export function buildGraphqlFields(fields: ContentFieldsMappingDto[]) {
     const gfields: { [key: string]: any } = {}
     fields
         // .filter((x) => !GraphQLNotSupportFields.includes(x.fieldType))
@@ -417,7 +419,7 @@ export function buildGraphqlFields(fields: ContentFieldsMapping[]) {
             const fieldName = camelCase(field.fieldName)
             // console.log('fieldName: ', fieldName);
             // const formValue = getFieldsValue()
-            const isPart = false
+            // const isPart = field.is
             // if (field.partName) {
             //   isPart = ![formValue.TargetContentType, 'TitlePart'].includes(
             //     field.partName,
@@ -425,7 +427,7 @@ export function buildGraphqlFields(fields: ContentFieldsMapping[]) {
             // }
 
             let tempPart = gfields
-            if (isPart) {
+            if (!field.isSelf) {
                 if (!gfields[camelCase(field.partName)]) {
                     gfields[camelCase(field.partName)] = {}
                 }
@@ -449,6 +451,7 @@ export function buildGraphqlFields(fields: ContentFieldsMapping[]) {
                     }
                     break
                 case FieldType.HtmlField:
+                case FieldType.GeoPointField:
                     break
                 default:
                     tempPart[fieldName] = false

@@ -36,7 +36,7 @@ export const decodeJwt = (token: string) => {
 export function camelCase(str: string | null | undefined): string | null {
   if (!str) return null
   const [first, ...rest] = str
-  return [first.toLocaleLowerCase(), ...rest].join()
+  return [first.toLocaleLowerCase(), ...rest].join("")
 }
 /**
  * Add the object as a parameter to the URL

@@ -40,7 +40,7 @@ async function eventTrackerEvent(params: TrackerEventArgs) {
 
     const typeName = params?.tracker?.eventData?.value;
     const genCrudString = await buildCrud(typeName);
-    // console.log('genCrudString: ', genCrudString);
+    console.log('genCrudString: ', genCrudString);
     // console.log('genCrudString: ', genCrudString);
 
     // console.log('typeName: ', typeName);
@@ -72,7 +72,7 @@ function amisMounted(amisScope) {
   //   data: { typeName: "Customer" }
   // }) 
   // 替代 amisScope.updateProps
-  amisjson.value.data = { typeName: "Customer" }
+  // amisjson.value.data = { typeName: "Customer" }
 
   // amisScope.getComponentByName("page1.firstForm").handleFormSubmit = (a, b, c) => console.log("1111111111111111111111111",a, b, c);
   const svrPreview = amisScope.getComponentByName('page1.service1');

@@ -134,6 +134,7 @@ export enum FieldType {
   HtmlField = 'HtmlField',
   TitlePart = 'TitlePart',
   CustomField = 'CustomField',
+  GeoPointField = 'GeoPointField',
 }
 
 export function getValuePath(fieldName: FieldType | string) {
