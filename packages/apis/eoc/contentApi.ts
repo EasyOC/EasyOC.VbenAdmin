@@ -128,6 +128,7 @@ export enum FieldType {
   DateField = 'DateField',
   TimeField = 'TimeField',
   DateTimefield = 'Date&Timefield',
+  DateTimeOffield = 'DateTimeField',
   NumericField = 'NumericField',
   ContentPickerField = 'ContentPickerField',
   UserPickerField = 'UserPickerField',

@@ -314,8 +314,12 @@ function setColumnType(fieldDef: ContentFieldsMappingDto, field: any) {
             break;
         case FieldType.DateField:
         case FieldType.DateTimefield:
-        case FieldType.TimeField:
+        case FieldType.DateTimeOffield:
             field.type = "date";
+            field.placeholder = "-"
+            break;
+        case FieldType.TimeField:
+            field.type = "text";
             break;
         case FieldType.NumericField:
             field.type = "text";
