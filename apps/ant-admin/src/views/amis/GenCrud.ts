@@ -377,16 +377,17 @@ function genFormItems(fields: ContentFieldsMappingDto[]) {
                     if (multiple) {
                         item.name = field.graphqlValuePath?.replace('firstValue', 'contentItemIds')
                     }
-
                     item.autoComplete = {
-                        "method": "post",
-                        "url": "/api/graphql",
-                        "data": null,
-                        "dataType": "json",
-                        "requestAdaptor": `
-                            const query=\`
+                        method: "post",
+                        url: "/api/graphql",
+                        dataType: "json",
+                        replaceData: false,
+                        requestAdaptor:
+                            `const query=\`
                             {
-                                options:${camelCase(pickerType)}(status: PUBLISHED, first: 10, where: {displayText_contains: \"\${api.body.term}\"}) 
+                                options:${camelCase(pickerType)}
+                                (status: PUBLISHED, first: 10, 
+                                    where: {displayText_contains: \"\${api.body.term}\"}) 
                                 {
                                     label:displayText
                                     value:contentItemId
@@ -394,7 +395,6 @@ function genFormItems(fields: ContentFieldsMappingDto[]) {
                             }\`
                             api.data={query}
                             return api`,
-                        "replaceData": false
                     }
                 }
                 break;
@@ -402,6 +402,9 @@ function genFormItems(fields: ContentFieldsMappingDto[]) {
                 item.type = "input-date"
             case FieldType.BooleanField:
                 item.type = "switch"
+                break;
+            case FieldType.DateTimefield:
+                item.type = "input-datetime";
                 break;
 
         }
@@ -416,7 +419,7 @@ export function buildGraphqlFields(fields: ContentFieldsMappingDto[]) {
         // .filter((x) => !GraphQLNotSupportFields.includes(x.fieldType))
         .forEach((field) => {
             // console.log('field: ', field);
-            const fieldName = camelCase(field.fieldName)
+            const fieldName = camelCase(field.fieldName) ?? ''
             // console.log('fieldName: ', fieldName);
             // const formValue = getFieldsValue()
             // const isPart = field.is
