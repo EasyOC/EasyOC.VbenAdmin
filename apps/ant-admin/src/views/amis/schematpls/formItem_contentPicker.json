@@ -1,5 +1,5 @@
 {
-  "label": "选项",
+  "label": "内容项选择下拉菜单",
   "name": "select",
   "type": "select",
   "checkAll": false,

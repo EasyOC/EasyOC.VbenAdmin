@@ -2,20 +2,16 @@
   <Amis ref="amisRender" :amisjson="amisjson" @amisMounted="amisMounted" @eventTrackerEvent="eventTrackerEvent" />
 </template>
 <script setup lang="ts">
-import { onBeforeMount, ref } from 'vue'
+import { onBeforeMount, onMounted, ref } from 'vue'
 import { Amis } from '@/components/Amis'
 import schema from './GenFromType.json'
 import { useGo } from '@/hooks/web/usePage'
-
-
-import { ContentTypeManagementServiceProxy } from '@pkg/apis/eoc/app-service-proxies'
 
 import { TrackerEventArgs } from '../../components/Amis/src/types';
 import { useRouter } from 'vue-router'
 import buildCrud from './GenCrud'
 const { currentRoute } = useRouter()
 const go = useGo()
-const apiService = new ContentTypeManagementServiceProxy()
 
 // 页面左侧点击返回链接时的操作
 function goBack() {
@@ -29,14 +25,14 @@ onBeforeMount(() => {
   // set(amisjson.value, "body[0].columns[7].buttons[1].url", globConfig.amisEditorUrl + url);
 
 })
-let amisScoped
+onMounted(() => {
+  // console.log(' amisScoped.value.getCompomentById: ',  amisScoped.value.getComponentById('u:4324e9e667ba'));
+
+})
+
+const amisScoped = ref<any>();
 async function eventTrackerEvent(params: TrackerEventArgs) {
-  // console.log('data: ', data);
-  // console.log('', params)
-  // console.log('params?.tracker: ', params?.tracker);
-  // console.log('params?.eventProps: ', params?.eventProps);
   if (params?.tracker?.eventData?.id == "ftypeName" && params?.tracker?.eventType == "formItemChange" && params?.tracker?.eventData?.value) {
-    // console.log('该信息来自于Vue事件监听： params: ', params);
 
     const typeName = params?.tracker?.eventData?.value;
     const genCrudString = await buildCrud(typeName);
@@ -84,15 +80,15 @@ async function eventTrackerEvent(params: TrackerEventArgs) {
     //       }`)
     // }
   }
-
-
 }
 function amisMounted(amisScope) {
-  amisScoped = amisScope;
+
   console.log('gft-amisScoped.value: ', amisScope)
   if (!amisScope) {
     return;
   }
+  amisScoped.value = amisScope;
+
   // amisScope.updateProps({
   //   data: { typeName: "Customer" }
   // }) 
