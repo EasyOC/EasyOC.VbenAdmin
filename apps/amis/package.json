@@ -9,6 +9,7 @@
         "start": "fis3 server start --www ./public --port 8082 --no-daemon",
         "dev": "fis3 release -cwd ./public",
         "admin:dev": "rimraf ../ant-admin/public/amis-editor-renderer && fis3 release -cwd ../ant-admin/public/amis-editor-renderer",
+        "clean": "pnpm rimraf node_modules && pnpm rimraf dist && pnpm rimraf .turbo",
         "build-admin": "rimraf ../ant-admin/public/amis-editor-renderer && fis3 release gh-pages -c -cwd"
     },
     "repository": {
@@ -27,7 +28,7 @@
     "homepage": "https://github.com/fex-team/amis-editor-demo#readme",
     "dependencies": {
         "@fortawesome/fontawesome-free": "^5.15.3",
-        "amis": "^1.9.1-beta.1",
+        "amis": "^1.9.1-beta.17",
         "amis-editor": "^4.1.0-beta.23",
         "axios": "0.21.1",
         "bootstrap": "3.4.1",
