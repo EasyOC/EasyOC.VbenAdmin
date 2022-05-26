@@ -24,7 +24,7 @@ onBeforeMount(async () => {
   if (id) {
     const result = await excuteGraphqlQuery({
       query: `{
-          contentItem(contentItemId: "${id}") {
+          contentItem:contentItemByVersion(contentItemVersionId: "${id}") {
             ... on AmisSchema {
               displayText
               createdUtc
@@ -36,6 +36,7 @@ onBeforeMount(async () => {
         }`
     })
     amisjson.value = JSON.parse(result.data.contentItem.schema)
+    console.log('result.data.contentItem.schema: ', result.data.contentItem.schema);
   }
 })
 

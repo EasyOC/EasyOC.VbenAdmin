@@ -14,12 +14,10 @@
           "type": "grid",
           "columns": [
             {
-            },
-            {
               "body": [
                 {
                   "type": "submit",
-                  "label": "刷新",
+                  "label": "刷新类型列表",
                   "actionType": "submit",
                   "id": "u:c25bbea0513a",
                   "checkAll": false,

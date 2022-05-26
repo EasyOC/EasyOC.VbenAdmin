@@ -69,7 +69,7 @@ function amisMounted(amisScope) {
   if (svrPreview) {
     svrPreview.setValue(`{ 
           "type": "tpl",
-          "tpl": "内容aaaaaaaaaa",
+          "tpl": "1111",
           "inline": false
         }`)
   }

@@ -14,6 +14,7 @@
   "scripts": {
     "dev": "vite",
     "build": "pnpm cross-env NODE_ENV=production vite build && pnpm esno ./scripts/post-build.ts",
+    "build:dev": "pnpm cross-env NODE_ENV=development vite build && pnpm esno ./scripts/post-build.ts",
     "build:test": "pnpm cross-env vite build --mode test &&pnpm esno ./scripts/post-build.ts",
     "clean": "pnpm rimraf node_modules && pnpm rimraf dist && pnpm rimraf .turbo",
     "prod:run": "pnpm cross-env NODE_ENV=production vite",
