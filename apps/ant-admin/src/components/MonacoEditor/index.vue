@@ -82,6 +82,7 @@ export default defineComponent({
         this.diffEditor ? 'createDiffEditor' : 'create'
       ](this.$el, {
         value: value,
+        autoIndent: "advanced",
         language: language,
         theme: theme,
         ...options,

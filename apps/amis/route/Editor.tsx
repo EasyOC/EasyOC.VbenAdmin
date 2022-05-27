@@ -4,10 +4,11 @@ import {Editor} from 'amis-editor';
 import '../renderer/MyRenderer';
 import '../editor/MyRenderer';
 import {PluginClass} from 'amis-editor/dist/manager';
-import {Layout, Switch, toast, classnames as cx} from 'amis';
+import {Layout, Switch, toast, classnames as cx, FormItem} from 'amis';
 import {apiRequest} from './../service/api';
 import {RouteComponentProps} from 'react-router';
 import {inject, observer} from 'mobx-react';
+import Form from 'amis/lib/renderers/Form';
 // import {IMainStore} from 'store';
 // import authService from './auth/authService';
 
@@ -22,6 +23,41 @@ const schemaUrl = `${host}/schema.json`;
 @inject('store')
 @observer
 class AmisEditor extends React.Component {
+    constructor(props: any) {
+        super(props);
+        console.log('getSchemagetSchemagetSchema');
+        //    await authService.login()
+
+        apiRequest({
+            needReload: true,
+            method: 'get',
+            url: `/api/graphql?query={  
+    contentItem:contentItemByVersion(${this.getGpParams()}) 
+    {     ... on AmisSchema 
+        {
+            createdUtc
+            description
+            displayText
+            schema
+            contentItemId
+            contentType
+            latest owner published
+            contentItemVersionId     
+        }   
+    } 
+}`
+        }).then(result => {
+            console.log('result?.data', result?.data);
+            this.state.schemaObject = result?.data.contentItem;
+            document.title = this.state.schemaObject?.displayText + ' - ' + document.title;
+            if (this.state.schemaObject?.schema) {
+                this.state.schema = JSON.parse(this.state.schemaObject.schema);
+            }
+            this.togglePreview(false);
+        });
+
+        
+    }
     state: any = {
         preview: true,
         mobile: false,
@@ -40,33 +76,6 @@ class AmisEditor extends React.Component {
         let queryparamsStr = `contentItemVersionId:\"${this.state.id}\"`;
 
         return queryparamsStr;
-    }
-    async componentDidMount() {
-        console.log('getSchemagetSchemagetSchema');
-        //    await authService.login()
-
-        const result = await apiRequest({
-            needReload: true,
-            method: 'get',
-            url: `/api/graphql?query={  
-               contentItem:contentItemByVersion(${this.getGpParams()}) 
-                    {     ... on AmisSchema {
-                        createdUtc
-                        description
-                        displayText
-                        schema
-                        contentItemId
-                        contentType
-                        latest owner published
-                        contentItemVersionId     }   } }`
-        });
-        console.log('result?.data', result?.data);
-        this.state.schemaObject = result?.data.contentItem;
-        document.title = this.state.schemaObject?.displayText + ' - ' + document.title;
-        if (this.state.schemaObject?.schema) {
-            this.state.schema = JSON.parse(this.state.schemaObject.schema);
-        }
-        this.togglePreview(false);
     }
 
     handleChange = (value: any) => {
@@ -102,9 +111,16 @@ class AmisEditor extends React.Component {
         });
     }
 
+    renderGenForm() {
+        return <div className="amis-editor-container">aaaaaaaaaa</div>;
+    }
+
+    handleShowGen(draft = false) {}
+
     renderHeader = () => {
         return (
             <div className="clearfix editor-header box-shadow bg-dark">
+                <div className="pull-left">{this.renderGenForm()}</div>
                 <div className="editor-preview">
                     预览 <Switch value={this.state.preview} onChange={this.togglePreview} className="m-l-xs" inline />
                 </div>

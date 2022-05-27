@@ -1,6 +1,6 @@
 <template>
   <div className="amis-renderer-box">
-    <AMIS ref="amisRender" :schema="amisjsonSchema" :trackerFn="eventTrackerEvent" :amisMounted="amisMounted" />
+    <AMIS scoped ref="amisRender" :schema="amisjsonSchema" :trackerFn="eventTrackerEvent" :amisMounted="amisMounted" />
   </div>
 
 </template>
@@ -16,7 +16,7 @@ import { applyReactInVue } from 'veaury'
 // 这是一个React组件
 //@ts-ignore
 import AMISRendererComponent from './react_app/Renderer.jsx'
-import { defineComponent, toRaw, onBeforeUnmount, unref } from 'vue'
+import { defineComponent, toRaw, onBeforeUnmount, unref, onActivated, ref, watchEffect, } from 'vue'
 import { TrackerEventArgs } from './types'
 import { deepMerge } from '@pkg/utils';
 export default defineComponent({
@@ -28,36 +28,46 @@ export default defineComponent({
 
   },
   props: {
-    amisjson: {
+    modelValue: {
       type: Object,
+      default: () => ({}),
       required: true,
     },
+    amisScope: {
+      type: Object,
+    },
   },
-  emits: ['amisMounted', 'eventTrackerEvent'],
+  emits: ['amisMounted', 'eventTrackerEvent', "update:amisScope"],
   setup(props, { emit }) {
-    let _amisScoped: any;
+    const _amisScoped = ref<any>();
+
+
     function amisMounted(amisScoped) {
-      _amisScoped = amisScoped
-      // if (_amisScoped && (!_amisScoped.updateProps)) {
-      //   _amisScoped.updateProps = (attrs) => {
-      //     // props.amisjson = deepMerge(unref(props).amisjson, { ...attrs })
+      _amisScoped.value = amisScoped
+      // if (_amisScoped.value && (!_amisScoped.value.updateProps)) {
+      //   _amisScoped.value.updateProps = (attrs) => {
+      //     _amisjsonSchema.value = deepMerge(unref(_amisjsonSchema), { ...attrs })
       //     throw 'react 方式集成无法支持此方法， 请直接修改 amisjson 对象'
       //   }
       // }
-      emit("amisMounted", amisScoped)
+      emit("amisMounted", _amisScoped.value)
+      console.log('amisMounted111: ', _amisScoped.value);
+      emit("update:amisScope", _amisScoped.value)
     }
-    onBeforeUnmount(() => {
-      // if (_amisScoped?.unmount)
-        // _amisScoped.unmount()
-    })
+
+
     function eventTrackerEvent(params: TrackerEventArgs) {
+      console.log('AMIS Renderer eventTrackerEvent', params);
+      console.log('AMIS Renderer eventTrackerEvent', _amisScoped.value);
+      emit("amisMounted", _amisScoped.value)
       emit("eventTrackerEvent", params)
     }
     return {
       amisMounted,
       eventTrackerEvent,
-      amisjsonSchema: toRaw(props.amisjson),
+      amisjsonSchema: toRaw(props.modelValue),
     }
   }
 })
+
 </script>

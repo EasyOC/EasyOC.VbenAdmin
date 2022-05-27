@@ -1,4 +1,4 @@
-<template>
+<template scoped>
   <div className="amis-renderer-box">
     <div ref="rendererBox"></div>
   </div>
@@ -13,7 +13,7 @@ import { EventTrack } from 'amis/lib/types'
 import { TrackerEventArgs } from './types'
 import getEnv from './amisEnv'
 const props = defineProps({
-  amisjson: {
+  modelValue: {
     type: Object,
     required: true,
   },
@@ -36,7 +36,7 @@ onMounted(() => {
     // document.querySelector('#amis'),
     {
       // amis schema
-      ...unref(props).amisjson,
+      ...unref(props).modelValue,
     },
     {
       // 这里是初始 props
@@ -49,7 +49,7 @@ onMounted(() => {
       tracker: (tracker: EventTrack, eventProps: any) => {
         console.log('eventTracker: ', tracker)
         console.log('eventProps: ', eventProps)
-        emit('eventTrackerEvent', { tracker, eventProps })
+        emit('eventTrackerEvent', { tracker, eventProps } as TrackerEventArgs)
       },
     },
   )

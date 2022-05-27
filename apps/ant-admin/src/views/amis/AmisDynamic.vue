@@ -1,6 +1,6 @@
 <template>
   <PageWrapper>
-    <Amis :amisjson="amisjson" @amisMounted="amisMounted" @eventTrackerEvent="eventTrackerEvent" />
+    <Amis v-model="amisjson" @amisMounted="amisMounted" @eventTrackerEvent="eventTrackerEvent" />
   </PageWrapper>
 </template>
 <script setup lang="ts">
@@ -17,20 +17,6 @@ const amisScope = ref<any>()
 onMounted(async () => { })
 
 onBeforeMount(async () => {
-
-})
-
-
-function eventTrackerEvent(tracker: TrackerEventArgs) {
-  console.log('该信息来自于Vue事件监听：', tracker)
-}
-
-
-
-
-async function amisMounted(amisScoped) {
-  console.log('amisScope: ', amisScoped);
-  amisScope.value = amisScoped
 
   console.log('currentRoute', currentRoute.value)
   let id = currentRoute.value.meta.schemaId
@@ -53,9 +39,21 @@ async function amisMounted(amisScoped) {
     })
     amisjson.value = JSON.parse(result.data.contentItem.schema)
     console.log('result.data.contentItem.schema: ', amisjson.value);
-    if (amisScoped?.updateProps) {
-      amisScoped.updateProps(amisjson.value)
+    if (amisScope.value?.updateProps) {
+      amisScope.value.updateProps(amisjson.value)
     }
   }
+})
+
+
+function eventTrackerEvent(tracker: TrackerEventArgs) {
+  console.log('该信息来自于Vue事件监听：', tracker)
+}
+ 
+
+async function amisMounted(amisScoped) {
+  console.log('amisScope: ', amisScoped);
+  amisScope.value = amisScoped
+
 }
 </script>

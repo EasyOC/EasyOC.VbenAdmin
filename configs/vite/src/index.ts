@@ -44,7 +44,7 @@ export async function createViteConfig(
       base: VITE_PUBLIC_PATH,
       resolve: {
         alias: {
-          '@/': `${resolve(root, 'src')}/`,
+          '@/': `${resolve(root, 'src')}/`,          
           'vue-i18n': 'vue-i18n/dist/vue-i18n.cjs.js',
           vue: 'vue/dist/vue.esm-bundler.js',
         },
@@ -115,17 +115,18 @@ export async function createViteConfig(
       optimizeDeps: {
         // entries: ["/index.html",'/amis-editor-renderer/index.html'],
         include: [
+          
           '@vue/shared',
           '@iconify/iconify',
           'dayjs/locale/en',
           'dayjs/locale/zh-cn',
           'lodash-es',
-          `${prefix}/language/json/json.worker`,
-          `${prefix}/language/css/css.worker`,
-          `${prefix}/language/html/html.worker`,
-          `${prefix}/language/typescript/ts.worker`,
-          `${prefix}/editor/editor.worker`,
-          'monaco-editor/min/vs/loader.js',
+          // `${prefix}/language/json/json.worker`,
+          // `${prefix}/language/css/css.worker`,
+          // `${prefix}/language/html/html.worker`,
+          // `${prefix}/language/typescript/ts.worker`,
+          // `${prefix}/editor/editor.worker`,
+          // 'monaco-editor/min/vs/loader.js',
         ],
         exclude: ['vue-demi'],
       },

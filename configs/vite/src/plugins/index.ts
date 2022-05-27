@@ -12,8 +12,10 @@ import { configCompressPlugin } from './compress'
 import { configVisualizerConfig } from './visualizer'
 import { configImageminPlugin } from './imagemin'
 import { configSvgIconsPlugin } from './svg-icons'
-import react from '@vitejs/plugin-react'
+// import react from '@vitejs/plugin-react'
 import { babel } from '@rollup/plugin-babel'
+
+import monacoEditorPlugin from "vite-plugin-monaco-editor"
 export async function configVitePlugins(
   root: string,
   viteEnv: ViteEnv,
@@ -27,8 +29,8 @@ export async function configVitePlugins(
     VITE_BUILD_COMPRESS_DELETE_ORIGIN_FILE,
   } = viteEnv
 
-  const vitePlugins: (PluginOption | PluginOption[])[] = [
-    
+  const vitePlugins: (PluginOption | PluginOption [])[] = [
+
     // have to
     vue({
       // exclude: [/.*react_app[\\/].*/],
@@ -56,6 +58,8 @@ export async function configVitePlugins(
     VitePluginCertificate({
       source: 'coding',
     }),
+    monacoEditorPlugin()
+
   ]
 
   // @vitejs/plugin-legacy
@@ -75,6 +79,7 @@ export async function configVitePlugins(
 
   // rollup-plugin-visualizer
   vitePlugins.push(configVisualizerConfig())
+
 
   // The following plugins only work in the production environment
   if (isBuild) {

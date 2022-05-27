@@ -1,112 +1,100 @@
 <template>
-  <Amis ref="amisRender" :amisjson="amisjson" @amisMounted="amisMounted" @eventTrackerEvent="eventTrackerEvent" />
+  <div>
+    <a-row scoped>
+      <a-col :span="11" style="margin:5px;">
+        <a-card title="Schema" :bordered="false" size="small">
+          <template #extra>
+            <a-button size="small">预览</a-button>
+          </template>
+          <MonacoEditor :height="500" language="json" :value="amisjsonStr" @editorDidMount="editorDidMounted"
+            @change="editorUpdated" />
+        </a-card>
+
+      </a-col>
+      <a-col :span="11" style="margin:5px;">
+        <a-card title="字段映射" :bordered="false" size="small">
+          <Amis ref="amisRender" v-model="amisjson" @amisMounted="amisMounted" v-model:amisScope="amisScope"
+            @eventTrackerEvent="eventTrackerEvent" />
+        </a-card>
+      </a-col>
+    </a-row>
+
+  </div>
 </template>
 <script setup lang="ts">
-import { onBeforeMount, onMounted, ref } from 'vue'
+import { onBeforeMount, onMounted, ref, watchEffect } from 'vue'
 import { Amis } from '@/components/Amis'
 import schema from './GenFromType.json'
-import { useGo } from '@/hooks/web/usePage'
-
+import MonacoEditor from '@/components/MonacoEditor/index.vue'
 import { TrackerEventArgs } from '../../components/Amis/src/types';
-import { useRouter } from 'vue-router'
+
 import buildCrud from './GenCrud'
-const { currentRoute } = useRouter()
-const go = useGo()
 
-// 页面左侧点击返回链接时的操作
-function goBack() {
-  // 本例的效果时点击返回始终跳转到账号列表页，实际应用时可返回上一页
-  go(currentRoute.value.meta.currentActiveMenu)
+
+const amisScope = ref<any>();
+
+const amisjson = ref<any>(schema)
+
+const amisjsonStr = ref<string>('')
+
+function editorUpdated(value) {
+  amisjsonStr.value = value
 }
-
-const amisjson = ref(schema)
 onBeforeMount(() => {
   //使用 JSON Handler 之类的工具 获取Json路径
   // set(amisjson.value, "body[0].columns[7].buttons[1].url", globConfig.amisEditorUrl + url);
-
+  const service = amisjson.value.toolbar[0].dialog.body[0];
+  service.dataProvider = (data, setData) => {
+    watchEffect(() => {
+      console.log("1111111")
+      setData(
+        {
+          "status": 0,
+          "msg": "",
+          "data": JSON.parse(amisjsonStr.value)
+        }
+      )
+    })
+  }
 })
+
+
 onMounted(() => {
   // console.log(' amisScoped.value.getCompomentById: ',  amisScoped.value.getComponentById('u:4324e9e667ba'));
 
 })
 
-const amisScoped = ref<any>();
+const monacoEditor = ref<any>({})
+function editorDidMounted(editor) {
+  monacoEditor.value = editor
+  monacoEditor.value.getAction(['editor.action.formatDocument'])._run()
+}
 async function eventTrackerEvent(params: TrackerEventArgs) {
+
+
   if (params?.tracker?.eventData?.id == "ftypeName" && params?.tracker?.eventType == "formItemChange" && params?.tracker?.eventData?.value) {
 
     const typeName = params?.tracker?.eventData?.value;
-    const genCrudString = await buildCrud(typeName);
-    // console.log('genCrudString: ', genCrudString);
-    // console.log('genCrudString: ', genCrudString);
-
-    // console.log('typeName: ', typeName);
-    // const fields = await apiService.getFields(typeName);
-    // const form = amisScoped.getComponentByName('page1.schemaForm');
-    //   console.log('typeName: ', formModel);
-    // const tempGraphqlStr = `query queryDepartment {
-    //     ${typeName[0].toLowerCase() + typeName.slice(1)} ${fieldstoGraph(fields as any)}
-    //    }`
-
-
-    // amisjson.value.dialog.body = JSON.parse(tempGraphqlStr)
-    console.log('amisScoped: ', amisScoped);
-    const service = amisScoped.value.getComponentByName("page1").props.toolbar.find(o => o.id == "u:4324e9e667ba").dialog;
-    // set(amisjson.value, "body[1].body[2].value", genCrudString)
-    service.body = [JSON.parse(genCrudString)]
-    var schemaForm = amisScoped.value.getComponentByName("page1.schemaForm");
-    console.log('schemaForm: ', schemaForm);
-    if (schemaForm) {
-      try {
-        schemaForm.setValues({ schema: genCrudString })
-      } catch (e) {
-        console.log('e: ', e);
-      }
-      // schemaForm.load();
+    amisjsonStr.value = await buildCrud(typeName);
+    console.log('eventTrackerEvent:ftypeName ', params);
+    const service = amisjson.value.toolbar[0].dialog.body[0];
+    service.body = JSON.parse(amisjsonStr.value);
+    if (amisScope.value) {
+      amisScope.value.relaod()
     }
-
-    console.log('service: ', service);
-
-
-
-
-    //     const svrPreview = amisScope.getComponentByName('page1.service1');
-    // console.log('svrPreview: ', svrPreview);
-
-    // if (svrPreview) {
-    //   svrPreview.setValue(`{ 
-    //         "type": "tpl",
-    //         "tpl": "内容aaaaaaaaaa",
-    //         "inline": false
-    //       }`)
-    // }
   }
 }
-function amisMounted(amisScope) {
-
-  console.log('gft-amisScoped.value: ', amisScope)
-  if (!amisScope) {
+function amisMounted(amisScoped) {
+  if (!amisScoped) {
+    console.warn("amisMounted：amisScope is not ready", amisScope.value)
     return;
   }
-  amisScoped.value = amisScope;
+  amisScope.value = amisScoped
+  console.log('amisScoped: ', amisScoped);
+  if (amisScoped.getComponentByName) {
+    const svrPreview = amisScoped.getComponentByName('page1.svrPreview');
+    console.log('svrPreview: ', svrPreview);
 
-  // amisScope.updateProps({
-  //   data: { typeName: "Customer" }
-  // }) 
-  // 替代 amisScope.updateProps
-  // amisjson.value.data = { typeName: "Customer" }
-
-  const svrPreview = amisScope.getComponentByName('page1.service1');
-  // const page1 = amisScope.getComponentByName('page1');
-
-  console.log('svrPreview: ', svrPreview);
-  console.log('amisScoped.value.getCompomentById: ', amisScope.getComponentById('u:4324e9e667ba'));
-
-  if (svrPreview) {
-    svrPreview.setValue(`{ 
-          "type": "tpl",
-          "tpl": "1111",
-          "inline": false
-        }`)
   }
 }
 </script>

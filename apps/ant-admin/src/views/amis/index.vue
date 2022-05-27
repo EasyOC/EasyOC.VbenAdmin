@@ -1,6 +1,6 @@
 <template>
 
-  <Amis ref="amisRender" :amisjson="amisjson" @amisMounted="amisMounted" @eventTrackerEvent="eventTrackerEvent" />
+  <Amis ref="amisRender" v-model="amisjson" @amisMounted="amisMounted" @eventTrackerEvent="eventTrackerEvent" />
 </template>
 <script setup lang="ts">
 import { onBeforeMount, ref } from 'vue'

@@ -8,104 +8,81 @@
   "body": [
     {
       "type": "form",
-      "title": "表单",
+      "title": "",
       "body": [
+        {
+          "type": "grid",
+          "columns": [],
+          "id": "u:84b91d3bdecf"
+        },
         {
           "type": "grid",
           "columns": [
             {
               "body": [
                 {
-                  "type": "submit",
-                  "label": "刷新类型列表",
-                  "actionType": "submit",
-                  "id": "u:c25bbea0513a",
-                  "checkAll": false,
-                  "level": "primary"
+                  "type": "textarea",
+                  "name": "schema",
+                  "id": "u:8d9ea63a69f6",
+                  "value": "{\n          \"type\": \"tpl\",\n          \"tpl\": \"内容aaaaaaaaaa\",\n          \"inline\": false\n        }",
+                  "label": "Schema JSON",
+                  "mode": "normal",
+                  "horizontal": {
+                    "leftFixed": "normal"
+                  },
+                  "required": true,
+                  "minRows": 3,
+                  "maxRows": 20,
+                  "minLength": 5,
+                  "maxLength": 120
+                }
+              ]
+            },
+            {
+              "body": [
+                {
+                  "type": "control",
+                  "label": "生成选项",
+                  "body": [
+                    {
+                      "type": "select",
+                      "name": "typeName",
+                      "id": "ftypeName",
+                      "label": "类型",
+                      "source": {
+                        "method": "get",
+                        "url": "/api/ContentTypeManagement/GetAllTypes",
+                        "data": {
+                          "stereotype": "1",
+                          "pageSize": "-1"
+                        },
+                        "adaptor": "console.log('dropdown options11',response)\r\nvar items = response.data.items.map(x=>{\r\n    return {label:x.displayName,value:x.name}\r\n})\r\nconsole.log('dropdown options',items)\r\nreturn {options:items}",
+                        "replaceData": false,
+                        "responseData": null,
+                        "dataType": "json"
+                      },
+                      "searchable": true,
+                      "submitOnChange": false,
+                      "validations": {},
+                      "mode": "horizontal",
+                      "size": "",
+                      "horizontal": {
+                        "leftFixed": "normal",
+                        "left": 2,
+                        "right": 10
+                      },
+                      "checkAll": false,
+                      "required": true,
+                      "editable": false
+                    }
+                  ],
+                  "id": "u:732d33b69131",
+                  "mode": "normal"
                 }
               ]
             }
           ],
-          "id": "u:eec0b89bd4a5"
-        }
-      ],
-      "api": "",
-      "id": "u:e9b1e459dc49",
-      "actions": [
-      ],
-      "submitOnChange": true,
-      "submitOnInit": true,
-      "reload": "",
-      "target": "",
-      "checkAll": false,
-      "name": "firstForm",
-      "wrapWithPanel": false,
-      "className": "m-b",
-      "mode": "horizontal",
-      "horizontal": {
-        "leftFixed": "",
-        "left": 4,
-        "right": 8
-      },
-      "debug": false
-    },
-    {
-      "type": "form",
-      "title": "",
-      "body": [
-        {
-          "type": "grid",
-          "columns": [
-          ],
-          "id": "u:84b91d3bdecf"
-        },
-        {
-          "type": "select",
-          "label": "类型",
-          "name": "typeName",
-          "id": "ftypeName",
-          "source": {
-            "method": "get",
-            "url": "/api/ContentTypeManagement/GetAllTypes",
-            "data": {
-              "stereotype": "1",
-              "pageSize": "-1"
-            },
-            "adaptor": "console.log('dropdown options11',response)\r\nvar items = response.data.items.map(x=>{\r\n    return {label:x.displayName,value:x.name}\r\n})\r\nconsole.log('dropdown options',items)\r\nreturn {options:items}",
-            "replaceData": false,
-            "responseData": null,
-            "dataType": "json"
-          },
-          "searchable": true,
-          "submitOnChange": false,
-          "validations": {
-          },
-          "mode": "horizontal",
-          "size": "",
-          "horizontal": {
-            "leftFixed": "normal",
-            "left": 2,
-            "right": 10
-          },
-          "checkAll": false,
-          "required": true,
-          "editable": false
-        },
-        {
-          "type": "textarea",
-          "label": "Schema JSON",
-          "name": "schema",
-          "id": "u:8d9ea63a69f6",
-          "mode": "normal",
-          "horizontal": {
-            "leftFixed": "normal"
-          },
-          "required": true,
-          "minRows": 3,
-          "maxRows": 20,
-          "minLength": 5,
-          "maxLength": 120,
-          "value": "{\n          \"type\": \"tpl\",\n          \"tpl\": \"内容aaaaaaaaaa\",\n          \"inline\": false\n        }"
+          "id": "u:fb5e77ba86b5"
         },
         {
           "type": "hidden",
@@ -151,26 +128,22 @@
       "actionType": "dialog",
       "dialog": {
         "title": "系统提示",
-        "size": "lg",
-        "closeOnOutside": true,
         "body": [
           {
-            "type": "service",
-            "body": [
-            ],
+            "type": "service", 
             "id": "u:2f42de2f5de0",
             "name": "svrPreview",
             "closeOnEsc": false,
             "closeOnOutside": false,
             "showCloseButton": true,
-            "messages": {
-            },
+            "messages": {},
             "dataProvider": ""
           }
         ],
         "type": "dialog",
-        "actions": [
-        ]
+        "actions": [],
+        "size": "lg",
+        "closeOnOutside": true
       },
       "id": "u:4324e9e667ba"
     },
@@ -178,10 +151,6 @@
       "type": "submit",
       "label": "提交",
       "actionType": "submit",
-      "dialog": {
-        "title": "系统提示",
-        "body": "对你点击了"
-      },
       "id": "u:41627a0c4d0b",
       "level": "primary",
       "target": "indexConfigForm",
@@ -189,6 +158,5 @@
     }
   ],
   "name": "page1",
-  "messages": {
-  }
+  "messages": {}
 }
