@@ -41,7 +41,7 @@ class AmisEditor extends React.Component {
 
         return queryparamsStr;
     }
-    async componentWillMount() {
+    async componentDidMount() {
         console.log('getSchemagetSchemagetSchema');
         //    await authService.login()
 

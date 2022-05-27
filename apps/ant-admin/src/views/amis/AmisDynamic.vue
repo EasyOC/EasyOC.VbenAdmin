@@ -13,9 +13,25 @@ import { PageWrapper } from '@/components/page'
 
 const amisjson = ref<any>({})
 const { currentRoute } = useRouter()
+const amisScope = ref<any>()
 onMounted(async () => { })
 
 onBeforeMount(async () => {
+
+})
+
+
+function eventTrackerEvent(tracker: TrackerEventArgs) {
+  console.log('该信息来自于Vue事件监听：', tracker)
+}
+
+
+
+
+async function amisMounted(amisScoped) {
+  console.log('amisScope: ', amisScoped);
+  amisScope.value = amisScoped
+
   console.log('currentRoute', currentRoute.value)
   let id = currentRoute.value.meta.schemaId
   if (!id) {
@@ -24,7 +40,7 @@ onBeforeMount(async () => {
   if (id) {
     const result = await excuteGraphqlQuery({
       query: `{
-          contentItem(contentItemId: "${id}") {
+          contentItem:contentItemByVersion(contentItemVersionId: "${id}") {
             ... on AmisSchema {
               displayText
               createdUtc
@@ -36,22 +52,10 @@ onBeforeMount(async () => {
         }`
     })
     amisjson.value = JSON.parse(result.data.contentItem.schema)
+    console.log('result.data.contentItem.schema: ', amisjson.value);
+    if (amisScoped?.updateProps) {
+      amisScoped.updateProps(amisjson.value)
+    }
   }
-})
-
-
-function eventTrackerEvent(tracker: TrackerEventArgs) {
-  console.log('该信息来自于Vue事件监听：', tracker)
-}
-
-
-
-
-function amisMounted(amisScope) {
-  console.log('amisScope: ', amisScope);
-
-  // amisScope.updateProps(amisjson)
-
-  // monacoEditor.value.getAction(['editor.action.formatDocument'])._run()
 }
 </script>
