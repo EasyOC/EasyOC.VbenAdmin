@@ -157,7 +157,7 @@ export const usePermissionStore = defineStore({
     },
     async changePermissionCode() {
       const codeList = await getPermCode()
-      console.log('codeList: ', codeList);
+      // console.log('codeList: ', codeList);
       this.setPermCodeList(codeList)
     },
     async buildRoutesAction(): Promise<RouteRecordItem[]> {
@@ -240,8 +240,6 @@ export const usePermissionStore = defineStore({
 
         //  If you are sure that you do not need to do background dynamic permissions, please comment the entire judgment below
         case PermissionModeEnum.BACK:
-
-          console.log(1111111111111)
           const { createMessage, } = useMessage()
           createMessage.loading({
             content: t('sys.app.menuLoading'),
@@ -260,14 +258,12 @@ export const usePermissionStore = defineStore({
             // routes = filterTree(asyncRoutes, routeFilter)
             // routes = routes.filter(routeFilter)
             // const menus = transformRouteToMenu(routes, true)
-            console.log('menus:111 ', JSON.stringify(menus));
 
             //获取 OC菜单
             const ocMenus = await getOcMenu()
             console.log('ocMenus:111', ocMenus);
             //将后ocMenus的数据结构转换为 RouteRecordItem 的数据结构
             const ocMenuList = transformOcMenuToMenu(ocMenus)
-            console.log('ocMenuList: ', JSON.stringify(ocMenuList));
             // 合并菜单 
             routeList = [...menus, ...ocMenuList] as RouteRecordItem[]
             routeOrder(routeList)

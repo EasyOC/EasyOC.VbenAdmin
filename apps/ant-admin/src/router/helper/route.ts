@@ -47,7 +47,6 @@ function asyncImportRoute(routes: RouteRecordItem[] | undefined) {
       children && asyncImportRoute(children)
       item.children = children
     }
-    console.log("asyncImportRoute routes.item", item)
   })
 }
 

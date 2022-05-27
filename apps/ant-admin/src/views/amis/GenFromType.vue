@@ -50,10 +50,10 @@ async function eventTrackerEvent(params: TrackerEventArgs) {
 
     // amisjson.value.dialog.body = JSON.parse(tempGraphqlStr)
     console.log('amisScoped: ', amisScoped);
-    const service = amisScoped.getComponentByName("page1").props.toolbar.find(o => o.id == "u:4324e9e667ba").dialog;
+    const service = amisScoped.value.getComponentByName("page1").props.toolbar.find(o => o.id == "u:4324e9e667ba").dialog;
     // set(amisjson.value, "body[1].body[2].value", genCrudString)
 
-    var schemaForm = amisScoped.getComponentByName("page1.schemaForm");
+    var schemaForm = amisScoped.value.getComponentByName("page1.schemaForm");
     console.log('schemaForm: ', schemaForm);
     if (schemaForm) {
       try {
@@ -61,7 +61,7 @@ async function eventTrackerEvent(params: TrackerEventArgs) {
       } catch (e) {
         console.log('e: ', e);
       }
-      schemaForm.load();
+      // schemaForm.load();
     }
 
     console.log('service: ', service);

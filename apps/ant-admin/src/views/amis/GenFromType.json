@@ -137,19 +137,6 @@
       "debug": false,
       "canAccessSuperData": false,
       "placeholder": "-"
-    },
-    {
-      "type": "service",
-      "body": [
-        {
-          "type": "tpl",
-          "tpl": "<p>内容</p>",
-          "inline": false,
-          "style": {
-          }
-        }
-      ],
-      "id": "u:7ee1588f76fe"
     }
   ],
   "style": {

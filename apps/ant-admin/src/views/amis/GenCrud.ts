@@ -5,24 +5,24 @@ import { ContentFieldsMappingDto, ContentTypeManagementServiceProxy } from '@pkg
 import crud from "./schematpls/crud.json"
 
 export default async function buildCrud(typeName: string) {
-    
+
     const apiService = new ContentTypeManagementServiceProxy()
     //查询出所有字段
     const fields = await apiService.getFields(typeName);
     console.log('fields: ', fields);
     //根据字段构建查询字段
-    const tempGraphqlStr = "query MyQuery2 { data:contentItems( contentType: "+ typeName +" page: ${api.body.page}  pageSize: ${api.body.perPage} ) {  total items { ... on  " + typeName + buildGraphqlFields(fields as any) + "}}}";
+    const tempGraphqlStr = "query MyQuery2 { data:contentItems( contentType: " + typeName + " page: ${api.body.page}  pageSize: ${api.body.perPage} orderBy: {field: \"${api.body.orderBy?api.body.orderBy:''}\", direction: ${api.body.orderDir?api.body.orderDir.toUpperCase():'DESC' } } dynamicFilter: {} ) {  total items { ... on  " + typeName + buildGraphqlFields(fields as any) + "}}}";
 
     // const tempGraphqlStr = ` {
     //     items: ${typeName[0].toLowerCase()+ typeName.slice(1)} ${buildGraphqlFields(fields as any)}
     //   }`
-    console.log('tempGraphqlStr: ', tempGraphqlStr);
+    // console.log('tempGraphqlStr: ', tempGraphqlStr);
 
 
 
     const requestAdaptor = "\r\nconsole.log(\"api.发送适配器\",api)\r\nconst filterParams=[`status: ${api.data.status}`]\r\nif(api.data.displayText){\r\n     filterParams.push(`where: {displayText_contains: \"${api.data.displayText}\"}`)\r\n}\r\nif(api.data.orderBy){\r\n    filterParams.push(`orderBy:{${api.body.orderBy}:${api.body.orderDir.toUpperCase()}}`)\r\n}\r\nconsole.log(\"filterParams.join(',')\",filterParams.join(','))\r\nconst  query=`\r\n "
         + tempGraphqlStr + "` \r\napi.data={query}\r\nconsole.log(\"api.发送适配器2\",api)\r\nreturn api"
-    console.log('requestAdaptor: ', requestAdaptor);
+    // console.log('requestAdaptor: ', requestAdaptor);
 
 
 
@@ -32,11 +32,11 @@ export default async function buildCrud(typeName: string) {
     crud.body[0].headerToolbar[1].dialog.body[0].body = genFormItems(fields);
 
     console.log('crud: ', crud);
-    return JSON.stringify(crud);
+    return JSON.stringify(crud,null,2);
 }
 
 function genColumns(fields: ContentFieldsMappingDto[]) {
-    const seebodyColumns:any = [];
+    const seebodyColumns: any = [];
 
     const defaultColumns: any = [
         {
@@ -49,74 +49,74 @@ function genColumns(fields: ContentFieldsMappingDto[]) {
                     "actionType": "dialog",
                     "level": "link",
                     "dialog": {
-                      "title": "查看详情",
-                      "body": [
-                        {
-                          "type": "property",
-                          "className": "b-b m-b",
-                          "labelStyle": {
-                                "textAlign": "right"
-                            },
-                            "contentStyle": {
-                                "textAlign": "left"
-                            },
-                          "items": [
+                        "title": "查看详情",
+                        "body": [
                             {
-                              "label": "编号",
-                              "content": "${contentItemId}",
-                              "span": 1
+                                "type": "property",
+                                "className": "b-b m-b",
+                                "labelStyle": {
+                                    "textAlign": "right"
+                                },
+                                "contentStyle": {
+                                    "textAlign": "left"
+                                },
+                                "items": [
+                                    {
+                                        "label": "编号",
+                                        "content": "${contentItemId}",
+                                        "span": 1
+                                    },
+                                    {
+                                        "label": "版本号",
+                                        "content": "${contentItemVersionId}",
+                                        "span": 1
+                                    },
+                                    {
+                                        "label": "创建人",
+                                        "content": "${author}",
+                                        "span": 1
+                                    },
+                                    {
+                                        "label": "创建时间",
+                                        "content": "${createdUtc | toDate |date:YYYY-MM-DD HH\\:mm\\:ss }",
+                                        "span": 1
+                                    },
+                                    {
+                                        "span": 1,
+                                        "label": "修改时间",
+                                        "content": "${modifiedUtc | toDate |date:YYYY-MM-DD HH\\:mm\\:ss } "
+                                    },
+                                    {
+                                        "span": 1,
+                                        "label": "发布时间",
+                                        "content": "${publishedUtc | toDate |date:YYYY-MM-DD HH\\:mm\\:ss }"
+                                    },
+                                    {
+                                        "span": 1,
+                                        "label": "最新版本",
+                                        "content": "${latest?\"是\":\"否\"}"
+                                    }
+                                ]
                             },
                             {
-                              "label": "版本号",
-                              "content": "${contentItemVersionId}",
-                              "span": 1
-                            },
-                            {
-                              "label": "创建人",
-                              "content": "${author}",
-                              "span": 1
-                            },
-                            {
-                              "label": "创建时间",
-                              "content": "${createdUtc | toDate |date:YYYY-MM-DD HH\\:mm\\:ss }",
-                              "span": 1
-                            },
-                            {
-                              "span": 1,
-                              "label": "修改时间",
-                              "content": "${modifiedUtc | toDate |date:YYYY-MM-DD HH\\:mm\\:ss } "
-                            },
-                            {
-                              "span": 1,
-                              "label": "发布时间",
-                              "content": "${publishedUtc | toDate |date:YYYY-MM-DD HH\\:mm\\:ss }"
-                            },
-                            {
-                              "span": 1,
-                              "label": "最新版本",
-                              "content": "${latest?\"是\":\"否\"}"
+                                "type": "property",
+                                "labelStyle": {
+                                    "textAlign": "right"
+                                },
+                                "contentStyle": {
+                                    "textAlign": "left"
+                                },
+                                "items": seebodyColumns
                             }
-                          ]
-                        },
-                        {
-                            "type": "property",
-                            "labelStyle": {
-                                "textAlign": "right"
-                            },
-                            "contentStyle": {
-                                "textAlign": "left"
-                            },
-                            "items": seebodyColumns
-                        }
-                      ],
-                      "type": "dialog",
-                      "closeOnEsc": false,
-                      "closeOnOutside": true,
-                      "showCloseButton": true,
-                      "size": "md",
-                      "data": null,
-                      "actions": [
-                      ]
+                        ],
+                        "type": "dialog",
+                        "closeOnEsc": false,
+                        "closeOnOutside": true,
+                        "showCloseButton": true,
+                        "size": "md",
+                        "data": null,
+                        "actions": [
+                        ]
                     }
                 },
                 {
@@ -374,15 +374,22 @@ function genColumns(fields: ContentFieldsMappingDto[]) {
         }
     ]
 
-
+    const ExceptFields =
+        [
+            "GeoPointField", "MediaField"
+        ];
     fields.filter(x => !x.isBasic).forEach(o => {
         const field: any = {
             name: o.graphqlValuePath,
             label: o.displayName,
         }
 
-        
-        const seeField:any = {
+        if (!ExceptFields.includes(o.fieldType || '') && o.isSelf) {
+            field.sortable = true;
+        }
+
+
+        const seeField: any = {
             content: "${ " + o.graphqlValuePath + " }",
             label: o.displayName,
             span: 1,
@@ -403,7 +410,7 @@ function setSeeColumnType(fieldDef: ContentFieldsMappingDto, field: any) {
     switch (fieldDef.fieldType) {
         case FieldType.DateTimefield:
         case FieldType.DateTimeOffield:
-            field.content= "${createdUtc | toDate |date:YYYY-MM-DD HH\\:mm\\:ss }"
+            field.content = "${createdUtc | toDate |date:YYYY-MM-DD HH\\:mm\\:ss }"
             break;
         case FieldType.ContentPickerField:
             field.content = "${ " + fieldDef.graphqlValuePath?.replace('contentItemIds.firstValue', 'firstContentItem.displayText') + " }"
@@ -411,7 +418,7 @@ function setSeeColumnType(fieldDef: ContentFieldsMappingDto, field: any) {
         case FieldType.MediaField:
             field.content = {
                 "type": "image",
-                "src": "${ " + fieldDef.graphqlValuePath+".urls[0] }" 
+                "src": "${ " + fieldDef.graphqlValuePath + ".urls[0] }"
             }
             break;
         default:
@@ -576,8 +583,8 @@ export function buildGraphqlFields(fields: ContentFieldsMappingDto[]) {
                     break
                 case FieldType.MediaField:
                     tempPart[fieldName] = {
-                        urls:false,
-                        paths:false,
+                        urls: false,
+                        paths: false,
                     }
                 case FieldType.HtmlField:
                 case FieldType.GeoPointField:

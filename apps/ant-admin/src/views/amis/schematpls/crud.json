@@ -35,8 +35,6 @@
         "requestAdaptor": ""
       },
       "columns": [],
-      "bulkActions": [
-      ],
       "itemActions": [
       ],
       "features": [
@@ -48,17 +46,13 @@
       ],
       "headerToolbar": [
         {
-          "label": "从类型创建",
-          "type": "button",
-          "actionType": "url",
-          "level": "success",
-          "tpl": "内容",
-          "perPageAvailable": [
-            10
-          ],
-          "url": "/amis/genFromType",
-          "blank": false
-        },
+          "type": "columns-toggler",
+          "align": "right",
+          "draggable": true,
+          "icon": "fas fa-cog",
+          "overlay": true,
+          "footerBtnSize": "sm"
+        }, 
         {
           "type": "button",
           "label": "新增",
@@ -133,6 +127,21 @@
         },
         {
           "type": "bulk-actions"
+        }
+      ],
+      "bulkActions": [
+        {
+          "label": "批量删除",
+          "type": "submit",
+          "perPageAvailable": [
+            10
+          ],
+          "actionType": "ajax",
+          "block": false,
+          "level": "danger",
+          "tooltip": "",
+          "tooltipPlacement": "bottom",
+          "confirmText": "确认删选中项目吗？"
         }
       ],
       "messages": {
