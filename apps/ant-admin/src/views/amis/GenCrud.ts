@@ -11,7 +11,7 @@ export default async function buildCrud(typeName: string) {
     const fields = await apiService.getFields(typeName);
     console.log('fields: ', fields);
     //根据字段构建查询字段
-    const tempGraphqlStr = "query MyQuery2 { data:contentItems( contentType: " + typeName + " page: ${api.body.page}  pageSize: ${api.body.perPage} orderBy: {field: \"${api.body.orderBy?api.body.orderBy:''}\", direction: ${api.body.orderDir?api.body.orderDir.toUpperCase():'DESC' } } dynamicFilter: {} ) {  total items { ... on  " + typeName + buildGraphqlFields(fields as any) + "}}}";
+    const tempGraphqlStr = " { data:contentItems( contentType: " + typeName + " page: ${api.body.page}  pageSize: ${api.body.perPage} orderBy: {field: \"${api.body.orderBy?api.body.orderBy:''}\", direction: ${api.body.orderDir?api.body.orderDir.toUpperCase():'DESC' } } dynamicFilter: {} ) {  total items { ... on  " + typeName + buildGraphqlFields(fields as any) + "}}}";
 
     // const tempGraphqlStr = ` {
     //     items: ${typeName[0].toLowerCase()+ typeName.slice(1)} ${buildGraphqlFields(fields as any)}
@@ -37,6 +37,7 @@ export default async function buildCrud(typeName: string) {
 
 function genColumns(fields: ContentFieldsMappingDto[]) {
     const seebodyColumns: any = [];
+    const editFormBodyColumns: any = [];
 
     const defaultColumns: any = [
         {
@@ -189,105 +190,7 @@ function genColumns(fields: ContentFieldsMappingDto[]) {
                                     "url": "/api/ContentManagement/PostContent?draft=${isDraft}",
                                     "dataType": "json"
                                 },
-                                "body": [
-                                    {
-                                        "name": "contentType",
-                                        "label": "ContentType",
-                                        "type": "hidden",
-                                        "value": "AmisSchema"
-                                    },
-                                    {
-                                        "type": "hidden",
-                                        "label": "isDraft",
-                                        "name": "isDraft"
-                                    },
-                                    {
-                                        "type": "hidden",
-                                        "label": "contentItemId",
-                                        "name": "contentItemId"
-                                    },
-                                    {
-                                        "type": "input-text",
-                                        "label": "显示名称",
-                                        "name": "displayText",
-                                        "required": true
-                                    },
-                                    {
-                                        "type": "input-text",
-                                        "label": "页面名称",
-                                        "name": "name",
-                                        "id": "u:344a4699b814",
-                                        "required": true
-                                    },
-                                    {
-                                        "type": "switch",
-                                        "label": "发布状态",
-                                        "name": "published",
-                                        "option": "",
-                                        "id": "u:079f8569c6bd",
-                                        "optionAtLeft": false,
-                                        "trueValue": true,
-                                        "falseValue": false,
-                                        "onText": "已发布",
-                                        "offText": "未发布",
-                                        "readOnly": true,
-                                        "disabled": true
-                                    },
-                                    {
-                                        "type": "textarea",
-                                        "label": "描述",
-                                        "name": "description"
-                                    },
-                                    {
-                                        "type": "textarea",
-                                        "label": "JSON Schema",
-                                        "name": "schema",
-                                        "language": "json",
-                                        "minRows": 3,
-                                        "maxRows": 20,
-                                        "minLength": 5,
-                                        "maxLength": "",
-                                        "showCounter": true,
-                                        "mode": "",
-                                        "inline": false
-                                    },
-                                    {
-                                        "type": "container",
-                                        "id": "u:4db12b8df64c",
-                                        "style": {
-                                            "textAlign": "right"
-                                        },
-                                        "body": [
-                                            {
-                                                "type": "button-toolbar",
-                                                "buttons": [
-                                                    {
-                                                        "type": "submit",
-                                                        "label": "发布",
-                                                        "actionType": "submit",
-                                                        "dialog": {
-                                                            "title": "系统提示",
-                                                            "body": "对你点击了"
-                                                        },
-                                                        "onClick": "props.formStore.setValues({ isDraft: false});\r\n",
-                                                        "level": "primary"
-                                                    },
-                                                    {
-                                                        "type": "submit",
-                                                        "label": "草稿",
-                                                        "actionType": "submit",
-                                                        "dialog": {
-                                                            "title": "系统提示",
-                                                            "body": "对你点击了"
-                                                        },
-                                                        "onClick": "props.formStore.setValues({ isDraft: true});\r\n"
-                                                    }
-                                                ],
-                                                "id": "u:f4244cf1ad06"
-                                            }
-                                        ]
-                                    }
-                                ],
+                                "body": editFormBodyColumns,
                                 "initApi": {
                                     "method": "get",
                                     "url": "/api/graphql?query={  contentItem:contentItemByVersion(contentItemVersionId: \"${contentItemVersionId}\") {     ... on AmisSchema {      createdUtc       description       displayText     schema       contentItemId    name   contentType       latest owner published       contentItemVersionId     }   } }",
@@ -300,15 +203,14 @@ function genColumns(fields: ContentFieldsMappingDto[]) {
                                     "sendOn": "!!this.contentItemId"
                                 },
                                 "name": "EditForm",
+                                "actions": [],
                                 "debug": false
                             }
                         ],
-                        "closeOnEsc": true,
+                        "closeOnEsc": false,
                         "closeOnOutside": false,
                         "showCloseButton": true,
-                        "size": "md",
-                        "actions": [],
-                        "data": null
+                        "size": "md"
                     },
                     "onClick": "\r\n\r\nconsole.log(props,'Editing')"
                 },
@@ -400,7 +302,25 @@ function genColumns(fields: ContentFieldsMappingDto[]) {
         setSeeColumnType(o, seeField)
         defaultColumns.push(field)
         seebodyColumns.push(seeField)
+
+
+        const editItem: any = {
+            name: o.graphqlValuePath,
+            label: o.displayName,
+            description: o.description,
+            type: "input-text",
+            required: false,
+            disabled: false,
+            // value: "${ " + o.graphqlValuePath + " }",
+        }
+        seteditColumnType(o, editItem)
+        editFormBodyColumns.push(editItem)
+
     })
+
+    // const formItems = genFormItems(fields);
+    // formItems.forEach(o => editFormBodyColumns.push(o));
+    console.log('editFormBodyColumns: ', editFormBodyColumns);
     return defaultColumns;
 }
 
@@ -445,6 +365,11 @@ function setColumnType(fieldDef: ContentFieldsMappingDto, field: any) {
             break;
         case FieldType.ContentPickerField:
             field.name = fieldDef.graphqlValuePath?.replace('contentItemIds.firstValue', 'firstContentItem.displayText')
+            field.sortable = false
+            break;
+        case FieldType.UserPickerField:
+            field.name = fieldDef.graphqlValuePath?.replace('userIds.firstValue', 'firstUserProfiles.displayText')
+            field.sortable = false
             break;
         case FieldType.MediaField:
             field.type = "image";
@@ -456,6 +381,91 @@ function setColumnType(fieldDef: ContentFieldsMappingDto, field: any) {
     }
 }
 
+
+function seteditColumnType(fieldDef: ContentFieldsMappingDto, field: any) {
+    switch (fieldDef.fieldType) {
+        case FieldType.TextField:
+            field.type = "input-text";
+            if (fieldDef.fieldSettings?.ContentPartFieldSettings?.Editor == "PredefinedList") {
+                field.type = "select"
+                if (fieldDef.fieldSettings?.TextFieldPredefinedListEditorSettings?.Options) {
+                    field.options =
+                    fieldDef.fieldSettings?.TextFieldPredefinedListEditorSettings?.Options.map(x => {
+                            return {
+                                label: x.name,
+                                value: x.value
+                            }
+                        })
+                }
+            }
+            break;
+        //下拉菜单数据源
+        case FieldType.ContentPickerField:
+            deepMerge(field, {
+                type: "select",
+                checkAll: false,
+                searchable: true,
+                name: fieldDef.graphqlValuePath
+            })
+            const pickerTypeConfig = fieldDef.fieldSettings?.ContentPickerFieldSettings?.DisplayedContentTypes
+            if (pickerTypeConfig && pickerTypeConfig.length > 0) {
+                const pickerType = pickerTypeConfig[0];
+                const multiple = fieldDef.fieldSettings?.ContentPickerFieldSettings?.Multiple ?? false
+                field.multiple = multiple
+                field.extractValue = multiple
+
+                if (multiple) {
+                    field.name = fieldDef.graphqlValuePath?.replace('firstValue', 'contentItemIds')
+                }else{
+                    field.name = fieldDef.graphqlValuePath?.replace('contentItemIds.firstValue', 'firstValue')
+                }
+                field.autoComplete = {
+                    method: "post",
+                    url: "/api/graphql",
+                    dataType: "json",
+                    replaceData: false,
+                    requestAdaptor:
+                        `const query=\`
+                        {
+                            options:${camelCase(pickerType)}
+                            (status: PUBLISHED, first: 10, 
+                                where: {displayText_contains: \"\${api.body.term}\"}) 
+                            {
+                                label:displayText
+                                value:contentItemId
+                            }
+                        }\`
+                        api.data={query}
+                        return api`,
+                }
+                // field.value = "${ " + fieldDef.graphqlValuePath?.replace('contentItemIds.firstValue', 'firstContentItem.displayText') + " }"
+            }
+            break;
+        case FieldType.UserPickerField:
+            field.name = fieldDef.graphqlValuePath?.replace('userIds.firstValue', 'firstUserProfiles.displayText')
+            field.type = "select"
+            break;
+        case FieldType.DateField:
+            field.type = "input-date"
+            break;
+        case FieldType.DateTimefield:
+        case FieldType.DateTimeOffield:
+            field.type = "input-datetime";
+            break;
+        case FieldType.TimeField:
+            field.type = "input-time"
+            field.timeFormat = "HH:mm:ss"
+            field.inputFormat =  "HH:mm:ss"
+            break;
+        case FieldType.BooleanField:
+            field.type = "switch"
+            break;
+        case FieldType.MediaField:
+            // field.type = "input-image"
+            field.name =  fieldDef.graphqlValuePath + ".urls"
+            break;
+    }
+}
 
 function genFormItems(fields: ContentFieldsMappingDto[]) {
 
@@ -504,6 +514,8 @@ function genFormItems(fields: ContentFieldsMappingDto[]) {
 
                     if (multiple) {
                         item.name = field.graphqlValuePath?.replace('firstValue', 'contentItemIds')
+                    }else{
+                        item.name = field.graphqlValuePath?.replace('contentItemIds.firstValue', 'firstValue')
                     }
                     item.autoComplete = {
                         method: "post",
@@ -528,11 +540,17 @@ function genFormItems(fields: ContentFieldsMappingDto[]) {
                 break;
             case FieldType.DateField:
                 item.type = "input-date"
-            case FieldType.BooleanField:
-                item.type = "switch"
                 break;
             case FieldType.DateTimefield:
+            case FieldType.DateTimeOffield:
                 item.type = "input-datetime";
+                break;
+            case FieldType.TimeField:
+                item.type = "input-time"
+                item.timeFormat = "HH:mm:ss"
+                break;
+            case FieldType.BooleanField:
+                item.type = "switch"
                 break;
 
         }
@@ -576,9 +594,8 @@ export function buildGraphqlFields(fields: ContentFieldsMappingDto[]) {
                     break
                 case FieldType.UserPickerField:
                     tempPart[fieldName] = {
-                        userIds: false,
                         firstValue: false,
-                        userProfiles: { displayText: false },
+                        firstUserProfiles: { displayText: false },
                     }
                     break
                 case FieldType.MediaField:

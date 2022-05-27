@@ -63,7 +63,8 @@
                       },
                       "searchable": true,
                       "submitOnChange": false,
-                      "validations": {},
+                      "validations": {
+                      },
                       "mode": "horizontal",
                       "size": "",
                       "horizontal": {
@@ -141,7 +142,8 @@
           }
         ],
         "type": "dialog",
-        "actions": [],
+        "actions": [
+        ],
         "size": "lg",
         "closeOnOutside": true
       },
