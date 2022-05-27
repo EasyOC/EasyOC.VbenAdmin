@@ -12,7 +12,7 @@ export default defineComponent({
     width: { type: [String, Number], default: '100%' },
     height: { type: [String, Number], default: '100%' },
     original: String,
-    value: String,
+    modelValue: String,
     language: { type: String, default: 'javascript' },
     theme: { type: String, default: 'vs' },
     options: {

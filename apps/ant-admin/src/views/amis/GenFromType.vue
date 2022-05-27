@@ -6,14 +6,14 @@
           <template #extra>
             <a-button size="small">预览</a-button>
           </template>
-          <MonacoEditor :height="500" language="json" :value="amisjsonStr" @editorDidMount="editorDidMounted"
+          <MonacoEditor :height="500" language="json" v-model="amisjsonStr" @editorDidMount="editorDidMounted"
             @change="editorUpdated" />
         </a-card>
 
       </a-col>
       <a-col :span="11" style="margin:5px;">
         <a-card title="字段映射" :bordered="false" size="small">
-          <Amis ref="amisRender" v-model="amisjson" @amisMounted="amisMounted" v-model:amisScope="amisScope"
+          <Amis ref="amisRender" v-model="builderJson" @amisMounted="amisMounted" v-model:amisScope="amisScope"
             @eventTrackerEvent="eventTrackerEvent" />
         </a-card>
       </a-col>
@@ -33,7 +33,7 @@ import buildCrud from './GenCrud'
 
 const amisScope = ref<any>();
 
-const amisjson = ref<any>(schema)
+const builderJson = ref<any>(schema)
 
 const amisjsonStr = ref<string>('')
 
@@ -43,7 +43,7 @@ function editorUpdated(value) {
 onBeforeMount(() => {
   //使用 JSON Handler 之类的工具 获取Json路径
   // set(amisjson.value, "body[0].columns[7].buttons[1].url", globConfig.amisEditorUrl + url);
-  const service = amisjson.value.toolbar[0].dialog.body[0];
+  const service = builderJson.value.toolbar[0].dialog.body[0];
   service.dataProvider = (data, setData) => {
     watchEffect(() => {
       console.log("1111111")
@@ -69,21 +69,22 @@ function editorDidMounted(editor) {
   monacoEditor.value = editor
   monacoEditor.value.getAction(['editor.action.formatDocument'])._run()
 }
-async function eventTrackerEvent(params: TrackerEventArgs) {
-
-
+async function eventTrackerEvent(params: TrackerEventArgs) {  
   if (params?.tracker?.eventData?.id == "ftypeName" && params?.tracker?.eventType == "formItemChange" && params?.tracker?.eventData?.value) {
 
     const typeName = params?.tracker?.eventData?.value;
     amisjsonStr.value = await buildCrud(typeName);
     console.log('eventTrackerEvent:ftypeName ', params);
-    const service = amisjson.value.toolbar[0].dialog.body[0];
-    service.body = JSON.parse(amisjsonStr.value);
+    const service = builderJson.value.toolbar[0].dialog.body[0];
+    service.body = [JSON.parse(amisjsonStr.value)];
     if (amisScope.value) {
-      amisScope.value.relaod()
+      console.log('amisScope.value: ', amisScope.value);
+      amisScope.value.reload()
     }
   }
 }
+
+
 function amisMounted(amisScoped) {
   if (!amisScoped) {
     console.warn("amisMounted：amisScope is not ready", amisScope.value)
