@@ -10,6 +10,21 @@
   "body": [
     {
       "type": "crud",
+      "perPage": 2,
+      "alwaysShowPagination": true,
+      "perPageAvailable": [ 2, 5, 10, 20, 50, 100 ],
+      "footerToolbar": [
+        {
+          "type": "statistics"
+        },
+        {
+          "type":"switch-per-page"
+        },
+        {
+          "type": "pagination",
+          "align": "right"
+        }
+      ],
       "api": {
         "method": "post",
         "url": "/api/graphql",
@@ -120,9 +135,6 @@
           "type": "bulk-actions"
         }
       ],
-      "perPageAvailable": [
-        10
-      ],
       "messages": {
       },
       "primaryField": "contentItemVersionId",
@@ -178,19 +190,6 @@
       "keepItemSelectionOnPageChange": true,
       "labelTpl": "${displayText}",
       "filterTogglable": true,
-      "footerToolbar": [
-        {
-          "type": "statistics"
-        },
-        {
-          "type": "pagination"
-        },
-        {
-          "type": "load-more",
-          "tpl": "内容",
-          "align": "right"
-        }
-      ],
       "filterColumnCount": 3,
       "name": "contentmange",
       "placeholder": "-",

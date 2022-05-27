@@ -11,7 +11,7 @@ export default async function buildCrud(typeName: string) {
     const fields = await apiService.getFields(typeName);
     console.log('fields: ', fields);
     //根据字段构建查询字段
-    const tempGraphqlStr = "{items: " + typeName[0].toLowerCase() + typeName.slice(1) + buildGraphqlFields(fields as any) + "}";
+    const tempGraphqlStr = "query MyQuery2 { data:contentItems( contentType: "+ typeName +" page: ${api.body.page}  pageSize: ${api.body.perPage} ) {  total items { ... on  " + typeName + buildGraphqlFields(fields as any) + "}}}";
 
     // const tempGraphqlStr = ` {
     //     items: ${typeName[0].toLowerCase()+ typeName.slice(1)} ${buildGraphqlFields(fields as any)}

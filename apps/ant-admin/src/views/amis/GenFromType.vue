@@ -39,11 +39,46 @@ async function eventTrackerEvent(params: TrackerEventArgs) {
     // console.log('genCrudString: ', genCrudString);
     // console.log('genCrudString: ', genCrudString);
 
-    console.log('amisScoped.value: ', amisScoped.value);
+    // console.log('typeName: ', typeName);
+    // const fields = await apiService.getFields(typeName);
+    // const form = amisScoped.getComponentByName('page1.schemaForm');
+    //   console.log('typeName: ', formModel);
+    // const tempGraphqlStr = `query queryDepartment {
+    //     ${typeName[0].toLowerCase() + typeName.slice(1)} ${fieldstoGraph(fields as any)}
+    //    }`
+
+
+    // amisjson.value.dialog.body = JSON.parse(tempGraphqlStr)
+    console.log('amisScoped: ', amisScoped);
     const service = amisScoped.value.getComponentByName("page1").props.toolbar.find(o => o.id == "u:4324e9e667ba").dialog;
+    // set(amisjson.value, "body[1].body[2].value", genCrudString)
+
+    var schemaForm = amisScoped.value.getComponentByName("page1.schemaForm");
+    console.log('schemaForm: ', schemaForm);
+    if (schemaForm) {
+      try {
+        schemaForm.setValues({ schema: genCrudString })
+      } catch (e) {
+        console.log('e: ', e);
+      }
+      schemaForm.load();
+    }
 
     console.log('service: ', service);
     service.body = [JSON.parse(genCrudString)]
+
+
+
+    //     const svrPreview = amisScope.getComponentByName('page1.service1');
+    // console.log('svrPreview: ', svrPreview);
+
+    // if (svrPreview) {
+    //   svrPreview.setValue(`{ 
+    //         "type": "tpl",
+    //         "tpl": "内容aaaaaaaaaa",
+    //         "inline": false
+    //       }`)
+    // }
   }
 }
 function amisMounted(amisScope) {
@@ -59,8 +94,8 @@ function amisMounted(amisScope) {
   // }) 
   // 替代 amisScope.updateProps
   // amisjson.value.data = { typeName: "Customer" }
-   
-  const svrPreview = amisScope.getComponentByName('page1.service1');
+
+    const svrPreview = amisScope.getComponentByName('page1.service1');
   // const page1 = amisScope.getComponentByName('page1');
   
   console.log('svrPreview: ', svrPreview);
