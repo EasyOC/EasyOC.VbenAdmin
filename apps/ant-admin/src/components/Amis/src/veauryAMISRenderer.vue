@@ -1,6 +1,6 @@
-<template>
+<template scoped>
   <div className="amis-renderer-box">
-    <AMIS scoped ref="amisRender" :schema="amisjsonSchema" :trackerFn="eventTrackerEvent" :amisMounted="amisMounted" />
+    <AMIS ref="amisRender" :schema="amisjsonSchema" :trackerFn="eventTrackerEvent" :amisMounted="amisMounted" />
   </div>
 
 </template>
@@ -16,9 +16,8 @@ import { applyReactInVue } from 'veaury'
 // 这是一个React组件
 //@ts-ignore
 import AMISRendererComponent from './react_app/Renderer.jsx'
-import { defineComponent, toRaw, onBeforeUnmount, unref, onActivated, ref, watchEffect, } from 'vue'
+import { defineComponent, toRaw,ref} from 'vue'
 import { TrackerEventArgs } from './types'
-import { deepMerge } from '@pkg/utils';
 export default defineComponent({
   name: 'VeauryAMISRenderer',
   components: {

@@ -1,5 +1,8 @@
 {
   "type": "page",
+  "title": "页面生成器",
+  "subTitle": "根据类型生成页面",
+  "name": "page1",
   "regions": [
     "body",
     "toolbar",
@@ -11,81 +14,6 @@
       "title": "",
       "body": [
         {
-          "type": "grid",
-          "columns": [],
-          "id": "u:84b91d3bdecf"
-        },
-        {
-          "type": "grid",
-          "columns": [
-            {
-              "body": [
-                {
-                  "type": "textarea",
-                  "name": "schema",
-                  "id": "u:8d9ea63a69f6",
-                  "value": "{\n          \"type\": \"tpl\",\n          \"tpl\": \"内容aaaaaaaaaa\",\n          \"inline\": false\n        }",
-                  "label": "Schema JSON",
-                  "mode": "normal",
-                  "horizontal": {
-                    "leftFixed": "normal"
-                  },
-                  "required": true,
-                  "minRows": 3,
-                  "maxRows": 20,
-                  "minLength": 5,
-                  "maxLength": 120
-                }
-              ]
-            },
-            {
-              "body": [
-                {
-                  "type": "control",
-                  "label": "生成选项",
-                  "body": [
-                    {
-                      "type": "select",
-                      "name": "typeName",
-                      "id": "ftypeName",
-                      "label": "类型",
-                      "source": {
-                        "method": "get",
-                        "url": "/api/ContentTypeManagement/GetAllTypes",
-                        "data": {
-                          "stereotype": "1",
-                          "pageSize": "-1"
-                        },
-                        "adaptor": "console.log('dropdown options11',response)\r\nvar items = response.data.items.map(x=>{\r\n    return {label:x.displayName,value:x.name}\r\n})\r\nconsole.log('dropdown options',items)\r\nreturn {options:items}",
-                        "replaceData": false,
-                        "responseData": null,
-                        "dataType": "json"
-                      },
-                      "searchable": true,
-                      "submitOnChange": false,
-                      "validations": {
-                      },
-                      "mode": "horizontal",
-                      "size": "",
-                      "horizontal": {
-                        "leftFixed": "normal",
-                        "left": 2,
-                        "right": 10
-                      },
-                      "checkAll": false,
-                      "required": true,
-                      "editable": false
-                    }
-                  ],
-                  "id": "u:732d33b69131",
-                  "mode": "normal"
-                }
-              ]
-            }
-          ],
-          "id": "u:fb5e77ba86b5"
-        },
-        {
           "type": "hidden",
           "name": "contentItemId",
           "id": "u:bd12b2a13634"
@@ -95,21 +23,69 @@
           "name": "contentType",
           "id": "u:a1ae08b567b3",
           "value": "AmisSchema"
+        },
+        {
+          "type": "select",
+          "name": "typeName",
+          "id": "ftypeName",
+          "label": "类型",
+          "source": {
+            "method": "get",
+            "url": "/api/ContentTypeManagement/GetAllTypes",
+            "data": {
+              "stereotype": "1",
+              "pageSize": "-1"
+            },
+            "adaptor": "console.log('dropdown options11',response)\r\nvar items = response.data.items.map(x=>{\r\n    return {label:x.displayName,value:x.name}\r\n})\r\nconsole.log('dropdown options',items)\r\nreturn {options:items}",
+            "replaceData": false,
+            "responseData": null,
+            "dataType": "json"
+          },
+          "searchable": true,
+          "submitOnChange": false,
+          "validations": {
+          },
+          "mode": "horizontal",
+          "size": "",
+          "horizontal": {
+            "leftFixed": "normal",
+            "left": 2,
+            "right": 10
+          },
+          "checkAll": false,
+          "required": true,
+          "editable": false
+        },
+        {
+          "type": "hidden",
+          "name": "schema",
+          "id": "u:8d9ea63a69f6",
+          "label": "Schema JSON",
+          "mode": "normal",
+          "value": "{\n          \"type\": \"tpl\",\n          \"tpl\": \"内容aaaaaaaaaa\",\n          \"inline\": false\n        }",
+          "horizontal": {
+            "leftFixed": "normal"
+          },
+          "required": true,
+          "minRows": 3,
+          "maxRows": 20,
+          "minLength": 5,
+          "maxLength": 120
         }
       ],
       "id": "u:5bd9921a8c0a",
+      "submitOnChange": false,
       "checkAll": false,
-      "mode": "horizontal",
-      "affixFooter": false,
+      "name": "schemaForm",
       "wrapWithPanel": false,
+      "mode": "horizontal",
       "horizontal": {
         "leftFixed": "normal",
         "left": 3,
         "right": 9
       },
+      "affixFooter": false,
       "strictMode": true,
-      "submitOnChange": false,
-      "name": "schemaForm",
       "debug": false,
       "canAccessSuperData": false,
       "placeholder": "-"
@@ -119,9 +95,7 @@
     "fontWeight": "normal",
     "backgroundColor": "",
     "fontSize": "16px"
-  },
-  "title": "页面生成器",
-  "subTitle": "根据类型生成页面",
+  }, 
   "toolbar": [
     {
       "type": "button",
@@ -131,20 +105,21 @@
         "title": "系统提示",
         "body": [
           {
-            "type": "service", 
+            "type": "service",
             "id": "u:2f42de2f5de0",
             "name": "svrPreview",
             "closeOnEsc": false,
             "closeOnOutside": false,
             "showCloseButton": true,
-            "messages": {},
+            "messages": {
+            },
             "dataProvider": ""
           }
         ],
         "type": "dialog",
         "actions": [
         ],
-        "size": "lg",
+        "size": "xl",
         "closeOnOutside": true
       },
       "id": "u:4324e9e667ba"
@@ -159,6 +134,6 @@
       "name": "btnSubmit"
     }
   ],
-  "name": "page1",
-  "messages": {}
+  "messages": {
+  }
 }

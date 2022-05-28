@@ -237,13 +237,13 @@ function genColumns(fields: ContentFieldsMappingDto[]) {
         },
         {
             "type": "status",
-            "label": "latest",
+            "label": "最新版",
             "name": "latest"
         },
         {
             "type": "status",
             "name": "published",
-            "label": "published",
+            "label": "发布状态",
             "placeholder": "-"
         },
         {

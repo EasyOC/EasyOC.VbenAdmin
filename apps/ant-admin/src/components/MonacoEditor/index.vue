@@ -8,11 +8,14 @@ import * as monaco from 'monaco-editor'
 export default defineComponent({
   name: 'MonacoEditor',
   props: {
+    modelValue: {
+      type: String,
+      require: true
+    },
     diffEditor: { type: Boolean, default: false },
     width: { type: [String, Number], default: '100%' },
     height: { type: [String, Number], default: '100%' },
     original: String,
-    modelValue: String,
     language: { type: String, default: 'javascript' },
     theme: { type: String, default: 'vs' },
     options: {

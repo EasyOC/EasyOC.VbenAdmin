@@ -58,7 +58,7 @@ export async function configVitePlugins(
     VitePluginCertificate({
       source: 'coding',
     }),
-    monacoEditorPlugin()
+    // monacoEditorPlugin()
 
   ]
 
