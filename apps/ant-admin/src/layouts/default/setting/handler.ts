@@ -145,6 +145,8 @@ export function handler(
       updateColorWeak(value)
       return { colorWeak: value }
 
+    case HandlerEnum.AMIS_RENDER_MODE:
+      return { amisRenderMode: value  }
     case HandlerEnum.SHOW_LOGO:
       return { showLogo: value }
 

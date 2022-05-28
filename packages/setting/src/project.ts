@@ -23,6 +23,7 @@ export const projectSetting: ProjectConfig = {
   // Whether to show the configuration button
   showSettingButton: true,
 
+  amisRenderMode: 'sdk',
   // Whether to show the theme switch button
   showDarkModeToggle: true,
 

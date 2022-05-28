@@ -39,9 +39,9 @@ export const useAppStore = defineStore({
     pageLoading: false,
     projectConfig: {} as any,
     beforeMiniInfo: {},
-    typeFieldCache: {},
+    typeFieldCache: {}, 
   }),
-  getters: {
+  getters: { 
     getPageLoading(): boolean {
       return this.pageLoading
     },
@@ -71,6 +71,7 @@ export const useAppStore = defineStore({
     },
   },
   actions: {
+ 
     updateTypeFieldCache(typeName: string, fields: ContentFieldsMapping[]) {
       this.typeFieldCache[typeName] = fields
     },

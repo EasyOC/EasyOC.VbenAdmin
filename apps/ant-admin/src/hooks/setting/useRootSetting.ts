@@ -28,6 +28,9 @@ export function useRootSetting() {
   const getPermissionMode = computed(
     () => appStore.getProjectConfig.permissionMode,
   )
+  const getSettingAmisRenderMode = computed(
+    () => appStore.getProjectConfig.amisRenderMode,
+  )
 
   const getShowLogo = computed(() => appStore.getProjectConfig.showLogo)
 
@@ -93,6 +96,7 @@ export function useRootSetting() {
     getCanEmbedIFramePage,
     getPermissionMode,
     getShowLogo,
+    getSettingAmisRenderMode,
     getShowBreadCrumb,
     getShowBreadCrumbIcon,
     getUseOpenBackTop,

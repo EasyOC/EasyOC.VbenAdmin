@@ -30,7 +30,7 @@ import { isString } from "@pkg/utils";
   const emit = defineEmits(['change', 'update:value', 'format-error']);
 
   const getValue = computed(() => {
-    const { value, mode, autoFormat } = props;
+    const { value: value, mode, autoFormat } = props;
     if (!autoFormat || mode !== MODE.JSON) {
       return value as string;
     }

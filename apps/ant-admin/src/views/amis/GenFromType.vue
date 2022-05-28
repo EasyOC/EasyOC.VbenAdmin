@@ -15,14 +15,14 @@
       </a-col>
       <a-col :span="11" style="margin:5px;">
         <Amis ref="amisRender" v-model="builderJson" @amisMounted="amisMounted" v-model:amisScope="amisScope"
-            @eventTrackerEvent="eventTrackerEvent" />
+          @eventTrackerEvent="eventTrackerEvent" />
       </a-col>
     </a-row>
 
   </div>
 </template>
 <script setup lang="ts">
-import { onBeforeMount, onMounted, ref, watchEffect } from 'vue'
+import { onBeforeMount, onMounted, ref, watchEffect, onActivated, computed } from 'vue'
 import { Amis } from '@/components/Amis'
 import schema from './GenFromType.json'
 import { CodeEditor } from '@/components/CodeEditor'
@@ -35,26 +35,32 @@ const amisScope = ref<any>();
 const builderJson = ref<any>(schema)
 
 const builderJsonStr = ref<string>('')
-const service = builderJson.value.toolbar[0].dialog.body[0]
+const preview = builderJson.value.toolbar[0].dialog.body[0]
 
 
 onBeforeMount(() => {
 })
 onMounted(() => {
-})
 
+})
 watchEffect(() => {
   if (builderJsonStr.value) {
-    service.body = [JSON.parse(builderJsonStr.value)];
+    try {
+      preview.body = JSON.parse(builderJsonStr.value);
+    } catch (error) {
+      console.error(error)
+    }
   }
 })
 
 async function eventTrackerEvent(params: TrackerEventArgs) {
-  if (params?.tracker?.eventData?.id == "ftypeName" && params?.tracker?.eventType == "formItemChange" && params?.tracker?.eventData?.value) {
+  if (params?.tracker?.eventData?.id == "ftypeName" &&
+    params?.tracker?.eventType == "formItemChange" &&
+    params?.tracker?.eventData?.value) {
 
+    console.log('eventTrackerEvent:ftypeName ', params);
     const typeName = params?.tracker?.eventData?.value;
     builderJsonStr.value = await buildCrud(typeName);
-    console.log('eventTrackerEvent:ftypeName ', params);
     //试试watchEffect
     // service.body = [JSON.parse(builderJsonStr.value)];
     // if (amisScope.value) {

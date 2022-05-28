@@ -50,6 +50,7 @@ export enum HandlerEnum {
   SHOW_BREADCRUMB_ICON,
   GRAY_MODE,
   COLOR_WEAK,
+  AMIS_RENDER_MODE,
   SHOW_LOGO,
   SHOW_FOOTER,
 
@@ -57,7 +58,18 @@ export enum HandlerEnum {
   OPEN_PROGRESS,
   OPEN_PAGE_LOADING,
   OPEN_ROUTE_TRANSITION,
+
 }
+export const amisRenderModeOptions = [
+  {
+    value: 'sdk',
+    label: '使用SDK渲染',
+  },
+  {
+    value: 'react',
+    label: '使用react渲染',
+  },
+]
 
 export const contentModeOptions = [
   {
