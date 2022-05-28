@@ -1,4 +1,4 @@
-import { defineComponent, computed, unref } from 'vue'
+import { defineComponent, computed, unref, ref } from 'vue'
 import { BasicDrawer } from '@/components/drawer/index'
 import { Divider } from 'ant-design-vue'
 import {
@@ -24,6 +24,7 @@ import { baseHandler } from './handler'
 import {
   HandlerEnum,
   contentModeOptions,
+  amisRenderModeOptions,
   topMenuAlignOptions,
   getMenuTriggerOptions,
   menuTypeList,
@@ -48,6 +49,7 @@ export default defineComponent({
       getShowFooter,
       getShowBreadCrumb,
       getShowBreadCrumbIcon,
+      getSettingAmisRenderMode,
       getShowLogo,
       getFullContent,
       getColorWeak,
@@ -151,6 +153,7 @@ export default defineComponent({
       if (!some) {
         triggerDef = TriggerEnum.FOOTER
       }
+      const isDev = process.env.NODE_ENV !== 'production'
 
       return (
         <>
@@ -277,10 +280,17 @@ export default defineComponent({
             defaultValue={unref(getMenuWidth)}
             formatter={(value: string) => `${parseInt(value)}px`}
           />
+
+          <SelectItem
+           
+            title={t('低代码渲染方式')}
+            event={HandlerEnum.AMIS_RENDER_MODE}
+            def={unref(getSettingAmisRenderMode)}
+            options={amisRenderModeOptions}
+          />
         </>
       )
     }
-
     function renderContent() {
       return (
         <>
@@ -336,6 +346,7 @@ export default defineComponent({
             event={HandlerEnum.HEADER_SHOW}
             def={unref(getShowHeader)}
           />
+
           <SwitchItem
             title="Logo"
             event={HandlerEnum.SHOW_LOGO}
