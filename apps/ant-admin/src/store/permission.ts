@@ -46,7 +46,7 @@ function transformOcMenuToMenu(menu: any[]): RouteRecordItem[] {
   if (menu && menu.length > 0) {
     menuList = menu.filter(x => x.menuType != "2" && x.status == '1')
       .map((item: any) => {
-        const { routePath, schemaId, displayText, orderNo, component,keepAlive, show, meta, icon, children } = item
+        const { routePath, schemaId, displayText, orderNo, component, keepAlive, show, meta, icon, children } = item
         let metaProp: any = {}
         if (meta) {
           metaProp = JSON.parse(meta)
@@ -56,10 +56,11 @@ function transformOcMenuToMenu(menu: any[]): RouteRecordItem[] {
           orderNo: orderNo,
           name: displayText,
           component,
-          keepAlive: keepAlive,
+          // keepAlive: keepAlive,
           meta: {
             title: displayText,
             schemaId,
+            ignoreKeepAlive: !keepAlive,
             hideMenu: show == '0',
             icon,
             ...metaProp

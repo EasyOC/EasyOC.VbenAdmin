@@ -58,7 +58,7 @@ const sysRoute = {
       orderNo: 9001,
       meta: {
         title: 'routes.demo.system.account',
-        ignoreKeepAlive: true,
+        // ignoreKeepAlive: false,
       },
 
       component: '/system/account/index',
@@ -69,7 +69,6 @@ const sysRoute = {
       meta: {
         hideMenu: true,
         title: 'routes.demo.system.account_detail',
-        ignoreKeepAlive: true,
         showMenu: false,
         currentActiveMenu: '/system/account',
       },
@@ -82,7 +81,6 @@ const sysRoute = {
       name: 'RoleManagement',
       meta: {
         title: 'routes.demo.system.role',
-        ignoreKeepAlive: true,
       },
       component: '/system/role/index',
     },
@@ -92,7 +90,6 @@ const sysRoute = {
       name: 'MenuManagement',
       meta: {
         title: 'routes.demo.system.menu',
-        ignoreKeepAlive: true,
       },
       component: '/develop/menu/index',
     },
@@ -102,7 +99,6 @@ const sysRoute = {
       name: 'DeptManagement',
       meta: {
         title: 'routes.demo.system.dept',
-        ignoreKeepAlive: true,
       },
       component: '/system/dept/index',
     },
@@ -113,7 +109,6 @@ const sysRoute = {
       name: 'ChangePassword',
       meta: {
         title: 'routes.demo.system.password',
-        ignoreKeepAlive: true,
       },
       component: '/system/password/index',
     },

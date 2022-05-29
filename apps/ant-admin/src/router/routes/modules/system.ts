@@ -27,7 +27,7 @@ const system: RouteRecordItem = {
       meta: {
         hideMenu: true,
         title: t('routes.default.system.account_detail'),
-        ignoreKeepAlive: true,
+        ignoreKeepAlive: false,
         showMenu: false,
         currentActiveMenu: '/system/account',
       },
@@ -38,7 +38,7 @@ const system: RouteRecordItem = {
       name: 'RoleManagement',
       meta: {
         title: t('routes.default.system.role'),
-        ignoreKeepAlive: true,
+        ignoreKeepAlive: false,
       },
       component: () => import('@/views/system/role/index.vue'),
     },
@@ -47,7 +47,7 @@ const system: RouteRecordItem = {
       name: 'DeptManagement',
       meta: {
         title: t('routes.default.system.dept'),
-        ignoreKeepAlive: true,
+        ignoreKeepAlive: false,
       },
       component: () => import('@/views/system/dept/index.vue'),
     },

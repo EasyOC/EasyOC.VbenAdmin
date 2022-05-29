@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, unref } from 'vue'
+import { computed, ref, unref, KeepAlive } from 'vue'
 import { useRootSetting } from '@/hooks/setting/useRootSetting'
 import { useMultipleTabSetting } from '@/hooks/setting/useMultipleTabSetting'
 import { useMultipleTabStore } from '@/store/multiple-tab'

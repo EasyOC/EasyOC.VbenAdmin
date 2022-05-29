@@ -21,7 +21,7 @@
 
   </div>
 </template>
-<script setup lang="ts">
+<script setup lang="ts" name="页面生成器" >
 import { onBeforeMount, onMounted, ref, watchEffect, onActivated, computed } from 'vue'
 import { Amis } from '@/components/Amis'
 import schema from './GenFromType.json'
