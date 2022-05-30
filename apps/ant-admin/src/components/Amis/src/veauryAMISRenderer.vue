@@ -23,7 +23,7 @@ export default defineComponent({
   components: {
     // 使用高阶组件 'applyReactInVue'
     AMIS: applyReactInVue(AMISRendererComponent)
-    // AMIS: lazyReactInVue(() => import('./react/Renderer.tsx'))
+    // AMIS: lazyReactInVue(() => import('./react_app/Renderer.jsx'))
 
   },
   props: {

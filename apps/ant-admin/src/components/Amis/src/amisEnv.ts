@@ -3,6 +3,76 @@ import { ocApi } from '@pkg/request'
 // import { useGo } from '@/hooks/web/usePage'
 import { useGo } from '@/hooks/web/usePage'
 import { getGlobalConfig } from '@/internal'
+
+
+// enum filterFieldOperator {
+//   equal = 'equal',
+//   not_equal = 'not_equal',
+//   less = 'less',
+//   less_or_equal = 'less_or_equal',
+//   greater = 'greater',
+//   greater_or_equal = 'greater_or_equal',
+//   between = 'between',
+//   not_between = 'not_between',
+//   is_empty = 'is_empty',
+//   is_not_empty = 'is_not_empty'
+//   // 'equal', 'not_equal', 'less', 'less_or_equal', 'greater', 'greater_or_equal', 'between', 'not_between', 'is_empty', 'is_not_empty' 
+
+// }
+
+//@ts-ignore
+window.amisExt = {
+  convertCondition: function (condition) {
+
+    console.log(condition, "convertCondition")
+    let filterString = "";
+    if(condition && condition.children && condition.children.length > 0){
+      const children = condition.children;
+      if(condition.children.length == 1){
+        const child = children[0];
+        if(child.left&&child.op&&child.right){
+          if(child.left&&child.left.field){
+            const filter = { logic:condition.conjunction,field:child.left.field,operator:child.op,value:child.right };
+            console.log('filter: ', filter);
+            console.log('filter: ', JSON.stringify(filter));
+            let filterStringJoin = '';
+            for(const item in filter) { 
+              if(filterStringJoin) {
+                filterStringJoin = filterStringJoin+"," 
+                } 
+                if(item === "field" || item === "value")
+                { 
+                  filterStringJoin = filterStringJoin + item + ':"' + filter[item]+'"' 
+                } else { 
+                  filterStringJoin = filterStringJoin + item + ':' + filter[item]
+                }
+            }
+            filterString = "{" + filterStringJoin + "}";
+            //return JSON.stringify(filter)
+          }
+        }
+      } else {
+        
+
+        //return JSON.stringify(condition)
+      }
+    }
+
+    if(filterString) {
+      return filterString;
+
+    } else {
+      return JSON.stringify({})
+    }
+    
+  }
+
+}
+
+
+
+
+
 export default function getEnv() {
   const go = useGo()
 

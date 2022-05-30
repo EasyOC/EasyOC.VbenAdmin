@@ -1,6 +1,13 @@
 import axios, { AxiosRequestConfig, AxiosInstance } from 'axios';
 import authService, { globConfig } from './../route/auth/authService';
-
+//@ts-ignore
+//@ts-ignore
+window.amisExt = {
+    convertCondition: function (condition) {
+      console.log(condition, "convertCondition")
+      return JSON.stringify(condition)
+    } 
+  }
 export async function apiRequest(config: AxiosRequestConfig | boolean | any) {
     if (!config) {
         return { data: null };

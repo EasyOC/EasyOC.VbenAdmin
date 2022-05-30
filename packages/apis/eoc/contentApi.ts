@@ -127,8 +127,7 @@ export enum FieldType {
   BooleanField = 'BooleanField',
   DateField = 'DateField',
   TimeField = 'TimeField',
-  DateTimefield = 'Date&Timefield',
-  DateTimeOffield = 'DateTimeField',
+  DateTimeField = 'DateTimeField',
   NumericField = 'NumericField',
   ContentPickerField = 'ContentPickerField',
   UserPickerField = 'UserPickerField',
@@ -136,7 +135,7 @@ export enum FieldType {
   MediaField = 'MediaField',
   TitlePart = 'TitlePart',
   CustomField = 'CustomField',
-  GeoPointField = 'GeoPointField',
+  GeoPointField = 'GeoPointField'
 }
 
 export function getValuePath(fieldName: FieldType | string) {
@@ -148,7 +147,7 @@ export function getValuePath(fieldName: FieldType | string) {
     case FieldType.BooleanField:
     case FieldType.DateField:
     case FieldType.TimeField:
-    case FieldType.DateTimefield:
+    case FieldType.DateTimeField:
     case FieldType.NumericField:
       valuePath = 'Value'
       break
