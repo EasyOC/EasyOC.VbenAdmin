@@ -32,9 +32,11 @@
           "&": "$$"
         },
         "dataType": "json",
-        "requestAdaptor": ""
+        "requestAdaptor": "",
+        "adaptor": "const data = response?.data?.data?response.data:{items:[],total:0};\r\nconsole.log(\"data111111\",data);\r\nreturn data"
       },
       "columns": [],
+      "placeholder": "未查询到数据",
       "itemActions": [
       ],
       "features": [
@@ -186,10 +188,17 @@
             "value": "PUBLISHEDORLATEST",
             "searchable": false,
             "size": "md"
+          },
+          {
+            "type": "condition-builder",
+            "label": "条件组件",
+            "name": "conditions",
+            "searchable": true,
+            "fields":[]
           }
         ],
         "checkAll": false,
-        "submitOnChange": true,
+        "submitOnChange": false,
         "perPageAvailable": [
           10
         ],
@@ -200,8 +209,7 @@
       "labelTpl": "${displayText}",
       "filterTogglable": true,
       "filterColumnCount": 3,
-      "name": "contentmange",
-      "placeholder": "-",
+      "name": "contentMange",
       "syncLocation": false,
       "defaultParams": {
       }

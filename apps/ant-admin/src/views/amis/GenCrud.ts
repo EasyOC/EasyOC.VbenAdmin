@@ -25,17 +25,24 @@ export default async function buildCrud(typeName: string) {
     // console.log('requestAdaptor: ', requestAdaptor);
 
 
+    const filterFields:any = []
 
-    crud.body[0].columns = genColumns(fields);
+
+    crud.body[0].columns = genColumns(fields,filterFields);
     crud.body[0].api.requestAdaptor = requestAdaptor
     //@ts-ignore
     crud.body[0].headerToolbar[1].dialog.body[0].body = genFormItems(fields);
+
+    const condition = crud.body[0].filter.body.find(o=>o.name=="conditions")
+    if(condition) {
+        condition.fields = filterFields;
+    }
 
     console.log('crud: ', crud);
     return JSON.stringify(crud,null,2);
 }
 
-function genColumns(fields: ContentFieldsMappingDto[]) {
+function genColumns(fields: ContentFieldsMappingDto[],filterFields:any[]) {
     const seebodyColumns: any = [];
     const editFormBodyColumns: any = [];
 
@@ -316,6 +323,14 @@ function genColumns(fields: ContentFieldsMappingDto[]) {
         seteditColumnType(o, editItem)
         editFormBodyColumns.push(editItem)
 
+        const filterField = {
+            "label": o.displayName,
+            "name": o.graphqlValuePath,
+            "type": "text"
+        }
+        setFilterColumnType(o, filterField,filterFields)
+        // filterFields.push(filterField)
+
     })
 
     // const formItems = genFormItems(fields);
@@ -377,6 +392,45 @@ function setColumnType(fieldDef: ContentFieldsMappingDto, field: any) {
             break;
         default:
             field.type = "text";
+            break;
+    }
+}
+
+function setFilterColumnType(fieldDef: ContentFieldsMappingDto, field: any, filterFields:any[]){
+    switch (fieldDef.fieldType) {
+        case FieldType.TextField:
+            filterFields.push(field)
+            break;
+        case FieldType.BooleanField:
+            field.type = "boolean";
+            filterFields.push(field)
+            break;
+        case FieldType.DateField:
+        case FieldType.DateTimefield:
+        case FieldType.DateTimeOffield:
+            field.type = "date";
+            filterFields.push(field)
+            break;
+        case FieldType.TimeField:
+            field.type = "time";
+            filterFields.push(field)
+            break;
+        case FieldType.NumericField:
+            field.type = "number";
+            filterFields.push(field)
+            break;
+        case FieldType.ContentPickerField:
+            field.name = fieldDef.graphqlValuePath?.replace('contentItemIds.firstValue', 'firstContentItem.displayText')
+            field.type = "select"
+            filterFields.push(field)
+            break;
+        case FieldType.UserPickerField:
+            field.name = fieldDef.graphqlValuePath?.replace('userIds.firstValue', 'firstUserProfiles.displayText')
+            field.type = "select"
+            filterFields.push(field)
+            break;
+        case FieldType.MediaField:
+        default:
             break;
     }
 }
