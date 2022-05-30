@@ -11,7 +11,7 @@ export default async function buildCrud(typeName: string) {
     const fields = await apiService.getFields(typeName);
     console.log('fields: ', fields);
     //根据字段构建查询字段
-    const tempGraphqlStr = " { data:contentItems( contentType: " + typeName + " page: ${api.body.page}  pageSize: ${api.body.perPage} orderBy: {field: \"${api.body.orderBy?api.body.orderBy:''}\", direction: ${api.body.orderDir?api.body.orderDir.toUpperCase():'DESC' } } dynamicFilter: {} ) {  total items { ... on  " + typeName + buildGraphqlFields(fields as any) + "}}}";
+    const tempGraphqlStr = " { data:contentItems( contentType: " + typeName + " page: ${api.body.page}  pageSize: ${api.body.perPage} orderBy: {field: \"${api.body.orderBy?api.body.orderBy:''}\", direction: ${api.body.orderDir?api.body.orderDir.toUpperCase():'DESC' } } dynamicFilter: ${amisExt.convertCondition(api.body.conditions)} ) {  total items { ... on  " + typeName + buildGraphqlFields(fields as any) + "}}}";
 
     // const tempGraphqlStr = ` {
     //     items: ${typeName[0].toLowerCase()+ typeName.slice(1)} ${buildGraphqlFields(fields as any)}
@@ -20,7 +20,7 @@ export default async function buildCrud(typeName: string) {
 
 
 
-    const requestAdaptor = "\r\nconsole.log(\"api.发送适配器\",api)\r\nconst filterParams=[`status: ${api.data.status}`]\r\nif(api.data.displayText){\r\n     filterParams.push(`where: {displayText_contains: \"${api.data.displayText}\"}`)\r\n}\r\nif(api.data.orderBy){\r\n    filterParams.push(`orderBy:{${api.body.orderBy}:${api.body.orderDir.toUpperCase()}}`)\r\n}\r\nconsole.log(\"filterParams.join(',')\",filterParams.join(','))\r\nconst  query=`\r\n "
+    const requestAdaptor = "\r\nconsole.log(\"api.发送适配器\",api)\r\n console.log(\"哈哈哈哈\", amisExt.convertCondition(api.body.conditions));\r\nconst filterParams=[`status: ${api.data.status}`]\r\nif(api.data.displayText){\r\n     filterParams.push(`where: {displayText_contains: \"${api.data.displayText}\"}`)\r\n}\r\nif(api.data.orderBy){\r\n    filterParams.push(`orderBy:{${api.body.orderBy}:${api.body.orderDir.toUpperCase()}}`)\r\n}\r\nconsole.log(\"filterParams.join(',')\",filterParams.join(','))\r\nconst  query=`\r\n "
         + tempGraphqlStr + "` \r\napi.data={query}\r\nconsole.log(\"api.发送适配器2\",api)\r\nreturn api"
     // console.log('requestAdaptor: ', requestAdaptor);
 
@@ -343,8 +343,7 @@ function genColumns(fields: ContentFieldsMappingDto[],filterFields:any[]) {
 function setSeeColumnType(fieldDef: ContentFieldsMappingDto, field: any) {
     field.type = "text";
     switch (fieldDef.fieldType) {
-        case FieldType.DateTimefield:
-        case FieldType.DateTimeOffield:
+        case FieldType.DateTimeField:
             field.content = "${createdUtc | toDate |date:YYYY-MM-DD HH\\:mm\\:ss }"
             break;
         case FieldType.ContentPickerField:
@@ -367,8 +366,7 @@ function setColumnType(fieldDef: ContentFieldsMappingDto, field: any) {
         case FieldType.TextField:
             break;
         case FieldType.DateField:
-        case FieldType.DateTimefield:
-        case FieldType.DateTimeOffield:
+        case FieldType.DateTimeField:
             field.type = "date";
             field.placeholder = "-"
             break;
@@ -399,34 +397,40 @@ function setColumnType(fieldDef: ContentFieldsMappingDto, field: any) {
 function setFilterColumnType(fieldDef: ContentFieldsMappingDto, field: any, filterFields:any[]){
     switch (fieldDef.fieldType) {
         case FieldType.TextField:
+            field.operators = genFilterOptions(fieldDef.fieldType)
             filterFields.push(field)
             break;
         case FieldType.BooleanField:
             field.type = "boolean";
+            field.operators = genFilterOptions(fieldDef.fieldType)
             filterFields.push(field)
             break;
         case FieldType.DateField:
-        case FieldType.DateTimefield:
-        case FieldType.DateTimeOffield:
+        case FieldType.DateTimeField:
             field.type = "date";
+            field.operators = genFilterOptions(fieldDef.fieldType)
             filterFields.push(field)
             break;
         case FieldType.TimeField:
             field.type = "time";
+            field.operators = genFilterOptions(fieldDef.fieldType)
             filterFields.push(field)
             break;
         case FieldType.NumericField:
             field.type = "number";
+            field.operators = genFilterOptions(fieldDef.fieldType)
             filterFields.push(field)
             break;
         case FieldType.ContentPickerField:
             field.name = fieldDef.graphqlValuePath?.replace('contentItemIds.firstValue', 'firstContentItem.displayText')
             field.type = "select"
+            field.operators = genFilterOptions(fieldDef.fieldType)
             filterFields.push(field)
             break;
         case FieldType.UserPickerField:
             field.name = fieldDef.graphqlValuePath?.replace('userIds.firstValue', 'firstUserProfiles.displayText')
             field.type = "select"
+            field.operators = genFilterOptions(fieldDef.fieldType)
             filterFields.push(field)
             break;
         case FieldType.MediaField:
@@ -502,8 +506,7 @@ function seteditColumnType(fieldDef: ContentFieldsMappingDto, field: any) {
         case FieldType.DateField:
             field.type = "input-date"
             break;
-        case FieldType.DateTimefield:
-        case FieldType.DateTimeOffield:
+        case FieldType.DateTimeField:
             field.type = "input-datetime";
             break;
         case FieldType.TimeField:
@@ -520,6 +523,8 @@ function seteditColumnType(fieldDef: ContentFieldsMappingDto, field: any) {
             break;
     }
 }
+
+
 
 function genFormItems(fields: ContentFieldsMappingDto[]) {
 
@@ -595,8 +600,7 @@ function genFormItems(fields: ContentFieldsMappingDto[]) {
             case FieldType.DateField:
                 item.type = "input-date"
                 break;
-            case FieldType.DateTimefield:
-            case FieldType.DateTimeOffield:
+            case FieldType.DateTimeField:
                 item.type = "input-datetime";
                 break;
             case FieldType.TimeField:
@@ -672,3 +676,68 @@ export function buildGraphqlFields(fields: ContentFieldsMappingDto[]) {
     )
     return tempGraphqlStr
 }
+
+
+function genFilterOptions(fieldType:FieldType) {
+    const defaultOptions = [
+        {label:"等于",value:"EQUALS"},
+        {label:"不等于",value:"NOT_EQUAL"},
+    ]
+
+    // {label:"模糊匹配",value:"CONTAINS"},
+    // {label:"匹配开头",value:"STARTS_WITH"},
+    // {label:"匹配结尾",value:"ENDS_WITH"},
+    // {label:"不匹配",value:"NOT_CONTAINS"},
+    // {label:"",value:"NOT_STARTS_WITH"},
+    // {label:"",value:"GREATER_THAN_OR_EQUAL"},
+    // {label:"",value:"NOT_ENDS_WITH"},
+    // {label:"",value:"GREATER_THAN"},
+    // {label:"",value:"LESS_THAN"},
+    // {label:"",value:"LESS_THAN_OR_EQUAL"},
+    // {label:"",value:"RANGE"},
+    // {label:"",value:"DATE_RANGE"},
+    // {label:"",value:"ANY"},
+    // {label:"",value:"NOT_ANY"},
+    // {label:"",value:"CUSTOM"},
+    switch (fieldType) {
+        case FieldType.TextField:
+            defaultOptions.push({label: "包含",value: "CONTAINS"});
+            defaultOptions.push({label: "不包含",value: "NOT_CONTAINS"});
+            defaultOptions.push({label: "开头",value: "STARTS_WITH"});
+            defaultOptions.push({label: "结尾",value: "ENDS_WITH"});
+            defaultOptions.push({label: "不开头",value: "NOT_STARTS_WITH"});
+            defaultOptions.push({label: "不结尾",value: "NOT_ENDS_WITH"});
+            break;
+        case FieldType.NumericField:
+            defaultOptions.push({label: "大于等于",value: "GREATER_THAN_OR_EQUAL"});
+            defaultOptions.push({label: "小于等于",value: "LESS_THAN_OR_EQUAL"});
+            defaultOptions.push({label: "大于",value: "GREATER_THAN"});
+            defaultOptions.push({label: "小于",value: "LESS_THAN"});
+            defaultOptions.push({label: "范围",value: "RANGE",});
+            break;
+    }
+
+    return defaultOptions;
+}
+
+// enum FieldType2121 {
+//     CONTAINS,
+//     STARTS_WITH,
+//     ENDS_WITH,
+//     NOT_CONTAINS,
+//     NOT_STARTS_WITH,
+//     NOT_ENDS_WITH,
+//     EQUAL,
+//     EQUALS,
+//     EQ,
+//     NOT_EQUAL,
+//     GREATER_THAN,
+//     GREATER_THAN_OR_EQUAL,
+//     LESS_THAN,
+//     LESS_THAN_OR_EQUAL,
+//     RANGE,
+//     DATE_RANGE,
+//     ANY,
+//     NOT_ANY,
+//     CUSTOM
+// }
