@@ -42,7 +42,7 @@ function genColumns(fields: ContentFieldsMappingDto[]) {
     const defaultColumns: any = [
         {
             "type": "operation",
-            "label": "操作",
+            "label": "操作111",
             "buttons": [
                 {
                     "type": "button",

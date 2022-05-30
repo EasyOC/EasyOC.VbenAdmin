@@ -21,7 +21,7 @@
 
   </div>
 </template>
-<script setup lang="ts" name="页面生成器" >
+<script setup lang="ts" name="页面生成器">
 import { onBeforeMount, onMounted, ref, watchEffect, onActivated, computed } from 'vue'
 import { Amis } from '@/components/Amis'
 import schema from './GenFromType.json'
@@ -35,7 +35,7 @@ const amisScope = ref<any>();
 const builderJson = ref<any>(schema)
 
 const builderJsonStr = ref<string>('')
-const preview = builderJson.value.toolbar[0].dialog.body[0]
+const previewService = builderJson.value.toolbar[0].dialog.body[0]
 
 
 onBeforeMount(() => {
@@ -46,7 +46,7 @@ onMounted(() => {
 watchEffect(() => {
   if (builderJsonStr.value) {
     try {
-      preview.body = JSON.parse(builderJsonStr.value);
+      previewService.body = JSON.parse(builderJsonStr.value);
     } catch (error) {
       console.error(error)
     }
