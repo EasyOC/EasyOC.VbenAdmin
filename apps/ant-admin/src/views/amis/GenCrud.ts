@@ -25,28 +25,29 @@ export default async function buildCrud(typeName: string) {
     // console.log('requestAdaptor: ', requestAdaptor);
 
 
-    const filterFields:any = []
+    const filterFields: any = []
 
 
-    crud.body[0].columns = genColumns(fields,filterFields);
+    crud.body[0].columns = genColumns(fields, filterFields);
     crud.body[0].api.requestAdaptor = requestAdaptor
     //@ts-ignore
     crud.body[0].headerToolbar[1].dialog.body[0].body = genFormItems(fields);
 
-    const condition = crud.body[0].filter.body.find(o=>o.name=="conditions")
-    if(condition) {
+    const condition = crud.body[0].filter.body.find(o => o.name == "conditions") as any
+    if (condition) {
         condition.fields = filterFields;
     }
 
     console.log('crud: ', crud);
-    return JSON.stringify(crud,null,2);
+    return JSON.stringify(crud, null, 2);
 }
 
-function genColumns(fields: ContentFieldsMappingDto[],filterFields:any[]) {
-    const seebodyColumns: any = [];
+const ColExceptFields = ["GeoPointField", "MediaField"];
+function genColumns(fields: ContentFieldsMappingDto[], filterFields: any[]) {
+    const viewDetailsBodyFields: any = [];
     const editFormBodyColumns: any = [];
 
-    const defaultColumns: any = [
+    const defaultSchema: any = [
         {
             "type": "operation",
             "label": "操作111",
@@ -114,7 +115,7 @@ function genColumns(fields: ContentFieldsMappingDto[],filterFields:any[]) {
                                 "contentStyle": {
                                     "textAlign": "left"
                                 },
-                                "items": seebodyColumns
+                                "items": viewDetailsBodyFields
                             }
                         ],
                         "type": "dialog",
@@ -283,17 +284,14 @@ function genColumns(fields: ContentFieldsMappingDto[],filterFields:any[]) {
         }
     ]
 
-    const ExceptFields =
-        [
-            "GeoPointField", "MediaField"
-        ];
+
     fields.filter(x => !x.isBasic).forEach(o => {
         const field: any = {
             name: o.graphqlValuePath,
             label: o.displayName,
         }
 
-        if (!ExceptFields.includes(o.fieldType || '') && o.isSelf) {
+        if (!ColExceptFields.includes(o.fieldType || '') && o.isSelf) {
             field.sortable = true;
         }
 
@@ -306,9 +304,9 @@ function genColumns(fields: ContentFieldsMappingDto[],filterFields:any[]) {
         }
 
         setColumnType(o, field)
-        setSeeColumnType(o, seeField)
-        defaultColumns.push(field)
-        seebodyColumns.push(seeField)
+        setViewDetailsField(o, seeField)
+        defaultSchema.push(field)
+        viewDetailsBodyFields.push(seeField)
 
 
         const editItem: any = {
@@ -320,7 +318,7 @@ function genColumns(fields: ContentFieldsMappingDto[],filterFields:any[]) {
             disabled: false,
             // value: "${ " + o.graphqlValuePath + " }",
         }
-        seteditColumnType(o, editItem)
+        setEditField(o, editItem)
         editFormBodyColumns.push(editItem)
 
         const filterField = {
@@ -328,7 +326,7 @@ function genColumns(fields: ContentFieldsMappingDto[],filterFields:any[]) {
             "name": o.graphqlValuePath,
             "type": "text"
         }
-        setFilterColumnType(o, filterField,filterFields)
+        setFilterColumnField(o, filterField, filterFields)
         // filterFields.push(filterField)
 
     })
@@ -336,11 +334,11 @@ function genColumns(fields: ContentFieldsMappingDto[],filterFields:any[]) {
     // const formItems = genFormItems(fields);
     // formItems.forEach(o => editFormBodyColumns.push(o));
     console.log('editFormBodyColumns: ', editFormBodyColumns);
-    return defaultColumns;
+    return defaultSchema;
 }
 
 
-function setSeeColumnType(fieldDef: ContentFieldsMappingDto, field: any) {
+function setViewDetailsField(fieldDef: ContentFieldsMappingDto, field: any) {
     field.type = "text";
     switch (fieldDef.fieldType) {
         case FieldType.DateTimeField:
@@ -394,7 +392,7 @@ function setColumnType(fieldDef: ContentFieldsMappingDto, field: any) {
     }
 }
 
-function setFilterColumnType(fieldDef: ContentFieldsMappingDto, field: any, filterFields:any[]){
+function setFilterColumnField(fieldDef: ContentFieldsMappingDto, field: any, filterFields: any[]) {
     switch (fieldDef.fieldType) {
         case FieldType.TextField:
             field.operators = genFilterOptions(fieldDef.fieldType)
@@ -423,20 +421,20 @@ function setFilterColumnType(fieldDef: ContentFieldsMappingDto, field: any, filt
             break;
         case FieldType.ContentPickerField:
             const pickerTypeConfig = fieldDef.fieldSettings?.ContentPickerFieldSettings?.DisplayedContentTypes
-                if (pickerTypeConfig && pickerTypeConfig.length > 0) {
-                    const pickerType = pickerTypeConfig[0];
-                    console.log('etFilterColumnType pickerTypeConfig: ', JSON.stringify(pickerTypeConfig), JSON.stringify(pickerTypeConfig[0]),JSON.stringify(pickerType));
-                    //const multiple = fieldDef.fieldSettings?.ContentPickerFieldSettings?.Multiple ?? false
-                    //field.multiple = multiple
-                    //field.extractValue = multiple
-                    
-                    field.source = {
-                        method: "post",
-                        url: "/api/graphql",
-                        dataType: "json",
-                        replaceData: false,
-                        requestAdaptor:
-                            `
+            if (pickerTypeConfig && pickerTypeConfig.length > 0) {
+                const pickerType = pickerTypeConfig[0];
+                console.log('etFilterColumnType pickerTypeConfig: ', JSON.stringify(pickerTypeConfig), JSON.stringify(pickerTypeConfig[0]), JSON.stringify(pickerType));
+                //const multiple = fieldDef.fieldSettings?.ContentPickerFieldSettings?.Multiple ?? false
+                //field.multiple = multiple
+                //field.extractValue = multiple
+
+                field.source = {
+                    method: "post",
+                    url: "/api/graphql",
+                    dataType: "json",
+                    replaceData: false,
+                    requestAdaptor:
+                        `
                             console.log('genFilterOptions 111111111111111111111111')
 
                             console.log("genFilterOptions body", api.body);
@@ -458,8 +456,8 @@ function setFilterColumnType(fieldDef: ContentFieldsMappingDto, field: any, filt
 
                             console.log('genFilterOptions 2',api)
                             return api`,
-                    }
                 }
+            }
             field.name = fieldDef.graphqlValuePath?.replace('contentItemIds.firstValue', 'firstContentItem.displayText')
             field.type = "select"
             field.operators = genFilterOptions(fieldDef.fieldType)
@@ -478,7 +476,7 @@ function setFilterColumnType(fieldDef: ContentFieldsMappingDto, field: any, filt
 }
 
 
-function seteditColumnType(fieldDef: ContentFieldsMappingDto, field: any) {
+function setEditField(fieldDef: ContentFieldsMappingDto, field: any) {
     switch (fieldDef.fieldType) {
         case FieldType.TextField:
             field.type = "input-text";
@@ -486,7 +484,7 @@ function seteditColumnType(fieldDef: ContentFieldsMappingDto, field: any) {
                 field.type = "select"
                 if (fieldDef.fieldSettings?.TextFieldPredefinedListEditorSettings?.Options) {
                     field.options =
-                    fieldDef.fieldSettings?.TextFieldPredefinedListEditorSettings?.Options.map(x => {
+                        fieldDef.fieldSettings?.TextFieldPredefinedListEditorSettings?.Options.map(x => {
                             return {
                                 label: x.name,
                                 value: x.value
@@ -512,7 +510,7 @@ function seteditColumnType(fieldDef: ContentFieldsMappingDto, field: any) {
 
                 if (multiple) {
                     field.name = fieldDef.graphqlValuePath?.replace('firstValue', 'contentItemIds')
-                }else{
+                } else {
                     field.name = fieldDef.graphqlValuePath?.replace('contentItemIds.firstValue', 'firstValue')
                 }
                 field.autoComplete = {
@@ -550,14 +548,14 @@ function seteditColumnType(fieldDef: ContentFieldsMappingDto, field: any) {
         case FieldType.TimeField:
             field.type = "input-time"
             field.timeFormat = "HH:mm:ss"
-            field.inputFormat =  "HH:mm:ss"
+            field.inputFormat = "HH:mm:ss"
             break;
         case FieldType.BooleanField:
             field.type = "switch"
             break;
         case FieldType.MediaField:
             // field.type = "input-image"
-            field.name =  fieldDef.graphqlValuePath + ".urls"
+            field.name = fieldDef.graphqlValuePath + ".urls"
             break;
     }
 }
@@ -605,14 +603,14 @@ function genFormItems(fields: ContentFieldsMappingDto[]) {
                 const pickerTypeConfig = fieldSettings?.ContentPickerFieldSettings?.DisplayedContentTypes
                 if (pickerTypeConfig && pickerTypeConfig.length > 0) {
                     const pickerType = pickerTypeConfig[0];
-                    console.log('genFormItems pickerTypeConfig: ', JSON.stringify(pickerTypeConfig), JSON.stringify(pickerTypeConfig[0]),JSON.stringify(pickerType));
+                    console.log('genFormItems pickerTypeConfig: ', JSON.stringify(pickerTypeConfig), JSON.stringify(pickerTypeConfig[0]), JSON.stringify(pickerType));
                     const multiple = fieldSettings?.ContentPickerFieldSettings?.Multiple ?? false
                     item.multiple = multiple
                     item.extractValue = multiple
 
                     if (multiple) {
                         item.name = field.graphqlValuePath?.replace('firstValue', 'contentItemIds')
-                    }else{
+                    } else {
                         item.name = field.graphqlValuePath?.replace('contentItemIds.firstValue', 'firstValue')
                     }
                     item.autoComplete = {
@@ -717,10 +715,10 @@ export function buildGraphqlFields(fields: ContentFieldsMappingDto[]) {
 }
 
 
-function genFilterOptions(fieldType:FieldType) {
-    const defaultOptions:any = [
-        {label:"等于",value:"EQUALS"},
-        {label:"不等于",value:"NOT_EQUAL"},
+function genFilterOptions(fieldType: FieldType) {
+    const defaultOptions: any = [
+        { label: "等于", value: "EQUALS" },
+        { label: "不等于", value: "NOT_EQUAL" },
     ]
 
     // {label:"模糊匹配",value:"CONTAINS"},
@@ -740,26 +738,26 @@ function genFilterOptions(fieldType:FieldType) {
     // {label:"",value:"CUSTOM"},
     switch (fieldType) {
         case FieldType.TextField:
-            defaultOptions.push({label: "模糊匹配",value: "CONTAINS"});
-            defaultOptions.push({label: "不匹配",value: "NOT_CONTAINS"});
-            defaultOptions.push({label: "匹配开头",value: "STARTS_WITH"});
-            defaultOptions.push({label: "匹配结尾",value: "ENDS_WITH"});
-            defaultOptions.push({label: "不开头",value: "NOT_STARTS_WITH"});
-            defaultOptions.push({label: "不结尾",value: "NOT_ENDS_WITH"});
+            defaultOptions.push({ label: "模糊匹配", value: "CONTAINS" });
+            defaultOptions.push({ label: "不匹配", value: "NOT_CONTAINS" });
+            defaultOptions.push({ label: "匹配开头", value: "STARTS_WITH" });
+            defaultOptions.push({ label: "匹配结尾", value: "ENDS_WITH" });
+            defaultOptions.push({ label: "不开头", value: "NOT_STARTS_WITH" });
+            defaultOptions.push({ label: "不结尾", value: "NOT_ENDS_WITH" });
             break;
         case FieldType.NumericField:
-            defaultOptions.push({label: "大于等于",value: "GREATER_THAN_OR_EQUAL"});
-            defaultOptions.push({label: "小于等于",value: "LESS_THAN_OR_EQUAL"});
-            defaultOptions.push({label: "大于",value: "GREATER_THAN"});
-            defaultOptions.push({label: "小于",value: "LESS_THAN"});
+            defaultOptions.push({ label: "大于等于", value: "GREATER_THAN_OR_EQUAL" });
+            defaultOptions.push({ label: "小于等于", value: "LESS_THAN_OR_EQUAL" });
+            defaultOptions.push({ label: "大于", value: "GREATER_THAN" });
+            defaultOptions.push({ label: "小于", value: "LESS_THAN" });
             defaultOptions.push("between");
             break;
         case FieldType.DateField:
         case FieldType.DateTimeField:
-            defaultOptions.push({label: "大于等于",value: "GREATER_THAN_OR_EQUAL"});
-            defaultOptions.push({label: "小于等于",value: "LESS_THAN_OR_EQUAL"});
-            defaultOptions.push({label: "大于",value: "GREATER_THAN"});
-            defaultOptions.push({label: "小于",value: "LESS_THAN"});
+            defaultOptions.push({ label: "大于等于", value: "GREATER_THAN_OR_EQUAL" });
+            defaultOptions.push({ label: "小于等于", value: "LESS_THAN_OR_EQUAL" });
+            defaultOptions.push({ label: "大于", value: "GREATER_THAN" });
+            defaultOptions.push({ label: "小于", value: "LESS_THAN" });
             defaultOptions.push("between");
             break;
         case FieldType.UserPickerField:
