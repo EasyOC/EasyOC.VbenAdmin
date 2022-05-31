@@ -422,6 +422,44 @@ function setFilterColumnType(fieldDef: ContentFieldsMappingDto, field: any, filt
             filterFields.push(field)
             break;
         case FieldType.ContentPickerField:
+            const pickerTypeConfig = fieldDef.fieldSettings?.ContentPickerFieldSettings?.DisplayedContentTypes
+                if (pickerTypeConfig && pickerTypeConfig.length > 0) {
+                    const pickerType = pickerTypeConfig[0];
+                    console.log('etFilterColumnType pickerTypeConfig: ', JSON.stringify(pickerTypeConfig), JSON.stringify(pickerTypeConfig[0]),JSON.stringify(pickerType));
+                    //const multiple = fieldDef.fieldSettings?.ContentPickerFieldSettings?.Multiple ?? false
+                    //field.multiple = multiple
+                    //field.extractValue = multiple
+                    
+                    field.source = {
+                        method: "post",
+                        url: "/api/graphql",
+                        dataType: "json",
+                        replaceData: false,
+                        requestAdaptor:
+                            `
+                            console.log('genFilterOptions 111111111111111111111111')
+
+                            console.log("genFilterOptions body", api.body);
+                            const text_containsName = "";
+
+                            const query=\`
+                            {
+                                options:${camelCase(pickerType)}
+                                (status: PUBLISHED, first: 10, 
+                                    where: {displayText_contains: \"\${text_containsName}\"}) 
+                                {
+                                    label:displayText
+                                    value:contentItemId
+                                }
+                            }\`
+                            console.log('genFilterOptions 3',query)
+
+                            api.data={query}
+
+                            console.log('genFilterOptions 2',api)
+                            return api`,
+                    }
+                }
             field.name = fieldDef.graphqlValuePath?.replace('contentItemIds.firstValue', 'firstContentItem.displayText')
             field.type = "select"
             field.operators = genFilterOptions(fieldDef.fieldType)
@@ -567,6 +605,7 @@ function genFormItems(fields: ContentFieldsMappingDto[]) {
                 const pickerTypeConfig = fieldSettings?.ContentPickerFieldSettings?.DisplayedContentTypes
                 if (pickerTypeConfig && pickerTypeConfig.length > 0) {
                     const pickerType = pickerTypeConfig[0];
+                    console.log('genFormItems pickerTypeConfig: ', JSON.stringify(pickerTypeConfig), JSON.stringify(pickerTypeConfig[0]),JSON.stringify(pickerType));
                     const multiple = fieldSettings?.ContentPickerFieldSettings?.Multiple ?? false
                     item.multiple = multiple
                     item.extractValue = multiple
@@ -679,7 +718,7 @@ export function buildGraphqlFields(fields: ContentFieldsMappingDto[]) {
 
 
 function genFilterOptions(fieldType:FieldType) {
-    const defaultOptions = [
+    const defaultOptions:any = [
         {label:"等于",value:"EQUALS"},
         {label:"不等于",value:"NOT_EQUAL"},
     ]
@@ -688,23 +727,23 @@ function genFilterOptions(fieldType:FieldType) {
     // {label:"匹配开头",value:"STARTS_WITH"},
     // {label:"匹配结尾",value:"ENDS_WITH"},
     // {label:"不匹配",value:"NOT_CONTAINS"},
-    // {label:"",value:"NOT_STARTS_WITH"},
-    // {label:"",value:"GREATER_THAN_OR_EQUAL"},
-    // {label:"",value:"NOT_ENDS_WITH"},
-    // {label:"",value:"GREATER_THAN"},
-    // {label:"",value:"LESS_THAN"},
-    // {label:"",value:"LESS_THAN_OR_EQUAL"},
-    // {label:"",value:"RANGE"},
-    // {label:"",value:"DATE_RANGE"},
-    // {label:"",value:"ANY"},
-    // {label:"",value:"NOT_ANY"},
+    // {label:"不开头",value:"NOT_STARTS_WITH"},
+    // {label:"大于等于",value:"GREATER_THAN_OR_EQUAL"},
+    // {label:"不结尾",value:"NOT_ENDS_WITH"},
+    // {label:"大于",value:"GREATER_THAN"},
+    // {label:"小于",value:"LESS_THAN"},
+    // {label:"小于等于",value:"LESS_THAN_OR_EQUAL"},
+    // {label:"范围",value:"RANGE"},
+    // {label:"时间范围",value:"DATE_RANGE"},
+    // {label:"包含",value:"ANY"},
+    // {label:"不包含",value:"NOT_ANY"},
     // {label:"",value:"CUSTOM"},
     switch (fieldType) {
         case FieldType.TextField:
-            defaultOptions.push({label: "包含",value: "CONTAINS"});
-            defaultOptions.push({label: "不包含",value: "NOT_CONTAINS"});
-            defaultOptions.push({label: "开头",value: "STARTS_WITH"});
-            defaultOptions.push({label: "结尾",value: "ENDS_WITH"});
+            defaultOptions.push({label: "模糊匹配",value: "CONTAINS"});
+            defaultOptions.push({label: "不匹配",value: "NOT_CONTAINS"});
+            defaultOptions.push({label: "匹配开头",value: "STARTS_WITH"});
+            defaultOptions.push({label: "匹配结尾",value: "ENDS_WITH"});
             defaultOptions.push({label: "不开头",value: "NOT_STARTS_WITH"});
             defaultOptions.push({label: "不结尾",value: "NOT_ENDS_WITH"});
             break;
@@ -713,8 +752,22 @@ function genFilterOptions(fieldType:FieldType) {
             defaultOptions.push({label: "小于等于",value: "LESS_THAN_OR_EQUAL"});
             defaultOptions.push({label: "大于",value: "GREATER_THAN"});
             defaultOptions.push({label: "小于",value: "LESS_THAN"});
-            defaultOptions.push({label: "范围",value: "RANGE",});
+            defaultOptions.push("between");
             break;
+        case FieldType.DateField:
+        case FieldType.DateTimeField:
+            defaultOptions.push({label: "大于等于",value: "GREATER_THAN_OR_EQUAL"});
+            defaultOptions.push({label: "小于等于",value: "LESS_THAN_OR_EQUAL"});
+            defaultOptions.push({label: "大于",value: "GREATER_THAN"});
+            defaultOptions.push({label: "小于",value: "LESS_THAN"});
+            defaultOptions.push("between");
+            break;
+        case FieldType.UserPickerField:
+        case FieldType.ContentPickerField:
+            defaultOptions.push("select_any_in");
+            defaultOptions.push("select_not_any_in");
+            break;
+
     }
 
     return defaultOptions;

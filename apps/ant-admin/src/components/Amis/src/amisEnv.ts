@@ -26,6 +26,7 @@ window.amisExt = {
 
     console.log(condition, "convertCondition")
     let filterString = "";
+    // 如果有子节点
     if(condition && condition.children && condition.children.length > 0){
       const children = condition.children;
       // if(condition.children.length == 1){
@@ -79,6 +80,19 @@ function genGraphqlFilter(children) {
     if(child.left&&child.left.field) {
       if(child.left&&child.op&&child.right) {
         const filter = { field:child.left.field,operator:child.op,value:child.right };
+
+        switch(filter.operator) {
+          case 'between':
+            filter.operator = "RANGE"
+            break
+          case 'select_any_in':  
+            filter.operator = "ANY"
+            break
+          case 'select_not_any_in':
+            filter.operator = "NOT_ANY"
+            break
+        }
+
         let filterStringJoin = '';
         for(const item in filter) {
           if(filterStringJoin) {
@@ -88,17 +102,17 @@ function genGraphqlFilter(children) {
           {
             filterStringJoin = filterStringJoin + item + ':"' + filter[item]+'"'
           }
-          else {
+          else if(item === "operator") {
             filterStringJoin = filterStringJoin + item + ':' + filter[item]
-          }
+          }  
+          else {
+            console.error("filter[item]: ", filter, item)
+            return "{}";
+        }
+          
         }
 
-        console.log('child: ', child);
-        if(child.children && child.children.length > 0) {
-          
-        } else {
-          return "{" + filterStringJoin + "}";
-        }
+        return "{" + filterStringJoin + "}";
       } else {
         return "{}";
       }

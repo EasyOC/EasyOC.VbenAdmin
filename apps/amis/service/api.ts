@@ -3,11 +3,88 @@ import authService, { globConfig } from './../route/auth/authService';
 //@ts-ignore
 //@ts-ignore
 window.amisExt = {
-    convertCondition: function (condition) {
-      console.log(condition, "convertCondition")
-      return JSON.stringify(condition)
+    convertCondition: function (condition:any) {
+        console.log(condition, "convertCondition")
+        let filterString = "";
+        // 如果有子节点, 则转换为graphql形式的filter
+        if(condition && condition.children && condition.children.length > 0){
+            const children = condition.children;
+            // 利用递归将筛选转换为graphql形式的filter字符串
+            filterString = "{" + "logic:" + condition.conjunction + "," + "filters:"+genGraphqlFilter(children)+"}";
+        }
+    
+        if(filterString) {
+          return filterString;
+    
+        } else {
+          return JSON.stringify({})
+        }
     } 
   }
+
+  function genGraphqlFilter(children:any) {
+    const arr = children.map((child:any) => {
+      if(child.left&&child.left.field) {
+          // 如果子节点有left、op和right, 则转换为graphql形式的filter,否则返回空字符串
+        if(child.left&&child.op&&child.right) {
+            const filter = { field:child.left.field,operator:child.op,value:child.right };
+
+            switch(filter.operator) {
+                case 'between':
+                  filter.operator = "RANGE"
+                  break
+                case 'select_any_in':  
+                  filter.operator = "ANY"
+                  break
+                case 'select_not_any_in':
+                  filter.operator = "NOT_ANY"
+                  break
+              }
+
+            let filterStringJoin = '';
+            for(const item in filter) {
+                if(filterStringJoin) {
+                    filterStringJoin = filterStringJoin+","
+                }
+                if(item === "field" || item === "value")
+                {
+                    filterStringJoin = filterStringJoin + item + ':"' + filter[item]+'"'
+                }
+                else if(item === "operator") {
+                    filterStringJoin = filterStringJoin + item + ':' + filter[item] +'';
+                } else {
+                    console.error("filter[item]: ", filter, item)
+                    return "{}";
+                }
+            }
+            return "{" + filterStringJoin + "}";
+          
+        } else {
+          return "{}";
+        }
+      } else if(child.children&&child.children.length>0){
+        // 如果有子节点, 则转换为graphql形式的filter
+        const genChilds = genGraphqlFilter(child.children)
+        if(genChilds === "[]") {
+          return "{}"
+        } else {
+          return "{" + "logic:" + child.conjunction + ",filters:" + genChilds + "}";
+        }
+      }else {
+        return "{}";
+      }
+    }).filter((item:string) => item !== "{}");
+
+    // 如果数组为空, 则返回空数组字符串
+    if(arr.length > 0) {
+      return "[" + arr.join(",") + "]";
+  
+    }else {
+      return "[]";
+    }
+  }
+
+
 export async function apiRequest(config: AxiosRequestConfig | boolean | any) {
     if (!config) {
         return { data: null };
