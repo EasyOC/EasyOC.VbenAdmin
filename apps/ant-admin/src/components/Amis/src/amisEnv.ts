@@ -28,34 +28,38 @@ window.amisExt = {
     let filterString = "";
     if(condition && condition.children && condition.children.length > 0){
       const children = condition.children;
-      if(condition.children.length == 1){
-        const child = children[0];
-        if(child.left&&child.op&&child.right){
-          if(child.left&&child.left.field){
-            const filter = { logic:condition.conjunction,field:child.left.field,operator:child.op,value:child.right };
-            console.log('filter: ', filter);
-            console.log('filter: ', JSON.stringify(filter));
-            let filterStringJoin = '';
-            for(const item in filter) { 
-              if(filterStringJoin) {
-                filterStringJoin = filterStringJoin+"," 
-                } 
-                if(item === "field" || item === "value")
-                { 
-                  filterStringJoin = filterStringJoin + item + ':"' + filter[item]+'"' 
-                } else { 
-                  filterStringJoin = filterStringJoin + item + ':' + filter[item]
-                }
-            }
-            filterString = "{" + filterStringJoin + "}";
-            //return JSON.stringify(filter)
-          }
-        }
-      } else {
+      // if(condition.children.length == 1){
+        // const child = children[0];
+        // if(child.left&&child.op&&child.right){
+        //   if(child.left&&child.left.field){
+        //     const filter = { logic:condition.conjunction,field:child.left.field,operator:child.op,value:child.right };
+        //     console.log('filter: ', filter);
+        //     console.log('filter: ', JSON.stringify(filter));
+        //     let filterStringJoin = '';
+        //     for(const item in filter) { 
+        //       if(filterStringJoin) {
+        //         filterStringJoin = filterStringJoin+"," 
+        //         } 
+        //         if(item === "field" || item === "value")
+        //         { 
+        //           filterStringJoin = filterStringJoin + item + ':"' + filter[item]+'"' 
+        //         } else { 
+        //           filterStringJoin = filterStringJoin + item + ':' + filter[item]
+        //         }
+        //     }
+        //     filterString = "{" + filterStringJoin + "}";
+        //     //return JSON.stringify(filter)
+        //   }
+        // }
+      // } else {
+        
+        console.log('children: ', children);
+        filterString = "{" + "logic:" + condition.conjunction + "," + "filters:"+genGraphqlFilter(children)+"}";
         
 
+        console.log(filterString, "filterString")
         //return JSON.stringify(condition)
-      }
+      // }
     }
 
     if(filterString) {
@@ -67,6 +71,56 @@ window.amisExt = {
     
   }
 
+}
+
+
+function genGraphqlFilter(children) {
+  const arr = children.map(child => {
+    if(child.left&&child.left.field) {
+      if(child.left&&child.op&&child.right) {
+        const filter = { field:child.left.field,operator:child.op,value:child.right };
+        let filterStringJoin = '';
+        for(const item in filter) {
+          if(filterStringJoin) {
+            filterStringJoin = filterStringJoin+","
+          }
+          if(item === "field" || item === "value")
+          {
+            filterStringJoin = filterStringJoin + item + ':"' + filter[item]+'"'
+          }
+          else {
+            filterStringJoin = filterStringJoin + item + ':' + filter[item]
+          }
+        }
+
+        console.log('child: ', child);
+        if(child.children && child.children.length > 0) {
+          
+        } else {
+          return "{" + filterStringJoin + "}";
+        }
+      } else {
+        return "{}";
+      }
+    } else if(child.children&&child.children.length>0){
+      const genChilds = genGraphqlFilter(child.children)
+      if(genChilds === "[]") {
+        return "{}"
+      } else {
+        return "{" + "logic:" + child.conjunction + ",filters:" + genChilds + "}";
+      }
+    }else {
+      return "{}";
+    }
+  }).filter(item => item !== "{}");
+
+  console.log('arr: ', arr);
+  if(arr.length > 0) {
+    return "[" + arr.join(",") + "]";
+
+  }else {
+    return "[]";
+  }
 }
 
 
