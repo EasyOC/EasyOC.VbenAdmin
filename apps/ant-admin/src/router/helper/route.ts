@@ -16,12 +16,11 @@ LayoutMap.set('LAYOUT', LAYOUT)
 LayoutMap.set('IFRAME', IFRAME)
 
 let dynamicViewsModules: Record<string, () => Promise<Recordable>>
-
 // Dynamic introduction
 function asyncImportRoute(routes: RouteRecordItem[] | undefined) {
   dynamicViewsModules =
     dynamicViewsModules || import.meta.glob('../../views/**/*.{vue,tsx}')
-  if (!routes) return
+   if (!routes) return
   routes.forEach((item: any) => {
     if (!item.component && item.meta?.frameSrc) {
       item.component = 'IFRAME'
@@ -105,6 +104,8 @@ export function transformObjToRoute<T = RouteRecordItem>(
     if (component) {
       if (component.toUpperCase() === 'LAYOUT') {
         route.component = LayoutMap.get(component.toUpperCase())
+      //  //@ts-ignore
+      //   route.component.name = _route.name
       } else {
         route.children = [cloneDeep(route)]
         //@ts-ignore
