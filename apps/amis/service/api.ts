@@ -106,8 +106,7 @@ export class DynamicFilterInfo {
   value?: any
   logic?: DynamicFilterLogic
   filters?: DynamicFilterInfo[] = []
-}
-
+} 
 function convertToJSONFilter(condition: any): DynamicFilterInfo[] {
   const arr: DynamicFilterInfo[] = condition.map((child: any) => {
     const filterItem = {
@@ -131,7 +130,7 @@ function convertToJSONFilter(condition: any): DynamicFilterInfo[] {
           default:
             {
               //@ts-ignore
-              const targetKey = filterItem.operator?.replaceAll("_", "").toLowerCase() as string
+              const targetKey = props.operator?.replaceAll("_", "").toLowerCase() as string
               for (const key in DynamicFilterOperator) {
                 if (targetKey == (key.toLowerCase())) {
                   //@ts-ignore
@@ -143,22 +142,6 @@ function convertToJSONFilter(condition: any): DynamicFilterInfo[] {
         }
         filterItem.field = props.field;
         filterItem.value = props.value;
-        // let filterStringJoin = '';
-        // for (const key in props) {
-        //   if (filterStringJoin) {
-        //     filterStringJoin = filterStringJoin + ","
-        //   }
-        //   if (key === "field" || key === "value") {
-        //     filterStringJoin = filterStringJoin + key + ':"' + props[key] + '"'
-        //   }
-        //   else if (key === "operator") {
-        //     filterStringJoin = filterStringJoin + key + ':' + props[key] + '';
-        //   } else {
-        //     console.error("filter[item]: ", props, key)
-        //     return "{}";
-        //   }
-        // }
-        // return "{" + filterStringJoin + "}";
       }
 
     } else if (child.children && child.children.length > 0) {
@@ -170,8 +153,10 @@ function convertToJSONFilter(condition: any): DynamicFilterInfo[] {
   return arr
 }
 
+
+
 //@ts-ignore 
-function convertToGraphqlJSONFilter(condition: any) {
+function dynamicJsonFilter(condition: any) {
 
   let dynamicFilter = {
     filters: []
@@ -193,18 +178,20 @@ function convertToGraphqlJSONFilter(condition: any) {
 
   return JSON.stringify(dynamicFilter)
 
+  // return "{\"field\":\"address.city\",\"operator\":\"Eq\",\"value\":[]}"
 }
 
 
 //@ts-ignore
 window.amisExt = {
-  convertToGraphqlJSONFilter,
-  convertCondition: function (condition: any) {
+  dynamicJsonFilter,
+  convertCondition: function(condition: any) {
     console.log(condition, "convertCondition")
     let filterString = "";
     // 如果有子节点, 则转换为graphql形式的filter
     if (condition && condition.children && condition.children.length > 0) {
       const children = condition.children;
+      console.log('children: ', children);
       // 利用递归将筛选转换为graphql形式的filter字符串
       filterString = "{" + "logic:" + condition.conjunction + "," + "filters:" + genGraphqlFilter(children) + "}";
     }
@@ -213,70 +200,77 @@ window.amisExt = {
       return filterString;
 
     } else {
-      return JSON.stringify({})
+      return  "{}";
     }
   }
 }
 
-function genGraphqlFilter(children: any) {
-  const arr = children.map((child: any) => {
-    if (child.left && child.left.field) {
-      // 如果子节点有left、op和right, 则转换为graphql形式的filter,否则返回空字符串
-      if (child.left && child.op && child.right) {
-        const filter = { field: child.left.field, operator: child.op, value: child.right };
+function genGraphqlFilter(children:any) {
+  console.log('genGraphqlFilter children: ', children);
+  const arr = children.map((child:any) => {
+    if(child.left&&child.left.field) {
+      if(child.left&&child.op&&child.right) {
+        const filter = { field:child.left.field,operator:"",value:child.right };
 
-        switch (filter.operator) {
+        switch(child.op) {
           case 'between':
             filter.operator = "RANGE"
             break
-          case 'select_any_in':
+          case 'select_any_in':  
             filter.operator = "ANY"
             break
           case 'select_not_any_in':
             filter.operator = "NOT_ANY"
             break
+          default:
+            filter.operator = child.op
+            break
         }
 
         let filterStringJoin = '';
-        for (const item in filter) {
-          if (filterStringJoin) {
-            filterStringJoin = filterStringJoin + ","
+        for(const item in filter) {
+          if(filterStringJoin) {
+            filterStringJoin = filterStringJoin+","
           }
-          if (item === "field" || item === "value") {
-            filterStringJoin = filterStringJoin + item + ':"' + filter[item] + '"'
+          if(item === "field" || item === "value")
+          {
+            filterStringJoin = filterStringJoin + item + ':"' + filter[item]+'"'
           }
-          else if (item === "operator") {
-            filterStringJoin = filterStringJoin + item + ':' + filter[item] + '';
-          } else {
+          else if(item === "operator") {
+            filterStringJoin = filterStringJoin + item + ':' + filter[item]
+          }  
+          else {
             console.error("filter[item]: ", filter, item)
             return "{}";
-          }
         }
-        return "{" + filterStringJoin + "}";
+          
+        }
 
+        return "{" + filterStringJoin + "}";
       } else {
         return "{}";
       }
-    } else if (child.children && child.children.length > 0) {
-      // 如果有子节点, 则转换为graphql形式的filter
+    } else if(child.children&&child.children.length>0){
       const genChilds = genGraphqlFilter(child.children)
-      if (genChilds === "[]") {
+      if(genChilds === "[]") {
         return "{}"
       } else {
         return "{" + "logic:" + child.conjunction + ",filters:" + genChilds + "}";
       }
-    } else {
+    }else {
       return "{}";
     }
-  }).filter((item: any) => item !== "{}");
+  }).filter((item:any) => item !== "{}");
 
-  // 如果数组为空, 则返回空数组字符串
-  if (arr.length > 0) {
-    return arr.join(",");
+  console.log('arr: ', arr);  
+  if(arr.length > 0) {
+    return "[" + arr.join(",") + "]";
 
-  } else {
-    return '';
+  }else {
+    return "[]";
   }
+  //return JSON.stringify(arr);
+  
 }
 
 
