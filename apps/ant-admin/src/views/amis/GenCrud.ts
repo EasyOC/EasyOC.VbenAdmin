@@ -11,7 +11,24 @@ export default async function buildCrud(typeName: string) {
     const fields = await apiService.getFields(typeName);
     console.log('fields: ', fields);
     //根据字段构建查询字段
-    const tempGraphqlStr = " { data:contentItems( contentType: " + typeName + " page: ${api.body.page}  pageSize: ${api.body.perPage} orderBy: {field: \"${api.body.orderBy?api.body.orderBy:''}\", direction: ${api.body.orderDir?api.body.orderDir.toUpperCase():'DESC' } } dynamicFilter: ${amisExt.convertCondition(api.body.conditions)} ) {  total items { ... on  " + typeName + buildGraphqlFields(fields as any) + "}}}";
+    const tempGraphqlStr = `query curdQuery($jsonFilter:String){ 
+        data:contentItems( 
+            contentType: ${typeName}
+            page: \${api.body.page}  
+            pageSize: \${api.body.perPage} 
+            orderBy: {field: \"\${api.body.orderBy?api.body.orderBy:''}\", direction: \${api.body.orderDir?api.body.orderDir.toUpperCase():'DESC' } } 
+            dynamicJSONFilter: $jsonFilter
+              )
+            {  
+                total                 
+                items 
+                { 
+                    ... on  ${typeName}
+                        ${buildGraphqlFields(fields as any)}
+                    
+                }
+            }
+        }`;
 
     // const tempGraphqlStr = ` {
     //     items: ${typeName[0].toLowerCase()+ typeName.slice(1)} ${buildGraphqlFields(fields as any)}
@@ -19,9 +36,24 @@ export default async function buildCrud(typeName: string) {
     // console.log('tempGraphqlStr: ', tempGraphqlStr);
 
 
-
-    const requestAdaptor = "\r\nconsole.log(\"api.发送适配器\",api)\r\n console.log(\"哈哈哈哈\", amisExt.convertCondition(api.body.conditions));\r\nconst filterParams=[`status: ${api.data.status}`]\r\nif(api.data.displayText){\r\n     filterParams.push(`where: {displayText_contains: \"${api.data.displayText}\"}`)\r\n}\r\nif(api.data.orderBy){\r\n    filterParams.push(`orderBy:{${api.body.orderBy}:${api.body.orderDir.toUpperCase()}}`)\r\n}\r\nconsole.log(\"filterParams.join(',')\",filterParams.join(','))\r\nconst  query=`\r\n "
-        + tempGraphqlStr + "` \r\napi.data={query}\r\nconsole.log(\"api.发送适配器2\",api)\r\nreturn api"
+    const requestAdaptor = `console.log(\"api.发送适配器\",api) 
+                     console.log(\"哈哈哈哈\", amisExt.convertCondition(api.body.conditions));
+                     const filterParams=[\`status: \${api.data.status}\`]
+                     const variables={
+                        jsonFilter:amisExt.dynamicJsonFilter(api.body.conditions)//,
+                        // filter: amisExt.convertCondition(api.body.conditions)
+                      }
+                     if(api.data.displayText){
+                         filterParams.push(\`where: {displayText_contains: \"\${api.data.displayText}\"}\`)
+                        }
+                        if(api.data.orderBy){
+                                filterParams.push(\`orderBy:{\${api.body.orderBy}:\${api.body.orderDir.toUpperCase()}}\`)
+                            }
+                            console.log(\"filterParams.join(',')\",filterParams.join(','))
+                            const  query=\`${tempGraphqlStr}\`
+        api.data={query,variables}
+        console.log(\"api.发送适配器2\",api) 
+        return api`
     // console.log('requestAdaptor: ', requestAdaptor);
 
 
