@@ -1,7 +1,6 @@
 /**
  * @file entry of this example.
  */
-import login from 'login';
 import React from 'react';
 import ReactDom from 'react-dom'; 
 import authService from 'route/auth/authService';
