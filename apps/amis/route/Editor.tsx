@@ -49,14 +49,13 @@ class AmisEditor extends React.Component {
         }).then(result => {
             console.log('result?.data', result?.data);
             this.state.schemaObject = result?.data.contentItem;
+            this.state.id = this.state.schemaObject.contentItemId;
             document.title = this.state.schemaObject?.displayText + ' - ' + document.title;
             if (this.state.schemaObject?.schema) {
                 this.state.schema = JSON.parse(this.state.schemaObject.schema);
             }
             this.togglePreview(false);
         });
-
-        
     }
     state: any = {
         preview: true,
@@ -72,8 +71,8 @@ class AmisEditor extends React.Component {
     getGpParams() {
         const {match} = this.props as RouteComponentProps<{id: string; version?: string}>;
         console.log('this.props: ', this.props);
-        this.state.id = match.params.id;
-        let queryparamsStr = `contentItemVersionId:\"${this.state.id}\"`;
+        this.state.version = match.params.id;
+        let queryparamsStr = `contentItemVersionId:\"${this.state.version}\"`;
 
         return queryparamsStr;
     }

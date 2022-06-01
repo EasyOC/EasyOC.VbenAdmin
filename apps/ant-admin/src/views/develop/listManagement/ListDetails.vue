@@ -114,7 +114,7 @@ import {
 import { ContentFieldsMapping } from '@pkg/apis/eoc/contentApi'
 import MonacoEditor from '@/components/MonacoEditor/index.vue'
 
-import { BasicColumn } from '@/components/Table'
+import { BasicColumn } from '@/components/table'
 import { camelCase, deepMerge } from '@pkg/utils'
 import { useMessage } from '@/hooks/web/useMessage'
 import { formSchema } from './data'
