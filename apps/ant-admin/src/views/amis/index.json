@@ -234,7 +234,8 @@
               "confirmText": "确定要删除？",
               "api": {
                 "method": "delete",
-                "url": "/api/content/${contentItemId}"
+                "url": "/api/content/${contentItemId}",
+                "adaptor": "return {\r\n  data:response.data,\r\n  status:0,\r\n  msg:\"删除成功\"\r\n}"
               },
               "onClick": "console.log(props)",
               "disabledOn": "!this.latest"

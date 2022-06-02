@@ -5,6 +5,8 @@
 </template>
 <script lang="ts" setup>
 // import 'amis/sdk/sdk.js'
+import './style/themes/cxd/fix.less'
+import './style/themes/cxd/fixvars.less'
 import './style/themes/cxd.less'
 import { onMounted, ref, unref, onUnmounted } from 'vue'
 import '@fortawesome/fontawesome-free/css/all.min.css'
