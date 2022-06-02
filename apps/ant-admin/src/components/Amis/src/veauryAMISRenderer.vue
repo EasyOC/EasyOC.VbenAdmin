@@ -16,7 +16,7 @@ import { applyReactInVue } from 'veaury'
 // 这是一个React组件
 //@ts-ignore
 import AMISRendererComponent from './react_app/Renderer.jsx'
-import { defineComponent, toRaw,ref} from 'vue'
+import { defineComponent, toRaw, ref, onBeforeUnmount } from 'vue'
 import { TrackerEventArgs } from './types'
 export default defineComponent({
   name: 'VeauryAMISRenderer',
@@ -53,7 +53,9 @@ export default defineComponent({
       console.log('amisMounted111: ', _amisScoped.value);
       emit("update:amisScope", _amisScoped.value)
     }
-
+    onBeforeUnmount(() => {
+      _amisScoped.value.unmount()
+    })
 
     function eventTrackerEvent(params: TrackerEventArgs) {
       console.log('AMIS Renderer eventTrackerEvent', params);

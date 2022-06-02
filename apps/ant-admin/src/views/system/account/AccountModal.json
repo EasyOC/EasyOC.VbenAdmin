@@ -1,9 +1,7 @@
 {
   "type": "page",
   "regions": [
-    "body",
-    "toolbar",
-    "header"
+    "body"
   ],
   "name": "page1",
   "body": [
@@ -68,7 +66,7 @@
         "left": 2,
         "right": 10
       },
-      "wrapWithPanel": true,
+      "wrapWithPanel": false,
       "onEvent": {
         "submitSucc": {
           "actions": [

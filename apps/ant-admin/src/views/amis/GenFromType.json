@@ -1,7 +1,5 @@
 {
   "type": "page",
-  "title": "页面生成器",
-  "subTitle": "根据类型生成页面",
   "name": "page1",
   "regions": [
     "body",
@@ -14,21 +12,10 @@
       "title": "",
       "body": [
         {
-          "type": "hidden",
-          "name": "contentItemId",
-          "id": "u:bd12b2a13634"
-        },
-        {
-          "type": "hidden",
-          "name": "contentType",
-          "id": "u:a1ae08b567b3",
-          "value": "AmisSchema"
-        },
-        {
           "type": "select",
           "name": "typeName",
           "id": "ftypeName",
-          "label": "类型",
+          "label": "数据模型",
           "source": {
             "method": "get",
             "url": "/api/ContentTypeManagement/GetAllTypes",
@@ -55,6 +42,32 @@
           "checkAll": false,
           "required": true,
           "editable": false
+        },
+        {
+          "type": "control",
+          "label": "技术名称",
+          "body": [
+            {
+              "type": "tpl",
+              "tpl": "<p>${typeName}</p>",
+              "style": {
+              }
+            }
+          ],
+          "id": "u:213dbd1f0dd0",
+          "placeholder": "",
+          "remark": null
+        },
+        {
+          "type": "hidden",
+          "id": "u:bd12b2a13634",
+          "name": "contentItemId"
+        },
+        {
+          "type": "hidden",
+          "name": "contentType",
+          "id": "u:a1ae08b567b3",
+          "value": "AmisSchema"
         },
         {
           "type": "hidden",
@@ -95,7 +108,9 @@
     "fontWeight": "normal",
     "backgroundColor": "",
     "fontSize": "16px"
-  }, 
+  },
+  "title": "页面生成器",
+  "subTitle": "根据类型生成页面",
   "toolbar": [
     {
       "type": "button",

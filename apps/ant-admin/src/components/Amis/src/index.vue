@@ -8,7 +8,7 @@
 import './style/themes/cxd/fix.less'
 import './style/themes/cxd/fixvars.less'
 import './style/themes/cxd.less'
-import { onMounted, ref, unref, onUnmounted } from 'vue'
+import { onMounted, ref, unref, onUnmounted, onBeforeUnmount } from 'vue'
 import '@fortawesome/fontawesome-free/css/all.min.css'
 import '@fortawesome/fontawesome-free/css/v4-shims.css'
 import { EventTrack } from 'amis/lib/types'
@@ -57,7 +57,7 @@ onMounted(() => {
   )
   emit('amisMounted', amisScoped.value)
 })
-onUnmounted(() => {
+onBeforeUnmount(() => {
   amisScoped.value.unmount()
 })
 </script>

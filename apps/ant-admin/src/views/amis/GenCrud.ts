@@ -1,14 +1,13 @@
 
 import { camelCase, deepMerge } from '@pkg/utils'
 import { FieldType } from '@pkg/apis/eoc/contentApi'
-import { ContentFieldsMappingDto, ContentTypeManagementServiceProxy } from '@pkg/apis/eoc/app-service-proxies';
+import { ContentFieldsMappingDto, EditViewContentDefinitionDto } from '@pkg/apis/eoc/app-service-proxies';
 import crud from "./schematpls/crud.json"
 
-export default async function buildCrud(typeName: string) {
+export default async function buildCrud(typeDef: EditViewContentDefinitionDto) {
 
-    const apiService = new ContentTypeManagementServiceProxy()
-    //查询出所有字段
-    const fields = await apiService.getFields(typeName);
+    const typeName = typeDef.name as string;
+    const fields = typeDef.fields as ContentFieldsMappingDto[];
     console.log('fields: ', fields);
     //根据字段构建查询字段
     const tempGraphqlStr = `query curdQuery($jsonFilter:String){ 
@@ -59,7 +58,7 @@ export default async function buildCrud(typeName: string) {
 
     const filterFields: any = []
 
-
+    crud.title = `${typeDef.displayName}管理`
     crud.body[0].columns = genColumns(fields, filterFields);
     crud.body[0].api.requestAdaptor = requestAdaptor
     //@ts-ignore

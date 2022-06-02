@@ -1,6 +1,6 @@
 <template>
-  <BasicModal v-bind="$attrs" @register="registerModal" :title="getTitle" @cancel="cancel" @ok="handleSubmit">
-    <Amis :amisjson="amisjson" @amisMounted="amisMounted" @eventTrackerEvent="eventTrackerEvent" />
+  <BasicModal v-bind="$attrs" @register="registerModal" :title="getTitle" @ok="handleSubmit">
+    <Amis v-model="amisjson" @amisMounted="amisMounted" @eventTrackerEvent="eventTrackerEvent" />
   </BasicModal>
 </template>
 <script lang="ts" setup>
@@ -16,7 +16,7 @@ import {
 
 import { Amis } from '@/components/Amis'
 import { TrackerEventArgs } from '@/components/Amis/src/types'
-import schema from './editAccount.json'
+import schema from './AccountModal.json'
 // import { createAsyncComponent } from '@/internal'
 // export default defineComponent({
 // export const Amis = createAsyncComponent(() => import('@/components/Amis'))
@@ -61,10 +61,10 @@ async function eventTrackerEvent(params: TrackerEventArgs) {
         break;
     }
 }
-let amisScoped  
+let amisScoped = ref<any>()
 function amisMounted(amisScope) {
-  amisScoped = amisScope
-  console.log('amisScoped: ', amisScoped)
+  amisScoped.value = amisScope
+  console.log('amisScoped.value: ', amisScoped.value)
 
 }
 
@@ -72,8 +72,6 @@ const userService = new UsersServiceProxy()
 
 const [registerModal, { setModalProps, closeModal }] = useModalInner(
   async (data) => {
-    const form = amisScoped.getComponentByName('page1.form1');
-    form.reset();
     setModalProps({ confirmLoading: false })
     model.isUpdate = !!data?.isUpdate
 
@@ -83,9 +81,14 @@ const [registerModal, { setModalProps, closeModal }] = useModalInner(
     else {
       model.userInfo = null
     }
-    // 可以通过 amisScoped.getComponentByName('form1').setValues({'name1': 'othername'}) 来修改表单中的值。 
-    form.setValues(model.userInfo) // 设置表单值
-
+    // amisjson.value.body[0].data = model.userInfo
+    const form = amisScoped.value.getComponentByName('page1.form1');
+    if (form) {
+      console.log('page1.form1: ', form);
+      form.reset();
+      // 可以通过 amisScoped.value.getComponentByName('form1').setValues({'name1': 'othername'}) 来修改表单中的值。 
+      form.setValues({ ...model.userInfo }) // 设置表单值
+    }
   },
 )
 
@@ -113,19 +116,19 @@ function getRecurDeptList(deptlist: any[]) {
 const getTitle = computed(() => (!model.isUpdate ? '新增账号' : '编辑账号'))
 
 async function handleSubmit() {
-  // 可以通过 amisScoped.getComponentByName('page1.form1').getValues() 来获取到所有表单的值，需要注意 page 和 form 都需要有 name 属性。
+  // 可以通过 amisScoped.value.getComponentByName('page1.form1').getValues() 来获取到所有表单的值，需要注意 page 和 form 都需要有 name 属性。
 
-  const form = amisScoped.getComponentByName('page1.form1');
-  console.log('amisScoped.getComponentByName(\'form1\'): ', form);
- 
-  try { 
+  const form = amisScoped.value.getComponentByName('page1.form1');
+  console.log('amisScoped.value.getComponentByName(\'form1\'): ', form);
+
+  try {
     form.validate().then(async isValidated => {
       console.log('isValidated: ', isValidated);
       if (!isValidated) {
         console.log('表单验证失败！');
 
       } else {
-    
+
         model.userInfo = form.getValues()
         console.log('model.isUpdate: ', model);
         if (model.isUpdate) {
@@ -139,7 +142,7 @@ async function handleSubmit() {
         })
         closeModal()
       }
-    }) 
+    })
   } catch (error) {
     console.log('error: ', error);
   }

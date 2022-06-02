@@ -22,51 +22,59 @@
   </div>
 </template>
 <script setup lang="ts" name="页面生成器">
-import { onBeforeMount, onMounted, ref, watchEffect, onActivated, computed } from 'vue'
+import { onBeforeMount, onMounted, ref, watchEffect, onBeforeUnmount, onActivated, computed, toRaw } from 'vue'
 import { Amis } from '@/components/Amis'
 import schema from './GenFromType.json'
 import { CodeEditor } from '@/components/CodeEditor'
 import { TrackerEventArgs } from '../../components/Amis/src/types';
 
 import buildCrud from './GenCrud'
+import { ContentTypeManagementServiceProxy } from '@pkg/apis/eoc/app-service-proxies';
+import { set } from '@pkg/utils';
 
 const amisScope = ref<any>();
 
 const builderJson = ref<any>(schema)
 
 const builderJsonStr = ref<string>('')
-const previewService = builderJson.value.toolbar[0].dialog.body[0]
+const previewService = toRaw(builderJson.value).toolbar[0].dialog.body[0]
 
-
-onBeforeMount(() => {
-})
-onMounted(() => {
-
-})
 watchEffect(() => {
   if (builderJsonStr.value) {
     try {
-      previewService.body = JSON.parse(builderJsonStr.value);
+      //使用toRaw ，避免传递 ref对象
+      previewService.body = JSON.parse(toRaw(builderJsonStr.value));
+      console.log('previewService.body: ', previewService.body);
     } catch (error) {
       console.error(error)
     }
   }
 })
 
+const apiService = new ContentTypeManagementServiceProxy()
+
+
 async function eventTrackerEvent(params: TrackerEventArgs) {
   if (params?.tracker?.eventData?.id == "ftypeName" &&
     params?.tracker?.eventType == "formItemChange" &&
     params?.tracker?.eventData?.value) {
-
     console.log('eventTrackerEvent:ftypeName ', params);
     const typeName = params?.tracker?.eventData?.value;
-    builderJsonStr.value = await buildCrud(typeName);
-    //试试watchEffect
-    // service.body = [JSON.parse(builderJsonStr.value)];
-    // if (amisScope.value) {
-    //   console.log('amisScope.value: ', amisScope.value);
-    //   // amisScope.value.reload()
-    // }
+    //查询出所有字段
+    const typeDef = await apiService.getTypeDefinitionForEdit(typeName);
+    // set(builderJson.value, "body[0].data.displayName", typeDef.displayName);
+    builderJsonStr.value = await buildCrud(typeDef);
+
+    if (amisScope.value) {
+      const form = amisScope.value.getComponentByName("page1.schemaForm")
+      if (form?.setValues) {
+        console.log('form:schemaForm ', form);
+        form.setValues({
+          displayName: typeDef.displayName
+        })
+      }
+    }
+
   }
 }
 
