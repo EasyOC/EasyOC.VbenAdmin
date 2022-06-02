@@ -65,9 +65,9 @@ export default async function buildCrud(typeName: string) {
     //@ts-ignore
     crud.body[0].headerToolbar[1].dialog.body[0].body = genFormItems(fields);
 
-    const condition = crud.body[0].filter.body.find(o => o.name == "conditions") as any
+    const condition = crud.body[0].filter.actions.find(o => o.name == "conditionsDrawer") as any
     if (condition) {
-        condition.fields = filterFields;
+        condition.drawer.body.body.fields = filterFields;
     }
 
     console.log('crud: ', crud);
@@ -369,7 +369,7 @@ function genColumns(fields: ContentFieldsMappingDto[], filterFields: any[]) {
     return defaultSchema;
 }
 
-
+// 生成详情页面的字段
 function setViewDetailsField(fieldDef: ContentFieldsMappingDto, field: any) {
     field.type = "text";
     switch (fieldDef.fieldType) {
@@ -377,7 +377,10 @@ function setViewDetailsField(fieldDef: ContentFieldsMappingDto, field: any) {
             field.content = "${createdUtc | toDate |date:YYYY-MM-DD HH\\:mm\\:ss }"
             break;
         case FieldType.ContentPickerField:
-            field.content = "${ " + fieldDef.graphqlValuePath?.replace('contentItemIds.firstValue', 'firstContentItem.displayText') + " }"
+            field.content = "${ " + fieldDef.graphqlValuePath?.replace('firstValue', 'firstContentItem.displayText') + " }"
+            break;
+        case FieldType.UserPickerField:
+            field.content = fieldDef.graphqlValuePath?.replace('firstValue', 'firstUserProfiles.displayText')
             break;
         case FieldType.MediaField:
             field.content = {
@@ -390,6 +393,7 @@ function setViewDetailsField(fieldDef: ContentFieldsMappingDto, field: any) {
     }
 }
 
+// 生成列表页面的字段
 function setColumnType(fieldDef: ContentFieldsMappingDto, field: any) {
     field.type = "text";
     switch (fieldDef.fieldType) {
@@ -407,11 +411,11 @@ function setColumnType(fieldDef: ContentFieldsMappingDto, field: any) {
             field.type = "text";
             break;
         case FieldType.ContentPickerField:
-            field.name = fieldDef.graphqlValuePath?.replace('contentItemIds.firstValue', 'firstContentItem.displayText')
+            field.name = fieldDef.graphqlValuePath?.replace('firstValue', 'firstContentItem.displayText')
             field.sortable = false
             break;
         case FieldType.UserPickerField:
-            field.name = fieldDef.graphqlValuePath?.replace('userIds.firstValue', 'firstUserProfiles.displayText')
+            field.name = fieldDef.graphqlValuePath?.replace('firstValue', 'firstUserProfiles.displayText')
             field.sortable = false
             break;
         case FieldType.MediaField:
@@ -424,6 +428,7 @@ function setColumnType(fieldDef: ContentFieldsMappingDto, field: any) {
     }
 }
 
+// 生成高级筛选的字段
 function setFilterColumnField(fieldDef: ContentFieldsMappingDto, field: any, filterFields: any[]) {
     switch (fieldDef.fieldType) {
         case FieldType.TextField:
@@ -507,7 +512,7 @@ function setFilterColumnField(fieldDef: ContentFieldsMappingDto, field: any, fil
     }
 }
 
-
+// 生成编辑表单的字段
 function setEditField(fieldDef: ContentFieldsMappingDto, field: any) {
     switch (fieldDef.fieldType) {
         case FieldType.TextField:
@@ -542,9 +547,11 @@ function setEditField(fieldDef: ContentFieldsMappingDto, field: any) {
 
                 if (multiple) {
                     field.name = fieldDef.graphqlValuePath?.replace('firstValue', 'contentItemIds')
-                } else {
-                    field.name = fieldDef.graphqlValuePath?.replace('contentItemIds.firstValue', 'firstValue')
-                }
+                } 
+                
+                // else {
+                //     field.name = fieldDef.graphqlValuePath?.replace('contentItemIds.firstValue', 'firstValue')
+                // }
                 field.autoComplete = {
                     method: "post",
                     url: "/api/graphql",
@@ -593,7 +600,7 @@ function setEditField(fieldDef: ContentFieldsMappingDto, field: any) {
 }
 
 
-
+// 生成新建页面的字段
 function genFormItems(fields: ContentFieldsMappingDto[]) {
 
     const formItems: any[] = []
@@ -642,9 +649,11 @@ function genFormItems(fields: ContentFieldsMappingDto[]) {
 
                     if (multiple) {
                         item.name = field.graphqlValuePath?.replace('firstValue', 'contentItemIds')
-                    } else {
-                        item.name = field.graphqlValuePath?.replace('contentItemIds.firstValue', 'firstValue')
-                    }
+                    } 
+                    
+                    // else {
+                    //     item.name = field.graphqlValuePath?.replace('contentItemIds.firstValue', 'firstValue')
+                    // }
                     item.autoComplete = {
                         method: "post",
                         url: "/api/graphql",
@@ -686,6 +695,9 @@ function genFormItems(fields: ContentFieldsMappingDto[]) {
     return formItems
 }
 
+
+
+// 生成GraphQL查询语句
 export function buildGraphqlFields(fields: ContentFieldsMappingDto[]) {
     const gfields: { [key: string]: any } = {}
     fields

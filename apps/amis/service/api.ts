@@ -110,7 +110,7 @@ export class DynamicFilterInfo {
 function convertToJSONFilter(condition: any): DynamicFilterInfo[] {
   const arr: DynamicFilterInfo[] = condition.map((child: any) => {
     const filterItem = {
-      logic: child.conjunction,
+      logic: child.conjunction??DynamicFilterLogic.And,
       filters: []
     } as DynamicFilterInfo
     if (child.left && child.left.field && !child.children || child.children.length == 0) {
