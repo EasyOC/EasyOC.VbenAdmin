@@ -151,6 +151,7 @@
       "primaryField": "contentItemVersionId",
       "filter": {
         "title": "查询条件",
+        "name": "searchForm",
         "body": [
           {
             "type": "input-text",
@@ -188,13 +189,42 @@
             "value": "PUBLISHEDORLATEST",
             "searchable": false,
             "size": "md"
+          }
+        ],
+        "actions":[
+          {
+            "type": "submit",
+            "label": "搜索",
+            "actionType": "submit",
+            "id": "u:f919f2d70d5d",
+            "level": "primary"
           },
           {
-            "type": "condition-builder",
-            "label": "条件组件",
-            "name": "conditions",
-            "searchable": true,
-            "fields":[]
+            "type": "button",
+            "label": "高级..",
+            "actionType": "drawer",
+            "name": "conditionsDrawer",
+            "drawer": {
+              "position": "right",
+              "resizable": true,
+              "title": "",
+              "overlay": false,
+              "width": "45vw",
+              "body": {
+                "type": "form",
+                "title": "表单",
+                "body": 
+                  {
+                    "type": "condition-builder",
+                    "label": "",
+                    "name": "conditions",
+                    "searchable": true,
+                    "fields": []
+                  },
+                "id": "u:6c7f8dc7b9b6",
+                "target": "searchForm"
+              }
+            }
           }
         ],
         "checkAll": false,
