@@ -19,14 +19,13 @@ onMounted(async () => { })
 onBeforeMount(async () => {
 
   console.log('currentRoute', currentRoute.value)
+
   let id = currentRoute.value.meta.schemaId
   if (!id) {
-    id = currentRoute.value.params.id;
-  }
-  if (id) {
+    //用户浏览
     const result = await excuteGraphqlQuery({
       query: `{
-          contentItem:contentItemByVersion(contentItemVersionId: "${id}") {
+          contentItem(contentItemId: "${id}") {
             ... on AmisSchema {
               displayText
               createdUtc
@@ -38,10 +37,24 @@ onBeforeMount(async () => {
         }`
     })
     amisjson.value = JSON.parse(result.data.contentItem.schema)
-    console.log('result.data.contentItem.schema: ', amisjson.value);
-    if (amisScope.value?.updateProps) {
-      amisScope.value.updateProps(amisjson.value)
-    }
+  }
+  else if (currentRoute.value.params.id) {
+    //管理页面预览
+    const versionId = currentRoute.value.params.id;
+    const result = await excuteGraphqlQuery({
+      query: `{
+          contentItem:contentItemByVersion(contentItemVersionId: "${versionId}") {
+            ... on AmisSchema {
+              displayText
+              createdUtc
+              description
+              schema
+              name
+            }
+          }
+        }`
+    })
+    amisjson.value = JSON.parse(result.data.contentItem.schema)
   }
 })
 
@@ -49,7 +62,7 @@ onBeforeMount(async () => {
 function eventTrackerEvent(tracker: TrackerEventArgs) {
   console.log('该信息来自于Vue事件监听：', tracker)
 }
- 
+
 
 async function amisMounted(amisScoped) {
   console.log('amisScope: ', amisScoped);

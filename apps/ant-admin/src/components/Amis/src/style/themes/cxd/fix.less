@@ -9,6 +9,7 @@
     transform: rotate(180deg);
     top: -5.5px;
   }
+
   .cxd-ColumnToggler-caret {
     margin-left: var(--DropDown-caret-marginLeft);
     display: inline-block;
@@ -33,5 +34,21 @@
     top: 0;
     padding: 0;
     margin-right: 0.625rem;
+  }
+
+  //修复curd 字段列表，显示列面板上的 列名称向下偏移问题
+  .cxd-ColumnToggler-modal-content
+    .cxd-ColumnToggler-menuItem
+    .cxd-ColumnToggler-menuItem-label {
+    vertical-align: unset !important;
+  }
+
+  //修复curd 字段列表，显示列面板上的 列名排序  文字向下偏移问题
+  .cxd-ColumnToggler-modal-content .cxd-ColumnToggler-menuItem {
+    .cxd-ColumnToggler-menuItem-label {
+      position: relative;
+      right: -11px;
+      top: -14px;
+    }
   }
 }

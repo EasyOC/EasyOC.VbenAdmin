@@ -72,22 +72,22 @@ const userService = new UsersServiceProxy()
 
 const [registerModal, { setModalProps, closeModal }] = useModalInner(
   async (data) => {
+    const form = amisScoped.value.getComponentByName('page1.form1');
+    if (form?.clear) {
+      form.clear()
+    }
     setModalProps({ confirmLoading: false })
     model.isUpdate = !!data?.isUpdate
-
+    model.userInfo = null
     if (model.isUpdate && data.record.userId) {
       model.userInfo = await userService.getUser(data.record.userId)
     }
-    else {
-      model.userInfo = null
-    }
     // amisjson.value.body[0].data = model.userInfo
-    const form = amisScoped.value.getComponentByName('page1.form1');
+
     if (form) {
       console.log('page1.form1: ', form);
-      form.reset();
       // 可以通过 amisScoped.value.getComponentByName('form1').setValues({'name1': 'othername'}) 来修改表单中的值。 
-      form.setValues({ ...model.userInfo }) // 设置表单值
+      form.setValues(model.userInfo, null, true) // 设置表单值
     }
   },
 )

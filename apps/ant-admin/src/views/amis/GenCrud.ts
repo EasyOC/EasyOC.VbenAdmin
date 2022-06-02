@@ -546,8 +546,8 @@ function setEditField(fieldDef: ContentFieldsMappingDto, field: any) {
 
                 if (multiple) {
                     field.name = fieldDef.graphqlValuePath?.replace('firstValue', 'contentItemIds')
-                } 
-                
+                }
+
                 // else {
                 //     field.name = fieldDef.graphqlValuePath?.replace('contentItemIds.firstValue', 'firstValue')
                 // }
@@ -648,8 +648,8 @@ function genFormItems(fields: ContentFieldsMappingDto[]) {
 
                     if (multiple) {
                         item.name = field.graphqlValuePath?.replace('firstValue', 'contentItemIds')
-                    } 
-                    
+                    }
+
                     // else {
                     //     item.name = field.graphqlValuePath?.replace('contentItemIds.firstValue', 'firstValue')
                     // }
@@ -715,10 +715,12 @@ export function buildGraphqlFields(fields: ContentFieldsMappingDto[]) {
 
             let tempPart = gfields
             if (!field.isSelf) {
-                if (!gfields[camelCase(field.partName)]) {
-                    gfields[camelCase(field.partName)] = {}
+                let partName = camelCase(field.partName);
+                if (partName?.endsWith("Part")) { partName = partName.substring(0, partName.length - 4); }
+                if (!gfields[partName]) {
+                    gfields[partName] = {}
                 }
-                tempPart = gfields[camelCase(field.partName)]
+                tempPart = gfields[partName]
             }
 
             switch (field.fieldType) {
