@@ -20,8 +20,10 @@ onBeforeMount(async () => {
 
   console.log('currentRoute', currentRoute.value)
 
-  let id = currentRoute.value.meta.schemaId
-  if (!id) {
+  if (currentRoute.value.meta.schemaId) {
+    let id = currentRoute.value.meta.schemaId
+    console.warn('管理页面预览: ');
+
     //用户浏览
     const result = await excuteGraphqlQuery({
       query: `{
@@ -38,9 +40,10 @@ onBeforeMount(async () => {
     })
     amisjson.value = JSON.parse(result.data.contentItem.schema)
   }
-  else if (currentRoute.value.params.id) {
+  else if (currentRoute.value.params.versionId) {
     //管理页面预览
-    const versionId = currentRoute.value.params.id;
+    console.warn('管理页面预览: ');
+    const versionId = currentRoute.value.params.versionId;
     const result = await excuteGraphqlQuery({
       query: `{
           contentItem:contentItemByVersion(contentItemVersionId: "${versionId}") {
@@ -56,6 +59,10 @@ onBeforeMount(async () => {
     })
     amisjson.value = JSON.parse(result.data.contentItem.schema)
   }
+  if (amisScope.value?.updateProps) {
+    amisScope.value.updateProps(amisjson.value)
+  }
+
 })
 
 
@@ -67,6 +74,5 @@ function eventTrackerEvent(tracker: TrackerEventArgs) {
 async function amisMounted(amisScoped) {
   console.log('amisScope: ', amisScoped);
   amisScope.value = amisScoped
-
 }
 </script>

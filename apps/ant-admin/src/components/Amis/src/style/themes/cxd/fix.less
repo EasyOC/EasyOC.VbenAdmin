@@ -39,16 +39,17 @@
   //修复curd 字段列表，显示列面板上的 列名称向下偏移问题
   .cxd-ColumnToggler-modal-content
     .cxd-ColumnToggler-menuItem
-    .cxd-ColumnToggler-menuItem-label {
+    > .cxd-Checkbox
+    > .cxd-ColumnToggler-menuItem-label
+    {
     vertical-align: unset !important;
-  }
-
+  } 
+  
   //修复curd 字段列表，显示列面板上的 列名排序  文字向下偏移问题
-  .cxd-ColumnToggler-modal-content .cxd-ColumnToggler-menuItem {
-    .cxd-ColumnToggler-menuItem-label {
+  .cxd-ColumnToggler-menuItem  
+   .cxd-ColumnToggler-menuItem-label > span{
       position: relative;
       right: -11px;
       top: -14px;
-    }
   }
 }
