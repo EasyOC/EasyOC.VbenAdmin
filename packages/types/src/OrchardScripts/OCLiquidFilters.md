@@ -11,21 +11,21 @@
 ## OrchardCore.Liquid
 > OrchardCore\src\OrchardCore.Modules\OrchardCore.Liquid\Startup.cs
 
-`{{"input" "arguments" "ctx" | local}}`
+`{{"input" | local}}`
 
-`{{"input" "arguments" "ctx" | slugify}}`
+`{{"input" | slugify}}`
 
-`{{"input" "arguments" "ctx" | liquid}}`
+`{{"input" | liquid}}`
 
 `{{"input" "arguments" "context" | href}}`
 
 `{{"input" "arguments" "context" | absolute_url}}`
 
-`{{"input" "arguments" "ctx" | shape_new}}`
+`{{"input" | shape_new}}`
 
-`{{"input" "arguments" "ctx" | shape_render}}`
+`{{"input" | shape_render}}`
 
-`{{"input" "arguments" "ctx" | shape_stringify}}`
+`{{"input" | shape_stringify}}`
 
 `{{"input" "arguments" "context" | shortcode}}`
 
@@ -36,13 +36,13 @@
  ```Lqiud 
  {% assign userlist = ['userid1','userid2',user.userId] | users_by_id   %}
  ```
-`{{"input" "arguments" "ctx" | users_by_id}}`
+`{{"input" | users_by_id}}`
 
-`{{"input" "arguments" "ctx" | has_permission}}`
+`{{"input" | has_permission}}`
 
-`{{"input" "arguments" "ctx" | is_in_role}}`
+`{{"input" | is_in_role}}`
 
-`{{"input" "arguments" "ctx" | user_email}}`
+`{{"input" | user_email}}`
 
 ## OrchardCore.ContentLocalization  多语言
 
@@ -51,7 +51,7 @@
 
 源代码路径：OrchardCore\src\OrchardCore.Modules\OrchardCore.ContentLocalization\Startup.cs
 
-`{{"input" "arguments" "ctx" | localization_set}}`  
+`{{"input" | localization_set}}`  
 
 ### switch_culture_url
 
@@ -68,37 +68,37 @@
  
 `{{"input" "arguments" "context" | display_url}}`
 
-`{{"input" "arguments" "ctx" | shape_build_display}}`
+`{{"input" | shape_build_display}}`
 
-`{{"input" "arguments" "ctx" | content_item_id}}`
+`{{"input" | content_item_id}}`
 
-`{{"input" "arguments" "ctx" | full_text}}`
+`{{"input" | full_text}}`
 
 
 ## OrchardCore.DisplayManagement
 > OrchardCore\src\OrchardCore\OrchardCore.DisplayManagement.Liquid\OrchardCoreBuilderExtensions.cs
 
-`{{"input" "arguments" "ctx" | append_version}}`
+`{{"input" | append_version}}`
 
-`{{"input" "arguments" "ctx" | resource_url}}`
+`{{"input" | resource_url}}`
 
-`{{"input" "arguments" "ctx" | sanitize_html}}`
+`{{"input" | sanitize_html}}`
 
 
 ## OrchardCore.Lists
 > OrchardCore\src\OrchardCore.Modules\OrchardCore.Lists\Startup.cs
 > 
-`{{"input" "arguments" "ctx" | list_count}}`
+`{{"input" | list_count}}`
 
-`{{"input" "arguments" "ctx" | list_items}}`
+`{{"input" | list_items}}`
 
-`{{"input" "arguments" "ctx" | container}}`
+`{{"input" | container}}`
 
 ## OrchardCore.Markdown
 
 > OrchardCore\src\OrchardCore.Modules\OrchardCore.Markdown\Startup.cs
 
-`{{"input" "arguments" "ctx" | markdownify}}`
+`{{"input" | markdownify}}`
 
 ## OrchardCore.Media 
 > OrchardCore\src\OrchardCore.Modules\OrchardCore.Media\Startup.cs
@@ -109,21 +109,21 @@
 
 
 //OrchardCore\src\OrchardCore.Modules\OrchardCore.Queries\Startup.cs
-//{{"input" "arguments" "ctx" | query}}
+//{{"input" | query}}
 
 ## OrchardCore.Taxonomies
 > OrchardCore\src\OrchardCore.Modules\OrchardCore.Taxonomies\Startup.cs
 > 
-`{{"input" "arguments" "ctx" | inherited_terms}}`
+`{{"input" | inherited_terms}}`
 
-`{{"input" "arguments" "ctx" | taxonomy_terms}}`
+`{{"input" | taxonomy_terms}}`
 
 
 
 ## OrchardCore.Workflows
 > OrchardCore\src\OrchardCore.Modules\OrchardCore.Workflows\Http\Startup.cs
 
-`{{"input" "arguments" "ctx" | signal_url}}`
+`{{"input" | signal_url}}`
 
 ``` Liquid
 {% var content | 'zh-cn' | localization_set  %}

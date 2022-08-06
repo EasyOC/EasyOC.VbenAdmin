@@ -136,7 +136,7 @@
                         "name": "description"
                       },
                       {
-                        "type": "textarea",
+                        "type": "editor",
                         "label": "JSON Schema",
                         "name": "schema",
                         "language": "json",
@@ -161,22 +161,14 @@
                               {
                                 "type": "submit",
                                 "label": "发布",
-                                "actionType": "submit",
-                                "dialog": {
-                                  "title": "系统提示",
-                                  "body": "对你点击了"
-                                },
+                                "actionType": "submit", 
                                 "onClick": "props.formStore.setValues({ isDraft: false});\r\n",
                                 "level": "primary"
                               },
                               {
                                 "type": "submit",
                                 "label": "草稿",
-                                "actionType": "submit",
-                                "dialog": {
-                                  "title": "系统提示",
-                                  "body": "对你点击了"
-                                },
+                                "actionType": "submit", 
                                 "onClick": "props.formStore.setValues({ isDraft: true});\r\n"
                               }
                             ],
@@ -211,13 +203,9 @@
               "onClick": "\r\n\r\nconsole.log(props,'Editing')"
             },
             {
-              "label": "设计器",
               "type": "button",
-              "actionType": "url",
+              "label": "设计器",
               "level": "link",
-              
-              "url": "/index.html#/edit/${contentItemVersionId}",
-              "onClick": "//window.open(`/amis-editor-renderer/index.html#/edit/${props.data.contentItemVersionId}`)",
               "disabledOn": "!this.latest",
               "perPageAvailable": [
                 10

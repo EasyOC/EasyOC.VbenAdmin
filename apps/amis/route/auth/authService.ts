@@ -17,7 +17,7 @@ const oidcClient = new Oidc.UserManager({
   client_id: globConfig.clientId,
   redirect_uri: globConfig.clientRoot+'auth/logincallback',
   scope: "openid offline_access",
-  // post_logout_redirect_uri: globConfig.clientRoot + 'signout-callback',
+  post_logout_redirect_uri: globConfig.clientRoot + 'signout-callback',
   filterProtocolClaims: true,
   loadUserInfo: true,
   response_type: globConfig.responseType,

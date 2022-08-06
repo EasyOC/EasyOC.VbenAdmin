@@ -4,8 +4,7 @@ import Oidc from 'oidc-client';
 import { useUserStore } from '@/store/user'
 import { getGlobalConfig } from '@/internal/config'
 const globConfig = getGlobalConfig()
-const oidcClient = new Oidc.UserManager({
-
+const oidcClient = new Oidc.UserManager({ 
   userStore: new Oidc.WebStorageStateStore({ prefix: 'oidc_', store: localStorage }),
   authority: globConfig.stsAuthority,
   client_id: globConfig.clientId,
