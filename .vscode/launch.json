@@ -2,17 +2,17 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Attach to Edge",
-      "port": 3100,
+      "type": "vscode-edge-devtools.debug",
       "request": "attach",
-      "type": "pwa-msedge",
+      "name": "Attach to Microsoft Edge and open the Edge DevTools",
+      "url": "http://localhost:8080",
       "webRoot": "${workspaceFolder}"
     },
     {
       "type": "chrome",
       "request": "launch",
       "name": "Launch Chrome",
-      "url": "http://localhost:3100",
+      "url": "http://localhost:3000",
       "webRoot": "${workspaceFolder}/src",
       "sourceMaps": true
     }

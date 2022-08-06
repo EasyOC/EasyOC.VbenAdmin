@@ -19,7 +19,7 @@ const _responseText = response.text();
 {% elseif Framework.IsAngularJS -%}
 const _responseText = response.data;
 {% elseif Framework.IsAxios -%}
-const _responseText = response.data.result;
+const _responseText = response.data.data;
 {% else -%}
 const _responseText = xhr.responseText; 
 {% endif -%}

@@ -1,4 +1,4 @@
-import type { ProjectConfig } from '@admin/types'
+import type { ProjectConfig } from '@pkg/types'
 import {
   CacheTypeEnum,
   MenuTypeEnum,
@@ -8,10 +8,9 @@ import {
   ContentLayoutEnum,
   PermissionModeEnum,
   ThemeEnum,
-  RouterTransitionEnum,
   SettingButtonPositionEnum,
   SessionTimeoutProcessingEnum,
-} from '@admin/tokens'
+} from '@pkg/tokens'
 
 import {
   SIDE_BAR_BG_COLOR_LIST,
@@ -24,6 +23,7 @@ export const projectSetting: ProjectConfig = {
   // Whether to show the configuration button
   showSettingButton: true,
 
+  amisRenderMode: 'sdk',
   // Whether to show the theme switch button
   showDarkModeToggle: true,
 
@@ -31,7 +31,7 @@ export const projectSetting: ProjectConfig = {
   settingButtonPosition: SettingButtonPositionEnum.AUTO,
 
   // Permission mode
-  permissionMode: PermissionModeEnum.ROUTE_MAPPING,
+  permissionMode: PermissionModeEnum.BACK,
 
   // Permission-related cache is stored in sessionStorage or localStorage
   permissionCacheType: CacheTypeEnum.LOCAL,
@@ -138,22 +138,8 @@ export const projectSetting: ProjectConfig = {
     showFold: true,
   },
 
-  // Transition Setting
-  transitionSetting: {
-    //  Whether to open the page switching animation
-    // The disabled state will also disable pageLoading
-    enable: true,
-
-    // Route basic switching animation
-    basicTransition: RouterTransitionEnum.FADE_SIDE,
-
-    // Whether to open page switching loading
-    // Only open when enable=true
-    openPageLoading: true,
-
-    // Whether to open the top progress bar
-    openNProgress: false,
-  },
+  // Whether to open the top progress bar
+  openNProgress: false,
 
   // Whether to enable KeepAlive cache is best to close during development, otherwise the cache needs to be cleared every time
   openKeepAlive: true,
@@ -166,9 +152,6 @@ export const projectSetting: ProjectConfig = {
 
   // Whether to show the breadcrumb icon
   showBreadCrumbIcon: false,
-
-  // Use error-handler-plugin
-  useErrorHandle: false,
 
   // Whether to open back to top
   useOpenBackTop: true,

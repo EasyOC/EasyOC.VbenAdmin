@@ -96,9 +96,6 @@ export default {
     colorWeak: 'Color Weak Mode',
 
     progress: 'Progress',
-    switchLoading: 'Switch Loading',
-    switchAnimation: 'Switch animation',
-    animationType: 'Animation type',
 
     autoScreenLock: 'Auto screen lock',
     notAutoScreenLock: 'Not auto lock',

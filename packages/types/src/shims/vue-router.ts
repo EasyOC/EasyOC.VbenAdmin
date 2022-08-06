@@ -1,4 +1,4 @@
-import { RoleEnum } from '@admin/tokens'
+import { RoleEnum } from '@pkg/tokens'
 declare module 'vue-router' {
   interface RouteMeta extends Record<string | number | symbol, unknown> {
     orderNo?: number
@@ -40,7 +40,10 @@ declare module 'vue-router' {
     ignoreRoute?: boolean
     // Hide path for children
     hidePathForChildren?: boolean
+    //amis props
+    isAmisPage?: boolean
+    amisSchemaId?: string
   }
 }
 
-export {}
+export { }

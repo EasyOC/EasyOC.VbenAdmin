@@ -1,5 +1,5 @@
 import { isUndefined, isNull } from 'lodash-es'
-export * from '@vue/shared'
+export { NOOP, isFunction, isString, isArray, isMap } from '@vue/shared'
 
 export { isClient, isWindow } from '@vueuse/core'
 

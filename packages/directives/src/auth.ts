@@ -5,7 +5,7 @@
  */
 import type { Directive, DirectiveBinding } from 'vue'
 
-import { context } from '../_bridge'
+import { context } from '../bridge'
 
 const isAuth = (el: Element, binding: any) => {
   const value = binding.value

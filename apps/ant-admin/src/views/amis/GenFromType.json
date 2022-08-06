@@ -1,0 +1,154 @@
+{
+  "type": "page",
+  "name": "page1",
+  "regions": [
+    "body",
+    "toolbar",
+    "header"
+  ],
+  "body": [
+    {
+      "type": "form",
+      "title": "",
+      "body": [
+        {
+          "type": "select",
+          "name": "typeName",
+          "id": "ftypeName",
+          "label": "数据模型",
+          "source": {
+            "method": "get",
+            "url": "/api/ContentTypeManagement/GetAllTypes",
+            "data": {
+              "stereotype": "1",
+              "pageSize": "-1"
+            },
+            "adaptor": "console.log('dropdown options11',response)\r\nvar items = response.data.items.map(x=>{\r\n    return {label:x.displayName,value:x.name}\r\n})\r\nconsole.log('dropdown options',items)\r\nreturn {options:items}",
+            "replaceData": false,
+            "responseData": null,
+            "dataType": "json"
+          },
+          "searchable": true,
+          "submitOnChange": false,
+          "validations": {
+          },
+          "mode": "horizontal",
+          "size": "",
+          "horizontal": {
+            "leftFixed": "normal",
+            "left": 2,
+            "right": 10
+          },
+          "checkAll": false,
+          "required": true,
+          "editable": false
+        },
+        {
+          "type": "control",
+          "label": "技术名称",
+          "body": [
+            {
+              "type": "tpl",
+              "tpl": "<p>${typeName}</p>",
+              "style": {
+              }
+            }
+          ],
+          "id": "u:213dbd1f0dd0",
+          "placeholder": "",
+          "remark": null
+        },
+        {
+          "type": "hidden",
+          "id": "u:bd12b2a13634",
+          "name": "contentItemId"
+        },
+        {
+          "type": "hidden",
+          "name": "contentType",
+          "id": "u:a1ae08b567b3",
+          "value": "AmisSchema"
+        },
+        {
+          "type": "hidden",
+          "name": "schema",
+          "id": "u:8d9ea63a69f6",
+          "label": "Schema JSON",
+          "mode": "normal",
+          "value": "{\n          \"type\": \"tpl\",\n          \"tpl\": \"内容aaaaaaaaaa\",\n          \"inline\": false\n        }",
+          "horizontal": {
+            "leftFixed": "normal"
+          },
+          "required": true,
+          "minRows": 3,
+          "maxRows": 20,
+          "minLength": 5,
+          "maxLength": 120
+        }
+      ],
+      "id": "u:5bd9921a8c0a",
+      "submitOnChange": false,
+      "checkAll": false,
+      "name": "schemaForm",
+      "wrapWithPanel": false,
+      "mode": "horizontal",
+      "horizontal": {
+        "leftFixed": "normal",
+        "left": 3,
+        "right": 9
+      },
+      "affixFooter": false,
+      "strictMode": true,
+      "debug": false,
+      "canAccessSuperData": false,
+      "placeholder": "-"
+    }
+  ],
+  "style": {
+    "fontWeight": "normal",
+    "backgroundColor": "",
+    "fontSize": "16px"
+  },
+  "title": "页面生成器",
+  "subTitle": "根据类型生成页面",
+  "toolbar": [
+    {
+      "type": "button",
+      "label": "预览",
+      "actionType": "dialog",
+      "dialog": {
+        "title": "系统提示",
+        "body": [
+          {
+            "type": "service",
+            "id": "u:2f42de2f5de0",
+            "name": "svrPreview",
+            "closeOnEsc": false,
+            "closeOnOutside": false,
+            "showCloseButton": true,
+            "messages": {
+            },
+            "dataProvider": ""
+          }
+        ],
+        "type": "dialog",
+        "actions": [
+        ],
+        "size": "xl",
+        "closeOnOutside": true
+      },
+      "id": "u:4324e9e667ba"
+    },
+    {
+      "type": "submit",
+      "label": "提交",
+      "actionType": "submit",
+      "id": "u:41627a0c4d0b",
+      "level": "primary",
+      "target": "indexConfigForm",
+      "name": "btnSubmit"
+    }
+  ],
+  "messages": {
+  }
+}

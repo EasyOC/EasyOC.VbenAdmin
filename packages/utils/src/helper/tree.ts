@@ -1,4 +1,4 @@
-import { deepMerge } from '../deepMerge'
+import { deepMerge } from "../deep-merge"
 
 class TreeHelperConfig {
   id?: string

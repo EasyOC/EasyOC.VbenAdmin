@@ -1,6 +1,6 @@
-import type { LocaleType } from '@admin/types'
+import type { LocaleType } from '@pkg/types'
 
-import { set } from '@admin/utils'
+import { set } from '@pkg/utils'
 
 export const loadLocalePool: LocaleType[] = []
 
