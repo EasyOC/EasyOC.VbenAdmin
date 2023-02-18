@@ -2,7 +2,7 @@
 ## 基于 Vue Vben Admin   的OC中后台模板
 
 ### OIDC 授权
-- [ ] 集成OC登录授权
+- [x] 集成OC登录授权
 
 
 
